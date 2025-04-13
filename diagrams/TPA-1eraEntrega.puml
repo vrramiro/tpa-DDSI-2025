@@ -1,0 +1,155 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+FuenteEstatica --> Hecho
+Coleccion ..> FuenteEstatica
+Coleccion o--> Hecho
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> Contribuyente
+UsuarioRegistrado ..|> Contribuyente
+Administrador ..|> Contribuyente
+Administrador --> Coleccion
+SolicitudDeEliminacion --> Hecho
+Administrador -> SolicitudDeEliminacion
+UsuarioRegistrado -> SolicitudDeEliminacion
+ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
+FuenteEstatica --> ImportadorDeArchivos
+Coleccion --> CriterioDePertenencia
+
+class Hecho {
+    - titulo: String
+    - descripcion: String
+    - categoria: Categoria
+    - lugar: Lugar
+    - contenido: ContenidoMultimedia
+    - fechaDeAcontecimiento: DateTime
+    - fechaDeCarga: DateTime
+    - origen: Origen
+    - visible: Bool
+}
+
+'Enum porque no tiene comportamiento, y necesitamos evitar inconsistencia
+enum Origen {
+    ARCHIVO
+    CONTRIBUYENTE
+}
+
+'Por consistencia de datos
+class Categoria {
+    - nombre: String
+}
+
+class SolicitudDeEliminacion {
+    - texto: String
+    - hechoAEliminar: Hecho
+
+    + aceptar(): void
+}
+
+interface Fuente {
+    + obtenerHechos(File unArchivo): Hecho
+}
+
+class FuenteEstatica {
+    + obtenerHechos(File unArchivo): Hecho
+}
+
+class Coleccion {
+    - titulo: String
+    - descripcion: String
+    - hechos : List<Hecho>
+    - fuenteDeHechos : Fuente
+    - criterioDePertenencia : CriterioDePertenencia
+
+    + cargarHechos() : void
+}
+
+'VER
+class CriterioDePertenencia {
+    - categorias : List<Categoria>
+
+    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+}
+
+interface Contribuyente {
+    + subirHecho()
+}
+
+class Administrador {
+    -nombre: String
+}
+
+class Visualizador {
+
+}
+
+class UsuarioRegistrado {
+    -nombre: String
+    -apellido: String
+    -edad: int
+
+}
+
+interface ImportadorDeArchivos {
+    + importarHechos(File unArchivo): Hecho
+}
+
+class ImportadorDeArchivosCSV {
+     + importarHechos(File unArchivo): Hecho
+}
+
+@enduml
+
+
+// Clase FuenteEstatica
+class FuenteEstatica {
+    private String nombre;
+    private String descripcion;
+
+    // Constructor, getters y setters
+}
+
+// Clase Hecho
+class Hecho {
+    private String titulo;
+    private String descripcion;
+    private String categoria;
+    private double latitud;
+    private double longitud;
+    private LocalDate fechaAcontecimiento;
+    private LocalDate fechaCarga;
+    private String origen; // "manual", "dataset" o "contribuyente"
+
+    // Constructor, getters y setters
+}
+
+// Clase Coleccion
+class Coleccion {
+    private String titulo;
+    private String descripcion;
+    private FuenteEstatica fuente;
+    private List<Hecho> hechos; // Asociación con Hechos
+
+    // Constructor, métodos para agregar y eliminar hechos
+}
+
+// Clase Contribuyente
+class Contribuyente {
+    private String nombre;
+    private String apellido;
+    private int edad;
+    private List<Hecho> hechosSubidos;
+
+    // Constructor, getters y setters
+}
+
+// Clase SolicitudEliminacion
+class SolicitudEliminacion {
+    private Hecho hecho;
+    private String motivo;
+    private boolean aprobada;
+
+    // Constructor, métodos para aprobar o rechazar solicitud
+}
+*/
