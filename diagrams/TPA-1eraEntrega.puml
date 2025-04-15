@@ -16,17 +16,28 @@ UsuarioRegistrado -> SolicitudDeEliminacion
 ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
 FuenteEstatica --> ImportadorDeArchivos
 Coleccion --> CriterioDePertenencia
+CriterioPorFecha ..> CriterioDePertenencia
+CriterioPorCategoria ..> CriterioDePertenencia
+CriterioPorUbicacion ..> CriterioDePertenencia
+Hecho --> Ubicacion
 
 class Hecho {
     - titulo: String
     - descripcion: String
     - categoria: Categoria
-    - lugar: Lugar
+    - ubicacion: Ubicacion
     - contenido: ContenidoMultimedia
     - fechaDeAcontecimiento: DateTime
     - fechaDeCarga: DateTime
     - origen: Origen
     - visible: Bool
+}
+
+class Ubicacion{
+    - nombreLugar: String
+    - descripcion: String
+    - longitud: Int
+    - latitud: Int
 }
 
 'Enum porque no tiene comportamiento, y necesitamos evitar inconsistencia
@@ -60,14 +71,30 @@ class Coleccion {
     - descripcion: String
     - hechos : List<Hecho>
     - fuenteDeHechos : Fuente
-    - criterioDePertenencia : CriterioDePertenencia
+    - criteriosDePertenencia : List<CriterioDePertenencia>
 
     + cargarHechos() : void
 }
 
 'VER
-class CriterioDePertenencia {
-    - categorias : List<Categoria>
+interface CriterioDePertenencia {
+    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+}
+
+class CriterioPorFecha {
+    - fechaACumplir: LocalDateTime
+
+    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+}
+
+class CriterioPorCategoria {
+    - categoriaACumplir: Categoria
+
+    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+}
+
+class CriterioPorUbicacion {
+    - ubicacion: Ubicacion
 
     + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
 }
@@ -101,55 +128,3 @@ class ImportadorDeArchivosCSV {
 
 @enduml
 
-
-// Clase FuenteEstatica
-class FuenteEstatica {
-    private String nombre;
-    private String descripcion;
-
-    // Constructor, getters y setters
-}
-
-// Clase Hecho
-class Hecho {
-    private String titulo;
-    private String descripcion;
-    private String categoria;
-    private double latitud;
-    private double longitud;
-    private LocalDate fechaAcontecimiento;
-    private LocalDate fechaCarga;
-    private String origen; // "manual", "dataset" o "contribuyente"
-
-    // Constructor, getters y setters
-}
-
-// Clase Coleccion
-class Coleccion {
-    private String titulo;
-    private String descripcion;
-    private FuenteEstatica fuente;
-    private List<Hecho> hechos; // Asociación con Hechos
-
-    // Constructor, métodos para agregar y eliminar hechos
-}
-
-// Clase Contribuyente
-class Contribuyente {
-    private String nombre;
-    private String apellido;
-    private int edad;
-    private List<Hecho> hechosSubidos;
-
-    // Constructor, getters y setters
-}
-
-// Clase SolicitudEliminacion
-class SolicitudEliminacion {
-    private Hecho hecho;
-    private String motivo;
-    private boolean aprobada;
-
-    // Constructor, métodos para aprobar o rechazar solicitud
-}
-*/
