@@ -1,3 +1,6 @@
+# ENUNCIADO
+https://docs.google.com/document/d/1ctxGwWrnM0XmPii38KWod9mTzphzNxxPRg9HkpXyNBg/edit?tab=t.0
+
 # java-base-project
 
 Esta es una plantilla de proyecto diseñada para: 
