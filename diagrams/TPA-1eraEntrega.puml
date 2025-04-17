@@ -20,6 +20,7 @@ CriterioPorFecha ..> CriterioDePertenencia
 CriterioPorCategoria ..> CriterioDePertenencia
 CriterioPorUbicacion ..> CriterioDePertenencia
 Hecho --> Ubicacion
+Hecho--> Etiqueta
 
 class Hecho {
     - titulo: String
@@ -30,7 +31,12 @@ class Hecho {
     - fechaDeAcontecimiento: DateTime
     - fechaDeCarga: DateTime
     - origen: Origen
+    - etiquetas: List<Etiqueta>
     - visible: Bool
+}
+
+class Etiqueta {
+    - nombre: String
 }
 
 class Ubicacion{

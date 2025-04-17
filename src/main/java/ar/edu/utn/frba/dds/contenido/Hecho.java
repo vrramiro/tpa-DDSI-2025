@@ -14,6 +14,18 @@ public class Hecho {
     private boolean visible;
 
 
+    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
+                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, Origen origen, boolean visible) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.categoria = categoria;
+        this.ubicacion = ubicacion;
+        this.fechaAcontecimiento = fechaAcontecimiento;
+        this.fechaCarga = fechaCarga;
+        this.origen = origen;
+        this.visible = visible;
+    }
+
     public void ocultarHecho() {
         this.visible = false;
     }

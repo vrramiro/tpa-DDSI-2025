@@ -14,4 +14,6 @@ public class UsuarioRegistrado {
         this.apellido = apellido;
         this.edad = edad;
     }
+
+
 }
