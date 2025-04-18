@@ -2,7 +2,7 @@
 'https://plantuml.com/class-diagram
 
 FuenteEstatica --> Hecho
-Coleccion ..> FuenteEstatica
+Coleccion --> Fuente
 Coleccion o--> Hecho
 Hecho --> Categoria
 Hecho --> Origen
@@ -10,8 +10,7 @@ Hecho --> Contribuyente
 UsuarioRegistrado ..|> Contribuyente
 Administrador ..|> Contribuyente
 Administrador --> Coleccion
-SolicitudDeEliminacion --> Hecho
-SolicitudDeEliminacion --> EstadoSolicitud
+SolicitudDeEliminacion *-- Hecho
 Administrador -> SolicitudDeEliminacion
 UsuarioRegistrado -> SolicitudDeEliminacion
 ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
@@ -22,6 +21,11 @@ CriterioPorCategoria ..> CriterioDePertenencia
 CriterioPorUbicacion ..> CriterioDePertenencia
 Hecho --> Ubicacion
 Hecho--> Etiqueta
+FuenteEstatica ..> Fuente
+SolicitudDeEliminacion --> EstadoDeSolicitud
+HechosEliminados --> Hecho
+SolicitudDeEliminacion --> HechosEliminados
+
 
 
 
