@@ -23,6 +23,23 @@ CriterioPorUbicacion ..> CriterioDePertenencia
 Hecho --> Ubicacion
 Hecho--> Etiqueta
 
+
+
+'--------- File: Contenido ---------
+class Coleccion {
+    - titulo: String
+    - descripcion: String
+    - hechos : List<Hecho>
+    - fuenteDeHechos : Fuente
+    - criteriosDePertenencia : List<CriterioDePertenencia>
+
+    + cargarHechos() : void
+}
+
+class Etiqueta {
+    - nombre: String
+}
+
 class Hecho {
     - titulo: String
     - descripcion: String
@@ -36,15 +53,9 @@ class Hecho {
     - visible: Bool
 }
 
-class Etiqueta {
-    - nombre: String
-}
-
-class Ubicacion{
-    - nombreLugar: String
-    - descripcion: String
-    - longitud: Int
-    - latitud: Int
+class HechosEliminados {
+   - hechosEliminados: List<Hecho>
+   + agregarHecho(Hecho hechoEliminado): void
 }
 
 'Enum porque no tiene comportamiento, y necesitamos evitar inconsistencia
@@ -53,91 +64,99 @@ enum Origen {
     CONTRIBUYENTE
 }
 
+class Ubicacion{
+    - latitud: Int
+    - longitud: Int
+    - lugar: String
+}
+
+
+'--------- File: Criterio ---------
+
 'Por consistencia de datos
 class Categoria {
     - nombre: String
 }
 
-class SolicitudDeEliminacion {
-    - texto: String
-    - hechoAEliminar: Hecho
-
-    + aceptar(): void
-    + rechazar(): void
-}
-
-enum EstadoSolicitud {
-    RECHAZADA
-    ACEPTADA
-    PENDIENTE
-}
-
-interface Fuente {
-    + obtenerHechos(File unArchivo): Hecho
-}
-
-class FuenteEstatica {
-    + obtenerHechos(File unArchivo): Hecho
-}
-
-class Coleccion {
-    - titulo: String
-    - descripcion: String
-    - hechos : List<Hecho>
-    - fuenteDeHechos : Fuente
-    - criteriosDePertenencia : List<CriterioDePertenencia>
-
-    + cargarHechos() : void
-}
-
-'VER
 interface CriterioDePertenencia {
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
-}
-
-class CriterioPorFecha {
-    - fechaACumplir: LocalDateTime
-
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorCategoria {
     - categoriaACumplir: Categoria
 
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+class CriterioPorFecha {
+    - fechaACumplir: LocalDateTime
+
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorUbicacion {
     - ubicacion: Ubicacion
 
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
-interface Contribuyente {
-    + subirHecho()
+
+'--------- File: Fuente ---------
+
+interface Fuente {
+    + obtenerHechos():  List<Hecho>
 }
 
-class Administrador {
-    -nombre: String
-}
+class FuenteEstatica {
+    - importadorDeArchivos: ImportadorDeArchivos
+    - archivoDeHechos: File
 
-class Visualizador {
-
-}
-
-class UsuarioRegistrado {
-    -nombre: String
-    -apellido: String
-    -edad: int
-
+    + obtenerHechos(): List<Hecho>
 }
 
 interface ImportadorDeArchivos {
-    + importarHechos(File unArchivo): Hecho
+    + importarHechos(File unArchivo): List<Hecho>
 }
 
 class ImportadorDeArchivosCSV {
-     + importarHechos(File unArchivo): Hecho
+     + importarHechos(File unArchivo): List<Hecho>
+}
+
+
+'--------- File: Solicitud ---------
+
+enum EstadoDeSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
+}
+
+class SolicitudDeEliminacion {
+    - hecho: Hecho
+    - descripcion: String
+    - estadoDeSolicitud: EstadoDeSolicitud
+    - fechaDeCreacion: DateTime
+
+    + aceptarSolicitud(): void
+    + rechazarSolicitud(): void
+}
+
+
+'--------- File: Usuario ---------
+
+class Administrador {
+}
+
+interface Contribuyente {
+}
+
+class UsuarioRegistrado {
+    - nombre: String
+    - apellido: String
+    - edad: int
+}
+
+class Visualizador {
 }
 
 @enduml

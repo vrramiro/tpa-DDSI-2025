@@ -9,11 +9,9 @@ import java.util.stream.Collectors;
 public class Coleccion {
     private String titulo;
     private String descripcion;
-    private Fuente fuenteDeOrigen;
     private List<Hecho> hechos;
+    private Fuente fuenteDeOrigen;
     private List<CriterioDePertenecia> criteriosDePertenecias;
-
-
 
     public void cargarHechos() {
         this.hechos = fuenteDeOrigen

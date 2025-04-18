@@ -13,4 +13,8 @@ public class HechosEliminados {
         hechosEliminados.add(hechoEliminado);
     }
 
+    public static Boolean noContiene(Hecho unHecho) {
+        return !hechosEliminados.contains(unHecho);
+    }
+
 }

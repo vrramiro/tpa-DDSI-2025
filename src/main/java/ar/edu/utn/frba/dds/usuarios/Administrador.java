@@ -9,17 +9,4 @@ public class Administrador extends UsuarioRegistrado {
     public Administrador(String nombre, String apellido, int edad) {
         super(nombre, apellido, edad);
     }
-
-    public void aprobarHecho(Hecho hecho) {
-        //TODO
-    }
-
-    public void aceptarSolicitud(/*solicitud*/) {
-        //TODO
-    }
-
-    public void crearColeccion() {
-        //TODO
-    }
-
 }

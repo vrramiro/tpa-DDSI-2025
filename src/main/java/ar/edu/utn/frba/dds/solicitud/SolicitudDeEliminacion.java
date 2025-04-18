@@ -1,6 +1,7 @@
 package ar.edu.utn.frba.dds.solicitud;
 
 import ar.edu.utn.frba.dds.contenido.Hecho;
+import ar.edu.utn.frba.dds.contenido.HechosEliminados;
 
 import java.time.LocalDateTime;
 
@@ -9,7 +10,6 @@ public class SolicitudDeEliminacion {
     private String descripcion;
     private EstadoDeSolicitud estadoDeSolicitud;
     private LocalDateTime fechaDeCreacion;
-
 
     public SolicitudDeEliminacion(Hecho hecho, String descripcion) {
         this.hecho = hecho;
@@ -20,8 +20,8 @@ public class SolicitudDeEliminacion {
 
     public void aceptarSolicitud() {
        estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
-       this.hecho.ocultarHecho();
-
+       this.hecho.setVisible(false);
+       HechosEliminados.agregarHecho(hecho);
     }
 
     public void rechazarSolicitud() {

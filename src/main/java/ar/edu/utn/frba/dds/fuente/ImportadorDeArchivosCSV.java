@@ -1,5 +1,6 @@
 package ar.edu.utn.frba.dds.fuente;
 
+import ar.edu.utn.frba.dds.contenido.Etiqueta;
 import ar.edu.utn.frba.dds.contenido.Hecho;
 import ar.edu.utn.frba.dds.criterio.Categoria;
 import ar.edu.utn.frba.dds.contenido.Ubicacion;
@@ -45,8 +46,10 @@ public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
 
                 Ubicacion ubicacion = new Ubicacion("Lugar no especificado", latitud, longitud);
 
+                List<Etiqueta> etiquetas = new ArrayList<>(); //por ahora la lista comienza vacia y en el proceso de etiquetado se van agregando
+
                 Hecho hecho = new Hecho(
-                        titulo, descripcion, categoria, ubicacion, fechaHecho, fechaCarga, Origen.ARCHIVO, true
+                        titulo, descripcion, categoria, ubicacion, fechaHecho, fechaCarga, Origen.ARCHIVO, etiquetas, true
                 );
 
                 if (!HechosEliminados.getHechosEliminados().contains(hecho)) {
