@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.criterio.CriterioDePertenecia;
 import ar.edu.utn.frba.dds.fuente.Fuente;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Coleccion {
     private String titulo;
@@ -12,8 +13,16 @@ public class Coleccion {
     private List<Hecho> hechos;
     private List<CriterioDePertenecia> criteriosDePertenecias;
 
-    public void cargarHechos() {
 
+
+    public void cargarHechos() {
+        this.hechos = fuenteDeOrigen
+                .obtenerHechos()
+                .stream()
+                .filter(hecho -> criteriosDePertenecias
+                        .stream()
+                        .allMatch(criterio -> criterio.hechoLoCumple(hecho)))
+                .collect(Collectors.toList());
     }
 
 }

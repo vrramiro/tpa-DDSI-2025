@@ -11,6 +11,7 @@ UsuarioRegistrado ..|> Contribuyente
 Administrador ..|> Contribuyente
 Administrador --> Coleccion
 SolicitudDeEliminacion --> Hecho
+SolicitudDeEliminacion --> EstadoSolicitud
 Administrador -> SolicitudDeEliminacion
 UsuarioRegistrado -> SolicitudDeEliminacion
 ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
@@ -62,6 +63,13 @@ class SolicitudDeEliminacion {
     - hechoAEliminar: Hecho
 
     + aceptar(): void
+    + rechazar(): void
+}
+
+enum EstadoSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
 }
 
 interface Fuente {

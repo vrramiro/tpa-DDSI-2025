@@ -6,5 +6,5 @@ import java.io.File;
 import java.util.List;
 
 public interface Fuente {
-    public List<Hecho> obtenerHechos(File archivo);
+    public List<Hecho> obtenerHechos();
 }

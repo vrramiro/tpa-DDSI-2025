@@ -1,6 +1,8 @@
 package ar.edu.utn.frba.dds.contenido;
 
 import ar.edu.utn.frba.dds.criterio.Categoria;
+import ar.edu.utn.frba.dds.contenido.HechosEliminados;
+
 import java.time.LocalDateTime;
 
 public class Hecho {
@@ -28,5 +30,6 @@ public class Hecho {
 
     public void ocultarHecho() {
         this.visible = false;
+        HechosEliminados.agregarHecho(this);
     }
 }

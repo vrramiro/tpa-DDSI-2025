@@ -4,6 +4,7 @@ import ar.edu.utn.frba.dds.contenido.Hecho;
 import ar.edu.utn.frba.dds.criterio.Categoria;
 import ar.edu.utn.frba.dds.contenido.Ubicacion;
 import ar.edu.utn.frba.dds.contenido.Origen;
+import ar.edu.utn.frba.dds.contenido.HechosEliminados;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,7 +49,10 @@ public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
                         titulo, descripcion, categoria, ubicacion, fechaHecho, fechaCarga, Origen.ARCHIVO, true
                 );
 
-                hechos.add(hecho);
+                if (!HechosEliminados.getHechosEliminados().contains(hecho)) {
+                    hechos.add(hecho);
+                }
+
             }
 
             lector.close();

@@ -3,6 +3,7 @@ package ar.edu.utn.frba.dds.contenido;
 public class Ubicacion {
     private double latitud;
     private double longitud;
+    @lombok.Getter
     private String lugar;
 
     public Ubicacion(String lugar, double latitud, double longitud) {
@@ -10,5 +11,11 @@ public class Ubicacion {
         this.latitud = latitud;
         this.longitud = longitud;
     }
+
+    public Ubicacion(double latitud, double longitud) {
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
+
 
 }
