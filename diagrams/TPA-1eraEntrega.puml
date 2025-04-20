@@ -1,49 +1,43 @@
 @startuml
-'https://plantuml.com/class-diagram
+' Diseño del sistema de hechos y colecciones
 
-FuenteEstatica --> Hecho
-Coleccion --> Fuente
-Coleccion o--> Hecho
-Hecho --> Categoria
-Hecho --> Origen
-Hecho --> Contribuyente
+'================== ENUMS ==================
+enum Origen {
+    ARCHIVO
+    CONTRIBUYENTE
+}
+
+enum EstadoDeSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
+}
+
+'================== INTERFACES ==================
+interface Contribuyente
+interface Fuente {
+    + obtenerHechos(): List<Hecho>
+}
+interface ImportadorDeArchivos {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+interface CriterioDePertenencia {
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+'================== USUARIOS ==================
+class UsuarioRegistrado {
+    - nombre: String
+    - apellido: String
+    - edad: int
+}
+class Administrador
+class Visualizador
+
 UsuarioRegistrado ..|> Contribuyente
 Administrador ..|> Contribuyente
-Administrador --> Coleccion
-SolicitudDeEliminacion *-- Hecho
-Administrador -> SolicitudDeEliminacion
-UsuarioRegistrado -> SolicitudDeEliminacion
-ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
-FuenteEstatica --> ImportadorDeArchivos
-Coleccion --> CriterioDePertenencia
-CriterioPorFecha ..> CriterioDePertenencia
-CriterioPorCategoria ..> CriterioDePertenencia
-CriterioPorUbicacion ..> CriterioDePertenencia
-Hecho --> Ubicacion
-Hecho--> Etiqueta
-FuenteEstatica ..> Fuente
-SolicitudDeEliminacion --> EstadoDeSolicitud
-HechosEliminados --> Hecho
-SolicitudDeEliminacion --> HechosEliminados
 
-
-
-
-'--------- File: Contenido ---------
-class Coleccion {
-    - titulo: String
-    - descripcion: String
-    - hechos : List<Hecho>
-    - fuenteDeHechos : Fuente
-    - criteriosDePertenencia : List<CriterioDePertenencia>
-
-    + cargarHechos() : void
-}
-
-class Etiqueta {
-    - nombre: String
-}
-
+'================== HECHOS ==================
 class Hecho {
     - titulo: String
     - descripcion: String
@@ -57,111 +51,96 @@ class Hecho {
     - visible: Bool
 }
 
-class HechosEliminados {
-   - hechosEliminados: List<Hecho>
-   + agregarHecho(Hecho hechoEliminado): void
-}
-
-'Enum porque no tiene comportamiento, y necesitamos evitar inconsistencia
-enum Origen {
-    ARCHIVO
-    CONTRIBUYENTE
-}
-
-class Ubicacion{
+class Ubicacion {
     - latitud: Int
     - longitud: Int
     - lugar: String
 }
 
-
-'--------- File: Criterio ---------
-
-'Por consistencia de datos
 class Categoria {
     - nombre: String
 }
 
-interface CriterioDePertenencia {
-    + hechoLoCumple(Hecho unoHecho): bool
+class Etiqueta {
+    - nombre: String
 }
 
+class HechosEliminados {
+    - hechosEliminados: List<Hecho>
+    + agregarHecho(Hecho hechoEliminado): void
+}
+
+'================== COLECCIÓN ==================
+class Coleccion {
+    - titulo: String
+    - descripcion: String
+    - hechos : List<Hecho>
+    - fuenteDeHechos : Fuente
+    - criteriosDePertenencia : List<CriterioDePertenencia>
+    + cargarHechos() : void
+}
+
+Administrador --> Coleccion
+Coleccion --> Fuente
+Coleccion o--> Hecho
+Coleccion --> CriterioDePertenencia
+
+'================== FUENTES ==================
+class FuenteEstatica {
+    - importadorDeArchivos: ImportadorDeArchivos
+    - archivoDeHechos: File
+    + obtenerHechos(): List<Hecho>
+}
+FuenteEstatica ..> Fuente
+FuenteEstatica --> ImportadorDeArchivos
+
+class ImportadorDeArchivosCSV {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
+
+'================== CRITERIOS ==================
 class CriterioPorCategoria {
     - categoriaACumplir: Categoria
-
     + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorFecha {
     - fechaACumplir: LocalDateTime
-
     + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorUbicacion {
     - ubicacion: Ubicacion
-
     + hechoLoCumple(Hecho unoHecho): bool
 }
 
+CriterioPorCategoria ..> CriterioDePertenencia
+CriterioPorFecha ..> CriterioDePertenencia
+CriterioPorUbicacion ..> CriterioDePertenencia
 
-'--------- File: Fuente ---------
-
-interface Fuente {
-    + obtenerHechos():  List<Hecho>
-}
-
-class FuenteEstatica {
-    - importadorDeArchivos: ImportadorDeArchivos
-    - archivoDeHechos: File
-
-    + obtenerHechos(): List<Hecho>
-}
-
-interface ImportadorDeArchivos {
-    + importarHechos(File unArchivo): List<Hecho>
-}
-
-class ImportadorDeArchivosCSV {
-     + importarHechos(File unArchivo): List<Hecho>
-}
-
-
-'--------- File: Solicitud ---------
-
-enum EstadoDeSolicitud {
-    RECHAZADA
-    ACEPTADA
-    PENDIENTE
-}
-
+'================== SOLICITUDES ==================
 class SolicitudDeEliminacion {
     - hecho: Hecho
     - descripcion: String
     - estadoDeSolicitud: EstadoDeSolicitud
     - fechaDeCreacion: DateTime
-
     + aceptarSolicitud(): void
     + rechazarSolicitud(): void
 }
 
+SolicitudDeEliminacion *-- Hecho
+SolicitudDeEliminacion --> EstadoDeSolicitud
+SolicitudDeEliminacion --> HechosEliminados
+Administrador -> SolicitudDeEliminacion
+UsuarioRegistrado -> SolicitudDeEliminacion
 
-'--------- File: Usuario ---------
-
-class Administrador {
-}
-
-interface Contribuyente {
-}
-
-class UsuarioRegistrado {
-    - nombre: String
-    - apellido: String
-    - edad: int
-}
-
-class Visualizador {
-}
+'================== RELACIONES ==================
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> Contribuyente
+Hecho --> Ubicacion
+Hecho --> Etiqueta
 
 @enduml
 
