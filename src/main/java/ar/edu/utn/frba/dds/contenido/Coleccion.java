@@ -37,8 +37,9 @@ public class Coleccion {
 
 
     public List<Hecho> aplicarFiltros(Etiqueta ... etiquetas) {
-        return hechos
-            .stream().filter(hecho ->
+        return this.hechos
+            .stream()
+            .filter(hecho ->
                 List.of(etiquetas)
                     .stream().allMatch(etiqueta -> hecho.tieneEtiqueta(etiqueta))
             )

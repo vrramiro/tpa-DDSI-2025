@@ -58,6 +58,6 @@ public class SolicitudDeEliminacionTest {
 
     assertEquals(EstadoDeSolicitud.ACEPTADA, solicitud.getEstadoDeSolicitud());
     assertFalse(hecho.isVisible());
-    assertTrue(HechosEliminados.getHechosEliminados().contains(hecho));
+    assertFalse(HechosEliminados.noContiene(hecho));
   }
 }

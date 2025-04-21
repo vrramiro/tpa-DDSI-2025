@@ -16,7 +16,7 @@ public class FuenteEstaticaTest {
 
   @Test
   public void seImportanCorrectamenteLosHechosDesdeUnCSV() {
-    File archivo = new File("src/test/resources/desastres_tecnologicos_argentina.csv"); // Asegurate de ponerlo ahí
+    File archivo = new File("src/utils/datasets/desastres_tecnologicos_argentina.csv"); // Asegurate de ponerlo ahí
     ImportadorDeArchivos importador = new ImportadorDeArchivosCSV();
     Fuente fuente = new FuenteEstatica(importador, archivo);
 

@@ -7,63 +7,65 @@ import ar.edu.utn.frba.dds.contenido.Ubicacion;
 import ar.edu.utn.frba.dds.contenido.Origen;
 import ar.edu.utn.frba.dds.contenido.HechosEliminados;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+
 
 public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
     @Override
     public List<Hecho> importarHechos(File archivo) {
-        List<Hecho> hechos = new ArrayList<>();
+        List<Hecho> hechos = new java.util.ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        //LEO ARCHIVO CSV
-        try {
-            BufferedReader lector = new BufferedReader(new FileReader(archivo));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), StandardCharsets.UTF_8))) {
             String linea;
+            boolean esPrimeraLinea = true;
 
-            lector.readLine(); //Salta el encabezado
-            while ((linea = lector.readLine()) != null) {
-                String[] campos = linea.split(",");
+            while ((linea = reader.readLine()) != null) {
+                if (esPrimeraLinea) {
+                    esPrimeraLinea = false; // saltar encabezado
+                    continue;
+                }
+
+                String[] campos = linea.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+
+                if (campos.length < 6) {
+                    System.err.println("Línea inválida (faltan campos): " + linea);
+                    continue;
+                }
 
                 String titulo = campos[0].trim();
-                String descripcion = campos[1].trim();
-                Categoria categoria = new Categoria(campos[2].trim());
-
+                String descripcion = campos[1].replaceAll("^\"|\"$", "").trim();
+                String nombreCategoria = campos[2].trim();
                 double latitud = Double.parseDouble(campos[3].trim());
                 double longitud = Double.parseDouble(campos[4].trim());
+                LocalDate fecha = LocalDate.parse(campos[5].trim(), formatter);
 
-                // Fecha en formato dd/MM/yyyy
-                String[] partesFecha = campos[5].trim().split("/");
-                int dia = Integer.parseInt(partesFecha[0]);
-                int mes = Integer.parseInt(partesFecha[1]);
-                int anio = Integer.parseInt(partesFecha[2]);
-
-                LocalDateTime fechaHecho = LocalDateTime.of(anio, mes, dia, 0, 0);
+                Categoria categoria = new Categoria(nombreCategoria);
+                Ubicacion ubicacion = new Ubicacion(latitud, longitud);
+                LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
                 LocalDateTime fechaCarga = LocalDateTime.now();
+                Origen origen = Origen.ARCHIVO;
+                List<Etiqueta> etiquetas = Collections.emptyList(); // si después las cargás por otro lado
+                boolean visible = true;
 
-                Ubicacion ubicacion = new Ubicacion("Lugar no especificado", latitud, longitud);
-
-                List<Etiqueta> etiquetas = new ArrayList<>(); //por ahora la lista comienza vacia y en el proceso de etiquetado se van agregando
-
-                Hecho hecho = new Hecho(
-                        titulo, descripcion, categoria, ubicacion, fechaHecho, fechaCarga, Origen.ARCHIVO, etiquetas, true
-                );
+                Hecho hecho = new Hecho(titulo, descripcion, categoria, ubicacion,
+                    fechaAcontecimiento, fechaCarga, origen, etiquetas, visible);
 
                 if (!HechosEliminados.getHechosEliminados().contains(hecho)) {
                     hechos.add(hecho);
                 }
-
             }
 
-            lector.close();
-
         } catch (Exception e) {
-            System.out.println("Error al importar hechos: " + e.getMessage());
+            System.err.println("Error al importar hechos: " + e.getMessage());
+            e.printStackTrace();
         }
-
         return hechos;
     }
 }
