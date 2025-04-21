@@ -1,5 +1,10 @@
+package ar.edu.utn.frba.dds.fuente;
 
 import ar.edu.utn.frba.dds.contenido.Hecho;
+import ar.edu.utn.frba.dds.fuente.Fuente;
+import ar.edu.utn.frba.dds.fuente.FuenteEstatica;
+import ar.edu.utn.frba.dds.fuente.ImportadorDeArchivos;
+import ar.edu.utn.frba.dds.fuente.ImportadorDeArchivosCSV;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -23,6 +28,7 @@ public class FuenteEstaticaTest {
 
     // Verificar que al menos uno tenga datos válidos
     Hecho primerHecho = hechos.get(0);
+
     assertNotNull(primerHecho.getTitulo(), "El hecho debería tener título.");
     assertNotNull(primerHecho.getUbicacion(), "El hecho debería tener ubicación.");
     assertTrue(primerHecho.getFechaAcontecimiento().getYear() > 1900, "La fecha del hecho debería ser válida.");

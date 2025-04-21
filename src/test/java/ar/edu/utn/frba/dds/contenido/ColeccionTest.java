@@ -8,6 +8,7 @@ import ar.edu.utn.frba.dds.fuente.Fuente;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
@@ -38,11 +39,7 @@ class ColeccionTest {
     // Mock de fuente que devuelve estos hechos
     fuenteMock = () -> hechosDePrueba;
 
-    coleccion = new Coleccion();
-    coleccion.setTitulo("Colección prueba");
-    coleccion.setDescripcion("Esto es una prueba");
-    coleccion.setFuenteDeOrigen(fuenteMock);
-    coleccion.setCriteriosDePertenecias(new ArrayList<>());
+    coleccion = new Coleccion("Colección prueba", "Esto es una prueba", fuenteMock, new ArrayList<CriterioDePertenecia>());
   }
 
   @Test
@@ -51,11 +48,14 @@ class ColeccionTest {
     assertEquals(5, coleccion.getHechos().size());
   }
 
+
   @Test
   public void testCargarHechosConCriterioFecha() {
-    coleccion.getCriteriosDePertenecias().add(new CriterioPorFecha(
-        LocalDateTime.of(2000, 1, 1, 0, 0),
-        LocalDateTime.of(2010, 1, 1, 0, 0)));
+    coleccion.addCriterioDePertenencia(new CriterioPorFecha(
+            LocalDate.of(2000, 1, 1),
+            LocalDate.of(2010, 1, 1)
+            )
+    );
 
     coleccion.cargarHechos();
     assertEquals(3, coleccion.getHechos().size());
@@ -63,12 +63,15 @@ class ColeccionTest {
 
   @Test
   public void testCargarHechosConCriterioFechaYCategoria() {
-    coleccion.getCriteriosDePertenecias().add(new CriterioPorFecha(
-        LocalDateTime.of(2000, 1, 1, 0, 0),
-        LocalDateTime.of(2010, 1, 1, 0, 0)));
-    coleccion.getCriteriosDePertenecias().add(new CriterioPorCategoria(categoriaAeronave));
+    coleccion.addCriterioDePertenencia(new CriterioPorFecha(
+        LocalDate.of(2000, 1, 1),
+        LocalDate.of(2010, 1, 1)
+        )
+    );
 
+    coleccion.addCriterioDePertenencia(new CriterioPorCategoria(categoriaAeronave));
     coleccion.cargarHechos();
+
     assertEquals(2, coleccion.getHechos().size());
   }
 
@@ -86,10 +89,12 @@ class ColeccionTest {
   @Test
   public void testEtiquetadoDeHecho() {
     Hecho hecho = hechosDePrueba.get(0); // Olavarría
+
     hecho.getEtiquetas().add(new Etiqueta("Olavarría"));
     hecho.getEtiquetas().add(new Etiqueta("Grave"));
 
     List<String> nombresEtiquetas = hecho.getEtiquetas().stream().map(Etiqueta::getNombre).toList();
+
     assertTrue(nombresEtiquetas.contains("Olavarría"));
     assertTrue(nombresEtiquetas.contains("Grave"));
     assertEquals(2, nombresEtiquetas.size());
@@ -104,7 +109,7 @@ class ColeccionTest {
         new Ubicacion(0.0, 0.0),
         fecha,
         LocalDateTime.now(),
-        new Origen("Fuente test"),
+        Origen.ARCHIVO,
         new ArrayList<>(),
         true
     );

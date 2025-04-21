@@ -1,7 +1,6 @@
 package ar.edu.utn.frba.dds.contenido;
 
 import ar.edu.utn.frba.dds.criterio.Categoria;
-import ar.edu.utn.frba.dds.contenido.HechosEliminados;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import java.util.List;
 
 @Getter
 @Setter
-
 public class Hecho {
     private String titulo;
     private String descripcion;
@@ -19,7 +17,7 @@ public class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen origen;
-    @Getter private List<Etiqueta> etiquetas;
+    private List<Etiqueta> etiquetas;
     private boolean visible;
 
 
@@ -34,5 +32,9 @@ public class Hecho {
         this.origen = origen;
         this.etiquetas = etiquetas;
         this.visible = visible;
+    }
+
+    public boolean tieneEtiqueta(Etiqueta etiqueta) {
+        return this.etiquetas.stream().anyMatch(unaEtiqueta -> unaEtiqueta.getNombre().equalsIgnoreCase(String.valueOf(etiqueta)));
     }
 }

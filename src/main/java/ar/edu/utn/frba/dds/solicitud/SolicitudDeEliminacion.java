@@ -2,8 +2,13 @@ package ar.edu.utn.frba.dds.solicitud;
 
 import ar.edu.utn.frba.dds.contenido.Hecho;
 import ar.edu.utn.frba.dds.contenido.HechosEliminados;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+
+@Getter
+@Setter
 
 public class SolicitudDeEliminacion {
     private Hecho hecho;
