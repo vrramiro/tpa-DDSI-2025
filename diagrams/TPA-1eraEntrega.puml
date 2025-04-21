@@ -82,8 +82,8 @@ class Coleccion {
 
 Administrador --> Coleccion
 Coleccion --> Fuente
-Coleccion o--> Hecho
-Coleccion --> CriterioDePertenencia
+Coleccion o-- Hecho
+Coleccion ----> CriterioDePertenencia
 
 '================== FUENTES ==================
 class FuenteEstatica {
