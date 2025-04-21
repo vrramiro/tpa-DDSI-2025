@@ -35,6 +35,6 @@ public class Hecho {
     }
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {
-        return this.etiquetas.stream().anyMatch(unaEtiqueta -> unaEtiqueta.getNombre().equalsIgnoreCase(String.valueOf(etiqueta)));
+        return this.etiquetas.contains(etiqueta);
     }
 }

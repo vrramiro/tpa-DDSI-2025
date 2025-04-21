@@ -17,7 +17,7 @@ public class FuenteEstatica implements Fuente {
     }
 
     public List<Hecho> obtenerHechos() {
-        //solo devuelve hechos que NO esten eliminados
+        // Solo devuelve hechos que NO esten eliminados
         return importadorDeArchivos
             .importarHechos(this.archivoDeHechos)
             .stream()
