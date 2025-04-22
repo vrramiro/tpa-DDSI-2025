@@ -91,7 +91,7 @@ class FuenteEstatica {
     - archivoDeHechos: File
     + obtenerHechos(): List<Hecho>
 }
-FuenteEstatica ..> Fuente
+FuenteEstatica ..|> Fuente
 FuenteEstatica --> ImportadorDeArchivos
 
 class ImportadorDeArchivosCSV {
@@ -115,9 +115,9 @@ class CriterioPorUbicacion {
     + hechoLoCumple(Hecho unoHecho): bool
 }
 
-CriterioPorCategoria ..> CriterioDePertenencia
-CriterioPorFecha ..> CriterioDePertenencia
-CriterioPorUbicacion ..> CriterioDePertenencia
+CriterioPorCategoria ..|> CriterioDePertenencia
+CriterioPorFecha ..|> CriterioDePertenencia
+CriterioPorUbicacion ..|> CriterioDePertenencia
 
 '================== SOLICITUDES ==================
 class SolicitudDeEliminacion {
