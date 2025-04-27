@@ -2,7 +2,7 @@ package ar.edu.utn.frba.dds.contenido;
 
 import ar.edu.utn.frba.dds.criterio.CriterioDePertenecia;
 
-import ar.edu.utn.frba.dds.fuente.Fuente;
+import ar.edu.utn.frba.dds.fuente.FuenteEstatica;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +15,10 @@ public class Coleccion {
     private String titulo;
     private String descripcion;
     private List<Hecho> hechos;
-    private Fuente fuenteDeOrigen;
+    private FuenteEstatica fuenteDeOrigen;
     private List<CriterioDePertenecia> criteriosDePertenecias;
 
-    public Coleccion(String titulo, String descripcion, Fuente fuenteDeOrigen, List<CriterioDePertenecia> criteriosDePertenecias) {
+    public Coleccion(String titulo, String descripcion, FuenteEstatica fuenteDeOrigen, List<CriterioDePertenecia> criteriosDePertenecias) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.fuenteDeOrigen = fuenteDeOrigen;

@@ -1,9 +1,8 @@
 package ar.edu.utn.frba.dds.contenido;
 
 import static org.junit.jupiter.api.Assertions.*;
-import ar.edu.utn.frba.dds.contenido.*;
+
 import ar.edu.utn.frba.dds.criterio.*;
-import ar.edu.utn.frba.dds.fuente.Fuente;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,12 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ColeccionTest {
   private Coleccion coleccion;
   private List<Hecho> hechosDePrueba;
-  private Fuente fuenteMock;
+  private FuenteEstatica fuenteMock;
 
   private Categoria categoriaAeronave = new Categoria("Caída de aeronave");
   private Categoria categoriaMaquinaria = new Categoria("Accidente con maquinaria industrial");

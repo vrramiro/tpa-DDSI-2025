@@ -1,10 +1,6 @@
 package ar.edu.utn.frba.dds.fuente;
 
 import ar.edu.utn.frba.dds.contenido.Hecho;
-import ar.edu.utn.frba.dds.fuente.Fuente;
-import ar.edu.utn.frba.dds.fuente.FuenteEstatica;
-import ar.edu.utn.frba.dds.fuente.ImportadorDeArchivos;
-import ar.edu.utn.frba.dds.fuente.ImportadorDeArchivosCSV;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -18,7 +14,7 @@ public class FuenteEstaticaTest {
   public void seImportanCorrectamenteLosHechosDesdeUnCSV() {
     File archivo = new File("src/utils/datasets/desastres_tecnologicos_argentina.csv"); // Asegurate de ponerlo ahí
     ImportadorDeArchivos importador = new ImportadorDeArchivosCSV();
-    Fuente fuente = new FuenteEstatica(importador, archivo);
+    FuenteEstatica fuente = new FuenteEstatica(importador, archivo);
 
     List<Hecho> hechos = fuente.obtenerHechos();
 

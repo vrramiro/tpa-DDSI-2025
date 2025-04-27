@@ -17,6 +17,8 @@ import java.util.List;
 
 
 public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
+    private Integer cantHechosMinimos = 10000;
+
     @Override
     public List<Hecho> importarHechos(File archivo) {
         List<Hecho> hechos = new java.util.ArrayList<>();
@@ -46,6 +48,8 @@ public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
                 double longitud = Double.parseDouble(campos[4].trim());
                 LocalDate fecha = LocalDate.parse(campos[5].trim(), formatter);
 
+                //TODO: DIVIDIR A PARTIR DE ACA
+
                 Categoria categoria = new Categoria(nombreCategoria);
                 Ubicacion ubicacion = new Ubicacion(latitud, longitud);
                 LocalDateTime fechaAcontecimiento = fecha.atStartOfDay();
@@ -54,8 +58,7 @@ public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
                 List<Etiqueta> etiquetas = Collections.emptyList(); // si después las cargás por otro lado
                 boolean visible = true;
 
-                Hecho hecho = new Hecho(titulo, descripcion, categoria, ubicacion,
-                    fechaAcontecimiento, fechaCarga, origen, etiquetas, visible);
+                Hecho hecho = new Hecho(titulo, descripcion, categoria, ubicacion, fechaAcontecimiento);
 
                 if (!HechosEliminados.getHechosEliminados().contains(hecho)) {
                     hechos.add(hecho);
@@ -66,6 +69,17 @@ public class ImportadorDeArchivosCSV implements ImportadorDeArchivos{
             System.err.println("Error al importar hechos: " + e.getMessage());
             e.printStackTrace();
         }
-        return hechos;
+
+      return evaluarCantidadHechos(hechos);
+    }
+
+    private List<Hecho> evaluarCantidadHechos(List<Hecho> hechos) {
+        if (hechos.size() >= this.cantHechosMinimos) {
+            return hechos;
+        } else {
+            throw new IllegalArgumentException("La fuent no tiene hechos suficientes.");
+        }
     }
 }
+
+

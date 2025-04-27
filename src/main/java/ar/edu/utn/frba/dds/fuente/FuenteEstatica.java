@@ -7,9 +7,10 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FuenteEstatica implements Fuente {
+public class FuenteEstatica {
     private ImportadorDeArchivos importadorDeArchivos;
     private File archivoDeHechos;
+
 
     public FuenteEstatica(ImportadorDeArchivos importadorDeArchivos, File archivoDeHechos) {
         this.importadorDeArchivos = importadorDeArchivos;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -20,18 +21,14 @@ public class Hecho {
     private List<Etiqueta> etiquetas;
     private boolean visible;
 
-
     public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
-                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, Origen origen, List<Etiqueta> etiquetas, boolean visible) {
+                 LocalDateTime fechaAcontecimiento) {
         this.titulo = titulo;
         this.descripcion = descripcion;
         this.categoria = categoria;
         this.ubicacion = ubicacion;
         this.fechaAcontecimiento = fechaAcontecimiento;
-        this.fechaCarga = fechaCarga;
-        this.origen = origen;
-        this.etiquetas = etiquetas;
-        this.visible = visible;
+        this.etiquetas = new ArrayList<Etiqueta>();
     }
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {
