@@ -18,27 +18,28 @@ public class SolicitudDeEliminacion {
     private LocalDateTime fechaDeCreacion;
     private LocalDateTime fechaDeEvaluacion;
     private Administrador administradorQueEvaluo;
-    private static Integer cantidadMinimaCaracteres;
 
     public SolicitudDeEliminacion(Hecho hecho, String descripcion) {
         this.hecho = hecho;
         this.descripcion = descripcion;
         this.estadoDeSolicitud = EstadoDeSolicitud.PENDIENTE;
         this.fechaDeCreacion = LocalDateTime.now();
-        this.cantidadMinimaCaracteres = 500;
     }
 
     public void aceptarSolicitud() {
-        if(descripcion.length() > cantidadMinimaCaracteres) {
-            estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
-            this.hecho.setVisible(false);
-            this.fechaDeEvaluacion = LocalDateTime.now();
-            HechosEliminados.agregarHecho(hecho);
-            setAdministradorQueEvaluo(administradorQueEvaluo);
-        } else rechazarSolicitud();
+        estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
+        this.hecho.setVisible(false);
+        this.fechaDeEvaluacion = LocalDateTime.now();
+        HechosEliminados.agregarHecho(hecho);
+        setAdministradorQueEvaluo(administradorQueEvaluo);
     }
 
     public void rechazarSolicitud() {
         estadoDeSolicitud = EstadoDeSolicitud.RECHAZADA;
+    }
+
+    public SolicitudDeEliminacion crearSolicitud(Hecho hecho, String descripcion) {
+        ValidadorSolicitud.validarSolicitud(descripcion);
+        return new SolicitudDeEliminacion(hecho, descripcion);
     }
 }
