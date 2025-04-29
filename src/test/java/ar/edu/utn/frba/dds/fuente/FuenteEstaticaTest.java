@@ -13,7 +13,7 @@ public class FuenteEstaticaTest {
   @Test
   public void seImportanCorrectamenteLosHechosDesdeUnCSV() {
     File archivo = new File("src/utils/datasets/desastres_tecnologicos_argentina.csv"); // Asegurate de ponerlo ahí
-    ImportadorDeArchivos importador = new LectorDeArchivosCSV();
+    LectorDeArchivos importador = new LectorDeArchivosCSV();
     FuenteEstatica fuente = new FuenteEstatica(importador, archivo);
 
     List<Hecho> hechos = fuente.obtenerHechos();

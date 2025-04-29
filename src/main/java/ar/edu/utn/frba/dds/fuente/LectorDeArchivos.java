@@ -5,6 +5,6 @@ import ar.edu.utn.frba.dds.contenido.Hecho;
 import java.io.File;
 import java.util.List;
 
-public interface ImportadorDeArchivos {
+public interface LectorDeArchivos {
     public List<Hecho> importarHechos(File archivo);
 }

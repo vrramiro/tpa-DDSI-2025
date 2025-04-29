@@ -1,19 +1,16 @@
 package ar.edu.utn.frba.dds.fuente;
 
 import ar.edu.utn.frba.dds.contenido.*;
-import ar.edu.utn.frba.dds.criterio.Categoria;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
-public class LectorDeArchivosCSV implements ImportadorDeArchivos {
+public class LectorDeArchivosCSV implements LectorDeArchivos {
 
     private HechoFactory hechoFactory;
 
