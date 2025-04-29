@@ -6,6 +6,7 @@ import ar.edu.utn.frba.dds.fuente.FuenteEstatica;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class Coleccion {
         this.descripcion = descripcion;
         this.fuenteDeOrigen = fuenteDeOrigen;
         this.criteriosDePertenecias = criteriosDePertenecias;
+        this.hechos = new ArrayList<>();
     }
 
     public void cargarHechos() {
