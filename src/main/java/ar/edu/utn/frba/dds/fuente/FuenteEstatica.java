@@ -11,7 +11,6 @@ public class FuenteEstatica {
     private LectorDeArchivos lectorDeArchivos;
     private File archivoDeHechos;
 
-
     public FuenteEstatica(LectorDeArchivos lectorDeArchivos, File archivoDeHechos) {
         this.lectorDeArchivos = lectorDeArchivos;
         this.archivoDeHechos = archivoDeHechos;

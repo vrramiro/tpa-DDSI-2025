@@ -37,18 +37,6 @@ public class Coleccion {
                 .collect(Collectors.toList());
     }
 
-
-    public List<Hecho> aplicarFiltros(Etiqueta ... etiquetas) {
-        return this.hechos
-            .stream()
-            .filter(hecho ->
-                List.of(etiquetas)
-                    .stream().allMatch(etiqueta -> hecho.tieneEtiqueta(etiqueta))
-            )
-            .collect(Collectors.toList());
-    }
-
-
     public void addCriterioDePertenencia(CriterioDePertenecia nuevoCriterio) {
         this.criteriosDePertenecias.add(nuevoCriterio);
     }

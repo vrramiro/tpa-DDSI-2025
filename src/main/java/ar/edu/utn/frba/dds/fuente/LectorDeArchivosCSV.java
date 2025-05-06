@@ -4,25 +4,23 @@ import ar.edu.utn.frba.dds.contenido.*;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class LectorDeArchivosCSV implements LectorDeArchivos {
-
     private HechoFactory hechoFactory;
 
     @Override
     public List<Hecho> importarHechos(File archivo) {
         List<Hecho> hechos = new ArrayList<>();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), StandardCharsets.UTF_8))) {
             String linea;
             boolean esPrimeraLinea = true;
-
 
             while ((linea = reader.readLine()) != null) {
                 if (esPrimeraLinea) {
@@ -30,27 +28,17 @@ public class LectorDeArchivosCSV implements LectorDeArchivos {
                     continue;
                 }
 
-                String[] campos = linea.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
+                Hecho hechoObtenido = hechoFactory.crearHecho(linea);
 
-                if (campos.length < 6) {
-                    System.err.println("Línea inválida (faltan campos): " + linea);
-                    continue;
+                if (hechoObtenido == null){
+                    throw new RuntimeException("No se pudo obtener el hecho, faltan campos.");
                 }
 
-                String tituloLeida = campos[0].trim();
-                String descripcionLeida = campos[1].replaceAll("^\"|\"$", "").trim();
-                String categoriaLeida = campos[2].trim();
-                double latitudLeida = Double.parseDouble(campos[3].trim());
-                double longitudLeida = Double.parseDouble(campos[4].trim());
-                LocalDate fechaLeida = LocalDate.parse(campos[5].trim(), formatter);
-
-                Hecho hecho = hechoFactory.crearHecho(tituloLeida, descripcionLeida, categoriaLeida, latitudLeida, longitudLeida, fechaLeida);
-
-                if (!HechosEliminados.getHechosEliminados().contains(hecho)) {
-                    hechos.add(hecho);
+                if (!HechosEliminados.noContiene(hechoObtenido)) {
+                    hechos.removeIf(hecho -> hecho.getTitulo().equals(hechoObtenido.getTitulo()));
+                    hechos.add(hechoObtenido);
                 }
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
