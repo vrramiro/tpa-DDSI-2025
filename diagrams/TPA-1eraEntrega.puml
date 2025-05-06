@@ -14,28 +14,13 @@ enum EstadoDeSolicitud {
 }
 
 '================== INTERFACES ==================
-interface Contribuyente
-interface Fuente {
-    + obtenerHechos(): List<Hecho>
-}
+
 interface ImportadorDeArchivos {
     + importarHechos(File unArchivo): List<Hecho>
 }
 interface CriterioDePertenencia {
     + hechoLoCumple(Hecho unoHecho): bool
 }
-
-'================== USUARIOS ==================
-class UsuarioRegistrado {
-    - nombre: String
-    - apellido: String
-    - edad: int
-}
-class Administrador
-class Visualizador
-
-UsuarioRegistrado ..|> Contribuyente
-Administrador ..|> Contribuyente
 
 '================== HECHOS ==================
 class Hecho {
@@ -80,9 +65,8 @@ class Coleccion {
     + cargarHechos() : void
 }
 
-Administrador --> Coleccion
-Coleccion --> Fuente
 Coleccion o-- Hecho
+Coleccion --> FuenteEstatica
 Coleccion ----> CriterioDePertenencia
 
 '================== FUENTES ==================
@@ -91,7 +75,7 @@ class FuenteEstatica {
     - archivoDeHechos: File
     + obtenerHechos(): List<Hecho>
 }
-FuenteEstatica ..|> Fuente
+
 FuenteEstatica --> ImportadorDeArchivos
 
 class ImportadorDeArchivosCSV {
@@ -132,8 +116,6 @@ class SolicitudDeEliminacion {
 SolicitudDeEliminacion *-- Hecho
 SolicitudDeEliminacion --> EstadoDeSolicitud
 SolicitudDeEliminacion --> HechosEliminados
-Administrador -> SolicitudDeEliminacion
-UsuarioRegistrado -> SolicitudDeEliminacion
 
 '================== RELACIONES ==================
 Hecho --> Categoria

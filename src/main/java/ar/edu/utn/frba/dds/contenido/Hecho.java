@@ -1,14 +1,17 @@
 package ar.edu.utn.frba.dds.contenido;
 
 import ar.edu.utn.frba.dds.criterio.Categoria;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 public class Hecho {
     private String titulo;
     private String descripcion;
@@ -20,21 +23,15 @@ public class Hecho {
     private List<Etiqueta> etiquetas;
     private boolean visible;
 
-
-    public Hecho(String titulo, String descripcion, Categoria categoria, Ubicacion ubicacion,
-                 LocalDateTime fechaAcontecimiento, LocalDateTime fechaCarga, Origen origen, List<Etiqueta> etiquetas, boolean visible) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.categoria = categoria;
-        this.ubicacion = ubicacion;
-        this.fechaAcontecimiento = fechaAcontecimiento;
-        this.fechaCarga = fechaCarga;
-        this.origen = origen;
-        this.etiquetas = etiquetas;
-        this.visible = visible;
+    public Hecho() {
+        this.etiquetas = new ArrayList<Etiqueta>();
     }
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {
         return this.etiquetas.contains(etiqueta);
+    }
+
+    public void addEtiqueta(Etiqueta etiqueta) {
+        this.etiquetas.add(etiqueta);
     }
 }

@@ -7,18 +7,18 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FuenteEstatica implements Fuente {
-    private ImportadorDeArchivos importadorDeArchivos;
+public class FuenteEstatica {
+    private LectorDeArchivos lectorDeArchivos;
     private File archivoDeHechos;
 
-    public FuenteEstatica(ImportadorDeArchivos importadorDeArchivos, File archivoDeHechos) {
-        this.importadorDeArchivos = importadorDeArchivos;
+    public FuenteEstatica(LectorDeArchivos lectorDeArchivos, File archivoDeHechos) {
+        this.lectorDeArchivos = lectorDeArchivos;
         this.archivoDeHechos = archivoDeHechos;
     }
 
     public List<Hecho> obtenerHechos() {
         // Solo devuelve hechos que NO esten eliminados
-        return importadorDeArchivos
+        return lectorDeArchivos
             .importarHechos(this.archivoDeHechos)
             .stream()
             .filter(hecho -> HechosEliminados.noContiene(hecho))
