@@ -1,9 +1,7 @@
 package ar.utn.ba.dsi.MetaMap.modelos.entidades.contenido;
 
 import ar.utn.ba.dsi.MetaMap.modelos.entidades.criterio.Categoria;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,8 +9,10 @@ import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @Builder
 public class Hecho {
+    private Long id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
