@@ -8,11 +8,11 @@
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>MetaMap</groupId>
-	<artifactId>ModuloFuenteEstatica</artifactId>
+	<groupId>ar.utn.dssi</groupId>
+	<artifactId>FuenteEstatica</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ModuloFuenteEstatica</name>
-	<description>modulo fuente estatica</description>
+	<name>FuenteEstatica</name>
+	<description>Componente Fuente Estatica del sistema MetaMap</description>
 	<url/>
 	<licenses>
 		<license/>

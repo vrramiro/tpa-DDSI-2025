@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>ar.utn.dssi</groupId>
-	<artifactId>FuenteDinamica</artifactId>
+	<artifactId>Agregador</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>FuenteDinamica</name>
-	<description>Componente Fuente Dinamica del sistema MetaMap</description>
+	<name>Agregador</name>
+	<description>Componente Servicio Agregador del sistema MetaMap</description>
 	<url/>
 	<licenses>
 		<license/>
