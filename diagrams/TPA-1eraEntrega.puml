@@ -1,26 +1,28 @@
 @startuml
-'https://plantuml.com/class-diagram
+' Diseño del sistema de hechos y colecciones
 
-FuenteEstatica --> Hecho
-Coleccion ..> FuenteEstatica
-Coleccion o--> Hecho
-Hecho --> Categoria
-Hecho --> Origen
-Hecho --> Contribuyente
-UsuarioRegistrado ..|> Contribuyente
-Administrador ..|> Contribuyente
-Administrador --> Coleccion
-SolicitudDeEliminacion --> Hecho
-Administrador -> SolicitudDeEliminacion
-UsuarioRegistrado -> SolicitudDeEliminacion
-ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
-FuenteEstatica --> ImportadorDeArchivos
-Coleccion --> CriterioDePertenencia
-CriterioPorFecha ..> CriterioDePertenencia
-CriterioPorCategoria ..> CriterioDePertenencia
-CriterioPorUbicacion ..> CriterioDePertenencia
-Hecho --> Ubicacion
+'================== ENUMS ==================
+enum Origen {
+    ARCHIVO
+    CONTRIBUYENTE
+}
 
+enum EstadoDeSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
+}
+
+'================== INTERFACES ==================
+
+interface ImportadorDeArchivos {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+interface CriterioDePertenencia {
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+'================== HECHOS ==================
 class Hecho {
     - titulo: String
     - descripcion: String
@@ -30,101 +32,97 @@ class Hecho {
     - fechaDeAcontecimiento: DateTime
     - fechaDeCarga: DateTime
     - origen: Origen
+    - etiquetas: List<Etiqueta>
     - visible: Bool
 }
 
-class Ubicacion{
-    - nombreLugar: String
-    - descripcion: String
-    - longitud: Int
+class Ubicacion {
     - latitud: Int
+    - longitud: Int
+    - lugar: String
 }
 
-'Enum porque no tiene comportamiento, y necesitamos evitar inconsistencia
-enum Origen {
-    ARCHIVO
-    CONTRIBUYENTE
-}
-
-'Por consistencia de datos
 class Categoria {
     - nombre: String
 }
 
-class SolicitudDeEliminacion {
-    - texto: String
-    - hechoAEliminar: Hecho
-
-    + aceptar(): void
+class Etiqueta {
+    - nombre: String
 }
 
-interface Fuente {
-    + obtenerHechos(File unArchivo): Hecho
+class HechosEliminados {
+    - hechosEliminados: List<Hecho>
+    + agregarHecho(Hecho hechoEliminado): void
 }
 
-class FuenteEstatica {
-    + obtenerHechos(File unArchivo): Hecho
-}
-
+'================== COLECCIÓN ==================
 class Coleccion {
     - titulo: String
     - descripcion: String
     - hechos : List<Hecho>
     - fuenteDeHechos : Fuente
     - criteriosDePertenencia : List<CriterioDePertenencia>
-
     + cargarHechos() : void
 }
 
-'VER
-interface CriterioDePertenencia {
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+Coleccion o-- Hecho
+Coleccion --> FuenteEstatica
+Coleccion ----> CriterioDePertenencia
+
+'================== FUENTES ==================
+class FuenteEstatica {
+    - importadorDeArchivos: ImportadorDeArchivos
+    - archivoDeHechos: File
+    + obtenerHechos(): List<Hecho>
+}
+
+FuenteEstatica --> ImportadorDeArchivos
+
+class ImportadorDeArchivosCSV {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
+
+'================== CRITERIOS ==================
+class CriterioPorCategoria {
+    - categoriaACumplir: Categoria
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorFecha {
     - fechaACumplir: LocalDateTime
-
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
-}
-
-class CriterioPorCategoria {
-    - categoriaACumplir: Categoria
-
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
 class CriterioPorUbicacion {
     - ubicacion: Ubicacion
-
-    + hechosQueLoCumplen(List<Hecho> unosHechos): List<Hecho> otrosHechos
+    + hechoLoCumple(Hecho unoHecho): bool
 }
 
-interface Contribuyente {
-    + subirHecho()
+CriterioPorCategoria ..|> CriterioDePertenencia
+CriterioPorFecha ..|> CriterioDePertenencia
+CriterioPorUbicacion ..|> CriterioDePertenencia
+
+'================== SOLICITUDES ==================
+class SolicitudDeEliminacion {
+    - hecho: Hecho
+    - descripcion: String
+    - estadoDeSolicitud: EstadoDeSolicitud
+    - fechaDeCreacion: DateTime
+    + aceptarSolicitud(): void
+    + rechazarSolicitud(): void
 }
 
-class Administrador {
-    -nombre: String
-}
+SolicitudDeEliminacion *-- Hecho
+SolicitudDeEliminacion --> EstadoDeSolicitud
+SolicitudDeEliminacion --> HechosEliminados
 
-class Visualizador {
-
-}
-
-class UsuarioRegistrado {
-    -nombre: String
-    -apellido: String
-    -edad: int
-
-}
-
-interface ImportadorDeArchivos {
-    + importarHechos(File unArchivo): Hecho
-}
-
-class ImportadorDeArchivosCSV {
-     + importarHechos(File unArchivo): Hecho
-}
+'================== RELACIONES ==================
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> Contribuyente
+Hecho --> Ubicacion
+Hecho --> Etiqueta
 
 @enduml
 

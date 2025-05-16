@@ -1,55 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.4.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-
-	<groupId>ar.utb.ba.dsi</groupId>
-
-	<artifactId>MetaMap</artifactId>
-
+	<groupId>ar.utn.dssi</groupId>
+	<artifactId>Agregador</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-
-	<name>MetaMap</name>
-
-	<description>Proyecto disenio de sistemas de informacion utn 2025, Grupo numero 1</description>
-
+	<name>Agregador</name>
+	<description>Componente Servicio Agregador del sistema MetaMap</description>
 	<url/>
-
 	<licenses>
 		<license/>
 	</licenses>
-
 	<developers>
 		<developer/>
 	</developers>
-
 	<scm>
 		<connection/>
 		<developerConnection/>
 		<tag/>
 		<url/>
 	</scm>
-
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-
-	<modules>
-		<module>Agregador</module>
-		<module>FuenteDinamica</module>
-		<module>FuenteEstatica</module>
-		<module>FuenteProxy</module>
-	</modules>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -64,21 +43,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-testcontainers</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.testcontainers</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
