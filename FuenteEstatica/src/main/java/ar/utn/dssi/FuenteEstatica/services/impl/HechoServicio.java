@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.io.File;
 
 @Service
 public class HechoServicio implements IHechoServicio {
@@ -16,9 +17,12 @@ public class HechoServicio implements IHechoServicio {
     private IHechosRepositorio hechoRepositorio;
 
     @Override
-    public List<Hecho> extraerHechos() {
+    public List<Hecho> extraerHechos(File archivo) {
         //TODO: Se extrae hecho del archivo y carga en el repositorio (Nico)
-        return List.of();
+        ILectorDeArchivos lectorDeArchivos = FactoryLectorArchivos.crearProducto(archivo);
+        List<Hecho> hechos = lectorDeArchivos.importarHechos(archivo);
+        hechoRepositorio.save(hechos)
+        return
     }
 
     @Override
