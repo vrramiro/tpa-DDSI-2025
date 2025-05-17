@@ -5,6 +5,6 @@ import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import java.util.List;
 
 public interface IHechosRepositorio {
-    public void save();
+    public void save(List<Hecho> hechos);
     public List<Hecho> findAll();
 }

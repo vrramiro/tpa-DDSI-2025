@@ -3,6 +3,8 @@ package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.LectorDeArchivos;
+import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
