@@ -7,6 +7,6 @@ import java.util.List;
 import java.io.File;
 
 public interface IHechoServicio {
-   void extraerHechos(File archivo);
+    List<HechoOutputDTO> extraerHechos(File archivo);
     List<HechoOutputDTO> obtenerHechos();
 }
