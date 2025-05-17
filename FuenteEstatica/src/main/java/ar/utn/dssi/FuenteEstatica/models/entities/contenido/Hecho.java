@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @Builder
 public class Hecho {
+    private Long id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
