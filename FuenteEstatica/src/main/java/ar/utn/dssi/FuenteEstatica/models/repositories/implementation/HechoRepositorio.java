@@ -13,9 +13,7 @@ public class HechoRepositorio implements IHechosRepositorio {
 
     @Override
     public void save(List<Hecho> hechosImportados) {
-        if (hechosImportados.size() >= 10000){ //TODO el if deberia ser un try catch en el servise
-            hechos.addAll(hechosImportados);
-        }
+        hechos.addAll(hechosImportados);
     }
 
     @Override

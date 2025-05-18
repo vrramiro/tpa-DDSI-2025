@@ -9,6 +9,7 @@ import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class HechoServicio implements IHechoServicio {
     @Autowired
     private IHechosRepositorio hechoRepositorio;
 
+    @Value("${cantidadMinimaDeHechos}")
+    private Integer cantidadMinimaDeHechos;
+
     @Override
     //TODO ver si hay que devolver una lista o nada
     public List<HechoOutputDTO> extraerHechos(File archivo) {
@@ -29,7 +33,14 @@ public class HechoServicio implements IHechoServicio {
         List<HechoOutputDTO> hechosDTO = hechos.stream()
                                                 .map(this :: hechoOutputDTO)
                                                 .toList();
-        hechoRepositorio.save(hechos);
+
+        if(hechos.size() >= cantidadMinimaDeHechos){
+            hechoRepositorio.save(hechos);
+        }
+        else{
+            throw new RuntimeException("El archivo no cumple con la cantidad de minima de hechos.");
+        }
+
         return hechosDTO;
     }
 
