@@ -49,8 +49,7 @@ public class HechoServicio implements IHechoServicio {
     }
 
     private  HechoOutputDTO hechoOutputDTO(Hecho hecho) {
-        HechoOutputDTO hechoOutputDTO = new HechoOutputDTO();
-        hechoOutputDTO.setId(hecho.getId());
+        var hechoOutputDTO = new HechoOutputDTO();
         hechoOutputDTO.setTitulo(hecho.getTitulo());
         hechoOutputDTO.setDescripcion(hecho.getDescripcion());
         hechoOutputDTO.setIdCategoria(hecho.getCategoria().getIdCategoria());
