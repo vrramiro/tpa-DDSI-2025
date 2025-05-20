@@ -25,14 +25,9 @@ public class HechoServicio implements IHechoServicio {
     private Integer cantidadMinimaDeHechos;
 
     @Override
-    //TODO ver si hay que devolver una lista o nada
-    public List<HechoOutputDTO> extraerHechos(File archivo) {
-        //TODO: Se extrae hecho del archivo y carga en el repositorio (Nico)
+    public void importarArchivo(File archivo) {
         ILectorDeArchivos lectorDeArchivos = FactoryLector.crearLector(archivo);
         List<Hecho> hechos = lectorDeArchivos.importarHechos(archivo);
-        List<HechoOutputDTO> hechosDTO = hechos.stream()
-                                                .map(this :: hechoOutputDTO)
-                                                .toList();
 
         if(hechos.size() >= cantidadMinimaDeHechos){
             hechoRepositorio.save(hechos);
@@ -40,8 +35,6 @@ public class HechoServicio implements IHechoServicio {
         else{
             throw new RuntimeException("El archivo no cumple con la cantidad de minima de hechos.");
         }
-
-        return hechosDTO;
     }
 
     @Override
@@ -60,7 +53,7 @@ public class HechoServicio implements IHechoServicio {
         hechoOutputDTO.setId(hecho.getId());
         hechoOutputDTO.setTitulo(hecho.getTitulo());
         hechoOutputDTO.setDescripcion(hecho.getDescripcion());
-        // TODO hechoOutputDTO.setIdCategoria(hecho.getCategoria());
+        hechoOutputDTO.setIdCategoria(hecho.getCategoria().getIdCategoria());
         hechoOutputDTO.setUbicacion(hecho.getUbicacion());
         hechoOutputDTO.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         hechoOutputDTO.setFechaCarga(hecho.getFechaCarga());

@@ -8,10 +8,9 @@ import lombok.Setter;
 
 public class Categoria {
     private String nombre;
+    private Long idCategoria;
 
     public Categoria(String nombre) {
         this.nombre = nombre;
     }
-
-    //TODO
 }
