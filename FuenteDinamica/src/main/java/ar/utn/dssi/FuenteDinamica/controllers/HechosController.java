@@ -25,7 +25,7 @@ public class HechosController {
     return null;
   }
 
-  @GetMapping("/obtener")
+  @GetMapping
   public List<HechoOutputDTO> obtenerHechos() {
     return this.hechosService.obtenerHechos();
   }
