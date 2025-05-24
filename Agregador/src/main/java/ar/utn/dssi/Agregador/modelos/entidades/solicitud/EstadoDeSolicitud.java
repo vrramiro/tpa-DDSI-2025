@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.modelos.entidades;
+package ar.utn.dssi.Agregador.modelos.entidades.solicitud;
 
 public enum EstadoDeSolicitud {
     PENDIENTE,

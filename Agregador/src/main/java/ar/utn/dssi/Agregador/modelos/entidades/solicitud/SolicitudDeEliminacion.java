@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.modelos.entidades;
+package ar.utn.dssi.Agregador.modelos.entidades.solicitud;
 
 import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
 import lombok.Getter;

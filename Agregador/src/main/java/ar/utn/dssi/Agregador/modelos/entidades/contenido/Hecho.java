@@ -24,7 +24,8 @@ public class Hecho {
     private boolean visible;
 
     public Hecho() {
-        this.etiquetas = new ArrayList<Etiqueta>();    }
+        this.etiquetas = new ArrayList<Etiqueta>();
+    }
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {
         return this.etiquetas.contains(etiqueta);
