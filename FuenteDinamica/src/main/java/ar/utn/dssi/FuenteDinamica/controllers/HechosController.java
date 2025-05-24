@@ -1,5 +1,6 @@
 package ar.utn.dssi.FuenteDinamica.controllers;
 
+import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
@@ -20,9 +21,8 @@ public class HechosController {
   private IHechosService hechosService;
 
   @PostMapping("/crear")
-  public HechoOutputDTO crearHecho(@RequestBody Hecho hecho) {
-    //TODO: desarrollar
-    return null;
+  public void crearHecho(@RequestBody HechoInputDTO hecho) {
+    this.hechosService.crear(hecho);
   }
 
   @GetMapping
@@ -30,3 +30,10 @@ public class HechosController {
     return this.hechosService.obtenerHechos();
   }
 }
+
+
+
+
+
+
+

@@ -11,13 +11,14 @@ import java.util.List;
 @Setter
 @Builder
 public class Hecho {
-    private Long Id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
+
+    private Long IdHecho;
     private Origen origen;
     private List<Etiqueta> etiquetas;
     private boolean visible;

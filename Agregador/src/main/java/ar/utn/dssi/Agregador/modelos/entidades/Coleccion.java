@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.modelos.entidades.contenido;
+package ar.utn.dssi.Agregador.modelos.entidades;
 
 import ar.utn.dssi.Agregador.modelos.entidades.criterio.CriterioDePertenencia;
 
@@ -9,16 +9,11 @@ import lombok.Getter;
 @Setter
 @Getter
 public class Coleccion {
-    private String idColeccion; //para que sea alfanumerico
+    private long idColeccion;
     private String titulo;
     private String descripcion;
     private List<CriterioDePertenencia> criteriosDePertenecias;
-
-    public Coleccion(String titulo, String descripcion, List<CriterioDePertenencia> criteriosDePertenecias) {
-        this.titulo = titulo;
-        this.descripcion = descripcion;
-        this.criteriosDePertenecias = criteriosDePertenecias;
-    }
+    private String handle;
 
     public void addCriterioDePertenencia(CriterioDePertenencia nuevoCriterio) {
         this.criteriosDePertenecias.add(nuevoCriterio);

@@ -48,5 +48,4 @@ public class HechosService implements IHechosService {
 
         return dtoHecho;
     }
-
 }

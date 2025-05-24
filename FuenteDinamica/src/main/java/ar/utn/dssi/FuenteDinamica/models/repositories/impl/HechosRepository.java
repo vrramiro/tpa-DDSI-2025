@@ -21,7 +21,6 @@ public class HechosRepository implements IHechosRepository {
 
   @Override
   public Hecho save(Hecho hecho) {
-    hecho.setIdHecho((long) this.hechos.size());
     this.hechos.add(hecho);
 
     return hecho;

@@ -21,19 +21,18 @@ public class HechosService implements IHechosService {
   @Autowired
   private ICategoriasRepository categoriasRepository;
 
-  //TODO: logica de servicio
   public List<HechoOutputDTO> obtenerHechos() {
     try {
-      return this.hechosRepository
-              .findall()
-              .stream()
+      var hechos = this.hechosRepository.findall();
+      if (hechos.isEmpty()) {
+        throw new RuntimeException("No hay hechos en la base de datos");
+      }
+      return hechos.stream()
               .map(this::hechoOutputDTO)
               .toList();
     } catch (Exception e) {
-
+      throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
     }
-
-    return null; //TODO
   }
 
   @Override
@@ -56,7 +55,6 @@ public class HechosService implements IHechosService {
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
 
-    //ya esta seteado el id
     hecho = this.hechosRepository.save(hecho);
 
     return this.hechoOutputDTO(hecho);
@@ -66,7 +64,6 @@ public class HechosService implements IHechosService {
   public HechoOutputDTO hechoOutputDTO(Hecho hecho){
     var dtoHecho = new HechoOutputDTO();
 
-    dtoHecho.setIdHecho(hecho.getIdHecho());
     dtoHecho.setTitulo(hecho.getTitulo());
     dtoHecho.setDescripcion(hecho.getDescripcion());
     dtoHecho.setCategoria(hecho.getCategoria());

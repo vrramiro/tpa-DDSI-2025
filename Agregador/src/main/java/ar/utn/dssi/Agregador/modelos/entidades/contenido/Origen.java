@@ -1,7 +1,7 @@
 package ar.utn.dssi.Agregador.modelos.entidades.contenido;
 
 public enum Origen {
-    ARCHIVO,
-    CONTRIBUYENTE,
-    MANUAL
+    FUENTE_ESTATICA,
+    FUENTE_DINAMICA,
+    FUENTE_PROXY
 }

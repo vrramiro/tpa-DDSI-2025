@@ -1,5 +1,6 @@
-package ar.utn.dssi.Agregador.modelos.entidades.contenido;
+package ar.utn.dssi.Agregador.modelos.entidades;
 
+import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
 import lombok.Getter;
 import lombok.Setter;
 

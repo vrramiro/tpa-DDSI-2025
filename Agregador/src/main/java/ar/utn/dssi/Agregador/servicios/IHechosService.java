@@ -7,7 +7,5 @@ import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
 import java.util.List;
 
 public interface IHechosService {
-    public List<HechoOutputDTO> obtenerHechos();
-    public List<HechoOutputDTO> importarHechos();
-    public HechoOutputDTO hechoOutputDTO(Hecho hecho);
+
 }
