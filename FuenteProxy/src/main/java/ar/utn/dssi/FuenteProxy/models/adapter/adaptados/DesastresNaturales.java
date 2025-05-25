@@ -1,7 +1,6 @@
 package ar.utn.dssi.FuenteProxy.models.adapter.adaptados;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import lombok.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;
 
