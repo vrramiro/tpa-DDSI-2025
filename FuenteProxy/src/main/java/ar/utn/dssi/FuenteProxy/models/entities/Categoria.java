@@ -1,4 +1,5 @@
 package ar.utn.dssi.FuenteProxy.models.entities;
 
 public class Categoria {
+  private String nombre;
 }
