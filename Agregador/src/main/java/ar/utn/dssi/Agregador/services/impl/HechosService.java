@@ -64,7 +64,7 @@ public class HechosService implements IHechosService {
         return hecho;
     }
 
-    private HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
+    public HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
         var dtoHecho = new HechoOutputDTO();
 
         dtoHecho.setTitulo(hecho.getTitulo());
