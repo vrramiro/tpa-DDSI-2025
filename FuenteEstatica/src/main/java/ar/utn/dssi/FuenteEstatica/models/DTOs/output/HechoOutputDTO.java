@@ -1,5 +1,6 @@
 package ar.utn.dssi.FuenteEstatica.models.DTOs.output;
 
+import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Origen;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Ubicacion;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,5 @@ public class HechoOutputDTO {
     private Ubicacion ubicacion;  //TODO: consultar si podemos enviar datos de tipo
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
+    private Origen origen;
 }

@@ -1,11 +1,11 @@
-package ar.utn.dssi.Agregador.modelos.entidades.criterio.impl;
+package ar.utn.dssi.Agregador.models.entities.criterio.impl;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
-import ar.utn.dssi.Agregador.modelos.entidades.criterio.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
 
 import java.time.LocalDate;
 
-public class CriterioPorFecha implements CriterioDePertenencia {
+public class CriterioPorFecha implements ICriterioDePertenencia {
     private LocalDate fechaDesde;
     private LocalDate fechaHasta;
 

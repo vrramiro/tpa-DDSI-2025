@@ -19,6 +19,7 @@ public class Hecho {
   private Ubicacion ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
+  private Origen origen;
 
 
   //TODO: Gestionar si el usuario que lo cargo es registrado o no =>

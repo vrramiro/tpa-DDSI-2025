@@ -1,8 +1,7 @@
-package ar.utn.dssi.Agregador.modelos.entidades.contenido;
-
-import ar.utn.dssi.Agregador.modelos.entidades.criterio.CriterioDePertenencia;
+package ar.utn.dssi.Agregador.models.entities.content;
 
 import java.util.List;
+import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
 import lombok.Setter;
 import lombok.Getter;
 
@@ -12,15 +11,14 @@ public class Coleccion {
     private List<Hecho> hechos;
     private String titulo;
     private String descripcion;
-    private List<CriterioDePertenencia> criteriosDePertenecias;
+    private List<ICriterioDePertenencia> criteriosDePertenecias;
     private String handle;      // identificador textual único que se utiliza para distinguirla dentro del sistema
 
     public Coleccion() {
         this.hechos = new java.util.ArrayList<>();
     }
 
-    public void addCriterioDePertenencia(CriterioDePertenencia nuevoCriterio) {
+    public void addCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio) {
         this.criteriosDePertenecias.add(nuevoCriterio);
     }
-
 }

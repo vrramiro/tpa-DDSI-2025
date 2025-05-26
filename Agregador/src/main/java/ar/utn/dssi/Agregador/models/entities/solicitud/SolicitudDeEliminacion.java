@@ -1,11 +1,12 @@
-package ar.utn.dssi.Agregador.modelos.entidades.solicitud;
+package ar.utn.dssi.Agregador.models.entities.solicitud;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
 @Getter
 public class SolicitudDeEliminacion {
     private Hecho hecho;
@@ -13,34 +14,10 @@ public class SolicitudDeEliminacion {
     private EstadoDeSolicitud estadoDeSolicitud;
     private LocalDateTime fechaDeCreacion;
     private LocalDateTime fechaDeEvaluacion;
-    @Setter
-    private Administrador administradorQueEvaluo; //TODO
+    private boolean esSpam;
+    private Long idSolicitud;
 
+    @Getter
     private static Integer caracteresMinimos = 500;
-
-    public SolicitudDeEliminacion(Hecho hecho, String descripcion) {
-        this.hecho = hecho;
-        setDescripcion(descripcion);
-        this.estadoDeSolicitud = EstadoDeSolicitud.PENDIENTE;
-        this.fechaDeCreacion = LocalDateTime.now();
-    }
-
-    public void aceptarSolicitud() {
-        estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
-        this.hecho.setVisible(false);
-        this.fechaDeEvaluacion = LocalDateTime.now();
-        HechosEliminados.agregarHecho(hecho);
-        setAdministradorQueEvaluo(administradorQueEvaluo);
-    }
-
-    public void rechazarSolicitud() {
-        estadoDeSolicitud = EstadoDeSolicitud.RECHAZADA;
-    }
-
-    public void setDescripcion(String descripcion) {
-        if (descripcion == null || descripcion.length() < caracteresMinimos) {
-            throw new IllegalArgumentException("La descripción debe tener minimo " + caracteresMinimos );
-        }
-        this.descripcion = descripcion;
-    }
 }
+

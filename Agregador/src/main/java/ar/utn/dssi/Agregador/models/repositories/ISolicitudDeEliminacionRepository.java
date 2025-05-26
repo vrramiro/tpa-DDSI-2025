@@ -1,7 +1,13 @@
-package ar.utn.dssi.Agregador.modelos.repositorio;
+package ar.utn.dssi.Agregador.models.repositories;
 
+import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
 public interface ISolicitudDeEliminacionRepository {
-    public void findAll();
-    public void findById(Long id);
-    public void save();
+    SolicitudDeEliminacion findById(Long id);
+    void save(SolicitudDeEliminacion solicitud);
+    void update (SolicitudDeEliminacion solicitud);
+    List<SolicitudDeEliminacion> findAll();
 }

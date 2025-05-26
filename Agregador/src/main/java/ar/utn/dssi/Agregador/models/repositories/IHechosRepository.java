@@ -1,6 +1,6 @@
-package ar.utn.dssi.Agregador.modelos.repositorio;
+package ar.utn.dssi.Agregador.models.repositories;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,4 +11,5 @@ public interface IHechosRepository {
     public Hecho save(Hecho hecho);
     public List<Hecho> findall();
     public long obtenerUltimoId();
+    public void update(Hecho hecho);
 }

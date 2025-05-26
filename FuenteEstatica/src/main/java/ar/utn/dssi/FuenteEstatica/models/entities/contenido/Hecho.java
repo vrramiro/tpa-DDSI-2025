@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Etiqueta;
+import ar.utn.dssi.Agregador.models.entities.content.Etiqueta;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +26,7 @@ public class Hecho {
 
     public Hecho() {
         this.etiquetas = new ArrayList<Etiqueta>();
-        this.origen = Origen.DATASET;
+        this.origen = Origen.FUENTE_ESTATICA;
     }
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {

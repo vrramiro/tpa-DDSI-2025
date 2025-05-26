@@ -3,6 +3,7 @@ package ar.utn.dssi.FuenteDinamica.services.impl;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
+import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
@@ -54,6 +55,7 @@ public class HechosService implements IHechosService {
     hecho.setFechaCarga(LocalDateTime.now());
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
+    hecho.setOrigen(Origen.FUENTE_DINAMICA);
 
     hecho = this.hechosRepository.save(hecho);
 

@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteDinamica.models.DTOs.outputs;
 
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
+import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import lombok.Data;
 
@@ -16,4 +17,5 @@ public class HechoOutputDTO {
   private Ubicacion ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
+  private Origen origen;
 }

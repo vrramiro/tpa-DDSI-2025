@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.controlador;
+package ar.utn.dssi.Agregador.controller;
 
-public class AgregadorControlador {
+public class AgregadorController {
 }

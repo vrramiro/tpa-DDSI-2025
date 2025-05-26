@@ -1,10 +1,10 @@
-package ar.utn.dssi.Agregador.modelos.entidades.criterio.impl;
+package ar.utn.dssi.Agregador.models.entities.criterio.impl;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Categoria;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
-import ar.utn.dssi.Agregador.modelos.entidades.criterio.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.content.Categoria;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
 
-public class CriterioPorCategoria implements CriterioDePertenencia {
+public class CriterioPorCategoria implements ICriterioDePertenencia {
     private Categoria categoria;
 
     public CriterioPorCategoria(Categoria categoria) {

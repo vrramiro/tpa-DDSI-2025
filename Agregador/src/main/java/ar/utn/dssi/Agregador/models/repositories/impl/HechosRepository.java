@@ -1,7 +1,8 @@
-package ar.utn.dssi.Agregador.modelos.repositorio.impl;
+package ar.utn.dssi.Agregador.models.repositories.impl;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
-import ar.utn.dssi.Agregador.modelos.repositorio.IHechosRepository;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +28,19 @@ public class HechosRepository implements IHechosRepository {
     }
 
     @Override
-    public List<Hecho> findall() {return this.hechos;}
+    public List<Hecho> findall() {
+        return this.hechos;
+    }
 
     @Override
     public long obtenerUltimoId() {
         return this.hechos.size()+1;
+    }
+
+    @Override
+    public void update(Hecho hecho) {
+        hechos.remove(findById(hecho.getIdHecho()));
+        hechos.add(hecho);
     }
 }
 

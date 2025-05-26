@@ -1,9 +1,13 @@
-package ar.utn.dssi.Agregador.servicios;
+package ar.utn.dssi.Agregador.services;
 
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
+import org.springframework.stereotype.Service;
+
+@Service
 public interface ISolicitudDeEliminacionService {
-    public void obtenerSolicitudes();
-    public void obtnerSolicitudPorId(Long idSolicitud);
-    //public void obtenerSolicitudesPorEstado(EstadoDeSolicitud estado);
-    //public void aceptarSolicitud(SolicitudInputDTO solicitud);
-    //public void rechazarSolicitud(SolicitudInputDTO solicitud);
+    void crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion);
+    void aceptarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion);
+    void rechazarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion);
 }

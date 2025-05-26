@@ -1,7 +1,8 @@
-package ar.utn.dssi.Agregador.modelos.DTOs.inputDTO;
+package ar.utn.dssi.Agregador.models.DTOs.inputDTO;
 
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Categoria;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.content.Categoria;
+import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,5 +16,6 @@ public class HechoInputDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
+    private Origen origen;
 }
 
