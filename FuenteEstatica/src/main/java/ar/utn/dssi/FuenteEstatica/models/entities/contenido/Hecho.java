@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 
-import ar.utn.dssi.Agregador.models.entities.Etiqueta;
+import ar.utn.dssi.Agregador.models.entities.content.Etiqueta;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 @Builder
 public class Hecho {
+    private Long id;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
@@ -20,19 +21,5 @@ public class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen origen;
-    private List<Etiqueta> etiquetas;
-    private boolean visible;
-
-    public Hecho() {
-        this.etiquetas = new ArrayList<Etiqueta>();
-        this.origen = Origen.DATASET;
-    }
-
-    public boolean tieneEtiqueta(Etiqueta etiqueta) {
-        return this.etiquetas.contains(etiqueta);
-    }
-
-    public void addEtiqueta(Etiqueta etiqueta) {
-        this.etiquetas.add(etiqueta);
-    }
+    private Boolean enviado;
 }
