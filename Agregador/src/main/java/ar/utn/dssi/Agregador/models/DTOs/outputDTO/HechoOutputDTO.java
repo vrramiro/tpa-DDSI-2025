@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.entities.content.Etiqueta;
 import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,4 +20,5 @@ public class HechoOutputDTO {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private List<Etiqueta> etiquetas;
+    private List<MultipartFile> contenidoMultimedia;
 }

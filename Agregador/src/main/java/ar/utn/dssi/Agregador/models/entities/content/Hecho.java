@@ -3,6 +3,8 @@ package ar.utn.dssi.Agregador.models.entities.content;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public class Hecho {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
+    private List<MultipartFile> contenidoMultimedia;
 
     private Long IdHecho;
     private Origen origen;

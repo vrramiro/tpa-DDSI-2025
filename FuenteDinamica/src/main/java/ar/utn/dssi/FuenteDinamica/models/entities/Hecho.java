@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,8 +21,5 @@ public class Hecho {
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
   private Origen origen;
-
-
-  //TODO: Gestionar si el usuario que lo cargo es registrado o no =>
-  //TODO: Analizar tema contenido multimedia
+  private List<MultipartFile> contenidoMultimedia;
 }

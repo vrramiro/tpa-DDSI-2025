@@ -60,6 +60,7 @@ public class HechosService implements IHechosService {
         hecho.setCategoria(categoria);
         hecho.setOrigen(hechoInputDTO.getOrigen());
         hecho.setVisible(true);
+        hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
 
         return hecho;
     }
@@ -73,6 +74,7 @@ public class HechosService implements IHechosService {
         dtoHecho.setUbicacion(hecho.getUbicacion());
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
+        dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
 
         return dtoHecho;
     }

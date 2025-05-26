@@ -4,6 +4,7 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,4 +19,5 @@ public class HechoOutputDTO {
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
   private Origen origen;
+  private List<MultipartFile> contenidoMultimedia;
 }

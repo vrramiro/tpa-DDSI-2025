@@ -56,6 +56,7 @@ public class HechosService implements IHechosService {
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
     hecho.setOrigen(Origen.FUENTE_DINAMICA);
+    hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
 
     hecho = this.hechosRepository.save(hecho);
 
@@ -72,7 +73,7 @@ public class HechosService implements IHechosService {
     dtoHecho.setUbicacion(hecho.getUbicacion());
     dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
     dtoHecho.setFechaCarga(hecho.getFechaCarga());
-
+    dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
     return dtoHecho;
   }
 }

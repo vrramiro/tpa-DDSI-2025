@@ -4,8 +4,10 @@ import ar.utn.dssi.Agregador.models.entities.content.Categoria;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class HechoInputDTO {
@@ -17,5 +19,6 @@ public class HechoInputDTO {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen origen;
+    private List<MultipartFile> contenidoMultimedia;
 }
 
