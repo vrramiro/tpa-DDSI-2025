@@ -37,7 +37,7 @@ public class FuentesService implements IFuentesService {
             uriBuilder
                 //TODO implementar
                 .path("/fuente/hechos")
-                .queryParam("agregado", false)
+               //.queryParam("enviado", false)
                 .build()
         )
         .retrieve()

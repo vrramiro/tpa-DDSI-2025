@@ -18,4 +18,5 @@ public class HechoOutputDTO {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen origen;
+    private Boolean enviado;
 }

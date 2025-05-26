@@ -21,19 +21,5 @@ public class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private Origen origen;
-    private List<Etiqueta> etiquetas;
-    private boolean visible;
-
-    public Hecho() {
-        this.etiquetas = new ArrayList<Etiqueta>();
-        this.origen = Origen.FUENTE_ESTATICA;
-    }
-
-    public boolean tieneEtiqueta(Etiqueta etiqueta) {
-        return this.etiquetas.contains(etiqueta);
-    }
-
-    public void addEtiqueta(Etiqueta etiqueta) {
-        this.etiquetas.add(etiqueta);
-    }
+    private Boolean enviado;
 }

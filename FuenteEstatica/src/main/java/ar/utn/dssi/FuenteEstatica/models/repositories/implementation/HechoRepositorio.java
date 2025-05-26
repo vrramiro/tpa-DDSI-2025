@@ -21,4 +21,14 @@ public class HechoRepositorio implements IHechosRepositorio {
         return this.hechos;
     }
 
+    @Override
+    public void update(Hecho hecho) {
+        hechos.remove(this.findById(hecho.getId()));
+        hechos.add(hecho);
+    }
+
+    @Override
+    public Hecho findById(Long id) {
+        return this.hechos.stream().filter(hecho -> hecho.getId().equals(id)).findFirst().orElse(null);
+    }
 }

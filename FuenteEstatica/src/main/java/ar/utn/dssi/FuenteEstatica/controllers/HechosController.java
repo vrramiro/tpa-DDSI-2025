@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hecho")
+@RequestMapping("/fuente/hechos")
 
 public class HechosController {
     @Autowired
@@ -24,4 +24,6 @@ public class HechosController {
     public List<HechoOutputDTO> obtenerHecho() {
         return this.hechoServicio.obtenerHechos();
     }
+
+    //TODO implementar endpoin para filtrado de hechos enviados
 }

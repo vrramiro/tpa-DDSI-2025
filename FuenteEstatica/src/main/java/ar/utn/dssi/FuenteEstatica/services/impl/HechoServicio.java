@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteEstatica.services.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
+import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Origen;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
 import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.impl.FactoryLector;
@@ -39,13 +40,20 @@ public class HechoServicio implements IHechoServicio {
 
     @Override
     public List<HechoOutputDTO> obtenerHechos() {
-        //TODO: Obtiene los hechos del repositorio (Nico)
-        //obtengo hechos del repositorio tranformarlos en DTO y mandarlo al controler
-        return this.hechoRepositorio
-                .findAll()
-                .stream()
-                .map(this::hechoOutputDTO)
-                .toList();
+        var hechos = this.hechoRepositorio.findAll();
+
+        var hechosAEnviar = hechos.stream().map(this::hechoOutputDTO).toList();
+
+        var hechosNuevos = hechos.stream().filter(hecho-> hecho.getEnviado().equals(false));
+
+        hechosNuevos.
+                forEach(hecho -> {
+                        hecho.setEnviado(true);
+                        hechoRepositorio.update(hecho);
+                }
+        );
+
+        return hechosAEnviar;
     }
 
     private  HechoOutputDTO hechoOutputDTO(Hecho hecho) {
@@ -56,6 +64,8 @@ public class HechoServicio implements IHechoServicio {
         hechoOutputDTO.setUbicacion(hecho.getUbicacion());
         hechoOutputDTO.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         hechoOutputDTO.setFechaCarga(hecho.getFechaCarga());
+        hecho.setOrigen(Origen.FUENTE_ESTATICA);
+
         return hechoOutputDTO;
     }
 }

@@ -65,4 +65,3 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     solicitudDeEliminacion.setDescripcion(descripcion);
   }
 }
-
