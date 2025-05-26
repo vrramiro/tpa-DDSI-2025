@@ -10,5 +10,6 @@ import java.util.List;
 public interface IHechosService {
     Mono<Void> actualizarHechos();
     void eliminarHecho(Hecho hecho);
-    public Hecho obtenerHechoPorId(Long idHecho);
+    Hecho obtenerHechoPorId(Long idHecho);
+    HechoOutputDTO hechoOutputDTO(Hecho hecho);
 }
