@@ -7,7 +7,6 @@ import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
-import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +45,15 @@ public class ColeccionService implements IColeccionService {
                 .toList();
     }
 
+    //Llega el identificador de la coleccion desde el controller
+    @Override
+    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
+        var coleccion = coleccionRepository.findByHandle(handle);
+        var hechosColeccion = coleccion.getHechos();
+
+        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
+    }
+
     @Override
     public Mono<Void> refrescarColecciones(Hecho hecho){
         return Flux
@@ -69,14 +77,6 @@ public class ColeccionService implements IColeccionService {
             coleccion.getHechos().add(hecho);
             coleccionRepository.update(coleccion);
         }
-    }
-
-    @Override
-    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findByHandle(handle);
-        var hechosColeccion = coleccion.getHechos();
-
-        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
     }
 
     private ColeccionOutputDTO coleccionOutputDTO(Coleccion coleccion) {
