@@ -1,11 +1,11 @@
 package ar.utn.dssi.Agregador.servicios.impl;
 
-import ar.utn.dssi.Agregador.modelos.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.modelos.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.modelos.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Coleccion;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
-import ar.utn.dssi.Agregador.modelos.repositorio.IcoleccionRepository;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.servicios.IColeccionService;
 import ar.utn.dssi.Agregador.servicios.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ColeccionService implements IColeccionService {
 
     @Autowired
-    private IcoleccionRepository coleccionRepository;
+    private IColeccionRepository coleccionRepository;
 
     @Autowired
     private IHechosService hechosService;

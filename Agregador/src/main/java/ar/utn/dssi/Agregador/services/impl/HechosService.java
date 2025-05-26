@@ -1,17 +1,16 @@
 package ar.utn.dssi.Agregador.servicios.impl;
 
-import ar.utn.dssi.Agregador.modelos.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.modelos.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Categoria;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Hecho;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Origen;
-import ar.utn.dssi.Agregador.modelos.entidades.contenido.Ubicacion;
-import ar.utn.dssi.Agregador.modelos.repositorio.IHechosRepository;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Categoria;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
+import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.servicios.IColeccionService;
 import ar.utn.dssi.Agregador.servicios.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -47,22 +46,21 @@ public class HechosService implements IHechosService {
         return dtoHecho;
     }
 
-    @Override
-    public void crearHecho(HechoInputDTO hechoInputDTO, Origen origen) {
-            var hecho = new Hecho();
-            var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
-            var categoria = new Categoria();
+    private void crearHecho(HechoInputDTO hechoInputDTO, Origen origen) {
+        var hecho = new Hecho();
+        var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
+        var categoria = new Categoria();
 
-            hecho.setTitulo(hechoInputDTO.getTitulo());
-            hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-            hecho.setFechaCarga(LocalDateTime.now());
-            hecho.setUbicacion(ubicacion);
-            hecho.setCategoria(categoria);
-            hecho.setOrigen(origen);
-            hecho.setVisible(true);
+        hecho.setTitulo(hechoInputDTO.getTitulo());
+        hecho.setDescripcion(hechoInputDTO.getDescripcion());
+        hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+        hecho.setFechaCarga(LocalDateTime.now());
+        hecho.setUbicacion(ubicacion);
+        hecho.setCategoria(categoria);
+        hecho.setOrigen(origen);
+        hecho.setVisible(true);
 
-            hechosRepository.save(hecho);
-            coleccionService.guardarEnColeccion(hecho);
+        hechosRepository.save(hecho);
+        coleccionService.guardarEnColeccion(hecho);
     }
 }
