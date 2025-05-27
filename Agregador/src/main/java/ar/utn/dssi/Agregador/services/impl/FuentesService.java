@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.models.DTOs.external.HechosMetaMapa;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,21 @@ public class FuentesService implements IFuentesService {
     hechosNuevos.addAll(pedirHechosNuevosA(fuenteProxy));
 
     return hechosNuevos;
+  }
+
+  @Override
+  //Los hechos output de una fuente metamapa son iguales a los hechos output
+  public List<HechoInputDTO> obtenerHechosMetamapa() {
+    return fuenteProxy
+        .get()
+        .uri(uriBuilder ->
+            uriBuilder
+                .path("/fuente/hechos/metamapa") //este endpoint al igual que el resto aun no existe
+                .build())
+        .retrieve()
+        .bodyToMono(HechosMetaMapa.class)
+        .map(HechosMetaMapa::getHechos)
+        .block();
   }
 
   private List<HechoInputDTO> pedirHechosNuevosA(WebClient fuente){
