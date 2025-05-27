@@ -1,0 +1,40 @@
+@startuml
+'================== HECHOS ==================
+class Hecho {
+    - idHecho: Long
+    - titulo: String
+    - descripcion: String
+    - categoria: Categoria
+    - ubicacion: Ubicacion
+    - fechaDeAcontecimiento: DateTime
+    - fechaDeCarga: DateTime
+    - contenidoMultimedia: List<MultipartFile>
+    - origen: Origen
+}
+
+class Ubicacion {
+    - latitud: Double
+    - longitud: Double
+}
+
+class Categoria {
+    - idCategoria: Long
+    - nombre: String
+}
+
+enum Origen {
+    FUENTE_DINAMICA
+}
+
+class ContenidoMultimedia {
+     -url: String
+     -formato: String
+     - tamano: Long
+}
+'================== RELACIONES ==================
+Hecho --> Ubicacion
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> ContenidoMultimedia
+
+@enduml
