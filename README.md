@@ -4,7 +4,7 @@
 https://docs.google.com/document/d/1ctxGwWrnM0XmPii38KWod9mTzphzNxxPRg9HkpXyNBg/edit?tab=t.0  
 ### Entrega 2
 https://docs.google.com/document/d/1f7a_fd9na5_3E6EzfIyAGn0FSMXAA7OURMPiPkvz7c0/edit?tab=t.0
-## MEMORIA TECNICA
+## MEMORIA TECNICA Y JUSTIFICACIONES DE DISEÑO
 https://docs.google.com/document/d/16u011LlpH063zOflb_Yh9cTvy7jmLuur/edit?usp=sharing&ouid=110234860859130530096&rtpof=true&sd=true
 
 # java-base-project
