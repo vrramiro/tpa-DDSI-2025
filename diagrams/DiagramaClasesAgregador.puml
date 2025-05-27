@@ -1,0 +1,108 @@
+@startuml
+' Diseño del sistema de hechos y colecciones
+
+'================== ENUMS ==================
+enum Origen {
+    ARCHIVO
+    CONTRIBUYENTE
+}
+
+enum EstadoDeSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
+}
+
+'================== INTERFACES ==================
+interface CriterioDePertenencia {
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+'================== HECHOS ==================
+class Hecho {
+    - IdHecho: Long
+    - titulo: String
+    - descripcion: String
+    - categoria: Categoria
+    - ubicacion: Ubicacion
+    - contenido: ContenidoMultimedia
+    - fechaDeAcontecimiento: DateTime
+    - fechaDeCarga: DateTime
+    - origen: Origen
+    - etiquetas: List<Etiqueta>
+    - visible: Boolean
+
+    + tieneEtiqueta(Etiqueta unaEtiqueta): Boolean
+    + addEtiqueta(): Void
+}
+
+class Ubicacion {
+    - latitud: Double
+    - longitud: Double
+}
+
+class Categoria {
+    - idCategoria: Long
+    - nombre: String
+}
+
+class Etiqueta {
+    - nombre: String
+}
+
+'================== COLECCIÓN ==================
+class Coleccion {
+    - handle: String
+    - titulo: String
+    - descripcion: String
+    - hechos : List<Hecho>
+    - criteriosDePertenencia : List<CriterioDePertenencia>
+
+    + addCriterioDePertenencia() : void
+}
+
+Coleccion o-- Hecho
+Coleccion ----> CriterioDePertenencia
+
+
+'================== CRITERIOS ==================
+class CriterioPorCategoria {
+    - categoriaACumplir: Categoria
+    + hechoLoCumple(Hecho unoHecho): Boolean
+}
+
+class CriterioPorFecha {
+    - fechaDesde: LocalDateTime
+    - fechaHasta: LocalDateTime
+
+    + hechoLoCumple(Hecho unHecho): Boolean
+}
+
+
+CriterioPorCategoria ..|> CriterioDePertenencia
+CriterioPorFecha ..|> CriterioDePertenencia
+
+'================== SOLICITUDES ==================
+class SolicitudDeEliminacion {
+    - idSolicitud: Long
+    - hecho: Hecho
+    - descripcion: String
+    - estadoDeSolicitud: EstadoDeSolicitud
+    - fechaDeCreacion: LocalDateTime
+    - fechaDeEvaluacion: LocalDateTime
+    - esSpam: Boolean
+
+}
+
+SolicitudDeEliminacion *-- Hecho
+SolicitudDeEliminacion --> EstadoDeSolicitud
+
+
+'================== RELACIONES ==================
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> Ubicacion
+Hecho --> Etiqueta
+
+@enduml
+
