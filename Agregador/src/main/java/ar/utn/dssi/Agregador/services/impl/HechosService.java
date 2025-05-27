@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Categoria;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
@@ -15,7 +16,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,6 +68,7 @@ public class HechosService implements IHechosService {
         return hecho;
     }
 
+    @Override
     public HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
         var dtoHecho = new HechoOutputDTO();
 
@@ -79,12 +83,31 @@ public class HechosService implements IHechosService {
         return dtoHecho;
     }
 
+    @Override
     public void eliminarHecho(Hecho hecho){
         hecho.setVisible(false);
         hechosRepository.update(hecho);
     }
 
-    public Hecho obtenerHechoPorId(Long idHecho){
-        return hechosRepository.findById(idHecho);
+    @Override
+    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
+        Hecho hecho = hechosRepository.findById(idHecho);
+
+        return hechoOutputDTO(hecho);
+    }
+
+    @Override
+    public void editarHecho(HechoInputDTO hecho, Long idHecho){
+        if (hecho.getOrigen() == Origen.FUENTE_DINAMICA && hechoEditable(idHecho)) {
+            Hecho hechoActualizado = crearHecho(hecho);
+            hechosRepository.update(hechoActualizado);
+        }
+    }
+
+    @Override
+    public Boolean hechoEditable(Long idHecho) {
+        Hecho hecho = hechosRepository.findById(idHecho);
+
+        return ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
     }
 }
