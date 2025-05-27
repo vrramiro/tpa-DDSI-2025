@@ -4,6 +4,7 @@ import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.adapter.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.adapter.adaptados.DesastresNaturales;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
+import ar.utn.dssi.FuenteProxy.models.entities.Origen;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
           dto.setUbicacion(ubicacion);
           dto.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
           dto.setFechaCarga(hechoObtenido.getCreated_at());
+          dto.setOrigen(Origen.FUENTE_PROXY);
 
           return dto;
         })
