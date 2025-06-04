@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 public class HechoInputDTO {
-    //private Long idHecho;
+    private Long idOrigen;
     private String titulo;
     private String descripcion;
     private Categoria categoria;

@@ -33,4 +33,10 @@ public class HechosRepository implements IHechosRepository {
   public long obtenerUltimoId() {
     return this.hechos.size()+1;
   }
+
+  @Override
+  public void update(Hecho hecho) {
+    hechos.remove(findById(hecho.getIdHecho()));
+    hechos.add(hecho);
+  }
 }

@@ -8,4 +8,5 @@ public interface IHechosRepository {
   public Hecho save(Hecho hecho);
   public List<Hecho> findall();
   public long obtenerUltimoId();
+  public void update(Hecho hecho);
 }

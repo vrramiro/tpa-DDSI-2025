@@ -12,6 +12,4 @@ public interface IHechosService {
     void eliminarHecho(Hecho hecho);
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     HechoOutputDTO hechoOutputDTO(Hecho hecho);
-    void editarHecho(HechoInputDTO hecho, Long idHecho);
-    Boolean hechoEditable(Long idHecho);
 }

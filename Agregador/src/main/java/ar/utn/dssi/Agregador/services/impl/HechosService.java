@@ -64,6 +64,9 @@ public class HechosService implements IHechosService {
         hecho.setOrigen(hechoInputDTO.getOrigen());
         hecho.setVisible(true);
         hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
+        hecho.setIdHecho(hechoInputDTO.getIdOrigen());
+
+        hechosRepository.save(hecho);
 
         return hecho;
     }
@@ -96,18 +99,5 @@ public class HechosService implements IHechosService {
         return hechoOutputDTO(hecho);
     }
 
-    @Override
-    public void editarHecho(HechoInputDTO hecho, Long idHecho){
-        if (hecho.getOrigen() == Origen.FUENTE_DINAMICA && hechoEditable(idHecho)) {
-            Hecho hechoActualizado = crearHecho(hecho);
-            hechosRepository.update(hechoActualizado);
-        }
-    }
 
-    @Override
-    public Boolean hechoEditable(Long idHecho) {
-        Hecho hecho = hechosRepository.findById(idHecho);
-
-        return ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
-    }
 }
