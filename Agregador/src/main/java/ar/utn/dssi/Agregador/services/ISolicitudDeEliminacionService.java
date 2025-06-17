@@ -8,6 +8,6 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ISolicitudDeEliminacionService {
     void crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion);
-    void aceptarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion);
-    void rechazarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion);
+    void aceptarSolicitud(Long idSolicitud);
+    void rechazarSolicitud(Long idSolicitud);
 }

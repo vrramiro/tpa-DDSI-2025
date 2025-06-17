@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface IHechosService {
   List<HechoOutputDTO> obtenerHechos();
-  List<HechoOutputDTO> obtenerHechosUltimasNHoras(int horas);
+  List<HechoOutputDTO> obtenerHechosUltimasNHoras(Integer horas);
   HechoOutputDTO obtenerHechoPorId(Long idHecho);
   HechoOutputDTO crear(HechoInputDTO hecho);
   HechoOutputDTO hechoOutputDTO(Hecho hecho);

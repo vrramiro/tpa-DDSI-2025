@@ -10,9 +10,9 @@ import java.util.List;
 
 @Service
 public class FuentesService implements IFuentesService {
-  private WebClient fuenteEstatica;
-  private WebClient fuenteDinamica;
-  private WebClient fuenteProxy;
+  //private List<WebClient> fuentesEstatica;
+  //private List<WebClient> fuentesDinamica;
+  //private List<WebClient> fuentesProxy;
 
   public FuentesService() {
     //TODO implementar controllers de fuentes
@@ -22,11 +22,21 @@ public class FuentesService implements IFuentesService {
   public List<HechoInputDTO> obtenerNuevosHechos() {
     List<HechoInputDTO> hechosNuevos = new ArrayList<>();
 
-    hechosNuevos.addAll(this.pedirHechosNuevosA(fuenteEstatica));
+    /*
+    hechosNuevos.addAll(this
+        .fuentes
+        .stream()
+        .filter(fuente -> fuente.tipo() != FUENTE_PROXY)
+        .map(fuente -> fuente.obtenerNuevosHechos())
+    );
+    */
 
-    hechosNuevos.addAll(this.pedirHechosNuevosA(fuenteDinamica));
-
-    hechosNuevos.addAll(pedirHechosNuevosA(fuenteProxy));
+    hechosNuevos.addAll(this
+        .fuentesEstatica
+        .stream()
+        .flatMap(fuente -> this.pedirHechosNuevosA(fuente).stream())
+        .toList()
+    );
 
     return hechosNuevos;
   }
@@ -34,7 +44,7 @@ public class FuentesService implements IFuentesService {
   @Override
   //Los hechos output de una fuente metamapa son iguales a los hechos output
   public List<HechoInputDTO> obtenerHechosMetamapa() {
-    return fuenteProxy
+    return fuentesProxy
         .get()
         .uri(uriBuilder ->
             uriBuilder

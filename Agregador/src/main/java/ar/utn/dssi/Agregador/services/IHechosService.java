@@ -12,4 +12,5 @@ public interface IHechosService {
     void eliminarHecho(Hecho hecho);
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     HechoOutputDTO hechoOutputDTO(Hecho hecho);
+    public List<HechoOutputDTO> obtenerHechos();
 }

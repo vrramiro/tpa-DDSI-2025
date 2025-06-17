@@ -41,21 +41,23 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   }
 
   @Override
-  public void aceptarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion){
-    solicitudDeEliminacion.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
-    solicitudDeEliminacion.getHecho().setVisible(false);
-    solicitudDeEliminacion.setFechaDeEvaluacion(LocalDateTime.now());
-    hechosService.eliminarHecho(solicitudDeEliminacion.getHecho());
+  public void aceptarSolicitud(Long idSolicitud){
+    SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
+    solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
+    solicitud.getHecho().setVisible(false);
+    solicitud.setFechaDeEvaluacion(LocalDateTime.now());
+    hechosService.eliminarHecho(solicitud.getHecho());
 
-    solicitudDeEliminacionRepository.update(solicitudDeEliminacion);
+    solicitudDeEliminacionRepository.update(solicitud);
   }
 
   @Override
-  public void rechazarSolicitud(SolicitudDeEliminacion solicitudDeEliminacion) {
-    solicitudDeEliminacion.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
-    solicitudDeEliminacion.setFechaDeEvaluacion(LocalDateTime.now());
+  public void rechazarSolicitud(Long idSolicitud){
+    SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud);
+    solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
+    solicitud.setFechaDeEvaluacion(LocalDateTime.now());
 
-    solicitudDeEliminacionRepository.update(solicitudDeEliminacion);
+    solicitudDeEliminacionRepository.update(solicitud);
   }
 
   public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {

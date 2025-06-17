@@ -17,8 +17,4 @@ public class Coleccion {
     public Coleccion() {
         this.hechos = new java.util.ArrayList<>();
     }
-
-    public void addCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio) {
-        this.criteriosDePertenecias.add(nuevoCriterio);
-    }
 }

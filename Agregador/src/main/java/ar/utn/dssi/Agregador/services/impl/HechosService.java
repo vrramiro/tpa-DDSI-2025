@@ -32,6 +32,7 @@ public class HechosService implements IHechosService {
     @Autowired
     private IFuentesService fuentesService;
 
+
     @Override
     public Mono<Void> actualizarHechos() {
         return Flux
@@ -64,7 +65,7 @@ public class HechosService implements IHechosService {
         hecho.setOrigen(hechoInputDTO.getOrigen());
         hecho.setVisible(true);
         hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-        hecho.setIdHecho(hechoInputDTO.getIdOrigen());
+        hecho.setIdHecho(hechoInputDTO.getIdFuenteOrigen());
 
         hechosRepository.save(hecho);
 
@@ -99,5 +100,18 @@ public class HechosService implements IHechosService {
         return hechoOutputDTO(hecho);
     }
 
-
+    @Override
+    public List<HechoOutputDTO> obtenerHechos() {
+        try {
+            var hechos = this.hechosRepository.findall();
+            if (hechos.isEmpty()) {
+                throw new RuntimeException("No hay hechos en la base de datos");
+            }
+            return hechos.stream()
+                .map(this::hechoOutputDTO)
+                .toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
+        }
+    }
 }

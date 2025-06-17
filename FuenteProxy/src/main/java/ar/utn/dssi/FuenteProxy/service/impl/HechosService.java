@@ -1,8 +1,8 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.adapter.IServicioExternoAdapter;
-import ar.utn.dssi.FuenteProxy.models.adapter.adaptadoresConcretos.DesastresNaturalesAdapter;
+import ar.utn.dssi.FuenteProxy.models.adapters.IServicioExternoAdapter;
+import ar.utn.dssi.FuenteProxy.models.adapters.adaptadoresConcretos.DesastresNaturalesAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.fuenteMetamapa.IFuenteMetaMapa;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;

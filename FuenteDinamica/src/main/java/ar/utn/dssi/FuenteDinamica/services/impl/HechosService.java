@@ -39,7 +39,7 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechosUltimasNHoras(int horas) {
+  public List<HechoOutputDTO> obtenerHechosUltimasNHoras(Integer horas) {
     List<HechoOutputDTO> hechosTotales = this.obtenerHechos();
     hechosTotales.removeIf(hecho -> ChronoUnit.HOURS.between(hecho.getFechaCarga(), LocalDateTime.now()) > horas);
     return hechosTotales;

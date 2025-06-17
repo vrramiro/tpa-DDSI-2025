@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteProxy.models.adapter;
+package ar.utn.dssi.FuenteProxy.models.adapters;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import java.util.List;
