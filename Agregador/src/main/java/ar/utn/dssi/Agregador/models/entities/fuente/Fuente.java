@@ -11,10 +11,14 @@ public class Fuente {
 
   //TODO revisar como hacer para que las fuentes dinamicas y estaticas puedan traer hechos nuevos (no se si se gestiona exactamente aca)
 
-  public Fuente(Long idFuente, String url, String tipoFuente) {
+  public Fuente(Long idFuente, String url, Origen tipoFuente) {
     this.idFuente = idFuente;
     this.url = url;
     this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoFuente);
+  }
+
+  public Boolean esDeTipo(Origen tipo) {
+    return tipoFuente.tipo().equals(tipo);
   }
 
   public List<HechoInputDTO> obtenerHechos() {
