@@ -2,6 +2,7 @@ package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.external.HechosMetaMapa;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -10,9 +11,7 @@ import java.util.List;
 
 @Service
 public class FuentesService implements IFuentesService {
-  //private List<WebClient> fuentesEstatica;
-  //private List<WebClient> fuentesDinamica;
-  //private List<WebClient> fuentesProxy;
+  private List<Fuente> fuentes;
 
   public FuentesService() {
     //TODO implementar controllers de fuentes
@@ -20,30 +19,14 @@ public class FuentesService implements IFuentesService {
 
   @Override
   public List<HechoInputDTO> obtenerNuevosHechos() {
-    List<HechoInputDTO> hechosNuevos = new ArrayList<>();
-
-    /*
-    hechosNuevos.addAll(this
-        .fuentes
-        .stream()
-        .filter(fuente -> fuente.tipo() != FUENTE_PROXY)
-        .map(fuente -> fuente.obtenerNuevosHechos())
-    );
-    */
-
-    hechosNuevos.addAll(this
-        .fuentesEstatica
-        .stream()
-        .flatMap(fuente -> this.pedirHechosNuevosA(fuente).stream())
-        .toList()
-    );
-
-    return hechosNuevos;
+    //TODO
+    return List.of();
   }
 
   @Override
-  //Los hechos output de una fuente metamapa son iguales a los hechos output
   public List<HechoInputDTO> obtenerHechosMetamapa() {
+    //TODO ya no es solo metamapa sino hechos proxy en general (se traen en tiempo real)
+
     return fuentesProxy
         .get()
         .uri(uriBuilder ->
@@ -56,7 +39,9 @@ public class FuentesService implements IFuentesService {
         .block();
   }
 
-  private List<HechoInputDTO> pedirHechosNuevosA(WebClient fuente){ //TODO: REVISAR QUE A FUENTE DINAMICA LE TENEMOS QUE PEDIR LOS HECHOS DE LA ULTIMA N HS
+  private List<HechoInputDTO> pedirHechosNuevosA(WebClient fuente){
+    //TODO REFACTOR Ademas revisar parametros, ahora hay una lista de fuentes, etc.
+
     return fuente
         .get()
         .uri(uriBuilder ->
@@ -72,6 +57,3 @@ public class FuentesService implements IFuentesService {
         .block();
   }
 }
-
-//TODO tener en cuenta que puede haber varias instancias de fuentes -> como gestionar
-
