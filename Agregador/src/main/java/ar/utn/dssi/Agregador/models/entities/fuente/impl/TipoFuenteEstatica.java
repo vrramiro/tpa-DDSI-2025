@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
+import ar.utn.dssi.Agregador.models.DTOs.external.HechosDeFuente;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.IFuenteRefrescable;
@@ -20,14 +21,19 @@ public class TipoFuenteEstatica implements ITipoFuente, IFuenteRefrescable {
     return tipo;
   }
 
-  //TODO
+  //TODO: ES NECESARIO OBTENER TOOODOS LOS HECHOS DE LA FUENTE? SI EN CASO DE QUE NUNCA NOS MANDO NADA, NOS LOS MANDA TODOS EN HECHOSNUEVOS
   public List<HechoInputDTO> obtenerHechos() {
     return List.of();
   }
 
-  //TODO
   public List<HechoInputDTO> obtenerNuevosHechos() {
-    return List.of();
+    return this.fuente
+            .get()
+            .uri("/hechosNuevos")
+            .retrieve()
+            .bodyToMono(HechosDeFuente.class)
+            .map(HechosDeFuente::getHechos)
+            .block();
   }
 
 }

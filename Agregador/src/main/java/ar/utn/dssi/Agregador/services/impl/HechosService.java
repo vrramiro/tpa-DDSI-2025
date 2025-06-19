@@ -4,7 +4,6 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Categoria;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
-import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
@@ -31,6 +30,7 @@ public class HechosService implements IHechosService {
 
     @Autowired
     private IFuentesService fuentesService;
+
 
 
     @Override
@@ -107,6 +107,7 @@ public class HechosService implements IHechosService {
             if (hechos.isEmpty()) {
                 throw new RuntimeException("No hay hechos en la base de datos");
             }
+            //var hechosProxy =
             return hechos.stream()
                 .map(this::hechoOutputDTO)
                 .toList();

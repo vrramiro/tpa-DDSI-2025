@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
+import ar.utn.dssi.Agregador.models.DTOs.external.HechosDeFuente;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.IFuenteRefrescable;
@@ -25,6 +26,12 @@ public class TipoFuenteDinamica implements ITipoFuente, IFuenteRefrescable {
   }
 
   public List<HechoInputDTO> obtenerNuevosHechos() {
-    return List.of();
+    return this.fuente
+            .get()
+            .uri("/hechosNuevos")
+            .retrieve()
+            .bodyToMono(HechosDeFuente.class)
+            .map(HechosDeFuente::getHechos)
+            .block();
   }
 }

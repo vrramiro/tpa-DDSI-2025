@@ -21,13 +21,13 @@ public class TipoFuenteProxy implements ITipoFuente {
   }
 
   public List<HechoInputDTO> obtenerHechos() {
-    //TODO revisar, no estoy seguro de que el pedido sea correcto (no digo que este mal, no lo se)
-
     return fuente
-        .get()
-        .retrieve()
-        .bodyToMono(HechosDeFuente.class)
-        .map(HechosDeFuente::getHechos)
-        .block();
+            .get()
+            .uri("/hechos")
+            .retrieve()
+            .bodyToMono(HechosDeFuente.class)
+            .map(HechosDeFuente::getHechos)
+            .block();
   }
 }
+

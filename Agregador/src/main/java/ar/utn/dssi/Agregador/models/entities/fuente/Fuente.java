@@ -9,8 +9,6 @@ public class Fuente {
   private String url;
   private ITipoFuente tipoFuente;
 
-  //TODO revisar como hacer para que las fuentes dinamicas y estaticas puedan traer hechos nuevos (no se si se gestiona exactamente aca)
-
   public Fuente(Long idFuente, String url, Origen tipoFuente) {
     this.idFuente = idFuente;
     this.url = url;

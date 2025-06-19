@@ -20,19 +20,16 @@ public class FuentesService implements IFuentesService {
 
   @Override
   public List<HechoInputDTO> obtenerNuevosHechos() {
-    //TODO
     return this
         .fuentes
         .stream()
-        .filter(fuente -> fuente.esDeTipo(Origen.FUENTE_DINAMICA) || fuente.esDeTipo(Origen.FUENTE_ESTATICA))
+        .filter(fuente -> !fuente.esDeTipo(Origen.FUENTE_PROXY))
         .flatMap(fuente -> fuente.obtenerHechos().stream())
         .toList();
   }
 
   @Override
   public List<HechoInputDTO> obtenerHechosProxy() {
-    //TODO ya no es solo metamapa sino hechos proxy en general (se traen en tiempo real)
-
     return this.fuentes
         .stream()
         .filter(fuente -> fuente.esDeTipo(Origen.FUENTE_PROXY))
@@ -43,4 +40,5 @@ public class FuentesService implements IFuentesService {
   public void agregarFuente(Fuente fuente) {
     this.fuentes.add(fuente);
   }
+
 }
