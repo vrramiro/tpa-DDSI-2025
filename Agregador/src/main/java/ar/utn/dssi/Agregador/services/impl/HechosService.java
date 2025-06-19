@@ -15,10 +15,9 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
+import java.util.stream.Stream;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class HechosService implements IHechosService {
@@ -30,8 +29,6 @@ public class HechosService implements IHechosService {
 
     @Autowired
     private IFuentesService fuentesService;
-
-
 
     @Override
     public Mono<Void> actualizarHechos() {
@@ -87,6 +84,20 @@ public class HechosService implements IHechosService {
         return dtoHecho;
     }
 
+    public HechoOutputDTO hechoOutputDTOProxy(HechoInputDTO hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la fuenteProxy
+        var dtoHecho = new HechoOutputDTO();
+
+        dtoHecho.setTitulo(hecho.getTitulo());
+        dtoHecho.setDescripcion(hecho.getDescripcion());
+        dtoHecho.setCategoria(hecho.getCategoria());
+        dtoHecho.setUbicacion(hecho.getUbicacion());
+        dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+        dtoHecho.setFechaCarga(hecho.getFechaCarga());
+        dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
+
+        return dtoHecho;
+    }
+
     @Override
     public void eliminarHecho(Hecho hecho){
         hecho.setVisible(false);
@@ -103,14 +114,22 @@ public class HechosService implements IHechosService {
     @Override
     public List<HechoOutputDTO> obtenerHechos() {
         try {
-            var hechos = this.hechosRepository.findall();
-            if (hechos.isEmpty()) {
-                throw new RuntimeException("No hay hechos en la base de datos");
+            var hechos = this.hechosRepository.findall().stream()
+                    .map(this::hechoOutputDTO)
+                    .toList();;
+            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+                    .stream()
+                    .map(this::hechoOutputDTOProxy)
+                    .toList();
+
+            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
+                throw new RuntimeException("No hay hechos disponibles");
             }
-            //var hechosProxy =
-            return hechos.stream()
-                .map(this::hechoOutputDTO)
-                .toList();
+
+            return Stream.concat(
+                            hechos.stream(),
+                            hechosProxy.stream()
+                    ).toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
