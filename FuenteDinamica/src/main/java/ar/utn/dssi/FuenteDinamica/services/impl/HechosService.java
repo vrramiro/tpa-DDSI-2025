@@ -23,6 +23,8 @@ public class HechosService implements IHechosService {
   @Autowired
   private ICategoriasRepository categoriasRepository;
 
+  private LocalDateTime ultimoEnvioHechos;
+
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
     try {
@@ -39,10 +41,19 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechosUltimasNHoras(Integer horas) {
-    List<HechoOutputDTO> hechosTotales = this.obtenerHechos();
-    hechosTotales.removeIf(hecho -> ChronoUnit.HOURS.between(hecho.getFechaCarga(), LocalDateTime.now()) > horas);
-    return hechosTotales;
+  public List<HechoOutputDTO> obtenerHechosNuevos() {
+
+    try {
+
+      List<HechoOutputDTO> hechos = this.obtenerHechos();
+      hechos.removeIf(hecho -> hecho.getFechaCarga().isBefore(ultimoEnvioHechos));
+
+      if (hechos.isEmpty()) {
+        throw new RuntimeException("No hay hechos en la base de datos");
+      } return hechos;
+    } catch (Exception e) {
+      throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
+    }
   }
 
 

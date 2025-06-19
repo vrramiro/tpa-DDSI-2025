@@ -25,15 +25,15 @@ public class HechosController {
     this.hechosService.crear(hecho);
   }
 
-  @GetMapping
+  @GetMapping("/hechos")
   public List<HechoOutputDTO> obtenerHechos() {
     return this.hechosService.obtenerHechos();
   }
+
+  @GetMapping("/hechosNuevos")
+  public List<HechoOutputDTO> obtenerHechosNuevos() {
+    return this.hechosService.obtenerHechos();
+  }
+
 }
-
-
-
-
-
-
 
