@@ -1,19 +1,17 @@
-package ar.utn.dssi.FuenteDinamica.models.entities;
+package ar.utn.dssi.Agregador.models.DTOs.external;
 
-import lombok.*;
+import ar.utn.dssi.Agregador.models.entities.content.Categoria;
+import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-public class Hecho {
-  private Long idHecho;
+public class HechoDeFuente {
+  private Long idEnFuente; //Viene desde la fuente
   private String titulo;
   private String descripcion;
   private Categoria categoria;
@@ -22,5 +20,4 @@ public class Hecho {
   private LocalDateTime fechaCarga;
   private Origen origen;
   private List<MultipartFile> contenidoMultimedia;
-  private Boolean visible;
 }

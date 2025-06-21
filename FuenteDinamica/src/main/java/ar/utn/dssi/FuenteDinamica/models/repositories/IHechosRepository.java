@@ -9,4 +9,5 @@ public interface IHechosRepository {
   public List<Hecho> findall();
   public long obtenerUltimoId();
   public void update(Hecho hecho);
+  public void delete(Long idHecho);
 }

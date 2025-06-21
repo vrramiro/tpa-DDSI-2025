@@ -39,4 +39,11 @@ public class HechosRepository implements IHechosRepository {
     hechos.remove(findById(hecho.getIdHecho()));
     hechos.add(hecho);
   }
+
+  @Override
+  public void delete(Long id){
+    var hecho = findById(id);
+    hecho.setVisible(false);
+    this.update(hecho);
+  }
 }

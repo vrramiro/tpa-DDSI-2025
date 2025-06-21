@@ -79,6 +79,7 @@ public class HechosService implements IHechosService {
     hecho.setOrigen(Origen.FUENTE_DINAMICA);
     hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
     hecho.setIdHecho(this.hechosRepository.obtenerUltimoId());
+    hecho.setVisible(true);
 
     hecho = this.hechosRepository.save(hecho);
 
@@ -132,5 +133,10 @@ public class HechosService implements IHechosService {
    this.hechosRepository.update(hecho);
 
     return this.hechoOutputDTO(hecho);
+  }
+
+  @Override
+  public void eliminarHecho(Long idHecho){
+      this.hechosRepository.delete(idHecho);
   }
 }

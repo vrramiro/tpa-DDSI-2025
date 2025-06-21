@@ -1,5 +1,7 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.spam.DetectorDeSpam;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Agregador.models.entities.solicitud.EstadoDeSolicitud;
@@ -20,11 +22,14 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   @Autowired
   private IHechosService hechosService;
 
+  @Autowired
+  private IHechosRepository hechosRepository;
+
   @Override
   public void crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
     var solicitud = new SolicitudDeEliminacion();
 
-    solicitud.setHecho(hechosService.obtenerHechoPorId(solicitudDeEliminacion.getIdHecho()));
+    solicitud.setIDHecho(solicitudDeEliminacion.getIDHecho());
     solicitud.setFechaDeCreacion(LocalDateTime.now());
     setDescripcion(solicitudDeEliminacion.getDescripcion(), solicitud);
 
@@ -44,26 +49,26 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   public void aceptarSolicitud(Long idSolicitud){
     SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
     solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
-    solicitud.getHecho().setVisible(false);
+    hechosRepository.findById(solicitud.getIDHecho()).setVisible(false);
     solicitud.setFechaDeEvaluacion(LocalDateTime.now());
-    hechosService.eliminarHecho(solicitud.getHecho());
+    hechosService.eliminarHecho(solicitud.getIDHecho());
 
     solicitudDeEliminacionRepository.update(solicitud);
   }
 
   @Override
   public void rechazarSolicitud(Long idSolicitud){
-    SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud);
-    solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
-    solicitud.setFechaDeEvaluacion(LocalDateTime.now());
+       SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud);
+       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
+       solicitud.setFechaDeEvaluacion(LocalDateTime.now());
 
-    solicitudDeEliminacionRepository.update(solicitud);
-  }
+       solicitudDeEliminacionRepository.update(solicitud);
+     }
 
-  public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
-    if (descripcion == null || descripcion.length() < SolicitudDeEliminacion.getCaracteresMinimos()) {
-      throw new IllegalArgumentException("La descripción debe tener minimo " + SolicitudDeEliminacion.getCaracteresMinimos() );
-    }
-    solicitudDeEliminacion.setDescripcion(descripcion);
-  }
+     public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
+       if (descripcion == null || descripcion.length() < SolicitudDeEliminacion.getCaracteresMinimos()) {
+         throw new IllegalArgumentException("La descripción debe tener minimo " + SolicitudDeEliminacion.getCaracteresMinimos() );
+       }
+       solicitudDeEliminacion.setDescripcion(descripcion);
+     }
 }

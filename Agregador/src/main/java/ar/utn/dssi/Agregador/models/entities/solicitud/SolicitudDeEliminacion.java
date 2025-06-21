@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class SolicitudDeEliminacion {
-    private Hecho hecho;
+    private Long IDHecho;
     private String descripcion;
     private EstadoDeSolicitud estadoDeSolicitud;
     private LocalDateTime fechaDeCreacion;
