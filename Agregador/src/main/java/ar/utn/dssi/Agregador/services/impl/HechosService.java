@@ -35,7 +35,6 @@ public class HechosService implements IHechosService {
         return Flux
             .fromIterable(this.importarNuevosHechos())
             .flatMap(hecho -> {
-                hechosRepository.save(hecho);
                 coleccionService.refrescarColecciones(hecho);
                 return Mono.empty();
             })
@@ -43,12 +42,13 @@ public class HechosService implements IHechosService {
     }
 
     private List<Hecho> importarNuevosHechos() {
-        List<HechoInputDTO> hechosNuevos = fuentesService.obtenerNuevosHechos();
+        List<Hecho> hechosNuevos = fuentesService.obtenerNuevosHechos();
 
-        return hechosNuevos.stream().map(this::crearHecho).toList();
+        return hechosNuevos;
     }
 
-    private Hecho crearHecho(HechoInputDTO hechoInputDTO) {
+    @Override
+    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente) {
         var hecho = new Hecho();
         var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
         var categoria = new Categoria();
@@ -68,6 +68,7 @@ public class HechosService implements IHechosService {
 
         return hecho;
     }
+
 
     @Override
     public HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
@@ -99,7 +100,8 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public void eliminarHecho(Hecho hecho){
+    public void eliminarHecho(Long IDHecho) {
+        Hecho hecho = this.hechosRepository.findById(IDHecho);
         hecho.setVisible(false);
         hechosRepository.update(hecho);
     }

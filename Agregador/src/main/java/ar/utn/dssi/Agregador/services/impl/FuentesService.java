@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.models.DTOs.external.HechosMetaMapa;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.FuenteServiceOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -26,15 +27,17 @@ public class FuentesService implements IFuentesService {
   }
 
   @Override
-  public List<HechoInputDTO> obtenerNuevosHechos() {
+  public List<Hecho> obtenerNuevosHechos() {
     return this
         .fuentes
         .stream()
         .filter(fuente -> !fuente.esDeTipo(Origen.FUENTE_PROXY))
-        .flatMap(fuente -> fuente.obtenerHechos().stream())
+        .flatMap(fuente -> fuente.obtenerHechos().stream()
+            .map(hechoInput -> {
+                return hechosService.crearHecho(hechoInput, fuente.getIdFuente());
+            }))
         .toList();
   }
-
 
   @Override
   public List<HechoInputDTO> obtenerHechosProxy() {

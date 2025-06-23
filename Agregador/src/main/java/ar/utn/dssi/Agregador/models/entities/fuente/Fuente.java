@@ -2,8 +2,15 @@ package ar.utn.dssi.Agregador.models.entities.fuente;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
 public class Fuente {
   private Long idFuente;
   private String url;

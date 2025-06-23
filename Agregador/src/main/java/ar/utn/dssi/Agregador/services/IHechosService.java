@@ -14,5 +14,4 @@ public interface IHechosService {
     HechoOutputDTO hechoOutputDTO(Hecho hecho);
     public List<HechoOutputDTO> obtenerHechos();
     public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
-
     }
