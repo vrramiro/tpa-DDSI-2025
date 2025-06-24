@@ -8,10 +8,11 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface IHechosService {
-    Mono<Void> actualizarHechos();
     void eliminarHecho(Long IDHecho);
+    void guardarHecho(Hecho hecho);
+    Mono<Void> actualizarHechos();
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     HechoOutputDTO hechoOutputDTO(Hecho hecho);
-    public List<HechoOutputDTO> obtenerHechos();
-    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
-    }
+    List<HechoOutputDTO> obtenerHechos();
+    Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
+}

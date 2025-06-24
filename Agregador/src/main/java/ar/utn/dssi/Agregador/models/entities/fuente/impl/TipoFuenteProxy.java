@@ -16,7 +16,7 @@ public class TipoFuenteProxy implements ITipoFuente {
     this.fuente = WebClient.builder().baseUrl(url).build();
   }
 
-  public Origen tipo() {
+  public Origen getTipo() {
     return tipo;
   }
 

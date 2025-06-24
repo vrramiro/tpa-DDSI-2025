@@ -31,30 +31,37 @@ public class FuentesService implements IFuentesService {
     return this
         .fuentes
         .stream()
-        .filter(fuente -> !fuente.esDeTipo(Origen.FUENTE_PROXY))
-        .flatMap(fuente -> fuente.obtenerHechos().stream()
+        .filter(fuente -> !fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream()
             .map(hechoInput -> {
-                return hechosService.crearHecho(hechoInput, fuente.getIdFuente());
-            }))
+              Hecho hecho = hechosService.crearHecho(hechoInput, fuente.getIdFuente());
+              hechosService.guardarHecho(hecho);
+              return hecho;
+            })
+        )
         .toList();
   }
 
   @Override
   public List<HechoInputDTO> obtenerHechosProxy() {
-    return this.fuentes
+    return this
+        .fuentes
         .stream()
-        .filter(fuente -> fuente.esDeTipo(Origen.FUENTE_PROXY))
-        .flatMap(fuente -> fuente.obtenerHechos().stream())
+        .filter(fuente -> fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream())
         .toList();
   }
 
+  @Override
+  public void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen){
+  }
 
   public void agregarFuente(Fuente fuente) {
     this.fuentes.add(fuente);
   }
 
-  @Override
-  public void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen){
-
+  public Fuente obtenerFuentePorId(Long idFuenteOrigen)
+  {
+    return this.fuentes.stream().filter(fuente -> fuente.getIdFuente().equals(idFuenteOrigen)).findFirst().orElse(null);
   }
 }

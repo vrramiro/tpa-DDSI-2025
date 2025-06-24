@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,8 @@ public class HechosService implements IHechosService {
   private ICategoriasRepository categoriasRepository;
 
   private LocalDateTime ultimoEnvioHechos;
+
+  private List<HechoOutputDTO> hechosEditados;
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
@@ -46,7 +49,7 @@ public class HechosService implements IHechosService {
     try {
 
       List<HechoOutputDTO> hechos = this.obtenerHechos();
-      hechos.removeIf(hecho -> hecho.getFechaCarga().isBefore(ultimoEnvioHechos));
+      hechos.removeIf(hecho -> hecho.getFechaCarga().isAfter(ultimoEnvioHechos));
 
       if (hechos.isEmpty()) {
         throw new RuntimeException("No hay hechos en la base de datos");
@@ -87,25 +90,21 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public HechoOutputDTO hechoOutputDTO(Hecho hecho){
-    var dtoHecho = new HechoOutputDTO();
-
-    dtoHecho.setTitulo(hecho.getTitulo());
-    dtoHecho.setDescripcion(hecho.getDescripcion());
-    dtoHecho.setCategoria(hecho.getCategoria());
-    dtoHecho.setUbicacion(hecho.getUbicacion());
-    dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    dtoHecho.setFechaCarga(hecho.getFechaCarga());
-    dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
-    dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
-    return dtoHecho;
-  }
-
-  @Override
   public void editarHecho(HechoInputDTO hecho, Long idHecho){
     if (hechoEditable(idHecho)) {
       HechoOutputDTO hechoActualizado = this.actualizarHecho(hecho, idHecho);
+
+      hechosEditados.add(hechoActualizado);
     }
+  }
+
+  @Override
+  public List<HechoOutputDTO> obtenerHechosEditados() {
+    List<HechoOutputDTO> hechosAEnviar = this.hechosEditados;
+
+    hechosEditados.clear();
+
+    return hechosAEnviar;
   }
 
   @Override
@@ -113,6 +112,11 @@ public class HechosService implements IHechosService {
     Hecho hecho = hechosRepository.findById(idHecho);
 
     return ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
+  }
+
+  @Override
+  public void eliminarHecho(Long idHecho){
+    this.hechosRepository.delete(idHecho);
   }
 
   private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
@@ -136,7 +140,17 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public void eliminarHecho(Long idHecho){
-      this.hechosRepository.delete(idHecho);
+  public HechoOutputDTO hechoOutputDTO(Hecho hecho){
+    var dtoHecho = new HechoOutputDTO();
+
+    dtoHecho.setTitulo(hecho.getTitulo());
+    dtoHecho.setDescripcion(hecho.getDescripcion());
+    dtoHecho.setCategoria(hecho.getCategoria());
+    dtoHecho.setUbicacion(hecho.getUbicacion());
+    dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+    dtoHecho.setFechaCarga(hecho.getFechaCarga());
+    dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
+    dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
+    return dtoHecho;
   }
 }

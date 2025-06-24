@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
@@ -27,6 +28,9 @@ public class ColeccionService implements IColeccionService {
 
     @Autowired
     private IHechosService hechosService;
+
+    @Autowired
+    private FuentesService fuentesService;
 
     @Override
     public void crearColeccion(ColeccionInputDTO coleccionInputDTO) {
@@ -112,6 +116,16 @@ public class ColeccionService implements IColeccionService {
                 return Mono.empty();
             })
             .then();
+    }
+
+    private void agregarFuente(String handle, Long idFuenteOrigen)
+    {
+        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuenteOrigen);
+        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
+
+        coleccionAModificar.agregarFuente(fuenteAAgregar);
+
+        coleccionRepository.save(coleccionAModificar);
     }
 }
 

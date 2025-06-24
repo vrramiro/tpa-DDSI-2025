@@ -49,7 +49,6 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   public void aceptarSolicitud(Long idSolicitud){
     SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
     solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
-    hechosRepository.findById(solicitud.getIDHecho()).setVisible(false);
     solicitud.setFechaDeEvaluacion(LocalDateTime.now());
     hechosService.eliminarHecho(solicitud.getIDHecho());
 

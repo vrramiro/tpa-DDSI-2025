@@ -1,12 +1,9 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Origen;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -24,9 +21,5 @@ public class Fuente {
 
   public Boolean esDeTipo(Origen tipo) {
     return tipoFuente.tipo().equals(tipo);
-  }
-
-  public List<HechoInputDTO> obtenerHechos() {
-    return tipoFuente.obtenerHechos();
   }
 }

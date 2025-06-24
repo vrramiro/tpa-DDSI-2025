@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ITipoFuente {
   public List<HechoInputDTO> obtenerHechos();
-  public Origen tipo();
+  public Origen getTipo();
 }

@@ -23,6 +23,7 @@ public class Hecho {
     private Long IdHecho;
     private Origen origen;
     private Long idOrigen;
+    private Long idFuente;
 
     private List<Etiqueta> etiquetas;
     private boolean visible;
