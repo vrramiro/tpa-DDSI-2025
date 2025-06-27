@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Repository
 public class HechoRepositorio implements IHechosRepositorio {
@@ -23,6 +24,9 @@ public class HechoRepositorio implements IHechosRepositorio {
 
     @Override
     public void update(Hecho hecho) {
+        if(hecho.getId() == null){
+            throw new NoSuchElementException();
+        }
         hechos.remove(this.findById(hecho.getId()));
         hechos.add(hecho);
     }
