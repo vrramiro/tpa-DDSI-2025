@@ -31,80 +31,9 @@ public class HechosService implements IHechosService {
     @Autowired
     private IFuentesService fuentesService;
 
+    //OPERACIONES CRUD SOBRE LOS HECHOS
     @Override
-    public Mono<Void> actualizarHechos() {
-        try {
-            return Flux
-                .fromIterable(this.importarNuevosHechos())
-                .flatMap(hecho -> {
-                    coleccionService.refrescarColecciones(hecho);
-                    return Mono.empty();
-                })
-                .then();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    private List<Hecho> importarNuevosHechos() {
-        try {
-            List<Hecho> hechosNuevos = fuentesService.obtenerNuevosHechos();
-
-            return hechosNuevos;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void eliminarHecho(Long IdHecho) {
-        try {
-            //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-            Hecho hecho = this.hechosRepository.findById(IdHecho);
-            hecho.setVisible(false);
-            hechosRepository.update(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
-        try {
-            Hecho hecho = hechosRepository.findById(idHecho);
-
-            return hechoOutputDTO(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public List<HechoOutputDTO> obtenerHechos() {
-        try {
-            var hechos = this.hechosRepository.findall().stream()
-                .map(this::hechoOutputDTO)
-                .toList();;
-            var hechosProxy = this.fuentesService.obtenerHechosProxy()
-                .stream()
-                .map(this::hechoOutputDTOProxy)
-                .toList();
-
-            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
-                throw new RuntimeException("No hay hechos disponibles");
-            }
-
-            return Stream.concat(
-                hechos.stream(),
-                hechosProxy.stream()
-            ).toList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IdFuente) {
+    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IdFuente) {   //CREATE
         try {
             var hecho = new Hecho();
             var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
@@ -129,6 +58,82 @@ public class HechosService implements IHechosService {
         }
     }
 
+    @Override
+    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {     //READ
+        try {
+            Hecho hecho = hechosRepository.findById(idHecho);
+
+            return hechoOutputDTO(hecho);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<HechoOutputDTO> obtenerHechos() {       //READ
+        try {
+            var hechos = this.hechosRepository.findall().stream()
+                    .map(this::hechoOutputDTO)
+                    .toList();;
+            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+                    .stream()
+                    .map(this::hechoOutputDTOProxy)
+                    .toList();
+
+            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
+                throw new RuntimeException("No hay hechos disponibles");
+            }
+
+            return Stream.concat(
+                    hechos.stream(),
+                    hechosProxy.stream()
+            ).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Mono<Void> actualizarHechos() {      //UPDATE
+        try {
+            return Flux
+                .fromIterable(this.importarNuevosHechos())
+                .flatMap(hecho -> {
+                    coleccionService.refrescarColecciones(hecho);
+                    return Mono.empty();
+                })
+                .then();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al actualizar los hechos: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void eliminarHecho(Long IdHecho) {       //DELETE
+        try {
+            //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
+            Hecho hecho = this.hechosRepository.findById(IdHecho);
+            hecho.setVisible(false);
+            hechosRepository.update(hecho);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
+        }
+    }
+
+
+    //IMPORTAR HECHOS NUEVOS DESDE LA FUENTE
+    private List<Hecho> importarNuevosHechos() {
+        try {
+            List<Hecho> hechosNuevos = fuentesService.obtenerNuevosHechos();
+
+            return hechosNuevos;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
+        }
+    }
+
+
+    //GUARDADO DE HECHOS
     public void guardarHecho(Hecho hecho){
         try {
             Long idEnFuente = hecho.getIdOrigen();
@@ -146,6 +151,8 @@ public class HechosService implements IHechosService {
         }
     }
 
+
+    //MODIFICACION DEL TIPO DE HECHO PARA SU TRANSMISION ENTRE MODULOS
     @Override
     public HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
         try{

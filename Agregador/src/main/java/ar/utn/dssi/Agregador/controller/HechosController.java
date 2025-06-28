@@ -31,9 +31,11 @@ public class HechosController {
   }
 
   @PutMapping("/actualizar/")
-  public ResponseEntity<HechoOutputDTO> actualizarHecho(@PathVariable Long idHecho, @RequestBody HechoInputDTO HechoInputDTO){
-    HechoOutputDTO hechoOutputDTO = hechosService.actualizarHechos();
+  public Mono<ResponseEntity<HechoOutputDTO>> actualizarHecho() {
+    return hechosService.actualizarHechos().then(Mono.just(ResponseEntity.ok().build()));
   }
+
+
 }
 
 
