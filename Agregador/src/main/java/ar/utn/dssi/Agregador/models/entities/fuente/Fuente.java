@@ -20,6 +20,6 @@ public class Fuente {
   }
 
   public Boolean esDeTipo(Origen tipo) {
-    return tipoFuente.tipo().equals(tipo);
+    return tipoFuente.getTipo().equals(tipo);
   }
 }
