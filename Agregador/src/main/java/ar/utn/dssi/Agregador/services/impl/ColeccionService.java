@@ -32,8 +32,9 @@ public class ColeccionService implements IColeccionService {
     @Autowired
     private FuentesService fuentesService;
 
+    //OPERACIONES CRUD EN COLECCIONES
     @Override
-    public void crearColeccion(ColeccionInputDTO coleccionInputDTO) {
+    public ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO) {     //CREATE
         var coleccion = new Coleccion();
 
         coleccion.setTitulo(coleccionInputDTO.getTitulo());
@@ -42,9 +43,49 @@ public class ColeccionService implements IColeccionService {
         coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
 
         coleccionRepository.save(coleccion);
-        //TODO deberia devolver la coleccion creada => falta manejo de errores
+        return this.coleccionOutputDTO(coleccion);
     }
 
+    @Override
+    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
+        var coleccion = coleccionRepository.findByHandle(handle);
+        var hechosColeccion = coleccion.getHechos();
+
+        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
+    }
+
+    @Override
+    public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO coleccionInputDTO) {      //UPDATE
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+
+        /*if (coleccion == null)
+            throw new RecursoNoEncontradoException("Colección con handle '" + handle + "' no encontrada.");*/
+        //TODO: MANEJO ERRORES
+
+        coleccion.setTitulo(coleccionInputDTO.getTitulo());
+        coleccion.setDescripcion(coleccionInputDTO.getDescripcion());
+        coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
+
+        coleccionRepository.update(coleccion);
+
+        this.refrescarHechosEnColeccion(coleccion);
+
+        return this.coleccionOutputDTO(coleccion);
+    }
+
+    @Override
+    public void eliminarColeccion(String handle) {       //DELETE
+        try {
+            Coleccion coleccion = coleccionRepository.findByHandle(handle);
+            if (coleccion != null) {
+                coleccionRepository.delete(coleccion);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error al eliminar la coleccion: " + e.getMessage(), e);
+        }
+    }
+
+    //OBTENER TODAS LAS COLECCIONES
     @Override
     public List<ColeccionOutputDTO> obtenerColecciones() {
         var colecciones = coleccionRepository.findall();
@@ -55,15 +96,33 @@ public class ColeccionService implements IColeccionService {
                 .toList();
     }
 
-    //Llega el identificador de la coleccion desde el controller
+    //OPERACIONES SOBRE LAS FUENTES DE UNA COLECCION
     @Override
-    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findByHandle(handle);
-        var hechosColeccion = coleccion.getHechos();
+    public void agregarFuente(Long idFuente, String handle){
+        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
+        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
 
-        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
+        var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
+
+        agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
+
+        coleccionRepository.save(coleccionAModificar);
     }
 
+    @Override
+    public void eliminarFuente(Long idFuente, String handle) {
+        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
+        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
+
+        var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
+
+        eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
+
+        coleccionRepository.save(coleccionAModificar);
+    }
+
+
+    //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
     @Override
     public Mono<Void> refrescarColecciones(Hecho hecho){
         return Flux
@@ -89,6 +148,38 @@ public class ColeccionService implements IColeccionService {
         }
     }
 
+    //REFRESCO DE HECHOS EN COLECCION SEGUN CRITERIOS DE PERTENENCIA AGREGADOS
+    @Override
+    public void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+        coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
+
+        refrescarHechosEnColeccion(coleccion)
+                .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
+                .subscribe();
+    }
+
+    @Override
+    public void eliminarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+        coleccion.getCriteriosDePertenecias().remove(nuevoCriterio);
+
+        refrescarHechosEnColeccion(coleccion)
+                .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
+                .subscribe();
+    }
+
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
+        return Flux
+                .fromIterable(hechosRepositorio.findall())
+                .flatMap(hecho -> {
+                    this.guardarEnColeccion(coleccion, hecho);
+                    return Mono.empty();
+                })
+                .then();
+    }
+
+    //COLECCION OUTPUT
     private ColeccionOutputDTO coleccionOutputDTO(Coleccion coleccion) {
         var coleccionDto = new ColeccionOutputDTO();
 
@@ -99,34 +190,6 @@ public class ColeccionService implements IColeccionService {
         return coleccionDto;
     }
 
-    @Override
-    public void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
 
-        refrescarHechosEnColeccion(coleccion)
-            .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
-            .subscribe();
-    }
-
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
-        return Flux
-            .fromIterable(hechosRepositorio.findall())
-            .flatMap(hecho -> {
-                this.guardarEnColeccion(coleccion, hecho);
-                return Mono.empty();
-            })
-            .then();
-    }
-
-    private void agregarFuente(String handle, Long idFuenteOrigen)
-    {
-        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuenteOrigen);
-        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
-
-        coleccionAModificar.agregarFuente(fuenteAAgregar);
-
-        coleccionRepository.save(coleccionAModificar);
-    }
 }
 

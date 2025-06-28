@@ -9,4 +9,5 @@ public interface IColeccionRepository {
     public List<Coleccion> findall();
     public Coleccion findByHandle(String handle);
     public void update(Coleccion coleccion);
+    void delete(Coleccion coleccion);
 }

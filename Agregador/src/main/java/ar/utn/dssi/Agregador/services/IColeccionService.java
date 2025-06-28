@@ -13,9 +13,20 @@ import java.util.List;
 
 @Service
 public interface IColeccionService {
+    //CRUD
+    ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
+    List<HechoOutputDTO> leerColeccion (String handle);
+    ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
+    void eliminarColeccion(String handle);
+
     List<ColeccionOutputDTO> obtenerColecciones();
-    void crearColeccion(ColeccionInputDTO coleccionInputDTO);
-    List<HechoOutputDTO> obtenerHechosDeColeccion (String handle);
+
+    void agregarFuente(Long idFuente,String handle);
+    void eliminarFuente(Long idFuente, String handle);
+
     Mono<Void> refrescarColecciones(Hecho hecho);
-    public void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle);
+
+    void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle);
+    void eliminarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle);
+
 }
