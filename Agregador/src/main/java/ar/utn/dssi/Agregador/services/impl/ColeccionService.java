@@ -42,6 +42,7 @@ public class ColeccionService implements IColeccionService {
         coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
 
         coleccionRepository.save(coleccion);
+        //TODO deberia devolver la coleccion creada => falta manejo de errores
     }
 
     @Override
