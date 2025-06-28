@@ -81,6 +81,9 @@ public class HechosService implements IHechosService {
   public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
     // Validaciones manuales
 
+    //TODO esta logica de validacion podria ir en una clase ValidadorHechosInput que implementa un metodo validar y recibe el hecho
+    //encapsula la logica de validacion y lo vuelve mas extensible
+
     if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
       throw new DatosFaltantes("El título es obligatorio.");
     }
