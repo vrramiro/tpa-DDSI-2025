@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.spam.DetectorDeSpam;
@@ -11,7 +12,10 @@ import ar.utn.dssi.Agregador.services.IHechosService;
 import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.management.relation.RoleInfoNotFoundException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionService {
@@ -25,8 +29,9 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   @Autowired
   private IHechosRepository hechosRepository;
 
+  //CREAR SOLICITUDES DE ELIMINACION
   @Override
-  public void crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
+  public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
     var solicitud = new SolicitudDeEliminacion();
 
     solicitud.setIDHecho(solicitudDeEliminacion.getIDHecho());
@@ -43,8 +48,11 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     }
 
     solicitudDeEliminacionRepository.save(solicitud);
+
+    return this.SolicitudEliminacionDTO(solicitud);
   }
 
+  //ACEPTAR O RECHAZAR SOLICITUDES DE ELIMINACION
   @Override
   public void aceptarSolicitud(Long idSolicitud){
     SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
