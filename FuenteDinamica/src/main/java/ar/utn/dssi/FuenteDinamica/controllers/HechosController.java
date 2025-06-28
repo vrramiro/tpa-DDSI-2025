@@ -30,19 +30,12 @@ public class HechosController {
   @GetMapping("/hechos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
     List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos();
-    if (hechos.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(hechos);
   }
 
   @GetMapping("/hechosNuevos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosNuevos() {
     List<HechoOutputDTO> hechos = this.hechosService.obtenerHechosNuevos();
-
-    if (hechos.isEmpty()){
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(hechos);
   }
 }

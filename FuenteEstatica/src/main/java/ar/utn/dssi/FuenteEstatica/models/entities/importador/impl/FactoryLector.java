@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
+import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
 
 import java.io.File;
 
@@ -16,7 +17,7 @@ public class FactoryLector {
                 instancia = new LectorDeArchivosCSV();
                 break;
             default:
-                throw new RuntimeException("No se ha podido crear el lector de archivo con extensión: " + extension);
+                throw new ValidacionException("No se ha podido crear el lector de archivo con extensión: " + extension);
         }
 
         return instancia;

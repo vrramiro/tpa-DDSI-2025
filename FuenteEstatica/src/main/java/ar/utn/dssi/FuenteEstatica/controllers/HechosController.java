@@ -26,13 +26,7 @@ public class HechosController {
     @GetMapping("/hechos")
     public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
         List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos();
-
-        if (hechos.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-
         return ResponseEntity.ok(hechos);
-
         //TODO implementar endpoin para filtrado de hechos enviados
     }
 }

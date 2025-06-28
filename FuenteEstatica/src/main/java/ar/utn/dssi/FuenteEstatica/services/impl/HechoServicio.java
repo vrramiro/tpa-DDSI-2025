@@ -3,6 +3,8 @@ package ar.utn.dssi.FuenteEstatica.services.impl;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Origen;
 import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
+import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
 import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
 import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
@@ -47,6 +49,11 @@ public class HechoServicio implements IHechoServicio {
     public List<HechoOutputDTO> obtenerHechos() {
         var hechos = this.hechoRepositorio.findAll();
 
+        if (hechos.isEmpty()) {
+            throw new RepositorioVacio("El repositorio esta vacio, no tiene datos.");
+
+        }
+
         var hechosAEnviar = hechos.stream().map(this::hechoOutputDTO).toList();
 
         var hechosNuevos = hechos.stream().filter(hecho-> hecho.getEnviado().equals(false));
@@ -56,10 +63,14 @@ public class HechoServicio implements IHechoServicio {
         hechosNuevos.
                 forEach(hecho -> {
                         try {
-                            hecho.setEnviado(true);
-                            hechoRepositorio.update(hecho);
-                        } catch (NoSuchElementException e) {
-                            errores.add(hecho.getTitulo());
+                            if(hecho.getId() == null) {
+                                errores.add(hecho.getTitulo());
+                            } else {
+                                hecho.setEnviado(true);
+                                hechoRepositorio.update(hecho);
+                            }
+                        } catch (Exception e) {
+                            throw new ErrorGeneralRepositorio("Error en el repositorio");
                         }
                 }
         );

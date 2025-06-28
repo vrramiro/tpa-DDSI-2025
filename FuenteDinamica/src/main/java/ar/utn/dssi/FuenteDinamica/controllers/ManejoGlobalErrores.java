@@ -1,10 +1,9 @@
-package ar.utn.dssi.FuenteEstatica.controllers;
+package ar.utn.dssi.FuenteDinamica.controllers;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.ErrorDTO;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
+import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.ErrorDTO;
+import ar.utn.dssi.FuenteDinamica.models.Errores.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.models.Errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.models.Errores.RepositorioVacio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,14 +14,9 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class ManejoGlobalErrores {
 
-    @ExceptionHandler(ValidacionException.class)
-    public ResponseEntity<ErrorDTO> manejarValidacion(ValidacionException ex) {
-        return construirRespuestaError(ex.getMessage(),HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ErrorActualizarRepositorio.class)
-    public ResponseEntity<ErrorDTO> manejarActualizarRepositorio(ErrorActualizarRepositorio ex) {
-        return construirRespuestaError(ex.getMessage(), ex.getStatus());
+    @ExceptionHandler(DatosFaltantes.class)
+    public ResponseEntity<ErrorDTO> datosFaltantes(DatosFaltantes ex) {
+        return construirRespuestaError(ex.getMessage(),HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(RepositorioVacio.class)
