@@ -1,6 +1,5 @@
 package ar.utn.dssi.Agregador.models.entities.solicitud;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +8,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 public class SolicitudDeEliminacion {
-    private Long IDHecho;
+    private Long IdHecho;
     private String descripcion;
     private EstadoDeSolicitud estadoDeSolicitud;
     private LocalDateTime fechaDeCreacion;
