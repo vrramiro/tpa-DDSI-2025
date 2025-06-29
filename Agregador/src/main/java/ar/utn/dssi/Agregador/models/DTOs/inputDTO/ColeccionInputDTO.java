@@ -11,4 +11,4 @@ public class ColeccionInputDTO {
     private String descripcion;
     private List<ICriterioDePertenencia> criteriosDePertenecias;
     private String handle;
-    }
+}

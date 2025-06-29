@@ -16,7 +16,10 @@ public class HechosRepository implements IHechosRepository {
 
   @Override
   public Hecho findById(Long id) {
-    return this.hechos.stream().filter(hecho -> hecho.getIdHecho().equals(id)).findFirst().orElse(null);
+    return this.hechos.stream()
+            .filter(hecho -> hecho.getIdHecho().equals(id))
+            .findFirst()
+            .orElse(null);
   }
 
   @Override
@@ -32,5 +35,18 @@ public class HechosRepository implements IHechosRepository {
   @Override
   public long obtenerUltimoId() {
     return this.hechos.size()+1;
+  }
+
+  @Override
+  public void update(Hecho hecho) {
+    hechos.remove(findById(hecho.getIdHecho()));
+    hechos.add(hecho);
+  }
+
+  @Override
+  public void delete(Long id){
+    var hecho = findById(id);
+    hecho.setVisible(false);
+    this.update(hecho);
   }
 }

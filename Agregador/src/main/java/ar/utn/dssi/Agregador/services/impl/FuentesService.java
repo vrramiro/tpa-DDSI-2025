@@ -2,7 +2,14 @@ package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.external.HechosMetaMapa;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.FuenteServiceOutputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.services.IFuentesService;
+import ar.utn.dssi.Agregador.services.IHechosService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
@@ -10,58 +17,51 @@ import java.util.List;
 
 @Service
 public class FuentesService implements IFuentesService {
-  private WebClient fuenteEstatica;
-  private WebClient fuenteDinamica;
-  private WebClient fuenteProxy;
+  private List<Fuente> fuentes;
+
+  @Autowired
+  private IHechosService hechosService;
 
   public FuentesService() {
-    //TODO implementar controllers de fuentes
+    this.fuentes = new ArrayList<>();
   }
 
   @Override
-  public List<HechoInputDTO> obtenerNuevosHechos() {
-    List<HechoInputDTO> hechosNuevos = new ArrayList<>();
-
-    hechosNuevos.addAll(this.pedirHechosNuevosA(fuenteEstatica));
-
-    hechosNuevos.addAll(this.pedirHechosNuevosA(fuenteDinamica));
-
-    hechosNuevos.addAll(pedirHechosNuevosA(fuenteProxy));
-
-    return hechosNuevos;
-  }
-
-  @Override
-  //Los hechos output de una fuente metamapa son iguales a los hechos output
-  public List<HechoInputDTO> obtenerHechosMetamapa() {
-    return fuenteProxy
-        .get()
-        .uri(uriBuilder ->
-            uriBuilder
-                .path("/fuente/hechos/metamapa") //este endpoint al igual que el resto aun no existe
-                .build())
-        .retrieve()
-        .bodyToMono(HechosMetaMapa.class)
-        .map(HechosMetaMapa::getHechos)
-        .block();
-  }
-
-  private List<HechoInputDTO> pedirHechosNuevosA(WebClient fuente){
-    return fuente
-        .get()
-        .uri(uriBuilder ->
-            uriBuilder
-                //TODO implementar
-                .path("/fuente/hechos")
-               //.queryParam("enviado", false)
-                .build()
+  public List<Hecho> obtenerNuevosHechos() {
+    return this
+        .fuentes
+        .stream()
+        .filter(fuente -> !fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream()
+            .map(hechoInput -> {
+              Hecho hecho = hechosService.crearHecho(hechoInput, fuente.getIdFuente());
+              hechosService.guardarHecho(hecho);
+              return hecho;
+            })
         )
-        .retrieve()
-        .bodyToFlux(HechoInputDTO.class)
-        .collectList()
-        .block();
+        .toList();
+  }
+
+  @Override
+  public List<HechoInputDTO> obtenerHechosProxy() {
+    return this
+        .fuentes
+        .stream()
+        .filter(fuente -> fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream())
+        .toList();
+  }
+
+  @Override
+  public void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen){
+  }
+
+  public void agregarFuente(Fuente fuente) {
+    this.fuentes.add(fuente);
+  }
+
+  public Fuente obtenerFuentePorId(Long idFuenteOrigen)
+  {
+    return this.fuentes.stream().filter(fuente -> fuente.getIdFuente().equals(idFuenteOrigen)).findFirst().orElse(null);
   }
 }
-
-//TODO tener en cuenta que puede haber varias instancias de fuentes -> como gestionar
-

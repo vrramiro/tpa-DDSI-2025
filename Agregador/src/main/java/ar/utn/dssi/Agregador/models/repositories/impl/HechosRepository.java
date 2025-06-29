@@ -19,6 +19,11 @@ public class HechosRepository implements IHechosRepository {
         return this.hechos.stream().filter(hecho -> hecho.getIdHecho().equals(id)).findFirst().orElse(null);
     }
 
+    public Hecho findByIdOrigenAndIdFuente(Long idEnFuente, Long idFuente)
+    {
+        return this.hechos.stream().filter(hecho -> hecho.getIdHecho().equals(idEnFuente) && equals(idFuente)).findFirst().orElse(null);
+    }
+
     @Override
     public Hecho save(Hecho hecho) {
         hecho.setIdHecho((long) this.hechos.size());

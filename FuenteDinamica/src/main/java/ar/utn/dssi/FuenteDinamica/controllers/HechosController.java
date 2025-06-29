@@ -5,6 +5,7 @@ import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,19 +22,21 @@ public class HechosController {
   private IHechosService hechosService;
 
   @PostMapping("/crear")
-  public void crearHecho(@RequestBody HechoInputDTO hecho) {
+  public ResponseEntity<Void> crearHecho(@RequestBody HechoInputDTO hecho) {
     this.hechosService.crear(hecho);
+    return ResponseEntity.ok().build();
   }
 
-  @GetMapping
-  public List<HechoOutputDTO> obtenerHechos() {
-    return this.hechosService.obtenerHechos();
+  @GetMapping("/hechos")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
+    List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos();
+    return ResponseEntity.ok(hechos);
+  }
+
+  @GetMapping("/hechosNuevos")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosNuevos() {
+    List<HechoOutputDTO> hechos = this.hechosService.obtenerHechosNuevos();
+    return ResponseEntity.ok(hechos);
   }
 }
-
-
-
-
-
-
 

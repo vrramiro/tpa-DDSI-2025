@@ -5,7 +5,10 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
+import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +24,13 @@ public class ColeccionService implements IColeccionService {
     private IColeccionRepository coleccionRepository;
 
     @Autowired
+    private IHechosRepository hechosRepositorio;
+
+    @Autowired
     private IHechosService hechosService;
+
+    @Autowired
+    private FuentesService fuentesService;
 
     @Override
     public void crearColeccion(ColeccionInputDTO coleccionInputDTO) {
@@ -33,6 +42,7 @@ public class ColeccionService implements IColeccionService {
         coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
 
         coleccionRepository.save(coleccion);
+        //TODO deberia devolver la coleccion creada => falta manejo de errores
     }
 
     @Override
@@ -87,6 +97,36 @@ public class ColeccionService implements IColeccionService {
         coleccionDto.setHechos(coleccion.getHechos());
 
         return coleccionDto;
+    }
+
+    @Override
+    public void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+        coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
+
+        refrescarHechosEnColeccion(coleccion)
+            .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
+            .subscribe();
+    }
+
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
+        return Flux
+            .fromIterable(hechosRepositorio.findall())
+            .flatMap(hecho -> {
+                this.guardarEnColeccion(coleccion, hecho);
+                return Mono.empty();
+            })
+            .then();
+    }
+
+    private void agregarFuente(String handle, Long idFuenteOrigen)
+    {
+        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuenteOrigen);
+        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
+
+        coleccionAModificar.agregarFuente(fuenteAAgregar);
+
+        coleccionRepository.save(coleccionAModificar);
     }
 }
 

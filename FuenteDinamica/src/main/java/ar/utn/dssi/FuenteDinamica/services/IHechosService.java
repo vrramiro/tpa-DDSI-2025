@@ -8,8 +8,12 @@ import java.util.List;
 
 public interface IHechosService {
   List<HechoOutputDTO> obtenerHechos();
+  List<HechoOutputDTO> obtenerHechosNuevos();
   HechoOutputDTO obtenerHechoPorId(Long idHecho);
   HechoOutputDTO crear(HechoInputDTO hecho);
   HechoOutputDTO hechoOutputDTO(Hecho hecho);
-
+  void editarHecho(HechoInputDTO hecho, Long idHecho);
+  Boolean hechoEditable(Long idHecho);
+  void eliminarHecho(Long idHecho);
+  List<HechoOutputDTO> obtenerHechosEditados();
 }

@@ -20,9 +20,11 @@ public class Hecho {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private List<MultipartFile> contenidoMultimedia;
-
     private Long IdHecho;
     private Origen origen;
+    private Long idOrigen;
+    private Long idFuente;
+
     private List<Etiqueta> etiquetas;
     private boolean visible;
 
