@@ -1,7 +1,9 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,7 @@ public class HechosControllerPUBLIC {
   private IHechosService hechosService;
 
   @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute Filtro filtros, @ModelAttribute ModoNavegacion modoNavegacion){
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute IModoNavegacion modoNavegacion){
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(filtros, modoNavegacion);
 
     if(hechos.isEmpty()) {

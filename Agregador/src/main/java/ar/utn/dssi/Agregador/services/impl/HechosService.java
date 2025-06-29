@@ -7,6 +7,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -18,6 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @Service
@@ -70,29 +72,33 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtros) {       //READ
+    public List<HechoOutputDTO> obtenerHechos(FiltroInputDTO filtroInputDTO, IModoNavegacion modoNavegacion) {       //READ
         try {
-            Filtro filtro = this.crearFiltro();
+            List<Hecho> hechosModulo = this.hechosRepository.findall();
 
-            List<HechoOutputDTO> hechosFiltrados = this.hechosRepository
-                .findall()
-                .stream()
-                .filter(hecho -> filtro.loCumple(hecho))
-                .map(this::hechoOutputDTO)
-                .toList();
+            Filtro filtro = this.crearFiltro(filtroInputDTO);
 
-            if (hechosFiltrados.isEmpty()) {
+            var hechos = modoNavegacion.obtenerHechos(filtro, hechosModulo)
+                    .stream()
+                    .filter(filtro::loCumple)
+                    .map(this::hechoOutputDTO)
+                    .toList();
+
+            if (hechos.isEmpty()) {
                 throw new RuntimeException("No hay hechos disponibles");
             }
 
-            return hechosFiltrados;
+            return hechos;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
     }
 
+
     private Filtro crearFiltro(FiltroInputDTO filtros) {
         Filtro filtro = new Filtro();
+
+        //TODO: ASIGNAR ATRIBUTOS DEL INPUT
 
         return filtro;
     }
