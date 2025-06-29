@@ -19,4 +19,10 @@ public class Coleccion {
     public Coleccion() {
         this.hechos = new java.util.ArrayList<>();
     }
+
+    public Boolean contieneHecho(Hecho hechoBuscado) {
+        return this.hechos.stream().anyMatch(hecho -> hecho.mismoHecho(hechoBuscado)); }
+
+    public Boolean contieneHechoParecido(Hecho hechoBuscado) {
+        return this.hechos.stream().anyMatch(hecho -> hecho.mismoMismoTitulo(hechoBuscado) && hecho.distintosAtributos(hechoBuscado)); }
 }
