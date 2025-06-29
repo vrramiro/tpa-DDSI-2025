@@ -54,8 +54,8 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(coleccionOutputDTO); // status 201
   }
 
-  @PutMapping("/agregar/{idFuente},{idColeccion}")
-  public ResponseEntity<Void> agregarFuente(@PathVariable Long idFuente, String handle) {
+  @PutMapping("/agregar/{idColeccion}/{idFuente}")
+  public ResponseEntity<Void> agregarFuente(@PathVariable Long idFuente, @PathVariable String handle) {
     coleccionService.agregarFuente(idFuente, handle);
 
     return ResponseEntity.ok().build();
@@ -68,8 +68,8 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
   }
 
-  @DeleteMapping("/eliminar/{idFuente},{idColeccion}")
-  public ResponseEntity<Void> eliminarFuente(@PathVariable Long idFuente, String handle){
+  @DeleteMapping("/eliminar/{idColeccion}/{idFuente}")
+  public ResponseEntity<Void> eliminarFuente(@PathVariable Long idFuente, @PathVariable String handle){
     coleccionService.eliminarFuente(idFuente, handle);
 
     return ResponseEntity.ok().build(); // status 200

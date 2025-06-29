@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.criterio.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
@@ -88,7 +89,7 @@ public class ColeccionService implements IColeccionService {
     //OBTENER TODAS LAS COLECCIONES
     @Override
     public List<ColeccionOutputDTO> obtenerColecciones() {
-        var colecciones = coleccionRepository.findall();
+        List<Coleccion> colecciones = coleccionRepository.findall();
 
         return colecciones
                 .stream()
@@ -104,7 +105,7 @@ public class ColeccionService implements IColeccionService {
 
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
 
-        agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
+        this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
 
         coleccionRepository.save(coleccionAModificar);
     }
@@ -134,6 +135,11 @@ public class ColeccionService implements IColeccionService {
                 return Mono.empty();
             })
             .then();
+    }
+
+    @Override
+    public List<HechoOutputDTO> leerColeccion(String handle) {
+        return List.of();
     }
 
     private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
