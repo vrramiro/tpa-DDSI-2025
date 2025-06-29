@@ -5,6 +5,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -196,6 +197,12 @@ public class ColeccionService implements IColeccionService {
         return coleccionDto;
     }
 
+    public void consensuarHechos()
+    {
+        List<Hecho> hechos = hechosRepositorio.findall();
+        List<Coleccion> colecciones = coleccionRepository.findall();
 
+        colecciones.forEach(coleccion -> {coleccion.aplicarAlgoritmoConsenso(hechos);});
+    }
 }
 

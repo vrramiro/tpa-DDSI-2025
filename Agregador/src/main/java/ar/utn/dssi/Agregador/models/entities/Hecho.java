@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -43,15 +44,20 @@ public class Hecho {
     //no todos los atributos porque por que compararias la descripcion
     public Boolean mismoHecho(Hecho otroHecho) {
         return this.getTitulo().equals(otroHecho.getTitulo()) &&
-                this.getCategoria().equals(otroHecho.getCategoria()) &&
-                    this.getUbicacion().equals(otroHecho.getUbicacion()) &&
-                        this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
+            this.getCategoria().equals(otroHecho.getCategoria()) &&
+            this.getUbicacion().equals(otroHecho.getUbicacion()) &&
+            this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
     }
 
     public boolean mismoMismoTitulo(Hecho otroHecho) { return this.getTitulo().equals(otroHecho.getTitulo()); }
 
-    public boolean distintosAtributos(Hecho otroHecho) { return !this.getDescripcion().equals(otroHecho.getDescripcion())
+    public boolean distintosAtributos(Hecho otroHecho) {
+        return !this.getDescripcion().equals(otroHecho.getDescripcion())
             || !this.getCategoria().equals(otroHecho.getCategoria())
             || !this.getUbicacion().equals(otroHecho.getUbicacion())
-            || !this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento()); }
+            || !this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
+    }
+
+    public boolean distintaFuente(Hecho hecho) { return (!Objects.equals(hecho.getIdFuente(), this.getIdFuente())); }
+
 }

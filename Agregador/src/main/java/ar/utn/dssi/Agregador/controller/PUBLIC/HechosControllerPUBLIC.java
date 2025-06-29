@@ -18,8 +18,8 @@ public class HechosControllerPUBLIC {
   private IHechosService hechosService;
 
   @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute Filtro filtros){
-    List<HechoOutputDTO> hechos = hechosService.obtenerHechosFiltrados(filtros);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute Filtro filtros, @ModelAttribute ModoNavegacion modoNavegacion){
+    List<HechoOutputDTO> hechos = hechosService.obtenerHechos(filtros, modoNavegacion);
 
     if(hechos.isEmpty()) {
       return ResponseEntity.noContent().build(); // status 204

@@ -1,0 +1,22 @@
+package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso;
+
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class Absoluta implements IAlgoritmoDeConsenso{
+
+  @Override
+  public Boolean consensuar(List<Hecho> hechosDelAgregador, List<Hecho> hechosDeColeccion) {
+    return hechosDeColeccion.stream().allMatch
+        (hecho -> hechosDeColeccion.stream().(otroHecho ->
+            otroHecho.distintaFuente(hecho) && otroHecho.mismoHecho(hecho)));
+
+  }
+}
+
