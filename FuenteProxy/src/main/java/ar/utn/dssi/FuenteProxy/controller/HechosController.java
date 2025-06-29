@@ -18,9 +18,6 @@ public class HechosController {
 
     List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos();
 
-    if(hechos.isEmpty()){
-      return ResponseEntity.noContent().build();
-    }
     return ResponseEntity.ok(hechos);
   }
 

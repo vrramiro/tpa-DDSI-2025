@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.models.Errores.RepositorioVacio;
 import ar.utn.dssi.FuenteProxy.models.adapters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.adapters.adaptadoresConcretos.DesastresNaturalesAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
@@ -21,12 +22,24 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
-    return desastreNaturalesAdapter.obtenerHechos();
+    List<HechoOutputDTO> hechos = desastreNaturalesAdapter.obtenerHechos();
+
+    if(hechos.isEmpty()) {
+      throw new RepositorioVacio("No hay hechos en el repositorio proxy.");
+    }
+
+    return hechos;
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    return fuenteMetamapa.obtenerHechosMetamapa();
+    List<HechoOutputDTO> hechos = fuenteMetamapa.obtenerHechosMetamapa();
+
+    if(hechos.isEmpty()) {
+      throw new RepositorioVacio("No hay hechos en el repositorio proxy metamapa.");
+    }
+
+    return hechos;
   }
 
   private HechoOutputDTO hechoOutputDTO(Hecho hecho) {
