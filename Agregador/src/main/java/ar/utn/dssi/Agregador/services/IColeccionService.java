@@ -20,6 +20,7 @@ public interface IColeccionService {
     void eliminarColeccion(String handle);
 
     List<ColeccionOutputDTO> obtenerColecciones();
+    List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
 
     void agregarFuente(Long idFuente,String handle);
     void eliminarFuente(Long idFuente, String handle);
