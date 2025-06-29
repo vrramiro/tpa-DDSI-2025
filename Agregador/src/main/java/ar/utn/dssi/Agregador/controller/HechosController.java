@@ -1,14 +1,10 @@
 package ar.utn.dssi.Agregador.controller;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -29,13 +25,6 @@ public class HechosController {
 
     return ResponseEntity.ok(hechos); // status 200
   }
-
-  @PutMapping("/actualizar/")
-  public Mono<ResponseEntity<HechoOutputDTO>> actualizarHecho() {
-    return hechosService.actualizarHechos().then(Mono.just(ResponseEntity.ok().build()));
-  }
-
-
 }
 
 
