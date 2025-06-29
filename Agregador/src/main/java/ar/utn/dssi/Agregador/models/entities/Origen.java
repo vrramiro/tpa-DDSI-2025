@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.models.entities.content;
+package ar.utn.dssi.Agregador.models.entities;
 
 public enum Origen {
     FUENTE_ESTATICA,

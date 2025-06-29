@@ -3,10 +3,10 @@ package ar.utn.dssi.Agregador.services.impl;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
-import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
-import ar.utn.dssi.Agregador.models.entities.criterio.impl.CriterioPorFuente;
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
@@ -146,7 +146,7 @@ public class ColeccionService implements IColeccionService {
         boolean cumpleCriterios = coleccion
             .getCriteriosDePertenecias()
             .stream()
-            .allMatch(criterio -> criterio.hechoLoCumple(hecho));
+            .allMatch(criterio -> criterio.loCumple(hecho));
 
         if (cumpleCriterios) {
             coleccion.getHechos().add(hecho);
@@ -156,7 +156,7 @@ public class ColeccionService implements IColeccionService {
 
     //REFRESCO DE HECHOS EN COLECCION SEGUN CRITERIOS DE PERTENENCIA AGREGADOS
     @Override
-    public void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
+    public void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
 
@@ -166,7 +166,7 @@ public class ColeccionService implements IColeccionService {
     }
 
     @Override
-    public void eliminarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle) {
+    public void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().remove(nuevoCriterio);
 

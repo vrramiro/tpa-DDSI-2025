@@ -1,10 +1,8 @@
 package ar.utn.dssi.Agregador.models.repositories.impl;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
 import ar.utn.dssi.Agregador.models.repositories.ISolicitudDeEliminacionRepository;
 import org.springframework.stereotype.Repository;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository

@@ -1,22 +1,22 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
+import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.content.Categoria;
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
-import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.testcontainers.shaded.org.apache.commons.lang3.ObjectUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
-import java.util.stream.Stream;
 import java.util.List;
 
 
@@ -70,27 +70,31 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos() {       //READ
+    public List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtros) {       //READ
         try {
-            var hechos = this.hechosRepository.findall().stream()
-                    .map(this::hechoOutputDTO)
-                    .toList();;
-            var hechosProxy = this.fuentesService.obtenerHechosProxy()
-                    .stream()
-                    .map(this::hechoOutputDTOProxy)
-                    .toList();
+            Filtro filtro = this.crearFiltro();
 
-            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
+            List<HechoOutputDTO> hechosFiltrados = this.hechosRepository
+                .findall()
+                .stream()
+                .filter(hecho -> filtro.loCumple(hecho))
+                .map(this::hechoOutputDTO)
+                .toList();
+
+            if (hechosFiltrados.isEmpty()) {
                 throw new RuntimeException("No hay hechos disponibles");
             }
 
-            return Stream.concat(
-                    hechos.stream(),
-                    hechosProxy.stream()
-            ).toList();
+            return hechosFiltrados;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
+    }
+
+    private Filtro crearFiltro(FiltroInputDTO filtros) {
+        Filtro filtro = new Filtro();
+
+        return filtro;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.impl.TipoFuenteDinamica;
 import ar.utn.dssi.Agregador.models.entities.fuente.impl.TipoFuenteEstatica;
 import ar.utn.dssi.Agregador.models.entities.fuente.impl.TipoFuenteProxy;

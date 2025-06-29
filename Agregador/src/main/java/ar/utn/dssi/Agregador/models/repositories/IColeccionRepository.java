@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.repositories;
 
-import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
 
 import java.util.List;
 

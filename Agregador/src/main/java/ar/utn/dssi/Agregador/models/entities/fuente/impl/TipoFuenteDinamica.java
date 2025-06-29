@@ -2,7 +2,7 @@ package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.external.HechosDeFuente;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.models.entities.content.Origen;
+import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.util.List;

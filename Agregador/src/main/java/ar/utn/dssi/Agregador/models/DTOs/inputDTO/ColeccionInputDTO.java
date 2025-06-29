@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.DTOs.inputDTO;
 
-import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +9,6 @@ import java.util.List;
 public class ColeccionInputDTO {
     private String titulo;
     private String descripcion;
-    private List<ICriterioDePertenencia> criteriosDePertenecias;
+    private List<ICriterioDeFiltrado> criteriosDePertenecias;
     private String handle;
 }

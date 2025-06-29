@@ -1,9 +1,9 @@
 package ar.utn.dssi.Agregador.models.DTOs.outputDTO;
 
 
-import ar.utn.dssi.Agregador.models.entities.content.Categoria;
-import ar.utn.dssi.Agregador.models.entities.content.Etiqueta;
-import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.Etiqueta;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

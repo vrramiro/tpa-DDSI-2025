@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 
 public class multiplesMenciones implements IAlgoritmoDeConsenso{
     @Override

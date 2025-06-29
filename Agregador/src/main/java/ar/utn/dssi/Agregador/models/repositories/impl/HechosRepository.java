@@ -1,7 +1,6 @@
 package ar.utn.dssi.Agregador.models.repositories.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 
 import java.util.ArrayList;

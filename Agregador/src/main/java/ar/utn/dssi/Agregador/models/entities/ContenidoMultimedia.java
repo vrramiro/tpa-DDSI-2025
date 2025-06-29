@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.models.entities.content;
+package ar.utn.dssi.Agregador.models.entities;
 
 public class ContenidoMultimedia {
     private String url;

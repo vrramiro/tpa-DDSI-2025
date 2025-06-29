@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.repositories;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

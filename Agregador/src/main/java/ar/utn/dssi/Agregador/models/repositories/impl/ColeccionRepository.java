@@ -1,12 +1,11 @@
 package ar.utn.dssi.Agregador.models.repositories.impl;
 
-import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class ColeccionRepository implements IColeccionRepository {

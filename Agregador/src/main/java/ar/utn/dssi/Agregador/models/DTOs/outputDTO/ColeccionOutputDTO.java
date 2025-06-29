@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.DTOs.outputDTO;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import lombok.Data;
 
 import java.util.List;

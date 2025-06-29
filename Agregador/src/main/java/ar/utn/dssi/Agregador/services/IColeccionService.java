@@ -3,9 +3,8 @@ package ar.utn.dssi.Agregador.services;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.content.Coleccion;
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
-import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -27,7 +26,7 @@ public interface IColeccionService {
 
     Mono<Void> refrescarColecciones(Hecho hecho);
 
-    void agregarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle);
-    void eliminarCriterioDePertenencia(ICriterioDePertenencia nuevoCriterio, String handle);
+    void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle);
+    void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle);
 
 }

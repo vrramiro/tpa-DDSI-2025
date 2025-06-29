@@ -1,10 +1,9 @@
 package ar.utn.dssi.Agregador.models.DTOs.external;
 
-import ar.utn.dssi.Agregador.models.entities.content.Categoria;
-import ar.utn.dssi.Agregador.models.entities.content.Origen;
-import ar.utn.dssi.Agregador.models.entities.content.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.Origen;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,6 +1,5 @@
 package ar.utn.dssi.Agregador.schedulers;
 
-import ar.utn.dssi.Agregador.models.entities.content.Hecho;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
