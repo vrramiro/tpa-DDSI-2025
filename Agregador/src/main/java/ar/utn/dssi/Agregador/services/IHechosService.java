@@ -5,6 +5,7 @@ import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -13,7 +14,9 @@ public interface IHechosService {
     //CRUD
     Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
     List<HechoOutputDTO> obtenerHechos();
+
     List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtro);
+  
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     Mono<Void> actualizarHechos();
     void eliminarHecho(Long IDHecho);

@@ -7,6 +7,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -72,7 +73,7 @@ public class HechosService implements IHechosService {
 
     @Override
     public List<HechoOutputDTO> obtenerHechos() {       //READ
-        try {
+  try {
             var hechos = this.hechosRepository.findall().stream()
                     .map(this::hechoOutputDTO)
                     .toList();;
@@ -96,30 +97,27 @@ public class HechosService implements IHechosService {
 
     @Override
     public List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtros) {       //READ
+
         try {
-            Filtro filtro = this.crearFiltro();
+            var hechos = this.hechosRepository.findall().stream()
+                    .map(this::hechoOutputDTO)
+                    .toList();;
+            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+                    .stream()
+                    .map(this::hechoOutputDTOProxy)
+                    .toList();
 
-            List<HechoOutputDTO> hechosFiltrados = this.hechosRepository
-                .findall()
-                .stream()
-                .filter(hecho -> filtro.loCumple(hecho))
-                .map(this::hechoOutputDTO)
-                .toList();
-
-            if (hechosFiltrados.isEmpty()) {
+            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
                 throw new RuntimeException("No hay hechos disponibles");
             }
 
-            return hechosFiltrados;
+            return Stream.concat(
+                    hechos.stream(),
+                    hechosProxy.stream()
+            ).toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
-    }
-
-    private Filtro crearFiltro(FiltroInputDTO filtros) {
-        Filtro filtro = new Filtro();
-
-        return filtro;
     }
 
     @Override

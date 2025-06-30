@@ -1,14 +1,17 @@
 package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
@@ -86,6 +89,40 @@ public class ColeccionService implements IColeccionService {
             throw new RuntimeException("Error al eliminar la coleccion: " + e.getMessage(), e);
         }
     }
+
+    //NAVEGACION EN LAS COLECCIONES
+    @Override
+    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, IModoNavegacion modoNavegacion) {       //READ
+        try {
+            List<Hecho> hechosModulo = this.hechosRepository.findall();
+
+            Filtro filtro = this.crearFiltro(filtroInputDTO);
+
+            var hechos = modoNavegacion.hechosNavegables(hechosModulo)
+                    .stream()
+                    .filter(filtro::loCumple)
+                    .map(this::hechoOutputDTO)
+                    .toList();
+
+            if (hechos.isEmpty()) {
+                throw new RuntimeException("No hay hechos disponibles");
+            }
+
+            return hechos;
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
+        }
+    }
+
+
+    private Filtro crearFiltro(FiltroInputDTO filtros) {
+        Filtro filtro = new Filtro();
+
+        //TODO: ASIGNAR ATRIBUTOS DEL INPUT
+
+        return filtro;
+    }
+
 
     //OBTENER TODAS LAS COLECCIONES
     @Override
