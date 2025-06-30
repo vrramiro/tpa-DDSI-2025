@@ -20,7 +20,7 @@ public class HechosControllerPUBLIC {
   private IHechosService hechosService;
 
   @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(){
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(){  //TODO: APLICAR FILTRADOS
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos();
 
     if(hechos.isEmpty()) {

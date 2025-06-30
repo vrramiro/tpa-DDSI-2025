@@ -3,6 +3,7 @@ package ar.utn.dssi.Agregador.services.impl;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.*;
 import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.TipoCriterio;
 
@@ -15,47 +16,32 @@ public class FiltroService implements IFiltrosService {
 
     @Override
     public Filtro crearFiltro(FiltroInputDTO filtroInputDTO) {
-        Filtro filtro = new Filtro();
+        List<ICriterioDeFiltrado> criterios = new ArrayList<>();
 
+        if (filtroInputDTO.getCategoria() != null && !filtroInputDTO.getCategoria().isBlank()) {
+            criterios.add(new CriterioPorCategoria(filtroInputDTO.getCategoria()));
+        }
 
-        return filtro;
+        if (filtroInputDTO.getFecha_acontecimiento_desde() != null) {
+            criterios.add(new CriterioFechaDesde(filtroInputDTO.getFecha_acontecimiento_desde()));
+        }
+
+        if (filtroInputDTO.getFecha_acontecimiento_hasta() != null) {
+            criterios.add(new CriterioFechaHasta(filtroInputDTO.getFecha_acontecimiento_hasta()));
+        }
+
+        if (filtroInputDTO.getLatitud() != null && filtroInputDTO.getLongitud() != null) {
+            criterios.add(new CriterioUbicacion(filtroInputDTO.getLatitud(), filtroInputDTO.getLongitud()));
+        }
+
+        if (filtroInputDTO.getIdFuente() != null) {
+            criterios.add(new CriterioPorFuente(filtroInputDTO.getIdFuente()));
+        }
+
+        return Filtro.builder()
+                .criteriosDeFiltro(criterios)
+                .build();
     }
 
-    private List<TipoCriterio> mapearCriterio(FiltroInputDTO filtroDTO) {
-
-        List<TipoCriterio> tipoCriterios = new ArrayList<>();
-
-        if (!filtroDTO.getCategoria().isEmpty()) {
-            tipoCriterios.add(TipoCriterio.CATEGORIA);
-        }
-
-        if (!filtroDTO.getFecha_acontecimiento_desde().toString().isBlank()) {
-            tipoCriterios.add(TipoCriterio.FECHA_DESDE);
-        }
-
-        if (!filtroDTO.getFecha_acontecimiento_hasta().toString().isBlank()) {
-            tipoCriterios.add(TipoCriterio.FECHA_HASTA);
-        }
-
-        if (!(filtroDTO.getLatitud().toString().isBlank() && filtroDTO.getLongitud().toString().isBlank())) {
-            tipoCriterios.add(TipoCriterio.UBICACION);
-        }
-
-        if (filtroDTO.getIdFuente().describeConstable().isPresent()) {
-            tipoCriterios.add(TipoCriterio.FUENTE);
-        }
-
-        return tipoCriterios;
-    }
 }
 
-/*
-public class FiltroInputDTO {
-    private String categoria;
-    private LocalDate fecha_reporte_desde;
-    private LocalDate fecha_reporte_hasta;
-    private LocalDate fecha_acontecimiento_desde;
-    private LocalDate fecha_acontecimiento_hasta;
-    private Double longitud;
-    private Double latitud;
-}

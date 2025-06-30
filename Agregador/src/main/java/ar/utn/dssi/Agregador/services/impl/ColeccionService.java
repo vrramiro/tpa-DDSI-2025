@@ -60,12 +60,15 @@ public class ColeccionService implements IColeccionService {
         return this.coleccionOutputDTO(coleccion);
     }
 
+    //OBTENER TODAS LAS COLECCIONES
     @Override
-    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findByHandle(handle);
-        var hechosColeccion = coleccion.getHechos();
+    public List<ColeccionOutputDTO> obtenerColecciones() {
+        List<Coleccion> colecciones = coleccionRepository.findall();
 
-        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
+        return colecciones
+                .stream()
+                .map(this::coleccionOutputDTO)
+                .toList();
     }
 
     @Override
@@ -123,15 +126,13 @@ public class ColeccionService implements IColeccionService {
         }
     }
 
-    //OBTENER TODAS LAS COLECCIONES
+    //OBTENER HECHOS DE COLECCION
     @Override
-    public List<ColeccionOutputDTO> obtenerColecciones() {
-        List<Coleccion> colecciones = coleccionRepository.findall();
+    public List<HechoOutputDTO> hechosDeColeccion(String handle) {
+        var coleccion = coleccionRepository.findByHandle(handle);
+        var hechosColeccion = coleccion.getHechos();
 
-        return colecciones
-                .stream()
-                .map(this::coleccionOutputDTO)
-                .toList();
+        return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
     }
 
     //OPERACIONES SOBRE LAS FUENTES DE UNA COLECCION
@@ -159,7 +160,6 @@ public class ColeccionService implements IColeccionService {
         coleccionRepository.save(coleccionAModificar);
     }
 
-
     //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
     @Override
     public Mono<Void> refrescarColecciones(Hecho hecho){
@@ -172,11 +172,6 @@ public class ColeccionService implements IColeccionService {
                 return Mono.empty();
             })
             .then();
-    }
-
-    @Override
-    public List<HechoOutputDTO> leerColeccion(String handle) {
-        return List.of();
     }
 
     private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
@@ -231,10 +226,6 @@ public class ColeccionService implements IColeccionService {
         coleccionDto.setHechos(coleccion.getHechos());
 
         return coleccionDto;
-    }
-
-    private List<Hecho> hechosDeColeccion(String handle){
-        return List.of();
     }
 
     //Esta tarea deberia ser un crontask

@@ -37,4 +37,6 @@ public class SolicitudDeEliminacionControllerADMIN {
     solicitudesService.rechazarSolicitud(idSolicitud);
     return ResponseEntity.ok().build();
   }
+
+
 }

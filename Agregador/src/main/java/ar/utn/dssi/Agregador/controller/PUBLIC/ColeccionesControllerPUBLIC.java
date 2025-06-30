@@ -23,7 +23,7 @@ public class ColeccionesControllerPUBLIC {
 
   @GetMapping("/hechos/{idColeccion}")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String handle) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(handle);
+    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(handle);
 
     if(hechosDeColeccion.isEmpty()){
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204

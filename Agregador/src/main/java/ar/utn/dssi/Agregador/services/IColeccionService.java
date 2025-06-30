@@ -17,14 +17,13 @@ import java.util.List;
 public interface IColeccionService {
     //CRUD
     ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
-    List<HechoOutputDTO> leerColeccion (String handle);
+    List<ColeccionOutputDTO> obtenerColecciones();
     ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
 
     List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle);
 
-    List<ColeccionOutputDTO> obtenerColecciones();
-    List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
+    List<HechoOutputDTO> hechosDeColeccion(String handle);
 
     void agregarFuente(Long idFuente,String handle);
     void eliminarFuente(Long idFuente, String handle);

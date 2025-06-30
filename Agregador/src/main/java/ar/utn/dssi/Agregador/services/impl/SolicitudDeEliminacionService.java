@@ -46,7 +46,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
 
     solicitudDeEliminacionRepository.save(solicitud);
 
-    return this.SolicitudEliminacionDTO(solicitud);
+    return this.SolicitudEliminacionOutputDTO(solicitud);
   }
 
   //ACEPTAR O RECHAZAR SOLICITUDES DE ELIMINACION
@@ -75,4 +75,10 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
        }
        solicitudDeEliminacion.setDescripcion(descripcion);
      }
+
+     //TODO: FUNCION QUE HACE LA SOLICITUD DE ELIMINACION EN UN OUTPUT
+  private SolicitudDeEliminacionOutputDTO SolicitudEliminacionOutputDTO(SolicitudDeEliminacion solicitud) {
+    return new SolicitudDeEliminacionOutputDTO();
+  }
+
 }

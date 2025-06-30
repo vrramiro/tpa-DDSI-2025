@@ -40,7 +40,7 @@ public class ColeccionesControllerADMIN {
 
   @GetMapping("/hechos/{idColeccion}")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(idColeccion);
+    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(idColeccion);
 
     if(hechosDeColeccion.isEmpty()){
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
@@ -81,10 +81,11 @@ public class ColeccionesControllerADMIN {
   }
 
   //ESTABLECER EL ALGORITMO DE CONSENSO
-  @PutMapping("/actualizar/{algoritmo}")
-  public void actualizarAlgoritmo(@PathVariable String handle, @RequestBody AlgoritmoConsenso algoritmoConsenso){
+  @PutMapping("/actualizar/{handle}")
+  public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody AlgoritmoConsenso algoritmoConsenso) {
     coleccionService.actualizarAlgoritmo(handle, algoritmoConsenso);
 
-    return Response.status(HttpStatus.ACCEPTED); // status 201
+    return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // 202 Accepted
   }
+
 }
