@@ -60,4 +60,5 @@ public class Hecho {
 
     public boolean distintaFuente(Hecho hecho) { return (!Objects.equals(hecho.getIdFuente(), this.getIdFuente())); }
 
+    public boolean noConsensuado() { return }
 }

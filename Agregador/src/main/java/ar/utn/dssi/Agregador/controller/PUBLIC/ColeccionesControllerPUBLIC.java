@@ -23,7 +23,6 @@ public class ColeccionesControllerPUBLIC {
   @Autowired
   private IColeccionService coleccionService;
 
-
   @GetMapping("/hechos/{idColeccion}")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
     List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(idColeccion);
@@ -34,6 +33,4 @@ public class ColeccionesControllerPUBLIC {
 
     return ResponseEntity.ok(hechosDeColeccion); // status 200
   }
-
-
 }
