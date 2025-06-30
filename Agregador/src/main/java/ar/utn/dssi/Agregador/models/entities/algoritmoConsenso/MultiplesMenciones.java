@@ -11,16 +11,13 @@ import java.util.List;
 @Component
 public class MultiplesMenciones implements IAlgoritmoDeConsenso{
 
-    @Autowired
-    private IColeccionRepository coleccionRepository;
-
-    List<Coleccion> colecciones = coleccionRepository.findall();
-
-    @Override
-    public Boolean consensuar(List<Hecho> hechosDelAgregador, List<Hecho> hechosDeColeccion) {
-        return  colecciones.stream().filter(coleccion -> coleccion.contieneHecho(hecho))
-            .limit(2).count() >= 2
-            && colecciones.stream().noneMatch(coleccion -> coleccion.contieneHechoParecido(hecho));
+    public boolean cumpleAlgoritmo(List<Hecho> hechos, Hecho hecho, List<Long> idsFuentes) {
+        return idsFuentes.stream().
+            filter(fuente -> hechos.stream().anyMatch(otroHecho -> otroHecho.mismoHecho(hecho)))
+            .count() >= 2 && idsFuentes.stream().noneMatch(fuente -> hechos.stream().
+                  anyMatch(otroHecho -> otroHecho.getIdFuente().equals(fuente) &&
+                         otroHecho.mismoMismoTitulo(hecho) && otroHecho.
+                            distintosAtributos(hecho)));
     }
 
 }

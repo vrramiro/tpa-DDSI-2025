@@ -236,10 +236,7 @@ public class ColeccionService implements IColeccionService {
 
     public void consensuarHechos()
     {
-        List<Hecho> hechos = hechosRepositorio.findall();
-        List<Coleccion> colecciones = coleccionRepository.findall();
 
-        colecciones.forEach(coleccion -> {coleccion.aplicarAlgoritmoConsenso(hechos);});
     }
 }
 

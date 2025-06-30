@@ -20,7 +20,6 @@ public class ColeccionesControllerPUBLIC {
   @Autowired
   private IColeccionService coleccionService;
 
-
   @GetMapping("/hechos/{idColeccion}")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
     List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(idColeccion);
@@ -32,7 +31,6 @@ public class ColeccionesControllerPUBLIC {
     return ResponseEntity.ok(hechosDeColeccion); // status 200
   }
 
-
   @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute IModoNavegacion modoNavegacion){
     List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(filtros, modoNavegacion);
@@ -43,5 +41,4 @@ public class ColeccionesControllerPUBLIC {
 
     return ResponseEntity.ok(hechos); // status 200
   }
-
 }

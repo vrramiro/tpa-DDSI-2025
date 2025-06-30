@@ -12,6 +12,6 @@ public class FiltroInputDTO {
   private LocalDate fecha_reporte_hasta;
   private LocalDate fecha_acontecimiento_desde;
   private LocalDate fecha_acontecimiento_hasta;
-  private Double latitud;
   private Double longitud;
+  private Double latitud;
 }

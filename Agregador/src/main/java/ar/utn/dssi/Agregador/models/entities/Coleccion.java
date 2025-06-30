@@ -2,7 +2,6 @@ package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
-import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Setter;
@@ -13,6 +12,7 @@ import lombok.Getter;
 public class Coleccion {
     private List<Hecho> hechos;
     private String titulo;
+    private List<Hecho> hechosConsensuados;
     private String descripcion;
     private List<ICriterioDeFiltrado> criteriosDePertenecias;
     private List<Fuente> fuentesDeHechos;
@@ -23,15 +23,10 @@ public class Coleccion {
         this.hechos = new java.util.ArrayList<>();
     }
 
-    public Boolean contieneHecho(Hecho hechoBuscado) {
-        return this.hechos.stream().anyMatch(hecho -> hecho.mismoHecho(hechoBuscado));
-    }
+    public void aplicarAlgoritmoConsenso() {
+        List<Long> idsFuentes = this.getFuentesDeHechos().stream().map(Fuente::getIdFuente).toList();
 
-    public Boolean contieneHechoParecido(Hecho hechoBuscado) {
-        return this.hechos.stream().anyMatch(hecho -> hecho.mismoMismoTitulo(hechoBuscado) && hecho.distintosAtributos(hechoBuscado));
-    }
-
-    public void aplicarAlgoritmoConsenso(List<Hecho> hechosDelAgregador) {
-       this.algoritmoConsenso.consensuar(hechosDelAgregador, this.hechos);
+        List<Hecho> hechosRecienConsensuados = this.algoritmoConsenso.consensuar(this.hechos, idsFuentes);
+        hechosConsensuados = hechosRecienConsensuados;
     }
 }
