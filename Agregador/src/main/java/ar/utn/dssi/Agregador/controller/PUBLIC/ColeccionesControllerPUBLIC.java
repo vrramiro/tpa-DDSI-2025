@@ -5,6 +5,7 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,8 @@ public class ColeccionesControllerPUBLIC {
   private IColeccionService coleccionService;
 
   @GetMapping("/hechos/{idColeccion}")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(idColeccion);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String handle) {
+    List<HechoOutputDTO> hechosDeColeccion = coleccionService.leerColeccion(handle);
 
     if(hechosDeColeccion.isEmpty()){
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
@@ -32,8 +33,8 @@ public class ColeccionesControllerPUBLIC {
   }
 
   @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute IModoNavegacion modoNavegacion){
-    List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(filtros, modoNavegacion);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute ModoNavegacion modoNavegacion, @PathVariable String handle) {
+    List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(filtros, modoNavegacion, handle);
 
     if(hechos.isEmpty()) {
       return ResponseEntity.noContent().build(); // status 204

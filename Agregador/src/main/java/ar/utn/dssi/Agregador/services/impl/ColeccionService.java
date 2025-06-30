@@ -12,9 +12,12 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFilt
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
+import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +39,12 @@ public class ColeccionService implements IColeccionService {
 
     @Autowired
     private FuentesService fuentesService;
+
+    @Autowired
+    private IFiltrosService filtrosService;
+
+    @Autowired
+    private ModoNavegacionFactory modoNavegacionFactory;
 
     //OPERACIONES CRUD EN COLECCIONES
     @Override
@@ -92,37 +101,29 @@ public class ColeccionService implements IColeccionService {
 
     //NAVEGACION EN LAS COLECCIONES
     @Override
-    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, IModoNavegacion modoNavegacion) {       //READ
+    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {       //READ
         try {
-            List<Hecho> hechosModulo = this.hechosRepository.findall();
+            Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
+            Coleccion coleccion = coleccionRepository.findByHandle(handle);
+            IAlgoritmoDeConsenso algoritmoDeConsenso = coleccion.getAlgoritmoConsenso();
 
-            Filtro filtro = this.crearFiltro(filtroInputDTO);
+            IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
 
-            var hechos = modoNavegacion.hechosNavegables(hechosModulo)
+            var hechosColeccion = coleccion.getHechos()
                     .stream()
-                    .filter(filtro::loCumple)
-                    .map(this::hechoOutputDTO)
+                    .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, algoritmoDeConsenso))
+                    .map(hecho -> hechosService.hechoOutputDTO(hecho))
                     .toList();
 
-            if (hechos.isEmpty()) {
+            if (hechosColeccion.isEmpty()) {
                 throw new RuntimeException("No hay hechos disponibles");
             }
 
-            return hechos;
+            return hechosColeccion;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
     }
-
-
-    private Filtro crearFiltro(FiltroInputDTO filtros) {
-        Filtro filtro = new Filtro();
-
-        //TODO: ASIGNAR ATRIBUTOS DEL INPUT
-
-        return filtro;
-    }
-
 
     //OBTENER TODAS LAS COLECCIONES
     @Override
@@ -155,7 +156,7 @@ public class ColeccionService implements IColeccionService {
 
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
 
-        eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
+        this.eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
 
         coleccionRepository.save(coleccionAModificar);
     }
@@ -232,11 +233,6 @@ public class ColeccionService implements IColeccionService {
         coleccionDto.setHechos(coleccion.getHechos());
 
         return coleccionDto;
-    }
-
-    public void consensuarHechos()
-    {
-
     }
 }
 

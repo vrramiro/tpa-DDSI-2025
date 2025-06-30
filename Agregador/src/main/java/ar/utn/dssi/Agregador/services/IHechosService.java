@@ -15,8 +15,6 @@ public interface IHechosService {
     Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
     List<HechoOutputDTO> obtenerHechos();
 
-    List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtro);
-  
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     Mono<Void> actualizarHechos();
     void eliminarHecho(Long IDHecho);

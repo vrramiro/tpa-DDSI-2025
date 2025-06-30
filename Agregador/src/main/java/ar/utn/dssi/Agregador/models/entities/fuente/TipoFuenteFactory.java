@@ -16,6 +16,7 @@ public class TipoFuenteFactory {
         return new TipoFuenteEstatica(url, tipoFuente);
       default:
         throw new IllegalArgumentException("Origen desconocido: " + tipoFuente); //TODO REVISAR
+
     }
   }
 }

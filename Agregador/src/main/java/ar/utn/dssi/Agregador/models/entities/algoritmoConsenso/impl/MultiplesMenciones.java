@@ -1,15 +1,19 @@
-package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso;
+package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
-import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Consenso;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class MultiplesMenciones implements IAlgoritmoDeConsenso{
+public class MultiplesMenciones implements IAlgoritmoDeConsenso {
+    private Consenso consenso;
+
+    public MultiplesMenciones() {
+        this.consenso = Consenso.MULTIPLES_MENCIONES;
+    }
 
     public boolean cumpleAlgoritmo(List<Hecho> hechos, Hecho hecho, List<Long> idsFuentes) {
         return idsFuentes.stream().
@@ -19,5 +23,4 @@ public class MultiplesMenciones implements IAlgoritmoDeConsenso{
                          otroHecho.mismoMismoTitulo(hecho) && otroHecho.
                             distintosAtributos(hecho)));
     }
-
 }

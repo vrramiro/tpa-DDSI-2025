@@ -1,13 +1,12 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl.Absoluta;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -73,36 +72,15 @@ public class HechosService implements IHechosService {
 
     @Override
     public List<HechoOutputDTO> obtenerHechos() {       //READ
-  try {
-            var hechos = this.hechosRepository.findall().stream()
-                    .map(this::hechoOutputDTO)
-                    .toList();;
-            var hechosProxy = this.fuentesService.obtenerHechosProxy()
-                    .stream()
-                    .map(this::hechoOutputDTOProxy)
-                    .toList();
-
-            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
-                throw new RuntimeException("No hay hechos disponibles");
-            }
-
-            return Stream.concat(
-                    hechos.stream(),
-                    hechosProxy.stream()
-            ).toList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public List<HechoOutputDTO> obtenerHechosFiltrados(FiltroInputDTO filtros) {       //READ
 
         try {
-            var hechos = this.hechosRepository.findall().stream()
+            var hechos = this.hechosRepository
+                    .findall()
+                    .stream()
                     .map(this::hechoOutputDTO)
                     .toList();;
-            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+            var hechosProxy = this.fuentesService
+                    .obtenerHechosProxy()
                     .stream()
                     .map(this::hechoOutputDTOProxy)
                     .toList();
@@ -119,6 +97,7 @@ public class HechosService implements IHechosService {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
     }
+
 
     @Override
     public Mono<Void> actualizarHechos() {      //UPDATE
@@ -215,6 +194,25 @@ public class HechosService implements IHechosService {
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el dto de hecho desde fuente proxy: " + e.getMessage(), e);
         }
+    }
 
+    public List<HechoOutputDTO> hechosColeccion(String handler) {
+        Coleccion coleccion = coleccionRepository.findById(handler);
+
+        return hechosService
+                .hechos()
+                .stream()
+                .filter(hecho -> coleccion.cumpleCriterios(hecho) && coleccion.cumpleConsenso(hecho))
+                .toList();
+    }
+
+    //TODO va con una crontask -> a eso de las 3
+    public void consensuarHechos() {
+        List<Fuente> fuentesDelSitema = fuentesService.fuentes();
+
+        hechosRepository.findall().forEach(hecho -> {
+            //TODO hacerlo general -> CuradorDeHechos.curar(hecho, fuentesDelSistema) -> List<IAlgoritmoDeConsenso> algoritmos
+            Absoluta.curar(hecho, fuentesDelSitema);
+        });
     }
 }
