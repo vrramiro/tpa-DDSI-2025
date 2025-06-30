@@ -13,7 +13,7 @@ import java.util.List;
 public interface IHechosService {
     //CRUD
     Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
-    List<HechoOutputDTO> obtenerHechos(FiltroInputDTO filtro, IModoNavegacion modoNavegacion);
+    List<HechoOutputDTO> obtenerHechos();
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     Mono<Void> actualizarHechos();
     void eliminarHecho(Long IDHecho);

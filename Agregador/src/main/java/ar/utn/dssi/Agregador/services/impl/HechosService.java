@@ -72,35 +72,27 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos(FiltroInputDTO filtroInputDTO, IModoNavegacion modoNavegacion) {       //READ
+    public List<HechoOutputDTO> obtenerHechos() {       //READ
         try {
-            List<Hecho> hechosModulo = this.hechosRepository.findall();
-
-            Filtro filtro = this.crearFiltro(filtroInputDTO);
-
-            var hechos = modoNavegacion.obtenerHechos(filtro, hechosModulo)
-                    .stream()
-                    .filter(filtro::loCumple)
+            var hechos = this.hechosRepository.findall().stream()
                     .map(this::hechoOutputDTO)
+                    .toList();;
+            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+                    .stream()
+                    .map(this::hechoOutputDTOProxy)
                     .toList();
 
-            if (hechos.isEmpty()) {
+            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
                 throw new RuntimeException("No hay hechos disponibles");
             }
 
-            return hechos;
+            return Stream.concat(
+                    hechos.stream(),
+                    hechosProxy.stream()
+            ).toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
-    }
-
-
-    private Filtro crearFiltro(FiltroInputDTO filtros) {
-        Filtro filtro = new Filtro();
-
-        //TODO: ASIGNAR ATRIBUTOS DEL INPUT
-
-        return filtro;
     }
 
     @Override

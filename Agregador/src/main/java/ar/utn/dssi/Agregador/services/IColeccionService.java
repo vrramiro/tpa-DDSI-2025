@@ -1,10 +1,12 @@
 package ar.utn.dssi.Agregador.services;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
+import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -17,6 +19,8 @@ public interface IColeccionService {
     List<HechoOutputDTO> leerColeccion (String handle);
     ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
+
+    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, IModoNavegacion modoNavegacion);
 
     List<ColeccionOutputDTO> obtenerColecciones();
     List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
