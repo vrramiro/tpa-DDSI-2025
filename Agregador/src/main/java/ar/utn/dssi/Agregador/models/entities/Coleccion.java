@@ -2,7 +2,6 @@ package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
-import ar.utn.dssi.Agregador.models.entities.criterio.ICriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Setter;

@@ -18,6 +18,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 @Service
@@ -66,6 +67,30 @@ public class HechosService implements IHechosService {
             return hechoOutputDTO(hecho);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<HechoOutputDTO> obtenerHechos() {       //READ
+        try {
+            var hechos = this.hechosRepository.findall().stream()
+                    .map(this::hechoOutputDTO)
+                    .toList();;
+            var hechosProxy = this.fuentesService.obtenerHechosProxy()
+                    .stream()
+                    .map(this::hechoOutputDTOProxy)
+                    .toList();
+
+            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
+                throw new RuntimeException("No hay hechos disponibles");
+            }
+
+            return Stream.concat(
+                    hechos.stream(),
+                    hechosProxy.stream()
+            ).toList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
     }
 
