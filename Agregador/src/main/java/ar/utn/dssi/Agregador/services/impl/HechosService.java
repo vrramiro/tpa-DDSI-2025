@@ -5,8 +5,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl.Absoluta;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -31,6 +30,9 @@ public class HechosService implements IHechosService {
 
     @Autowired
     private IFuentesService fuentesService;
+
+    @Autowired
+    private IColeccionRepository coleccionRepository;
 
     //OPERACIONES CRUD SOBRE LOS HECHOS
     @Override
@@ -196,23 +198,4 @@ public class HechosService implements IHechosService {
         }
     }
 
-    public List<HechoOutputDTO> hechosColeccion(String handler) {
-        Coleccion coleccion = coleccionRepository.findById(handler);
-
-        return hechosService
-                .hechos()
-                .stream()
-                .filter(hecho -> coleccion.cumpleCriterios(hecho) && coleccion.cumpleConsenso(hecho))
-                .toList();
-    }
-
-    //TODO va con una crontask -> a eso de las 3
-    public void consensuarHechos() {
-        List<Fuente> fuentesDelSitema = fuentesService.fuentes();
-
-        hechosRepository.findall().forEach(hecho -> {
-            //TODO hacerlo general -> CuradorDeHechos.curar(hecho, fuentesDelSistema) -> List<IAlgoritmoDeConsenso> algoritmos
-            Absoluta.curar(hecho, fuentesDelSitema);
-        });
-    }
 }

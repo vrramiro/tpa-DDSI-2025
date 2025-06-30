@@ -5,8 +5,8 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -33,5 +33,7 @@ public interface IColeccionService {
 
     void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle);
     void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle);
+
+    void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso);
 
 }

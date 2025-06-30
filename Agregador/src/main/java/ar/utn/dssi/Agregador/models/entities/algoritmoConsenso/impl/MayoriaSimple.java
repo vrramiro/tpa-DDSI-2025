@@ -1,27 +1,24 @@
 package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
-import ar.utn.dssi.Agregador.models.entities.Consenso;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class MayoriaSimple implements IAlgoritmoDeConsenso {
-    private Consenso consenso;
+public class MayoriaSimple extends AlgoritmoConsenso {
 
-    public MayoriaSimple() {
-        this.consenso = Consenso.MAYORIA_SIMPLE;
+    @Override
+    public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {
+        long coincidencias = fuentes.stream()
+                .filter(fuente -> fuente.obtenerHechos().stream()
+                        .anyMatch(hechoFuente -> hechoFuente.mismoHecho(hecho)))
+                .count();
+
+        return coincidencias >= fuentes.size()/2;
     }
 
-    public Boolean cumpleAlgoritmo(List<Hecho> hechos, Hecho hecho, List<Long> idsFuentes) {
-        Integer cantidadDeFuentesEnColeccion = idsFuentes.size();
-        Long contienenHecho = idsFuentes.stream().filter
-            (fuente -> hechos.stream().anyMatch(otroHecho ->
-                    otroHecho.getIdFuente().equals(fuente) && otroHecho.mismoHecho(hecho))
-            ).count();
-        return contienenHecho >= cantidadDeFuentesEnColeccion/2;
-    }
 }
 

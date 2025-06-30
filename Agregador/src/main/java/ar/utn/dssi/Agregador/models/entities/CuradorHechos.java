@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities;
 
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
+import ar.utn.dssi.Agregador.models.entities.consenso.algoritmoConsenso.IAlgoritmoDeConsenso;
 
 
 import java.util.List;

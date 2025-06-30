@@ -1,9 +1,12 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Origen;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,7 +22,11 @@ public class Fuente {
     this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoFuente);
   }
 
-  public Boolean esDeTipo(Origen tipo) {
-    return tipoFuente.getTipo().equals(tipo);
+  //public Boolean esDeTipo(Origen tipo) {
+    //return tipoFuente.getTipo().equals(tipo);
+  //}
+
+  public List<Hecho> obtenerHechos() {
+    return tipoFuente.obtenerHechos().stream()
   }
 }

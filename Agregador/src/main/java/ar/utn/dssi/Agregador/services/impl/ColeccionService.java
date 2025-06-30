@@ -7,7 +7,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -105,13 +105,11 @@ public class ColeccionService implements IColeccionService {
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
             Coleccion coleccion = coleccionRepository.findByHandle(handle);
-            IAlgoritmoDeConsenso algoritmoDeConsenso = coleccion.getAlgoritmoConsenso();
-
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
 
             var hechosColeccion = coleccion.getHechos()
                     .stream()
-                    .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, algoritmoDeConsenso))
+                    .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, coleccion))
                     .map(hecho -> hechosService.hechoOutputDTO(hecho))
                     .toList();
 
@@ -234,5 +232,26 @@ public class ColeccionService implements IColeccionService {
 
         return coleccionDto;
     }
+
+    private List<Hecho> hechosDeColeccion(String handle){
+        return List.of();
+    }
+
+    //Esta tarea deberia ser un crontask
+    public void realizarConsenso(){
+        List<Coleccion> colecciones = coleccionRepository.findall();
+
+        colecciones.forEach(coleccion -> {
+            hechosService.consensuar(coleccion);
+        });
+    }
+
+    @Override
+    public void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso) {
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+        coleccion.setAlgoritmoConsenso(algoritmoConsenso);
+        coleccionRepository.update(coleccion);
+    }
+
 }
 

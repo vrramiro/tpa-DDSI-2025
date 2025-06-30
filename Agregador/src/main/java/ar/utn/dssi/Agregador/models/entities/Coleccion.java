@@ -1,7 +1,7 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoDeConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Setter;
@@ -15,18 +15,16 @@ public class Coleccion {
     private List<Hecho> hechosConsensuados;
     private String descripcion;
     private List<ICriterioDeFiltrado> criteriosDePertenecias;
-    private List<Fuente> fuentesDeHechos;
-    private IAlgoritmoDeConsenso algoritmoConsenso;
+    //private List<Fuente> fuentesDeHechos;
+    private AlgoritmoConsenso algoritmoConsenso;
     private String handle;
 
     public Coleccion() {
         this.hechos = new java.util.ArrayList<>();
     }
 
-    public void aplicarAlgoritmoConsenso() {
-        List<Long> idsFuentes = this.getFuentesDeHechos().stream().map(Fuente::getIdFuente).toList();
-
-        List<Hecho> hechosRecienConsensuados = this.algoritmoConsenso.consensuar(this.hechos, idsFuentes);
+    public void aplicarAlgoritmoConsenso(List<Hecho> hechosAConsensuar,List<Fuente> fuentesDelSistema) {
+        List<Hecho> hechosRecienConsensuados = this.algoritmoConsenso.consensuar(hechosAConsensuar, fuentesDelSistema);
         hechosConsensuados = hechosRecienConsensuados;
     }
 }
