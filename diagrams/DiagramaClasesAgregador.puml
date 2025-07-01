@@ -13,11 +13,6 @@ enum EstadoDeSolicitud {
     PENDIENTE
 }
 
-'================== INTERFACES ==================
-interface CriterioDePertenencia {
-    + hechoLoCumple(Hecho unoHecho): bool
-}
-
 '================== HECHOS ==================
 class Hecho {
     - IdHecho: Long
@@ -49,6 +44,28 @@ class Categoria {
 class Etiqueta {
     - nombre: String
 }
+'================== ALGORITMO CONSENSO ==================
+abstract class AlgoritmoConsenso{
+    - hechosConsensuados: List<Hecho>
+    + consensuar(List<Hecho> hechos,List<Fuente> fuentes) : List<Hecho>
+    + abstract cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) : Boolean
+}
+
+class Absoluta{
+    + cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) : Boolean
+}
+
+class MayoriaSimple{
+    + cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) : Boolean
+}
+
+class MultiplesMenciones{
+    + cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) : Boolean
+}
+
+Absoluta ..|> AlgoritmoConsenso
+MayoriaSimple--|> AlgoritmoConsenso
+MultiplesMenciones--|> AlgoritmoConsenso
 
 '================== COLECCIÓN ==================
 class Coleccion {
@@ -57,30 +74,54 @@ class Coleccion {
     - descripcion: String
     - hechos : List<Hecho>
     - criteriosDePertenencia : List<CriterioDePertenencia>
+    - hechosConsensuados : List<Hecho>
+    - algoritmoConsenso : AlgoritmoConsenso
 
     + addCriterioDePertenencia() : void
+    + aplicarAlgoritmoConsenso(List<Hecho> hechosAConsensuar,List<Fuente> fuentesDelSistema) : void
+    + cumpleCriterios(Hecho hecho) : boolean
 }
 
 Coleccion o-- Hecho
-Coleccion ----> CriterioDePertenencia
+Coleccion ----> ICriterioDeFiltrado
+Coleccion o---> AlgoritmoConsenso
 
 
 '================== CRITERIOS ==================
+interface ICriterioDeFiltrado {
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
 class CriterioPorCategoria {
-    - categoriaACumplir: Categoria
+    - categoria : Categoria
     + hechoLoCumple(Hecho unoHecho): Boolean
 }
 
-class CriterioPorFecha {
+class CriterioFechaDesde {
     - fechaDesde: LocalDateTime
-    - fechaHasta: LocalDateTime
-
     + hechoLoCumple(Hecho unHecho): Boolean
 }
 
+class CriterioFechaHasta {
+    - fechaHasta: LocalDateTime
+    + hechoLoCumple(Hecho unHecho): Boolean
+}
 
-CriterioPorCategoria ..|> CriterioDePertenencia
-CriterioPorFecha ..|> CriterioDePertenencia
+class CriterioPorFuente {
+    - idFuente : Long
+    + hechoLoCumple(Hecho unoHecho): Boolean
+}
+
+class CriterioPorUbicacion {
+    - ubicacion : Ubicacion
+    + hechoLoCumple(Hecho unoHecho): Boolean
+}
+
+CriterioPorCategoria ..|> ICriterioDeFiltrado
+CriterioFechaDesde ..|> ICriterioDeFiltrado
+CriterioFechaHasta ..|> ICriterioDeFiltrado
+CriterioPorUbicacion ..|> ICriterioDeFiltrado
+CriterioPorFuente ..|> ICriterioDeFiltrado
 
 '================== SOLICITUDES ==================
 class SolicitudDeEliminacion {
@@ -91,18 +132,74 @@ class SolicitudDeEliminacion {
     - fechaDeCreacion: LocalDateTime
     - fechaDeEvaluacion: LocalDateTime
     - esSpam: Boolean
-
 }
 
 SolicitudDeEliminacion *-- Hecho
 SolicitudDeEliminacion --> EstadoDeSolicitud
 
+'================== ModosNavegacion ==================
+interface IModoNavegacion {
+    + hechoNavegable(Hecho hecho, Coleccion coleccion): Boolean
+}
+
+class NavegacionCurada {
+    + hechoNavegable(Hecho hecho, Coleccion coleccion): Boolean
+}
+
+class NavegacionIrrestricta {
+    + hechoNavegable(Hecho hecho, Coleccion coleccion): Boolean
+}
+
+NavegacionCurada ..|> IModoNavegacion
+NavegacionIrrestricta ..|> IModoNavegacion
+Coleccion o---> IModoNavegacion
 
 '================== RELACIONES ==================
 Hecho --> Categoria
 Hecho --> Origen
 Hecho --> Ubicacion
 Hecho --> Etiqueta
+
+'================== FUENTE ==================
+class Fuente{
+    - idFuente : Long
+    - url : String
+    - tipoFuente : ITipoFuente
+    + obtenerHechos() : List<Hecho>
+}
+
+interface ITipoFuente{
+    + obtenerHechos() : List<HechoInputDTO>
+}
+
+class TipoFuenteFactory {
+    + crearTipoFuente(String url, Origen tipoFuente) : ITipoFuente
+}
+
+class TipoFuenteDinamica {
+      - fuente : WebClient
+      - tipo : Origen
+      + obtenerHechos() : List<HechoInputDTO>
+}
+
+class TipoFuenteEstatica {
+    - fuente : WebClient
+    - tipo : Origen
+    + obtenerHechos() : List<HechoInputDTO>
+}
+
+class TipoFuenteProxy {
+    - fuente : WebClient
+    - tipo : Origen
+    + obtenerHechos() : List<HechoInputDTO>
+}
+
+TipoFuenteFactory *-- Fuente
+Fuente --> ITipoFuente
+TipoFuenteDinamica ..|> ITipoFuente
+TipoFuenteEstatica ..|> ITipoFuente
+TipoFuenteProxy ..|> ITipoFuente
+CriterioPorFuente --> ITipoFuente  
 
 @enduml
 
