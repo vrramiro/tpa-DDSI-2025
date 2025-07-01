@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
+import org.apache.logging.log4j.simple.internal.SimpleProvider;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface IHechosService {
     //AUX
     void guardarHecho(Hecho hecho);
     HechoOutputDTO hechoOutputDTO(Hecho hecho);
+
+   List<Hecho> obtenerHechosProxy();
 }

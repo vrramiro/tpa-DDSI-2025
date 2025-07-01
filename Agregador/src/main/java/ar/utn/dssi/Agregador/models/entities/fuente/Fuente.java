@@ -1,11 +1,14 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Origen;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.models.entities.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,6 +30,7 @@ public class Fuente {
   //}
 
   public List<Hecho> obtenerHechos() {
-    return tipoFuente.obtenerHechos().stream()
+    return tipoFuente.obtenerHechos().stream().map(Mapper::hechoInputToHecho).toList();
   }
+
 }

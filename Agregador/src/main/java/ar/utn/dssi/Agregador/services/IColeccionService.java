@@ -34,5 +34,6 @@ public interface IColeccionService {
     void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle);
 
     void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso);
+    void realizarConsenso();
 
 }

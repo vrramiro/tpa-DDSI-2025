@@ -7,6 +7,7 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Mapper;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
@@ -25,6 +26,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class ColeccionService implements IColeccionService {
@@ -229,11 +232,16 @@ public class ColeccionService implements IColeccionService {
     }
 
     //Esta tarea deberia ser un crontask
+    @Override
     public void realizarConsenso(){
         List<Coleccion> colecciones = coleccionRepository.findall();
 
         colecciones.forEach(coleccion -> {
-            hechosService.consensuar(coleccion);
+                List<Hecho> hechosColeccion = coleccion.getHechos();
+                List<Hecho> hechosColeccionProxy = hechosService.obtenerHechosProxy().stream().filter(coleccion::cumpleCriterios).toList();
+                List<Hecho> hechosAConsensuar = Stream.concat(hechosColeccion.stream(), hechosColeccionProxy.stream()).toList();
+                List<Fuente> fuentes = fuentesService.obtenerFuentes();
+                coleccion.aplicarAlgoritmoConsenso(hechosAConsensuar,fuentes);
         });
     }
 

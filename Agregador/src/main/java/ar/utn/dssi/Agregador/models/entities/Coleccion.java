@@ -27,4 +27,8 @@ public class Coleccion {
         List<Hecho> hechosRecienConsensuados = this.algoritmoConsenso.consensuar(hechosAConsensuar, fuentesDelSistema);
         hechosConsensuados = hechosRecienConsensuados;
     }
+
+    public boolean cumpleCriterios(Hecho hecho) {
+        return criteriosDePertenecias.stream().allMatch(criterio -> criterio.loCumple(hecho));
+    }
 }

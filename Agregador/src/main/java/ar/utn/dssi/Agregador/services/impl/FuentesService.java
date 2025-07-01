@@ -60,4 +60,8 @@ public class FuentesService implements IFuentesService {
   {
     return this.fuentes.stream().filter(fuente -> fuente.getIdFuente().equals(idFuenteOrigen)).findFirst().orElse(null);
   }
+
+  public List<Fuente> obtenerFuentes (){
+    return this.fuentes;
+  }
 }

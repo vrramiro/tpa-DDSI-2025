@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Mapper;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
@@ -180,6 +181,14 @@ public class HechosService implements IHechosService {
         }
     }
 
+    public List<Hecho> obtenerHechosProxy(){
+        return this.fuentesService
+                .obtenerHechosProxy()
+                .stream()
+                .map(Mapper::hechoInputToHecho)
+                .toList();
+    }
+
     public HechoOutputDTO hechoOutputDTOProxy(HechoInputDTO hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la fuenteProxy
         try {
             var dtoHecho = new HechoOutputDTO();
@@ -197,5 +206,4 @@ public class HechosService implements IHechosService {
             throw new RuntimeException("Error al obtener el dto de hecho desde fuente proxy: " + e.getMessage(), e);
         }
     }
-
 }
