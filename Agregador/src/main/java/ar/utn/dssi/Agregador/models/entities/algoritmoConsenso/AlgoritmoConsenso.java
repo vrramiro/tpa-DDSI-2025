@@ -26,3 +26,4 @@ public abstract class AlgoritmoConsenso {
 
     public abstract Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes);
 }
+

@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado;
 
+import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioFechaDesde;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorCategoria;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;

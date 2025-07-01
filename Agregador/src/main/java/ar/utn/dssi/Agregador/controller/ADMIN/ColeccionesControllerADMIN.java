@@ -20,7 +20,7 @@ public class ColeccionesControllerADMIN {
   private IColeccionService coleccionService;
 
   //OPERACIONES CRUD SOBRE COLECCIONES
-  @PostMapping("/crear")
+  @PostMapping("/hecho")
   public ResponseEntity<ColeccionOutputDTO> crearColeccion(@RequestBody ColeccionInputDTO coleccionInputDTO){
     ColeccionOutputDTO coleccionOutputDTO = coleccionService.crearColeccion(coleccionInputDTO);
 
@@ -38,7 +38,7 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.ok(colecciones); // status 200
   }
 
-  @GetMapping("/hechos/{idColeccion}")
+  @GetMapping("/{idColeccion}/hechos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
     List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(idColeccion);
 
@@ -49,16 +49,14 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.ok(hechosDeColeccion); // status 200
   }
 
-
-
-  @PutMapping("/actualizar/{idColeccion}")
+  @PutMapping("/{idColeccion}/coleccion")
   public ResponseEntity<ColeccionOutputDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionInputDTO coleccionInputDTO){
     ColeccionOutputDTO coleccionOutputDTO = coleccionService.actualizarColeccion(handle, coleccionInputDTO);
 
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(coleccionOutputDTO); // status 201
   }
 
-  @DeleteMapping("/eliminar/{idColeccion}")
+  @DeleteMapping("/{idColeccion}/coleccion")
   public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle){
     coleccionService.eliminarColeccion(handle);
 
@@ -66,14 +64,14 @@ public class ColeccionesControllerADMIN {
   }
 
   //AGREGAR O QUITAR FUENTES DE UNA COLECCION
-  @PutMapping("/agregar/{idColeccion}/{idFuente}")
+  @PutMapping("/{idColeccion}/{idFuente}/coleccion")
   public ResponseEntity<Void> agregarFuente(@PathVariable Long idFuente, @PathVariable String handle) {
     coleccionService.agregarFuente(idFuente, handle);
 
     return ResponseEntity.ok().build();
   }
 
-  @DeleteMapping("/eliminar/{idColeccion}/{idFuente}")
+  @DeleteMapping("/{idColeccion}/{idFuente}/coleccion")
   public ResponseEntity<Void> eliminarFuente(@PathVariable Long idFuente, @PathVariable String handle){
     coleccionService.eliminarFuente(idFuente, handle);
 
@@ -81,7 +79,7 @@ public class ColeccionesControllerADMIN {
   }
 
   //ESTABLECER EL ALGORITMO DE CONSENSO
-  @PutMapping("/actualizar/{handle}")
+  @PutMapping("/{handle}/algortimoConsenso")
   public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody AlgoritmoConsenso algoritmoConsenso) {
     coleccionService.actualizarAlgoritmo(handle, algoritmoConsenso);
 

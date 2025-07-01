@@ -26,13 +26,13 @@ public class SolicitudDeEliminacionControllerADMIN {
   }
 
   //TODO hay dos caminos => se toca aceptar y va al metodo aceptar o le da a cualquier boton y se va a procesar solicitud
-  @PostMapping("/aceptar/{idSolicitud}")
+  @PostMapping("/{idSolicitud}/aceptar")
   public ResponseEntity<Void> aceptarSolicitud(@PathVariable Long idSolicitud) {
     solicitudesService.aceptarSolicitud(idSolicitud);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/rechazar/{idSolicitud}")
+  @PostMapping("/{idSolicitud}/rechazar")
   public ResponseEntity<Void> rechazarSolicitud(@PathVariable Long idSolicitud) {
     solicitudesService.rechazarSolicitud(idSolicitud);
     return ResponseEntity.ok().build();
