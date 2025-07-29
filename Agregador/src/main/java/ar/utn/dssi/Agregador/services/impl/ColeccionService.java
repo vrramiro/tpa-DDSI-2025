@@ -210,7 +210,7 @@ public class ColeccionService implements IColeccionService {
                 .subscribe();
     }
 
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){ //TODO: ACA TENDRIA QUE VER SI EL REFRESCO DE LOS HECHOS EN UNA COLECCION LO HAGO CON UN SCHEDULER PARA QUE NO SEA SINCRONICO?
         return Flux
                 .fromIterable(hechosRepositorio.findall())
                 .flatMap(hecho -> {
