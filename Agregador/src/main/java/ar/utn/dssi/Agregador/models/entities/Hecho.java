@@ -51,11 +51,11 @@ public class Hecho {
 
     public boolean mismoMismoTitulo(Hecho otroHecho) { return this.getTitulo().equals(otroHecho.getTitulo()); }
 
-    public boolean distintosAtributos(Hecho otroHecho) {
-        return !this.getDescripcion().equals(otroHecho.getDescripcion())
-            || !this.getCategoria().equals(otroHecho.getCategoria())
-            || !this.getUbicacion().equals(otroHecho.getUbicacion())
-            || !this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
+    public boolean mismosAtributos(Hecho otroHecho) {
+        return this.getDescripcion().equals(otroHecho.getDescripcion())
+            || this.getCategoria().equals(otroHecho.getCategoria())
+            || this.getUbicacion().equals(otroHecho.getUbicacion())
+            || this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
     }
 
     public boolean distintaFuente(Hecho hecho) { return (!Objects.equals(hecho.getIdFuente(), this.getIdFuente())); }
