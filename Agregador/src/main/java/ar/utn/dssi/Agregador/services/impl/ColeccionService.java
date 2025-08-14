@@ -139,6 +139,17 @@ public class ColeccionService implements IColeccionService {
 
     /*/////////////////////// OPERACIONES SOBRE COLECCIONES ///////////////////////*/
 
+    //CREO LA COLECCION OUTPUT
+    private ColeccionOutputDTO coleccionOutputDTO(Coleccion coleccion) {
+        var coleccionDto = new ColeccionOutputDTO();
+
+        coleccionDto.setTitulo(coleccion.getTitulo());
+        coleccionDto.setDescripcion(coleccion.getDescripcion());
+        coleccionDto.setHechos(coleccion.getHechos());
+
+        return coleccionDto;
+    }
+
     //OBTENER HECHOS DE COLECCION
     @Override
     public List<HechoOutputDTO> hechosDeColeccion(String handle) {
@@ -187,21 +198,6 @@ public class ColeccionService implements IColeccionService {
         coleccionRepository.save(coleccionAModificar);
     }
 
-    //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
-    @Override
-    public Mono<Void> refrescarColecciones(Hecho hecho){
-        return Flux
-            .fromIterable(coleccionRepository.findall())
-            .flatMap(coleccion -> {
-
-                this.guardarEnColeccion(coleccion, hecho);
-
-                return Mono.empty();
-            })
-            .then();
-    }
-
-
     //AGREGACION DE UN CRITERIO DE PERTENENCIA
     @Override
     public void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
@@ -226,8 +222,16 @@ public class ColeccionService implements IColeccionService {
                 .subscribe();
     }
 
-    //REFRESCO DE LOS HECHOS EN UNA COLECCION, DADO POR CAMBIO EN SUS CRITERIOS
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){ //TODO: ACA TENDRIA QUE VER SI EL REFRESCO DE LOS HECHOS EN UNA COLECCION LO HAGO CON UN SCHEDULER PARA QUE NO SEA SINCRONICO?
+    //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
+    @Override
+    public void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso) {
+        Coleccion coleccion = coleccionRepository.findByHandle(handle);
+        coleccion.setAlgoritmoConsenso(algoritmoConsenso);
+        coleccionRepository.update(coleccion);
+    }
+
+    //REFRESCO DE LOS HECHOS EN UNA COLECCION
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){ //TODO: SOLO LO HAGO CUANDO SE ACTUALIZA.
         return Flux
                 .fromIterable(hechosRepositorio.findall())
                 .flatMap(hecho -> {
@@ -237,15 +241,19 @@ public class ColeccionService implements IColeccionService {
                 .then();
     }
 
-    //COLECCION OUTPUT
-    private ColeccionOutputDTO coleccionOutputDTO(Coleccion coleccion) {
-        var coleccionDto = new ColeccionOutputDTO();
 
-        coleccionDto.setTitulo(coleccion.getTitulo());
-        coleccionDto.setDescripcion(coleccion.getDescripcion());
-        coleccionDto.setHechos(coleccion.getHechos());
+    /*/////////////////////// CRONS EN COLECCIONES ///////////////////////*/
 
-        return coleccionDto;
+    //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
+    @Override
+    public Mono<Void> refrescarColecciones(Hecho hecho){
+        return Flux
+                .fromIterable(coleccionRepository.findall())
+                .flatMap(coleccion -> {
+                    this.guardarEnColeccion(coleccion, hecho);
+                    return Mono.empty();
+                })
+                .then();
     }
 
     //CONSENSO REALIZADO POR CRONTASK
@@ -254,21 +262,21 @@ public class ColeccionService implements IColeccionService {
         List<Coleccion> colecciones = coleccionRepository.findall();
 
         colecciones.forEach(coleccion -> {
-                List<Hecho> hechosColeccion = coleccion.getHechos();
-                List<Hecho> hechosColeccionProxy = hechosService.obtenerHechosProxy().stream().filter(coleccion::cumpleCriterios).toList();
-                List<Hecho> hechosAConsensuar = Stream.concat(hechosColeccion.stream(), hechosColeccionProxy.stream()).toList();
-                List<Fuente> fuentes = fuentesService.obtenerFuentes();
-                coleccion.aplicarAlgoritmoConsenso(hechosAConsensuar,fuentes);
+            List<Hecho> hechosColeccion = coleccion.getHechos();
+            List<Hecho> hechosColeccionProxy = hechosService.obtenerHechosProxy().stream().filter(coleccion::cumpleCriterios).toList();
+            List<Hecho> hechosAConsensuar = Stream.concat(hechosColeccion.stream(), hechosColeccionProxy.stream()).toList();
+            List<Fuente> fuentes = fuentesService.obtenerFuentes();
+            coleccion.aplicarAlgoritmoConsenso(hechosAConsensuar,fuentes);
         });
     }
 
-    //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
-    @Override
-    public void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.setAlgoritmoConsenso(algoritmoConsenso);
-        coleccionRepository.update(coleccion);
-    }
+    //REFRESCO COLECCIONES ACTUALIZADAS => CADA CIERTO TIEMPO, INVOCADA TAMBIEN POR EL SCHEDULER DE REFESCAR COLECCION. PRIMERO ACTUALIZO COLECCION!!!!!.
+    /*
+        Me fijo si la cache tiene elementos
+            si tiene actualizo colecciones en el repositorio
+            elimino las colecciones que actualice en la cache
+     */
+
 
     /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
     private void agregarACache(Coleccion coleccion) {
