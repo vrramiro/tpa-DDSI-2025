@@ -25,6 +25,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 @Service
@@ -47,9 +49,14 @@ public class ColeccionService implements IColeccionService {
     @Autowired
     private ModoNavegacionFactory modoNavegacionFactory;
 
-    //OPERACIONES CRUD EN COLECCIONES
+    //CACHE PARA LA ACTUALIZACION DE COLECCIONES
+    private final Map<String, Coleccion> coleccionCache = new ConcurrentHashMap<>();  //ConcurrentHashMap permite que varios hilos modifiquen la colección al mismo tiempo, y busco por handle
+
+    /*/////////////////////// OPERACIONES CRUD EN COLECCIONES ///////////////////////*/
+
+    //CREATE
     @Override
-    public ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO) {     //CREATE
+    public ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO) {
         var coleccion = new Coleccion();
 
         coleccion.setTitulo(coleccionInputDTO.getTitulo());
@@ -72,8 +79,9 @@ public class ColeccionService implements IColeccionService {
                 .toList();
     }
 
+    //UPDATE
     @Override
-    public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO coleccionInputDTO) {      //UPDATE
+    public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO coleccionInputDTO) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
 
         /*if (coleccion == null)
@@ -91,8 +99,9 @@ public class ColeccionService implements IColeccionService {
         return this.coleccionOutputDTO(coleccion);
     }
 
+    //DELETE
     @Override
-    public void eliminarColeccion(String handle) {       //DELETE
+    public void eliminarColeccion(String handle) {
         try {
             Coleccion coleccion = coleccionRepository.findByHandle(handle);
             if (coleccion != null) {
@@ -103,9 +112,9 @@ public class ColeccionService implements IColeccionService {
         }
     }
 
-    //NAVEGACION EN LAS COLECCIONES
+    //NAVEGACION EN LAS COLECCIONES - READ
     @Override
-    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {       //READ
+    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
             Coleccion coleccion = coleccionRepository.findByHandle(handle);             //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
@@ -128,6 +137,8 @@ public class ColeccionService implements IColeccionService {
         }
     }
 
+    /*/////////////////////// OPERACIONES SOBRE COLECCIONES ///////////////////////*/
+
     //OBTENER HECHOS DE COLECCION
     @Override
     public List<HechoOutputDTO> hechosDeColeccion(String handle) {
@@ -137,7 +148,20 @@ public class ColeccionService implements IColeccionService {
         return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
     }
 
-    //OPERACIONES SOBRE LAS FUENTES DE UNA COLECCION
+    // GUARDAR UN HECHO EN LA COLECCION
+    private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
+        boolean cumpleCriterios = coleccion
+                .getCriteriosDePertenecias()
+                .stream()
+                .allMatch(criterio -> criterio.loCumple(hecho));
+
+        if (cumpleCriterios) {
+            coleccion.getHechos().add(hecho);
+            coleccionRepository.update(coleccion);
+        }
+    }
+
+    //AGREGADO DE FUENTE A LA COLECCION
     @Override
     public void agregarFuente(Long idFuente, String handle){
         Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
@@ -150,6 +174,7 @@ public class ColeccionService implements IColeccionService {
         coleccionRepository.save(coleccionAModificar);
     }
 
+    //ELIMINADO DE FUENTE A LA COLECCION
     @Override
     public void eliminarFuente(Long idFuente, String handle) {
         Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
@@ -176,19 +201,8 @@ public class ColeccionService implements IColeccionService {
             .then();
     }
 
-    private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
-        boolean cumpleCriterios = coleccion
-            .getCriteriosDePertenecias()
-            .stream()
-            .allMatch(criterio -> criterio.loCumple(hecho));
 
-        if (cumpleCriterios) {
-            coleccion.getHechos().add(hecho);
-            coleccionRepository.update(coleccion);
-        }
-    }
-
-    //REFRESCO DE HECHOS EN COLECCION SEGUN CRITERIOS DE PERTENENCIA AGREGADOS
+    //AGREGACION DE UN CRITERIO DE PERTENENCIA
     @Override
     public void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
@@ -200,6 +214,7 @@ public class ColeccionService implements IColeccionService {
                 .subscribe();
     }
 
+    //ELIMINACION DE UN CRITERIO DE PERTENENCIA
     @Override
     public void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
@@ -211,6 +226,7 @@ public class ColeccionService implements IColeccionService {
                 .subscribe();
     }
 
+    //REFRESCO DE LOS HECHOS EN UNA COLECCION, DADO POR CAMBIO EN SUS CRITERIOS
     private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){ //TODO: ACA TENDRIA QUE VER SI EL REFRESCO DE LOS HECHOS EN UNA COLECCION LO HAGO CON UN SCHEDULER PARA QUE NO SEA SINCRONICO?
         return Flux
                 .fromIterable(hechosRepositorio.findall())
@@ -252,6 +268,23 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.setAlgoritmoConsenso(algoritmoConsenso);
         coleccionRepository.update(coleccion);
+    }
+
+    /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
+    private void agregarACache(Coleccion coleccion) {
+        coleccionCache.put(coleccion.getHandle(), coleccion);
+    }
+
+    private Coleccion obtenerDeCache(String handle) {
+        return coleccionCache.get(handle);
+    }
+
+    private void actualizarEnCache(Coleccion coleccion) {
+        coleccionCache.put(coleccion.getHandle(), coleccion);
+    }
+
+    private void eliminarDeCache(String handle) {
+        coleccionCache.remove(handle);
     }
 
 }
