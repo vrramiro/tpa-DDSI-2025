@@ -18,6 +18,7 @@ public class Coleccion {
     //private List<Fuente> fuentesDeHechos;
     private AlgoritmoConsenso algoritmoConsenso;
     private String handle;
+    private Boolean actualizada;
 
     public Coleccion() {
         this.hechos = new java.util.ArrayList<>();

@@ -18,8 +18,7 @@ public class HechosRepository implements IHechosRepository {
         return this.hechos.stream().filter(hecho -> hecho.getIdHecho().equals(id)).findFirst().orElse(null);
     }
 
-    public Hecho findByIdOrigenAndIdFuente(Long idEnFuente, Long idFuente)
-    {
+    public Hecho findByIdOrigenAndIdFuente(Long idEnFuente, Long idFuente) {
         return this.hechos.stream().filter(hecho -> hecho.getIdHecho().equals(idEnFuente) && equals(idFuente)).findFirst().orElse(null);
     }
 

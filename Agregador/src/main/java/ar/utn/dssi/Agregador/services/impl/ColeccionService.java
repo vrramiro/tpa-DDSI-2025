@@ -7,7 +7,6 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Mapper;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
@@ -26,7 +25,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -58,7 +56,7 @@ public class ColeccionService implements IColeccionService {
         coleccion.setDescripcion(coleccionInputDTO.getDescripcion());
         coleccion.setHandle(coleccionInputDTO.getHandle());
         coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
-
+        coleccion.setActualizada(Boolean.TRUE);
         coleccionRepository.save(coleccion);
         return this.coleccionOutputDTO(coleccion);
     }
@@ -67,7 +65,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     public List<ColeccionOutputDTO> obtenerColecciones() {
         List<Coleccion> colecciones = coleccionRepository.findall();
-
+            //TODO: SOLO OBTENER VERIFICADAS, SI ALGUNA NO LO ESTA LO ACTUALIZO.
         return colecciones
                 .stream()
                 .map(this::coleccionOutputDTO)
@@ -110,8 +108,9 @@ public class ColeccionService implements IColeccionService {
     public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {       //READ
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
-            Coleccion coleccion = coleccionRepository.findByHandle(handle);
+            Coleccion coleccion = coleccionRepository.findByHandle(handle);             //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
+
 
             var hechosColeccion = coleccion.getHechos()
                     .stream()
@@ -132,7 +131,7 @@ public class ColeccionService implements IColeccionService {
     //OBTENER HECHOS DE COLECCION
     @Override
     public List<HechoOutputDTO> hechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findByHandle(handle);
+        var coleccion = coleccionRepository.findByHandle(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
         var hechosColeccion = coleccion.getHechos();
 
         return hechosColeccion.stream().map(hechosService::hechoOutputDTO).toList();
@@ -195,6 +194,7 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
 
+        //TODO: REGISTRAR CAMBIOS EN COLECCION
         refrescarHechosEnColeccion(coleccion)
                 .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
                 .subscribe();
@@ -205,6 +205,7 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().remove(nuevoCriterio);
 
+        //TODO: REGISTRAR CAMBIOS EN COLECCION
         refrescarHechosEnColeccion(coleccion)
                 .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
                 .subscribe();
@@ -231,7 +232,7 @@ public class ColeccionService implements IColeccionService {
         return coleccionDto;
     }
 
-    //Esta tarea deberia ser un crontask
+    //CONSENSO REALIZADO POR CRONTASK
     @Override
     public void realizarConsenso(){
         List<Coleccion> colecciones = coleccionRepository.findall();
@@ -245,6 +246,7 @@ public class ColeccionService implements IColeccionService {
         });
     }
 
+    //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
     @Override
     public void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
