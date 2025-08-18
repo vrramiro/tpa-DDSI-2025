@@ -10,7 +10,7 @@ public class ColeccionScheduler {
     @Autowired
     IColeccionService coleccionService;
 
-    @Scheduled(cron = "0 0 4 * * *") //TODO hacerlo por config
+    @Scheduled(cron = "${cron.coleccion}")
     public void consensuarColeccion() {
         coleccionService.realizarConsenso();
     }

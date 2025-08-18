@@ -15,8 +15,5 @@ public class SolicitudDeEliminacion {
     private LocalDateTime fechaDeEvaluacion;
     private boolean esSpam;
     private Long idSolicitud;
-
-    @Getter
-    private static Integer caracteresMinimos = 500;
 }
 
