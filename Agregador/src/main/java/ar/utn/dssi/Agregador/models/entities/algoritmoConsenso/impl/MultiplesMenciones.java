@@ -5,7 +5,7 @@ import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Setter;
-import lombok.Value;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,8 @@ import java.util.List;
 @Component
 public class MultiplesMenciones extends AlgoritmoConsenso {
 
-    @Setter
-    static private Integer cantidadFuentes = 3; //lo inicializo en 3 pero si quiero lo puedo cambiar
+    @Value("${cantFuentesMultiplesMenciones}")
+    static private Integer cantidadFuentes;
 
     @Override
     public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {

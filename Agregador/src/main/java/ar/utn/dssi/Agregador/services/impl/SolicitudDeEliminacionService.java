@@ -10,6 +10,7 @@ import ar.utn.dssi.Agregador.models.repositories.impl.SolicitudDeEliminacionRepo
 import ar.utn.dssi.Agregador.services.IHechosService;
 import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -25,6 +26,9 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
 
   @Autowired
   private IHechosRepository hechosRepository;
+
+  @Value("${caracteresMinimosSolicitud}")
+  private Integer caracteresMinimos;
 
   //CREAR SOLICITUDES DE ELIMINACION
   @Override
@@ -70,8 +74,8 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
      }
 
      public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
-       if (descripcion == null || descripcion.length() < SolicitudDeEliminacion.getCaracteresMinimos()) {
-         throw new IllegalArgumentException("La descripción debe tener minimo " + SolicitudDeEliminacion.getCaracteresMinimos() );
+       if (descripcion == null || descripcion.length() < caracteresMinimos) {
+         throw new IllegalArgumentException("La descripción debe tener minimo " + caracteresMinimos);
        }
        solicitudDeEliminacion.setDescripcion(descripcion);
      }

@@ -10,7 +10,7 @@ public class HechosScheduler {
   @Autowired
   private IHechosService hechosService;
 
-  @Scheduled(cron = "0 0 * * * *") //TODO va en properties
+  @Scheduled(cron = "${cron.hechos}")
   public void actualizarHechos(){
     hechosService.actualizarHechos();
   }
