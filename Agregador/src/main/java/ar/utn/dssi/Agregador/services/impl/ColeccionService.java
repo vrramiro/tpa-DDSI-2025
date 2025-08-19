@@ -117,7 +117,8 @@ public class ColeccionService implements IColeccionService {
     public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
-            Coleccion coleccion = coleccionRepository.findByHandle(handle);             //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
+            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findByHandle(handle));             //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
+
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
 
 
@@ -203,11 +204,7 @@ public class ColeccionService implements IColeccionService {
     public void agregarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
-
-        //TODO: REGISTRAR CAMBIOS EN COLECCION
-        refrescarHechosEnColeccion(coleccion)
-                .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
-                .subscribe();
+        this.agregarACache(coleccion);
     }
 
     //ELIMINACION DE UN CRITERIO DE PERTENENCIA
@@ -215,11 +212,7 @@ public class ColeccionService implements IColeccionService {
     public void eliminarCriterioDePertenencia(ICriterioDeFiltrado nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.getCriteriosDePertenecias().remove(nuevoCriterio);
-
-        //TODO: REGISTRAR CAMBIOS EN COLECCION
-        refrescarHechosEnColeccion(coleccion)
-                .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
-                .subscribe();
+        this.agregarACache(coleccion);
     }
 
     //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
@@ -241,6 +234,18 @@ public class ColeccionService implements IColeccionService {
                 .then();
     }
 
+    private Coleccion verificarActualizada(Coleccion coleccion){
+        if (coleccion.getActualizada() == Boolean.TRUE) {
+            return coleccion;
+        } else if (coleccion.getActualizada() == Boolean.FALSE && coleccionCache.containsKey(coleccion.getHandle())) {
+            this.refrescarHechosEnColeccion(coleccion)
+                    .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
+                        .subscribe();;
+            return coleccion;
+        } else {
+            throw new IllegalStateException("No se puede actualizar el coleccion, se desconoce su estado actual");
+        }
+    }
 
     /*/////////////////////// CRONS EN COLECCIONES ///////////////////////*/
 
