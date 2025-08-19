@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionService {
@@ -73,7 +74,16 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
        solicitudDeEliminacionRepository.update(solicitud);
      }
 
-     public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
+  @Override
+  public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes() {
+    return this.solicitudDeEliminacionRepository
+            .findAll()
+            .stream()
+            .map(this::SolicitudEliminacionOutputDTO)
+            .toList();
+  }
+
+  public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
        if (descripcion == null || descripcion.length() < caracteresMinimos) {
          throw new IllegalArgumentException("La descripción debe tener minimo " + caracteresMinimos);
        }
@@ -82,7 +92,21 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
 
      //TODO: FUNCION QUE HACE LA SOLICITUD DE ELIMINACION EN UN OUTPUT
   private SolicitudDeEliminacionOutputDTO SolicitudEliminacionOutputDTO(SolicitudDeEliminacion solicitud) {
-    return new SolicitudDeEliminacionOutputDTO();
+    var dtoSolicitudEliminacion = new SolicitudDeEliminacionOutputDTO();
+
+    try {
+
+      dtoSolicitudEliminacion.setDescripcion(solicitud.getDescripcion());
+      dtoSolicitudEliminacion.setEstadoDeSolicitud(solicitud.getEstadoDeSolicitud());
+      dtoSolicitudEliminacion.setFechaDeCreacion(solicitud.getFechaDeEvaluacion());
+      dtoSolicitudEliminacion.setFechaDeEvaluacion(solicitud.getFechaDeEvaluacion());
+      dtoSolicitudEliminacion.setEsSpam(solicitud.isEsSpam());
+
+    } catch(Exception e) {
+      throw new RuntimeException("Error al obtener el dto de solicitud de eliminacion: " + e.getMessage(), e);
+    }
+
+    return dtoSolicitudEliminacion;
   }
 
 }
