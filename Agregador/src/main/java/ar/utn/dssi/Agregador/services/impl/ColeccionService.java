@@ -180,6 +180,9 @@ public class ColeccionService implements IColeccionService {
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
         this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
         coleccionRepository.save(coleccionAModificar);
+
+        //TODO: HACE FALTA CACHE?
+
     }
 
     //ELIMINADO DE FUENTE A LA COLECCION
@@ -191,6 +194,9 @@ public class ColeccionService implements IColeccionService {
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
         this.eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
         coleccionRepository.save(coleccionAModificar);
+
+        //TODO: HACE FALTA CACHE?
+
     }
 
     //AGREGACION DE UN CRITERIO DE PERTENENCIA
@@ -215,6 +221,8 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.setAlgoritmoConsenso(algoritmoConsenso);
         coleccionRepository.update(coleccion);
+
+        //TODO: HACE FALTA CACHE?
     }
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION
@@ -226,6 +234,7 @@ public class ColeccionService implements IColeccionService {
                     return Mono.empty();
                 })
                 .then();
+        //TODO: ELIMINAR HECHO DE CACHE LUEGO REFRESCO
     }
 
     private Coleccion verificarActualizada(Coleccion coleccion){
