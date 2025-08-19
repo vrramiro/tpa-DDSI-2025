@@ -1,6 +1,7 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado;
 
 import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioFechaDesde;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorCategoria;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.CriterioPorFuente;
@@ -16,8 +17,11 @@ public class CriterioDeFiltradoFactory {
             case FECHA_HASTA:
                 return new CriterioFechaDesde(LocalDate.parse(valorDelCriterio));
             case CATEGORIA:
-                return new CriterioPorCategoria();
+                Categoria categoria = new Categoria();
+                categoria.setNombre(valorDelCriterio);
+                return new CriterioPorCategoria(categoria);
             case UBICACION:
+                Ubicacion ubicacion = new Ubicacion();
                 return new CriterioUbicacion();
             case FUENTE:
                 return new CriterioPorFuente((long) Integer.parseInt(valorDelCriterio));
