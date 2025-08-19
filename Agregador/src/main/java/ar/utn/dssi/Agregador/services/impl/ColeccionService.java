@@ -72,9 +72,10 @@ public class ColeccionService implements IColeccionService {
     @Override
     public List<ColeccionOutputDTO> obtenerColecciones() {
         List<Coleccion> colecciones = coleccionRepository.findall();
-            //TODO: SOLO OBTENER VERIFICADAS, SI ALGUNA NO LO ESTA LO ACTUALIZO.
+
         return colecciones
                 .stream()
+                .map(this::verificarActualizada)
                 .map(this::coleccionOutputDTO)
                 .toList();
     }
@@ -93,8 +94,7 @@ public class ColeccionService implements IColeccionService {
         coleccion.setCriteriosDePertenecias(coleccionInputDTO.getCriteriosDePertenecias());
 
         coleccionRepository.update(coleccion);
-
-        this.refrescarHechosEnColeccion(coleccion);
+        this.agregarACache(coleccion);  //Se van a actualizar los hechos asincronincamente
 
         return this.coleccionOutputDTO(coleccion);
     }
@@ -117,10 +117,8 @@ public class ColeccionService implements IColeccionService {
     public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
-            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findByHandle(handle));             //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
-
+            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findByHandle(handle));
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
-
 
             var hechosColeccion = coleccion.getHechos()
                     .stream()
@@ -180,9 +178,7 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
 
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
-
         this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
-
         coleccionRepository.save(coleccionAModificar);
     }
 
@@ -193,9 +189,7 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
 
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
-
         this.eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
-
         coleccionRepository.save(coleccionAModificar);
     }
 
@@ -224,7 +218,7 @@ public class ColeccionService implements IColeccionService {
     }
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){ //TODO: SOLO LO HAGO CUANDO SE ACTUALIZA.
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
         return Flux
                 .fromIterable(hechosRepositorio.findall())
                 .flatMap(hecho -> {
@@ -275,12 +269,7 @@ public class ColeccionService implements IColeccionService {
         });
     }
 
-    //REFRESCO COLECCIONES ACTUALIZADAS => CADA CIERTO TIEMPO, INVOCADA TAMBIEN POR EL SCHEDULER DE REFESCAR COLECCION. PRIMERO ACTUALIZO COLECCION!!!!!.
-    /*
-        Me fijo si la cache tiene elementos
-            si tiene actualizo colecciones en el repositorio
-            elimino las colecciones que actualice en la cache
-     */
+    //TODO: SOLO RESTA QUE LUEGO DE QUE SE ACTUALICEN LOS HECHOS EN LAS COLECCIONES, VER COMO MANEJO LA VERIFICACION QUE TODAS LAS COLECCIONES QUEDEN ACTUALIZADAS Y LA CACHE QUEDE LIMPIA.
 
 
     /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
