@@ -1,0 +1,318 @@
+    :root {
+      --primary-color: #20c997;
+      --secondary-color: #00897b;
+      --accent-color: #ffc107;
+      --danger-color: #e53935;
+      --light-color: #e0f2f1;
+      --dark-color: #004d40;
+      --text-color: #37474f;
+      --background-color: #ffffff;
+      --border-color: #b2dfdb;
+      --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      --border-radius: 8px;
+      --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--light-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 0;
+    }
+
+    /* --- Header y Navegación --- */
+    header {
+      background: var(--background-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 5%;
+      box-shadow: var(--box-shadow);
+      position: relative;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-color);
+      text-decoration: none;
+      z-index: 1001;
+    }
+
+    nav { display: flex; }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1rem;
+      margin: 0;
+      padding: 0;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      transition: background 0.3s, color 0.3s;
+    }
+    nav a:hover {
+      background: var(--light-color);
+      color: var(--primary-color);
+    }
+    .hamburger-menu {
+      display: none;
+      cursor: pointer;
+      font-size: 2rem;
+      z-index: 1001;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 2rem 0 1rem;
+      color: var(--dark-color);
+    }
+
+    /* --- Grid de Hechos --- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .card {
+      background: var(--background-color);
+      border-radius: var(--border-radius);
+      box-shadow: var(--box-shadow);
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover { 
+      transform: translateY(-5px); 
+      box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 600;
+      margin-bottom: .5rem;
+    }
+
+    .card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+      margin-bottom: .5rem;
+    }
+    
+    .card-details {
+      flex-grow: 1;
+      margin: .7rem 0;
+      font-size: .9rem;
+      color: #555;
+    }
+    
+    .card-description {
+      margin: 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .9rem;
+      margin-top: auto;
+    }
+	
+	.footer-tag {
+      display: inline-block;
+      background: var(--secondary-color);
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 500;
+	}
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: .9rem;
+      font-weight: 600;
+      transition: opacity 0.3s;
+    }
+    .btn-danger { background: var(--danger-color); color: white; }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn:hover { opacity: 0.85; }
+
+    /* --- Modal --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 1rem;
+      box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+    }
+
+    .modal-content {
+      background: var(--background-color);
+      padding: 1.5rem;
+      border-radius: var(--border-radius);
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    #modal-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--dark-color);
+      margin: 0;
+    }
+
+    #modal-date {
+      background: var(--light-color);
+      padding: 0.3rem 0.8rem;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      margin-left: 1rem;
+    }
+    
+    .modal-body { position: relative; }
+    #modal-image {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: var(--border-radius);
+    }
+    .carousel-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 50%;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .carousel-arrow:hover { opacity: 1; }
+    .carousel-arrow.left { left: 10px; }
+    .carousel-arrow.right { right: 10px; }
+
+    #modal-description {
+        margin: 1rem 0;
+        line-height: 1.6;
+        color: var(--text-color);
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    #modal-category {
+      display: inline-block;
+      background: var(--secondary-color);
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    
+    .modal-actions { display: flex; gap: 0.75rem; }
+
+    /* --- Footer --- */
+    footer {
+      background: var(--dark-color);
+      color: var(--light-color);
+      text-align: center;
+      padding: 1.5rem 1rem;
+      margin-top: 2rem;
+    }
+    footer a { color: var(--light-color); margin: 0 0.5rem; }
+    footer a:hover { text-decoration: underline; }
+    
+    /* --- Media Queries --- */
+    @media (max-width: 768px) {
+      /* -- Menú Hamburguesa -- */
+      .hamburger-menu { display: block; }
+      nav {
+        position: absolute; top: 100%; left: 0;
+        background: var(--background-color);
+        width: 100%;
+        box-shadow: var(--box-shadow);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease-in-out;
+      }
+      nav.active { max-height: 300px; }
+      nav ul {
+        flex-direction: column; width: 100%;
+        padding: 1rem 0; align-items: center;
+      }
+      nav ul li { width: 100%; text-align: center; }
+      nav a { display: block; padding: 1rem; border-radius: 0; }
+      
+      /* -- Ajustes del Modal para Móvil -- */
+      .modal-content {
+          padding: 1rem; /* Menos padding en pantallas pequeñas */
+          max-height: 90vh; /* Altura máxima para que no ocupe toda la pantalla */
+          overflow-y: auto; /* Permite scroll DENTRO del modal si el contenido es muy largo */
+      }
+      .modal-header {
+          flex-direction: column;
+          align-items: flex-start;
+      }
+      #modal-title { font-size: 1.5rem; }
+      #modal-date { margin-left: 0; margin-top: 0.5rem; }
+      #modal-image {
+          max-height: 220px; /* Imagen más pequeña para no dominar la vista */
+      }
+      #modal-description { font-size: 0.95rem; } /* Texto un poco más pequeño */
+      .modal-footer {
+          flex-direction: column; /* Apila la categoría y los botones */
+          align-items: flex-start; /* Alinea todo a la izquierda */
+      }
+    }

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MetaMapa - Mis Hechos</title>
+  <link rel="stylesheet" href="./css/misHechos.css">
+</head>
+<body>
+
+  <header>
+    <a href="#" class="logo">MetaMapa</a>
+    <div class="hamburger-menu">&#9776;</div>
+    <nav>
+      <ul>
+        <li><a href="#">Explorar</a></li>
+        <li><a href="#">Crear hecho</a></li>
+        <li><a href="#">Gestionar</a></li>
+        <li><a href="#" style="background: var(--primary-color); color:white;">Iniciar sesión</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <h1>Mis Hechos</h1>
+
+  <div class="grid">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Protesta en Plaza Mayor</span>
+        <span class="card-date">01/08/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=1" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Protesta</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Incendio en Chascomús</span>
+        <span class="card-date">15/07/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=2" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales importantes. Afortunadamente no hubo heridos graves.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Ambiental</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Entrega de ayuda humanitaria</span>
+        <span class="card-date">10/06/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=3" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Organizaciones no gubernamentales distribuyeron alimentos y agua potable en las zonas más afectadas por las recientes inundaciones en el litoral.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Ayuda Humanitaria</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Marcha estudiantil</span>
+        <span class="card-date">20/05/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=4" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Estudiantes de varias universidades nacionales y provinciales reclamaron mayor presupuesto para la educación pública y la ciencia.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Social</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Inundación en Bangkok</span>
+        <span class="card-date">01/05/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=5" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Las intensas lluvias monzónicas provocaron graves inundaciones en varios distritos de la capital de Tailandia, afectando a miles de personas.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Ambiental</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Huelga de transporte</span>
+        <span class="card-date">28/04/2025</span>
+      </div>
+      <img class="card-img" src="https://picsum.photos/400/200?random=6" alt="hecho">
+      <div class="card-details">
+        <p class="card-description">Un paro total de transporte público afectó a millones de personas en la ciudad y el área metropolitana, en reclamo de mejoras salariales.</p>
+      </div>
+      <div class="card-footer">
+        <span class="footer-tag">Protesta</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="eventModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title"></h2>
+        <span id="modal-date"></span>
+      </div>
+      <div class="modal-body">
+        <img id="modal-image" src="" alt="Imagen del hecho">
+        <button class="carousel-arrow left">&#10094;</button>
+        <button class="carousel-arrow right">&#10095;</button>
+        <p id="modal-description"></p>
+      </div>
+      <div class="modal-footer">
+        <span id="modal-category"></span>
+        <div class="modal-actions">
+          <button class="btn btn-danger">Eliminar</button>
+          <button class="btn btn-primary">Modificar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 MetaMapa. Todos los derechos reservados.
+    <br>
+    <a href="#">Política de Privacidad</a> | <a href="#">Contacto</a>
+  </footer>
+
+    <script src="./js/misHechos.js"></script>
+</body>
+</html>
