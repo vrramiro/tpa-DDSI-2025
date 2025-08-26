@@ -270,3 +270,56 @@ img, svg, video, canvas {
     .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
     .main-nav a { padding: .4rem .5rem; }
 }
+
+/* Botón hamburguesa */
+.menu-toggle {
+    display: none; /* Oculto por defecto */
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+/* ============================================================
+   MEDIA QUERIES PARA QUE SEA ADAPTABLE A MOVILES, COMPU, ETC
+   ============================================================ */
+
+/* Tablet horizontal y menores - aquí aplicamos la lógica del menú */
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: block; /* Hacemos visible el botón */
+    }
+
+    .main-nav {
+        display: none; /* Ocultamos el menú de navegación */
+        width: 100%;
+        background: var(--background-color);
+        position: absolute;
+        top: 60px; /* Altura del header */
+        left: 0;
+        box-shadow: var(--box-shadow);
+    }
+
+    .main-nav ul {
+        flex-direction: column; /* Apilamos los links verticalmente */
+        padding: 0;
+        gap: 0;
+    }
+    
+    .main-nav ul li {
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .main-nav ul li a {
+        display: block;
+        padding: 1rem;
+        border-radius: 0;
+    }
+
+    /* Clase que se añade con JS para mostrar el menú */
+    .main-nav.show {
+        display: block;
+    }
+}
