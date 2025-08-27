@@ -181,8 +181,6 @@ public class ColeccionService implements IColeccionService {
         this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
         coleccionRepository.save(coleccionAModificar);
 
-        //TODO: HACE FALTA CACHE?
-
     }
 
     //ELIMINADO DE FUENTE A LA COLECCION
@@ -194,8 +192,6 @@ public class ColeccionService implements IColeccionService {
         var criterio = new CriterioPorFuente(fuenteAAgregar.getIdFuente());
         this.eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
         coleccionRepository.save(coleccionAModificar);
-
-        //TODO: HACE FALTA CACHE?
 
     }
 
@@ -226,16 +222,16 @@ public class ColeccionService implements IColeccionService {
     }
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion){
-        return Flux
-                .fromIterable(hechosRepositorio.findall())
-                .flatMap(hecho -> {
-                    this.guardarEnColeccion(coleccion, hecho);
-                    return Mono.empty();
-                })
-                .then();
-        //TODO: ELIMINAR HECHO DE CACHE LUEGO REFRESCO
+    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion) {
+        return Flux.fromIterable(hechosRepositorio.findall())
+                .flatMap(hecho -> Mono.fromRunnable(() -> this.guardarEnColeccion(coleccion, hecho)))
+                .then(Mono.fromRunnable(() -> {
+                    coleccion.setActualizada(Boolean.TRUE);
+                    this.eliminarDeCache(coleccion.getHandle());
+                }));
     }
+
+
 
     private Coleccion verificarActualizada(Coleccion coleccion){
         if (coleccion.getActualizada() == Boolean.TRUE) {
@@ -254,7 +250,7 @@ public class ColeccionService implements IColeccionService {
 
     //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
     @Override
-    public Mono<Void> refrescarColecciones(Hecho hecho){
+    public Mono<Void> refrescarColecciones(Hecho hecho){    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS... Nose si es depues de que se ejecute esta funcion porque se invoca la cantidad de veces necesarias dependiendo los hechos
         return Flux
                 .fromIterable(coleccionRepository.findall())
                 .flatMap(coleccion -> {
@@ -262,6 +258,7 @@ public class ColeccionService implements IColeccionService {
                     return Mono.empty();
                 })
                 .then();
+
     }
 
     //CONSENSO REALIZADO POR CRONTASK
@@ -278,24 +275,25 @@ public class ColeccionService implements IColeccionService {
         });
     }
 
-    //TODO: SOLO RESTA QUE LUEGO DE QUE SE ACTUALICEN LOS HECHOS EN LAS COLECCIONES, VER COMO MANEJO LA VERIFICACION QUE TODAS LAS COLECCIONES QUEDEN ACTUALIZADAS Y LA CACHE QUEDE LIMPIA.
-
 
     /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
     private void agregarACache(Coleccion coleccion) {
-        coleccionCache.put(coleccion.getHandle(), coleccion);
+        String handle = coleccion.getHandle();
+        coleccionCache.put(handle, coleccion); //EL PUT SI YA EXISTE PISA
     }
 
     private Coleccion obtenerDeCache(String handle) {
         return coleccionCache.get(handle);
     }
 
-    private void actualizarEnCache(Coleccion coleccion) {
-        coleccionCache.put(coleccion.getHandle(), coleccion);
-    }
-
     private void eliminarDeCache(String handle) {
         coleccionCache.remove(handle);
+    }
+
+    private void limpiarCache() {
+        // marcar todas las colecciones como actualizadas
+        coleccionCache.values().forEach(c -> c.setActualizada(Boolean.TRUE));
+        coleccionCache.clear();
     }
 
 }
