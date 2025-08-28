@@ -243,7 +243,7 @@ img, svg, video, canvas {
 @media (max-width: 992px) {
   .menu-toggle { display: block; }
   .main-nav { display: none; position: absolute; top: 60px; left: 0; width: 100%; background: var(--background-color); box-shadow: var(--box-shadow); }
-  .main-nav ul { flex-direction: column; }
+  .main-nav ul { flex-direction: column; padding: 0; gap: 0; }
   .main-nav ul li { text-align: center; border-bottom: 1px solid #eee; }
   .main-nav ul li a { display: block; padding: 1rem; border-radius: 0; }
   .main-nav.show { display: block; }
