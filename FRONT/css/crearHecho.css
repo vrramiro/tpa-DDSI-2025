@@ -191,6 +191,33 @@ img, svg, video, canvas {
   background: var(--secondary-color);
 }
 
+.form-options {
+  margin-top: .8rem;
+  margin-bottom: .5rem;
+  text-align: left;
+}
+
+.anonimo-option {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  user-select: none;
+}
+
+.anonimo-option input[type="checkbox"]{
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  accent-color: var(--primary-color);
+  position: relative;
+  top: 4px;
+}
+
+
 /* FOOTER */
 .main-footer {
     background: var(--dark-color);
