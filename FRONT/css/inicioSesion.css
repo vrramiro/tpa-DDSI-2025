@@ -1,4 +1,4 @@
-/* ============================================================
+/* =============================================================
    VARIABLES Y RESET BÁSICO
    ============================================================ */
 :root {
@@ -136,99 +136,87 @@ img, svg, video, canvas {
 .btn-secondary { background-color: var(--light-color); color: #fff; }
 .btn-outline   { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
 
-/* ============================================================
-   SECCIÓN BIENVENIDA / HERO
-   ============================================================ */
-.class-bienvenida {
-    text-align: center;
-    background: var(--background-color);
-    padding-block: clamp(2rem, 6vw, 4rem);
-    padding-inline: 5%;
-}
-.class-bienvenida h1 {
-    font-size: clamp(2rem, 4vw + 1rem, 3.25rem);
-    color: var(--dark-color);
-    margin-bottom: 1rem;
-}
-.class-bienvenida p {
-    font-size: clamp(1rem, 1.2vw + .8rem, 1.2rem);
-    max-width: 70ch;
-    margin: 0 auto clamp(1rem, 2vw, 2rem);
-}
 
-/* ============================================================
-   SECCIONES DE CONTENIDO
-   ============================================================ */
+/* =============================
+   INICIO DE SESIÓN
+   ============================= */
 
-/* Qué es MetaMapa */
-.container-quienesSomos {
-    width: min(92%, var(--container-max));
-    margin-inline: auto;    /*MARGENES VERTICALES*/
-    margin-block: clamp(1rem, 3vw, 2rem); /*MARGENES INFERIORES*/
-    padding: clamp(1rem, 3vw, 1.5rem) ;
-    border-radius: var(--border-radius);
-    background-color: #f0f7f7; /* color único */
-    text-align: center;  /* centra título + contenido */
-}
-.container-quienesSomos h2 {
-    margin-bottom: clamp(.5rem, 1.5vw, 1rem);; /*espacio externo del elemeto*/
-}
-
-/* Colecciones destacadas */
-.container-colecciones {
-    width: min(92%, var(--container-max));
-    margin-inline: auto;
-    margin-block: clamp(1rem, 3vw, 2rem);
-    padding: clamp(1rem, 3vw, 1.5rem) ;
-    border-radius: var(--border-radius);
-    background-color: #f0f7f7; /* color único */
-    text-align: center;  /* centra título + contenido */
-}
-.container-colecciones h2 {
-     margin-bottom: clamp(.5rem, 1.5vw, 1rem);; /*espacio externo del elemeto*/
- }
-
-
-/* Hechos destacados */
-.container-hechos {
-    width: min(92%, var(--container-max));
-    margin-inline: auto;
-    margin-block: clamp(1rem, 3vw, 2rem);
-    padding: clamp(1rem, 3vw, 1.5rem) ;
-    border-radius: var(--border-radius);
-    background-color: #f0f7f7; /* color único */
-    text-align: center;  /* centra título + contenido */
-}
-.container-hechos h2 {
-    margin-bottom: clamp(.5rem, 1.5vw, 1rem);; /*espacio externo del elemeto*/
-}
-
-/* ============================================================
-   TARJETAS Y GRID
-   ============================================================ */
-
-/* Grid adaptable para las features */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: clamp(1rem, 3vw, 2rem);
-}
-
-/* Tarjetas genéricas */
-.card {
+/* Contenedor de la tarjeta */
+#login-page .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    padding: clamp(1rem, 2.5vw, 1.5rem);
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: left;
 }
 
-/* Tarjetas de features */
-.feature-card {
+/* Título */
+#login-page h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 700;
     text-align: center;
 }
-.feature-card h3 {
-    color: var(--primary-color);
+
+/* Agrupación de campos */
+#login-page .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#login-page .form-group label {
+    display: block;
     margin-bottom: .5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Inputs */
+#login-page .form-control {
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color .3s, box-shadow .3s;
+}
+
+#login-page .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.25);
+}
+
+/* Botón de acceso */
+#login-page button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: .75rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+#login-page button[type="submit"]:hover {
+    background: #17a085; /* tono más oscuro */
+}
+
+/* Enlace de registro */
+#login-page p {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: .95rem;
+}
+
+#login-page .btn-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* ============================================================
@@ -306,7 +294,7 @@ img, svg, video, canvas {
         padding: 0;
         gap: 0;
     }
-    
+
     .main-nav ul li {
         text-align: center;
         border-bottom: 1px solid #eee;
@@ -365,4 +353,5 @@ img, svg, video, canvas {
     color: #333;
     text-decoration: none;
 }
+
 
