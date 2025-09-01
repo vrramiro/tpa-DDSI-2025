@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IHechosRepository {
+public interface IHechosRepository{
     public Hecho findById(Long idHecho);
     public Hecho save(Hecho hecho);
     public List<Hecho> findall();
