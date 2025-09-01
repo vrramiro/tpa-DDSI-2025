@@ -130,7 +130,7 @@ img, svg, video, canvas {
 
 /* FORM */
 .form-container {
-  max-width: 800px;
+  width: min(92%, var(--container-max));
   margin: 2rem auto;
   background: var(--background-color);
   border-radius: var(--border-radius);
@@ -139,13 +139,16 @@ img, svg, video, canvas {
 }
 
 .form-container h1 {
-  margin-bottom: 1.5rem;
+  
   color: var(--secondary-color);
+  margin-bottom: var(--space-2);
+  text-align: center;
+  font-size: clamp(1.8rem, 2vw + 1rem, 3rem);
 }
 
 .form label {
   display: block;
-  font-weight: 500;
+  font-weight: 600;
   margin-bottom: .3rem;
 }
 
