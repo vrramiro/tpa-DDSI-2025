@@ -9,6 +9,5 @@ public interface IFuentesService {
   List<Hecho> obtenerNuevosHechos();
   List<HechoInputDTO> obtenerHechosProxy();
   void agregarFuente(Fuente fuente);
-  public void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen);
-
+  void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen);
 }

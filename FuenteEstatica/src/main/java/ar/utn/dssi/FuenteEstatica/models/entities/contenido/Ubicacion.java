@@ -2,21 +2,13 @@ package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 
 import lombok.Getter;
 import lombok.Setter;
+
 @Getter
-
+@Setter
 public class Ubicacion {
-    private double latitud;
-    private double longitud;
-    @Setter private String lugar;
-
-    public Ubicacion(double latitud, double longitud) {
-        this.latitud = latitud;
-        this.longitud = longitud;
-    }
-
-    public Ubicacion(String lugar, double latitud, double longitud) {
-        this.lugar = lugar;
-        this.latitud = latitud;
-        this.longitud = longitud;
-    }
+    private Double latitud;
+    private Double longitud;
+    private String pais;
+    private String ciudad;
+    private String provincia;
 }

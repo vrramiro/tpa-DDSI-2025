@@ -25,11 +25,14 @@ public class HechoFactoryCSVFile implements HechoFactory {
         double longitudLeida = Double.parseDouble(campos[4].trim());
         LocalDate fechaLeida = LocalDate.parse(campos[5].trim(), formatter);
 
+        Ubicacion ubicacion = new Ubicacion();
+        //TODO setear ubicacion con latitud y longitud
+
         return Hecho.builder()
                 .titulo(tituloLeida)
                 .descripcion(descripcionLeida)
                 .categoria(new Categoria(categoriaLeida))
-                .ubicacion(new Ubicacion(latitudLeida, longitudLeida))
+                .ubicacion(ubicacion)
                 .fechaAcontecimiento(fechaLeida.atStartOfDay())
                 .fechaCarga(LocalDateTime.now())
                 .build();
