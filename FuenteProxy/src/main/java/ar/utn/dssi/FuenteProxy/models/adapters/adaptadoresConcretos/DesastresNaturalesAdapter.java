@@ -43,7 +43,6 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
           dto.setUbicacion(ubicacion);
           dto.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
           dto.setFechaCarga(hechoObtenido.getCreated_at());
-          dto.setOrigen(Origen.FUENTE_PROXY);
 
           return dto;
         })
