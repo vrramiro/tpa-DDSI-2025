@@ -111,7 +111,10 @@ public class HechosService implements IHechosService {
     // Construcción del hecho
 
     var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
+    Ubicacion ubicacion = Ubicacion.builder()
+            .latitud(hechoInputDTO.getLatitud())
+            .longitud(hechoInputDTO.getLongitud())
+            .build();
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -174,7 +177,12 @@ public class HechosService implements IHechosService {
 
   private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
     var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
+
+    Ubicacion ubicacion = Ubicacion.builder()
+            .latitud(hechoInputDTO.getLatitud())
+            .longitud(hechoInputDTO.getLongitud())
+            .build();
+
     var categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
