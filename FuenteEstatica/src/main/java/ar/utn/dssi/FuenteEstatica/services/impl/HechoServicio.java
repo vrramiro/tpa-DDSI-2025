@@ -1,7 +1,6 @@
 package ar.utn.dssi.FuenteEstatica.services.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Origen;
 import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
@@ -93,7 +92,6 @@ public class HechoServicio implements IHechoServicio {
         hechoOutputDTO.setUbicacion(hecho.getUbicacion());
         hechoOutputDTO.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         hechoOutputDTO.setFechaCarga(hecho.getFechaCarga());
-        hecho.setOrigen(Origen.FUENTE_ESTATICA);
 
         return hechoOutputDTO;
     }

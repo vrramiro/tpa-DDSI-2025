@@ -3,6 +3,7 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -17,6 +17,5 @@ public class Hecho {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen origen;
     private Boolean enviado;
 }

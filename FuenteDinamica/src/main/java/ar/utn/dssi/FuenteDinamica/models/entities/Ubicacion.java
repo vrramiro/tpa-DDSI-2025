@@ -1,14 +1,16 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
-import lombok.Getter;
+import lombok.*;
 
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Ubicacion {
-  private double latitud;
-  private double longitud;
-
-  public Ubicacion(double latitud, double longitud) {
-    this.latitud = latitud;
-    this.longitud = longitud;
-  }
+  private Double latitud;
+  private Double longitud;
+  private String pais;
+  private String ciudad;
+  private String provincia;
 }

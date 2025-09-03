@@ -33,6 +33,7 @@
 		<module>FuenteProxy</module>
 	</modules>
 
+
 	<!-- Dependencias y versiones centralizadas -->
 	<dependencyManagement>
 		<dependencies>

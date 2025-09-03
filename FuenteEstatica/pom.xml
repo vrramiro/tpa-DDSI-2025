@@ -19,6 +19,7 @@
 	<name>FuenteEstatica</name>
 	<description>Componente Fuente Estatica del sistema MetaMap</description>
 
+
 	<dependencies>
 		<!-- Spring Web -->
 		<dependency>
@@ -52,12 +53,14 @@
 			<optional>true</optional>
 		</dependency>
 
+
 		<!-- Test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>

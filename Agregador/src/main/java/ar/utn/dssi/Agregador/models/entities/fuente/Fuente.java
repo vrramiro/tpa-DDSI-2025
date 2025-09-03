@@ -25,9 +25,7 @@ public class Fuente {
     this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoDeFuente);
   }
 
-  //public Boolean esDeTipo(Origen tipo) {
-    //return tipoFuente.getTipo().equals(tipo);
-  //}
+
 
   public List<Hecho> obtenerHechos() {
     return tipoFuente.obtenerHechos().stream().map(Mapper::hechoInputToHecho).toList();

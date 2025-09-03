@@ -8,7 +8,6 @@ import ar.utn.dssi.FuenteDinamica.models.Errores.IdNoEncontrado;
 import ar.utn.dssi.FuenteDinamica.models.Errores.RepositorioVacio;
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
-import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
@@ -18,9 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -114,7 +111,9 @@ public class HechosService implements IHechosService {
     // Construcción del hecho
 
     var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
+    Ubicacion ubicacion = new Ubicacion();
+      ubicacion.setLatitud(hechoInputDTO.getLatitud());
+      ubicacion.setLongitud(hechoInputDTO.getLongitud());
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -122,7 +121,6 @@ public class HechosService implements IHechosService {
     hecho.setFechaCarga(LocalDateTime.now());
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
     hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
     hecho.setIdHecho(this.hechosRepository.obtenerUltimoId());
     hecho.setVisible(true);
@@ -177,9 +175,13 @@ public class HechosService implements IHechosService {
   }
 
   private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
-    var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
-    var categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
+    Hecho hecho = new Hecho();
+
+    Ubicacion ubicacion = new Ubicacion();
+      ubicacion.setLatitud(hechoInputDTO.getLatitud());
+      ubicacion.setLongitud(hechoInputDTO.getLongitud());
+
+    Categoria categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -187,7 +189,6 @@ public class HechosService implements IHechosService {
     hecho.setFechaCarga(LocalDateTime.now());
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
     hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
     hecho.setIdHecho(idHecho);
 

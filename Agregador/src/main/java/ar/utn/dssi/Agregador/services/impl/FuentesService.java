@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.fuente.impl.TipoFuenteProxy;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class FuentesService implements IFuentesService {
     return this
         .fuentes
         .stream()
-        .filter(fuente -> !fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .filter(fuente -> !(fuente.getTipoFuente() instanceof TipoFuenteProxy)) //SOLUCION A LOS ENUM
         .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream()
             .map(hechoInput -> {
               Hecho hecho = hechosService.crearHecho(hechoInput, fuente.getIdFuente());
@@ -43,7 +44,7 @@ public class FuentesService implements IFuentesService {
     return this
         .fuentes
         .stream()
-        .filter(fuente -> fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
+        .filter(fuente -> fuente.getTipoFuente() instanceof TipoFuenteProxy) //SOLUCION A LOS ENUM
         .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream())
         .toList();
   }
