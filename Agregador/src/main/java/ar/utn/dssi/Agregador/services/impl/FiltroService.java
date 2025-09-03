@@ -1,7 +1,9 @@
 package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
+import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl.*;
 import ar.utn.dssi.Agregador.services.IFiltrosService;
@@ -19,7 +21,9 @@ public class FiltroService implements IFiltrosService {
         List<ICriterioDeFiltrado> criterios = new ArrayList<>();
 
         if (filtroInputDTO.getCategoria() != null && !filtroInputDTO.getCategoria().isBlank()) {
-            criterios.add(new CriterioPorCategoria(filtroInputDTO.getCategoria()));
+            Categoria categoria = new Categoria();
+                categoria.setNombre(filtroInputDTO.getCategoria());
+            criterios.add(new CriterioPorCategoria(categoria));
         }
 
         if (filtroInputDTO.getFecha_acontecimiento_desde() != null) {
@@ -31,7 +35,9 @@ public class FiltroService implements IFiltrosService {
         }
 
         if (filtroInputDTO.getLatitud() != null && filtroInputDTO.getLongitud() != null) {
-            criterios.add(new CriterioUbicacion(filtroInputDTO.getLatitud(), filtroInputDTO.getLongitud()));
+            Ubicacion ubicacion = new Ubicacion(filtroInputDTO.getLatitud(), filtroInputDTO.getLongitud());
+
+            criterios.add(new CriterioUbicacion(ubicacion));
         }
 
         if (filtroInputDTO.getIdFuente() != null) {

@@ -20,9 +20,9 @@ public class CriterioDeFiltradoFactory {
                 Categoria categoria = new Categoria();
                 categoria.setNombre(valorDelCriterio);
                 return new CriterioPorCategoria(categoria);
-            case UBICACION:
+            /*case UBICACION:
                 Ubicacion ubicacion = new Ubicacion();
-                return new CriterioUbicacion();
+                return new CriterioUbicacion();*/ //TODO: IMPLEMENTACION
             case FUENTE:
                 return new CriterioPorFuente((long) Integer.parseInt(valorDelCriterio));
             default:

@@ -1,6 +1,7 @@
 /* =============================================================
    VARIABLES Y RESET BÁSICO
    ============================================================ */
+
 :root {
     /* Colores principales */
     --primary-color: #20c997;
@@ -47,21 +48,7 @@ body {
     color: var(--text-color);
     background-color: var(--light-color);
     line-height: 1.6;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
 }
-
-html, body {
-    height: 100%;      /* Body ocupa toda la altura de la ventana */
-    margin: 0;
-    padding: 0;
-}
-
-main {
-    flex: 1; /* Ocupa todo el espacio disponible entre header y footer */
-}
-
 
 /* Imágenes y medios siempre fluidos */
 img, svg, video, canvas {
@@ -150,25 +137,25 @@ img, svg, video, canvas {
 .btn-secondary { background-color: var(--light-color); color: #fff; }
 .btn-outline   { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
 
+/* ============================================================
+   MAIN - SECCIÓN DE REGISTRO
+   ============================================================ */
 
-/* =============================
-   INICIO DE SESIÓN
-   ============================= */
-
-/* Contenedor de la tarjeta */
-#login-page .card {
+/* Tarjeta que envuelve el formulario */
+.card {
     background: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding: 2rem;
-    margin-top: 2rem;
+    margin: 2rem auto;
     text-align: left;
     width: 100%;
     max-width: 600px;
 }
 
-/* Título */
-#login-page h2 {
+
+/* Título del formulario */
+.card h2 {
     margin-bottom: 1.5rem;
     color: var(--dark-color);
     font-size: 1.5rem;
@@ -177,19 +164,20 @@ img, svg, video, canvas {
 }
 
 /* Agrupación de campos */
-#login-page .form-group {
+.form-group {
     margin-bottom: 1.5rem;
 }
 
-#login-page .form-group label {
+/* Etiquetas de cada campo */
+.form-group label {
     display: block;
     margin-bottom: .5rem;
     font-weight: 600;
     color: var(--text-color);
 }
 
-/* Inputs */
-#login-page .form-control {
+/* Inputs generales */
+.form-control {
     width: 100%;
     padding: .75rem;
     border: 1px solid var(--border-color);
@@ -198,42 +186,38 @@ img, svg, video, canvas {
     transition: border-color .3s, box-shadow .3s;
 }
 
-#login-page .form-control:focus {
-    border-color: var(--primary-color);
+/* Inputs en foco */
+.form-control:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.25);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.2);
 }
 
-/* Botón de acceso */
-#login-page button[type="submit"] {
-    display: block;
+/* Botón principal del formulario */
+#register-form .btn-primary {
     width: 100%;
-    padding: .75rem;
-    background: var(--primary-color);
-    color: #fff;
-    border: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color .3s;
+    margin-top: var(--space-2);
 }
 
-#login-page button[type="submit"]:hover {
-    background: #17a085; /* tono más oscuro */
-}
-
-/* Enlace de registro */
-#login-page p {
+/* Link alternativo debajo del formulario */
+.switch-page {
     text-align: center;
-    margin-top: 1rem;
-    font-size: .95rem;
+    margin-top: var(--space-2);
+    font-size: .9rem;
 }
 
-#login-page .btn-link {
+/* Estilo del enlace "Inicia sesión" */
+.switch-page .btn-link {
     color: var(--primary-color);
     text-decoration: underline;
     cursor: pointer;
 }
+
+/* Hover para el link */
+.switch-page .btn-link:hover {
+    color: var(--secondary-color);
+}
+
 
 /* ============================================================
    FOOTER
@@ -354,6 +338,7 @@ img, svg, video, canvas {
     padding: 2rem;
     border-radius: 8px;
     width: 90%;
+    max-width: 400px;
     position: relative;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
@@ -368,5 +353,3 @@ img, svg, video, canvas {
     color: #333;
     text-decoration: none;
 }
-
-

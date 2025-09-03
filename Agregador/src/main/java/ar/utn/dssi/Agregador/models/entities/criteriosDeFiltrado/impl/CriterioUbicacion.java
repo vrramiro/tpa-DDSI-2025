@@ -2,8 +2,9 @@ package ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
 
-public class CriterioUbicacion {
+public class CriterioUbicacion implements ICriterioDeFiltrado {
   private Ubicacion ubicacion;
 
   public CriterioUbicacion(Ubicacion ubicacion) {

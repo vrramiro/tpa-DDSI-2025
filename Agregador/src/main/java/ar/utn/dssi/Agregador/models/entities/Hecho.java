@@ -1,8 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -13,6 +11,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hecho {
     private String titulo;
     private String descripcion;
@@ -24,13 +24,10 @@ public class Hecho {
     private Long IdHecho;
     private Long idOrigen;
     private Long idFuente;
-
-    private List<Etiqueta> etiquetas;
     private boolean visible;
 
-    public Hecho() {
-        this.etiquetas = new ArrayList<Etiqueta>();
-    }
+    @Builder.Default
+    private List<Etiqueta> etiquetas = new ArrayList<>();
 
     public boolean tieneEtiqueta(Etiqueta etiqueta) {
         return this.etiquetas.contains(etiqueta);

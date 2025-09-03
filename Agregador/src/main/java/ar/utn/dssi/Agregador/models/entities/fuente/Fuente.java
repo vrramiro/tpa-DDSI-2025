@@ -1,14 +1,14 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.models.entities.*;
+import ar.utn.dssi.Agregador.models.entities.Origen;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Mapper;
+
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -19,10 +19,10 @@ public class Fuente {
   private String url;
   private ITipoFuente tipoFuente;
 
-  public Fuente(Long idFuente, String url, Origen tipoFuente) {
+  public Fuente(Long idFuente, String url, Origen tipoDeFuente) {
     this.idFuente = idFuente;
     this.url = url;
-    this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoFuente);
+    this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoDeFuente);
   }
 
 
