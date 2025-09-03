@@ -49,6 +49,13 @@
 				<version>3.4.5</version>
 			</dependency>
 
+			<!-- Spring WebFlux -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-webflux</artifactId>
+				<version>3.4.5</version>
+			</dependency>
+
 			<!-- Persistencia -->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
