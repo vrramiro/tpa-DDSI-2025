@@ -120,9 +120,14 @@ body {
 }
 
 .action-buttons .btn {
-    padding: var(--space-1); /* Botones más pequeños */
+    padding: var(--space-1);
     font-size: 0.9rem;
+    flex-grow: 1; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 .btn-edit {
 	text-decoration: none;
@@ -145,6 +150,10 @@ main {
   width: 90%;
   max-width: var(--container-max);
   margin: 2rem auto;
+  background-color: var(--background-color); 
+  padding: var(--space-4);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
 h1, h2 { 
@@ -156,7 +165,10 @@ h1, h2 {
 
 /* Filtros y cabecera de la colección */
 .filter-controls {
-    margin-bottom: var(--space-3);
+    display: flex;
+	align-items: center;
+	gap: var(--space-2);
+	margin-bottom: 0;
 }
 
 .filter-controls label {

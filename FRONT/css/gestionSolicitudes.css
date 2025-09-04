@@ -145,6 +145,10 @@ main {
   width: 90%;
   max-width: var(--container-max);
   margin: 2rem auto;
+  background-color: var(--background-color); 
+  padding: var(--space-4);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
 }
 
 h1, h2 { 
