@@ -217,8 +217,6 @@ public class ColeccionService implements IColeccionService {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
         coleccion.setAlgoritmoConsenso(algoritmoConsenso);
         coleccionRepository.update(coleccion);
-
-        //TODO: HACE FALTA CACHE?
     }
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION

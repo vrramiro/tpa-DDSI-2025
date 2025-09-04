@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities;
 
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,32 +15,19 @@ import java.util.Objects;
 @Setter
 @Builder
 public class Hecho {
+    private Long id;
+    private Long idEnFuente;
+    private Fuente fuente;
     private String titulo;
     private String descripcion;
     private Categoria categoria;
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private List<MultipartFile> contenidoMultimedia;
-    private Long IdHecho;
-    private Origen origen;
-    private Long idOrigen;
-    private Long idFuente;
+    private List<MultipartFile> contenidoMultimedia; //cambiar a "Multimedia" y hacer la entidad
+    private Boolean visible;
+    //TODO: ver si hacen falta los datos ya sanitizados => titulo y descripcion directamente guardados sanitizados + los originales
 
-    private List<Etiqueta> etiquetas;
-    private boolean visible;
-
-    public Hecho() {
-        this.etiquetas = new ArrayList<Etiqueta>();
-    }
-
-    public boolean tieneEtiqueta(Etiqueta etiqueta) {
-        return this.etiquetas.contains(etiqueta);
-    }
-
-    public void addEtiqueta(Etiqueta etiqueta) {
-        this.etiquetas.add(etiqueta);
-    }
 
     //no todos los atributos porque por que compararias la descripcion
     public Boolean mismoHecho(Hecho otroHecho) {
@@ -49,7 +37,9 @@ public class Hecho {
             this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
     }
 
-    public boolean mismoMismoTitulo(Hecho otroHecho) { return this.getTitulo().equals(otroHecho.getTitulo()); }
+    public boolean tituloSimilar(Hecho otroHecho) {
+        return true; //TODO: Implementar, seguramente usando similitud de cosenos y TF-IDF (aptovechando alguna libreria)
+    }
 
     public boolean mismosAtributos(Hecho otroHecho) {
         return this.getDescripcion().equals(otroHecho.getDescripcion())
@@ -58,7 +48,7 @@ public class Hecho {
             || this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
     }
 
-    public boolean distintaFuente(Hecho hecho) { return (!Objects.equals(hecho.getIdFuente(), this.getIdFuente())); }
-
-    public boolean noConsensuado() { return true; }
+    public boolean distintaFuente(Hecho hecho) {
+        return (!Objects.equals(hecho.fuente.getId(), this.fuente.getId()));
+    }
 }

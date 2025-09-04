@@ -10,14 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NavegacionCurada implements IModoNavegacion {
-
     @Override
     public Boolean hechoNavegable(Hecho hecho, Coleccion coleccion) {
-
-    Boolean navegable = coleccion.getHechosConsensuados().contains(hecho.getIdHecho());
-
-    return navegable;
+        Boolean navegable = coleccion.getHechosConsensuados().contains(hecho.getId());
+        return navegable;
     }
-
-
 }
