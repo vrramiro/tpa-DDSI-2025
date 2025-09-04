@@ -12,8 +12,10 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
+import ar.utn.dssi.FuenteDinamica.services.IUbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -28,8 +30,10 @@ public class HechosService implements IHechosService {
   @Autowired
   private ICategoriasRepository categoriasRepository;
 
-  private LocalDateTime ultimoEnvioHechos;
+  @Autowired
+  private IUbicacionService ubicacionService;
 
+  private LocalDateTime ultimoEnvioHechos;
   private List<HechoOutputDTO> hechosEditados;
 
   @Override
@@ -111,9 +115,7 @@ public class HechosService implements IHechosService {
     // Construcción del hecho
 
     var hecho = new Hecho();
-    Ubicacion ubicacion = new Ubicacion();
-      ubicacion.setLatitud(hechoInputDTO.getLatitud());
-      ubicacion.setLongitud(hechoInputDTO.getLongitud());
+    Ubicacion ubicacion = this.normalizarUbicacion(hechoInputDTO).block();
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -215,4 +217,12 @@ public class HechosService implements IHechosService {
     dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
     return dtoHecho;
   }
+
+  private Mono<Ubicacion> normalizarUbicacion(HechoInputDTO hechoInputDTO){
+    Double latitud = hechoInputDTO.getLatitud();
+    Double longitud = hechoInputDTO.getLongitud();
+
+    return ubicacionService.obtenerUbicacionDeAPI(latitud, longitud);
+  }
+
 }
