@@ -79,41 +79,18 @@ public class HechosService implements IHechosService {
     return this.hechoOutputDTO(hecho);
   }
 
+  @Override
   public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
-    // Validaciones manuales
-
-    //TODO esta logica de validacion podria ir en una clase ValidadorHechosInput que implementa un metodo validar y recibe el hecho
-    //encapsula la logica de validacion y lo vuelve mas extensible
-
-    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
-      throw new DatosFaltantes("El título es obligatorio.");
-    }
-
-    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
-      throw new DatosFaltantes("La descripción es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento() == null) {
-      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
-      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
-    }
-
-    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
-      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
-    }
+    // Validaciones
+    validarHechoInput(hechoInputDTO);
 
     Categoria categoria = null;
-
-    if(hechoInputDTO.getIdCategoria()!=null) {
-        categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
-        //TODO chequear si hay que hacer categoria service para hacer el manejo de errores aca
+    if(hechoInputDTO.getIdCategoria() != null) {
+      categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
+      //TODO chequear si hay que hacer categoria service para manejo de errores
     }
 
     // Construcción del hecho
-
     var hecho = new Hecho();
     Ubicacion ubicacion = this.normalizarUbicacion(hechoInputDTO).block();
 
@@ -130,6 +107,24 @@ public class HechosService implements IHechosService {
     hecho = this.hechosRepository.save(hecho);
 
     return this.hechoOutputDTO(hecho);
+  }
+
+  private void validarHechoInput(HechoInputDTO hechoInputDTO) {
+    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
+      throw new DatosFaltantes("El título es obligatorio.");
+    }
+    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
+      throw new DatosFaltantes("La descripción es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento() == null) {
+      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
+      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
+    }
+    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
+      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
+    }
   }
 
   @Override

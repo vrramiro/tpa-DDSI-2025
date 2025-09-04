@@ -33,7 +33,7 @@ public class UbicacionService implements IUbicacionService {
                         .build())
                 .retrieve()
                 .bodyToMono(UbicacionInputDTO.class)
-                .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido
+                .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
                 .map(resp -> {
                     Ubicacion ubicacion = new Ubicacion();
                     ubicacion.setLatitud(resp.getUbicacion().getLat());
