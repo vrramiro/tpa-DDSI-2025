@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteDinamica.models.repositories;
+package ar.utn.dssi.FuenteDinamica.models.repositories.viejos;
 
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import java.util.List;

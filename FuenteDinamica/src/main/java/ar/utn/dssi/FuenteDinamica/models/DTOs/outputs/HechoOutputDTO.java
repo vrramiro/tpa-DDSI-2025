@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteDinamica.models.DTOs.outputs;
 
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
+import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,5 +18,5 @@ public class HechoOutputDTO {
   private Ubicacion ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
-  private List<MultipartFile> contenidoMultimedia;
+  private List<ContenidoMultimedia> contenidoMultimedia;
 }
