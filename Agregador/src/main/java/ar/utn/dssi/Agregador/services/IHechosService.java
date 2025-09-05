@@ -15,14 +15,10 @@ public interface IHechosService {
     //CRUD
     Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
     List<HechoOutputDTO> obtenerHechos();
-
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
-    Mono<Void> actualizarHechos();
     void eliminarHecho(Long IDHecho);
 
     //AUX
     void guardarHecho(Hecho hecho);
-    HechoOutputDTO hechoOutputDTO(Hecho hecho);
-
-   List<Hecho> obtenerHechosProxy();
+     void importarNuevosHechos();
 }
