@@ -1,6 +1,6 @@
-package ar.utb.ba.dsi;
+package ar.utb.ba.dsi.Normalizador;
 
-public class Main {
+public class NormalizadorApplication {
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
