@@ -4,6 +4,12 @@
 https://docs.google.com/document/d/1ctxGwWrnM0XmPii38KWod9mTzphzNxxPRg9HkpXyNBg/edit?tab=t.0  
 ### Entrega 2
 https://docs.google.com/document/d/1f7a_fd9na5_3E6EzfIyAGn0FSMXAA7OURMPiPkvz7c0/edit?tab=t.0
+### Entrega 3
+https://docs.google.com/document/d/1dESN18hVwo6pg2UhyZoV4vHDD08FsRlzNQH97gd630s/edit?tab=t.0#heading=h.4gc697nwzco3
+### Entrega 4
+https://docs.google.com/document/d/1Y-FelsGkQ5HopDlsP_2-ykUh7lzJQgWdi_4kcVMp4I4/edit?tab=t.0#heading=h.4gc697nwzco3
+https://docs.google.com/document/d/1PRoT0LJKgUpo-exubC7eX_kCefvZggb43fOqR5s1Tsw/edit?tab=t.0#heading=h.o4ngku363s3c
+
 ## MEMORIA TECNICA Y JUSTIFICACIONES DE DISEÑO
 https://docs.google.com/document/d/16u011LlpH063zOflb_Yh9cTvy7jmLuur/edit?usp=sharing&ouid=110234860859130530096&rtpof=true&sd=true
 

@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hecho {
     private Long id;
     private Long idEnFuente;

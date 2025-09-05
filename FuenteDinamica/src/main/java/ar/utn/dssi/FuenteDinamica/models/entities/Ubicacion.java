@@ -1,10 +1,12 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Ubicacion {
   private Double latitud;
   private Double longitud;

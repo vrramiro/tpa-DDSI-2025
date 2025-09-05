@@ -8,19 +8,18 @@ import ar.utn.dssi.FuenteDinamica.models.Errores.IdNoEncontrado;
 import ar.utn.dssi.FuenteDinamica.models.Errores.RepositorioVacio;
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
-import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
+import ar.utn.dssi.FuenteDinamica.services.IUbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -31,8 +30,10 @@ public class HechosService implements IHechosService {
   @Autowired
   private ICategoriasRepository categoriasRepository;
 
-  private LocalDateTime ultimoEnvioHechos;
+  @Autowired
+  private IUbicacionService ubicacionService;
 
+  private LocalDateTime ultimoEnvioHechos;
   private List<HechoOutputDTO> hechosEditados;
 
   @Override
@@ -78,43 +79,20 @@ public class HechosService implements IHechosService {
     return this.hechoOutputDTO(hecho);
   }
 
+  @Override
   public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
-    // Validaciones manuales
-
-    //TODO esta logica de validacion podria ir en una clase ValidadorHechosInput que implementa un metodo validar y recibe el hecho
-    //encapsula la logica de validacion y lo vuelve mas extensible
-
-    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
-      throw new DatosFaltantes("El título es obligatorio.");
-    }
-
-    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
-      throw new DatosFaltantes("La descripción es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento() == null) {
-      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
-      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
-    }
-
-    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
-      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
-    }
+    // Validaciones
+    validarHechoInput(hechoInputDTO);
 
     Categoria categoria = null;
-
-    if(hechoInputDTO.getIdCategoria()!=null) {
-        categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
-        //TODO chequear si hay que hacer categoria service para hacer el manejo de errores aca
+    if(hechoInputDTO.getIdCategoria() != null) {
+      categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
+      //TODO chequear si hay que hacer categoria service para manejo de errores
     }
 
     // Construcción del hecho
-
     var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
+    Ubicacion ubicacion = this.normalizarUbicacion(hechoInputDTO).block();
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -122,7 +100,6 @@ public class HechosService implements IHechosService {
     hecho.setFechaCarga(LocalDateTime.now());
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
     hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
     hecho.setIdHecho(this.hechosRepository.obtenerUltimoId());
     hecho.setVisible(true);
@@ -130,6 +107,24 @@ public class HechosService implements IHechosService {
     hecho = this.hechosRepository.save(hecho);
 
     return this.hechoOutputDTO(hecho);
+  }
+
+  private void validarHechoInput(HechoInputDTO hechoInputDTO) {
+    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
+      throw new DatosFaltantes("El título es obligatorio.");
+    }
+    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
+      throw new DatosFaltantes("La descripción es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento() == null) {
+      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
+      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
+    }
+    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
+      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
+    }
   }
 
   @Override
@@ -177,9 +172,13 @@ public class HechosService implements IHechosService {
   }
 
   private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
-    var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
-    var categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
+    Hecho hecho = new Hecho();
+
+    Ubicacion ubicacion = new Ubicacion();
+      ubicacion.setLatitud(hechoInputDTO.getLatitud());
+      ubicacion.setLongitud(hechoInputDTO.getLongitud());
+
+    Categoria categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
 
     hecho.setTitulo(hechoInputDTO.getTitulo());
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
@@ -187,7 +186,6 @@ public class HechosService implements IHechosService {
     hecho.setFechaCarga(LocalDateTime.now());
     hecho.setUbicacion(ubicacion);
     hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
     hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
     hecho.setIdHecho(idHecho);
 
@@ -214,4 +212,12 @@ public class HechosService implements IHechosService {
     dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
     return dtoHecho;
   }
+
+  private Mono<Ubicacion> normalizarUbicacion(HechoInputDTO hechoInputDTO){
+    Double latitud = hechoInputDTO.getLatitud();
+    Double longitud = hechoInputDTO.getLongitud();
+
+    return ubicacionService.obtenerUbicacionDeAPI(latitud, longitud);
+  }
+
 }

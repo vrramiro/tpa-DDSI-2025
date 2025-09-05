@@ -51,7 +51,6 @@ public class HechosService implements IHechosService {
             hecho.setFechaCarga(LocalDateTime.now());
             hecho.setUbicacion(ubicacion);
             hecho.setCategoria(categoria);
-            hecho.setOrigen(hechoInputDTO.getOrigen());
             hecho.setVisible(true);
             hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
             hecho.setIdHecho(hechosRepository.obtenerUltimoId());
