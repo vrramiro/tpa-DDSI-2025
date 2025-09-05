@@ -1,11 +1,11 @@
-package ar.utb.ba.dsi.Normalizador.models.DTOs;
+package ar.utb.ba.dsi.Normalizador.models.DTOs.Input;
 
 import lombok.Data;
 import lombok.Getter;
 
 @Data
 @Getter
-public class UbicacionResponseGeoref {
+public class UbicacionInputDTOGeoref {
     private UbicacionInner ubicacion;
 
     @Data

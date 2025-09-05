@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.UbicacionResponse;
+import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.IUbicacionAdapter;
 import ar.utb.ba.dsi.Normalizador.service.INormalizadorService;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class NormalizadorService implements INormalizadorService {
     }
 
     @Override
-    public UbicacionResponse obtenerUbicacion(Double latitud, Double longitud) {
+    public UbicacionOutputDTO obtenerUbicacion(Double latitud, Double longitud) {
         try {
             return adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
         } catch (Exception e) {
