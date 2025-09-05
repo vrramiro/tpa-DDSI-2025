@@ -12,7 +12,6 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
-import ar.utn.dssi.FuenteDinamica.services.IUbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -29,9 +28,6 @@ public class HechosService implements IHechosService {
 
   @Autowired
   private ICategoriasRepository categoriasRepository;
-
-  @Autowired
-  private IUbicacionService ubicacionService;
 
   private LocalDateTime ultimoEnvioHechos;
   private List<HechoOutputDTO> hechosEditados;
@@ -217,7 +213,7 @@ public class HechosService implements IHechosService {
     Double latitud = hechoInputDTO.getLatitud();
     Double longitud = hechoInputDTO.getLongitud();
 
-    return ubicacionService.obtenerUbicacionDeAPI(latitud, longitud);
+    return null; //TODO: ACA AL RESPONDER SE TIENE QUE NORMALIZAR LA UBICACION!!!!!!!!!1 VA ACA LA INTEGRACION CON LA API
   }
 
 }

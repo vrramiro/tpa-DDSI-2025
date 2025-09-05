@@ -1,23 +1,24 @@
 package ar.utb.ba.dsi.Normalizador.controllers;
 
 import ar.utb.ba.dsi.Normalizador.models.DTOs.UbicacionResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import ar.utb.ba.dsi.Normalizador.service.INormalizadorService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/solicitudes")
 public class UbicacionController {
 
+    private final INormalizadorService normalizadorService;
+
+    public UbicacionController(INormalizadorService normalizadorService) {
+        this.normalizadorService = normalizadorService;
+    }
 
     @GetMapping("/ubicacion")
-    public ResponseEntity<UbicacionResponse> obtenerHechos(Double latitud, Double longitud) {
-        //LOGICAAAA
-        return null;
+    public ResponseEntity<UbicacionResponse> obtenerUbicacion(@RequestParam Double latitud, @RequestParam Double longitud) {
+        UbicacionResponse ubicacion = normalizadorService.obtenerUbicacion(latitud, longitud);
+        return ResponseEntity.ok(ubicacion);
     }
+
 }

@@ -1,30 +1,29 @@
-package ar.utn.dssi.FuenteDinamica.services.impl;
+package ar.utb.ba.dsi.Normalizador.models.entities.impl;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.UbicacionInputDTO;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.UbicacionOutputDTO;
-import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
-import ar.utn.dssi.FuenteDinamica.services.IUbicacionService;
-
+import ar.utb.ba.dsi.Normalizador.models.DTOs.UbicacionResponse;
+import ar.utb.ba.dsi.Normalizador.models.DTOs.UbicacionResponseGeoref;
+import ar.utb.ba.dsi.Normalizador.models.entities.IUbicacionAdapter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
-@Service
-public class UbicacionService implements IUbicacionService {
+@Component
+public class GeorefAdapter implements IUbicacionAdapter {
     private final WebClient webClient;
+
     @Value("${georef.timeout-ms}")
     private int timeoutMs;
 
-    public UbicacionService( @Value("${georef.base-url}") String baseUrl) {
+    public GeorefAdapter( @Value("${georef.base-url}") String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .build();
     }
 
-    public Mono<Ubicacion> obtenerUbicacionDeAPI(Double latitud, Double longitud) {
+    public Mono<UbicacionResponse> obtenerUbicacionDeAPI(Double latitud, Double longitud) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/ubicacion")
@@ -32,10 +31,10 @@ public class UbicacionService implements IUbicacionService {
                         .queryParam("lon", longitud)
                         .build())
                 .retrieve()
-                .bodyToMono(UbicacionInputDTO.class)
+                .bodyToMono(UbicacionResponseGeoref.class)
                 .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
                 .map(resp -> {
-                    Ubicacion ubicacion = new Ubicacion();
+                    UbicacionResponse ubicacion = new UbicacionResponse();
                     ubicacion.setLatitud(resp.getUbicacion().getLat());
                     ubicacion.setLongitud(resp.getUbicacion().getLon());
                     ubicacion.setPais("Argentina");
