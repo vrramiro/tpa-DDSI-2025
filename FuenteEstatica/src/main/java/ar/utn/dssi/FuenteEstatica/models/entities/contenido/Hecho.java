@@ -29,8 +29,7 @@ public class Hecho {
     @JoinColumn(name = "categoria_id", nullable = false)
     private Categoria categoria;
 
-    @ManyToOne //ver, para mi many to one
-    @JoinColumn(name = "ubicacion_id", nullable = false)
+    @Embedded
     private Ubicacion ubicacion;
 
     @Column(name = "fecha_acontecimiento", nullable = false)
@@ -39,10 +38,6 @@ public class Hecho {
     @CreatedDate
     @Column(name = "fecha_carga", nullable = false)
     private LocalDateTime fechaCarga;
-
-    @LastModifiedDate
-    @Column(name = "fecha_modificacion")
-    private LocalDateTime fechaModificacion;
 
     private Boolean enviado;
 }
