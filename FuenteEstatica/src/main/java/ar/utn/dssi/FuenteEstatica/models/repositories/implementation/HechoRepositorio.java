@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@Repository
+/*@Repository
 public class HechoRepositorio implements IHechosRepositorio {
     private List<Hecho> hechos = new ArrayList<>();
 
@@ -34,3 +34,4 @@ public class HechoRepositorio implements IHechosRepositorio {
         return Optional.ofNullable(this.hechos.stream().filter(hecho -> hecho.getId().equals(id)).findFirst().orElse(null));
     }
 }
+*/
