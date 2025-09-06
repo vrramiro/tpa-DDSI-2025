@@ -22,8 +22,7 @@ public class Hecho {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idHecho;
 
-  @ManyToOne
-  @JoinColumn(name = "ubicacion_id")
+  @Embedded
   private Ubicacion ubicacion;
 
   @ManyToOne

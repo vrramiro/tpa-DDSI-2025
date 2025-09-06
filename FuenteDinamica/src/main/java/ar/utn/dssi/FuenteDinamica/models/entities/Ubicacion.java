@@ -8,14 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-@Entity
-@Table(name = "ubicacion")
+@Embeddable
 public class Ubicacion {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   private Double latitud;
   private Double longitud;
