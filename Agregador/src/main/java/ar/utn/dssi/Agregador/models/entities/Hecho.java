@@ -1,9 +1,7 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import org.springframework.web.multipart.MultipartFile;
 

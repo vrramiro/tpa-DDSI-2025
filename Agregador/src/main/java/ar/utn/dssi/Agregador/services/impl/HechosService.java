@@ -6,15 +6,9 @@ import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
-import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteDinamica.FuenteDinamica;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteDinamica.FuenteDinamicaConcreta;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteProxy.FuenteProxy;
-import ar.utn.dssi.Agregador.models.entities.sanitizador.Sanitizador;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
-import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
@@ -23,8 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Service
@@ -53,9 +45,9 @@ public class HechosService implements IHechosService {
             hecho.setCategoria(categoria);
             hecho.setVisible(true);
             hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-            hecho.setIdHecho(hechosRepository.obtenerUltimoId());
-            hecho.setIdOrigen(hechoInputDTO.getIdEnFuente());
-            hecho.setIdFuente(IdFuente);
+            hecho.setId(hechosRepository.obtenerUltimoId());
+            hecho.setIdEnFuente(hechoInputDTO.getIdEnFuente());
+            hecho.setFuente(new Fuente()/*ESTO NO ESTA BIEN!!! ES PARA QUE NO TIRE ERROR AHORA*/); //TODO: OBTENER LA FUENTE EN BASE A SU ID O ALGUNA FORMA
 
             return hecho;
         } catch (Exception e) {
@@ -106,11 +98,9 @@ public class HechosService implements IHechosService {
     @Override
     public void importarNuevosHechos() {
         try {
-            Sanitizador sanitizador = new Sanitizador();
-
             List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
 
-            sanitizador.sanitizar(hechosNuevos);
+            //TODO: ACA NORMALIZAR LOS HECHOS..
 
             List<Coleccion> colecciones = coleccionRepository.findAll();
 

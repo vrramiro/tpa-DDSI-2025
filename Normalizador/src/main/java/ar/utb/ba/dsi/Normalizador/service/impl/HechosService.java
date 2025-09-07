@@ -7,6 +7,7 @@ import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import ar.utb.ba.dsi.Normalizador.models.entities.Hecho;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
+import ar.utb.ba.dsi.Normalizador.models.entities.sanitizador.Sanitizador;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeFecha;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeHechos;
@@ -49,8 +50,10 @@ public class HechosService implements IHechosService {
                 MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento())
         );
 
-        //Sanitizo hecho??????????????/
-        //TODO: VER SI PUEDO HACERLO ACA, ESPERO RESPUESTA DE EZE
+        // Sanitizo titulo y descripcion
+        hecho.setTitulo(hechoInput.getTitulo());
+        hecho.setDescripcion(hechoInput.getDescripcion());
+        Sanitizador.sanitizar(hecho);
 
         return MapperDeHechos.hechoToOutput(hecho);
     }
