@@ -1,7 +1,7 @@
-package ar.utn.dssi.FuenteDinamica.models.repositories.impl;
+package ar.utn.dssi.FuenteDinamica.models.repositories.viejos.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
-import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.viejos.IHechosRepository;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;

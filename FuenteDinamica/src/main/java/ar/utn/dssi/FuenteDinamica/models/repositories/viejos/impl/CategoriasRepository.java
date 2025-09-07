@@ -1,7 +1,7 @@
-package ar.utn.dssi.FuenteDinamica.models.repositories.impl;
+package ar.utn.dssi.FuenteDinamica.models.repositories.viejos.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
-import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.viejos.ICategoriasRepository;
 import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
