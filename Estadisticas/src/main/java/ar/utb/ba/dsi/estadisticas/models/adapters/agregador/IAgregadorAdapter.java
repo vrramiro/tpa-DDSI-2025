@@ -7,4 +7,6 @@ import java.util.List;
 public interface IAgregadorAdapter {
     public List<HechoInputDTO> obtenerHechos();
     public List<ColeccionInputDTO> obtenerColecciones();
+    //TODO Falta el end point en agregador directamente para que me de las solicitudes
+    //public List<SolicitudEliminacionInputDTO> obtenerSolicitudes();
 }

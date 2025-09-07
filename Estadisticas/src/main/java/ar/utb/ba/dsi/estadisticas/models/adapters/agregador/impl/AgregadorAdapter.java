@@ -1,7 +1,8 @@
-package ar.utb.ba.dsi.estadisticas.models.adapters.agregador;
+package ar.utb.ba.dsi.estadisticas.models.adapters.agregador.impl;
 
 import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.ColeccionInputDTO;
 import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.HechoInputDTO;
+import ar.utb.ba.dsi.estadisticas.models.adapters.agregador.IAgregadorAdapter;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
