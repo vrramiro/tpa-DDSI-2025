@@ -23,11 +23,15 @@ public class Estadistica {
     @Column(name = "tipo_estadistica", nullable = false)
     private TipoEstadistica tipo;
 
+    private Long coleccionId;
+
+    private Long categotiaId; // representa a la categoria a la que pertenece la estadistica => tipo cant_hechos_categorias
+
     @Column(name = "valor", nullable = false)
     private Long valor;
 
-    @Column(name = "resultado", nullable = false)
-    private String resultado;
+    @Column(name = "clave", nullable = false)
+    private String clave; //puede llevar el nombre de la provincia, categoria, hora, dependiendo del tipo de estadistica
 
     @Column(name = "fecha_calculo", nullable = false)
     private LocalDateTime fechaDeCalculo;
