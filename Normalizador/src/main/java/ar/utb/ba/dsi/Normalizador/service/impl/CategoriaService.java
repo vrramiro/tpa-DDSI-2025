@@ -17,8 +17,13 @@ public class CategoriaService implements ICategoriaService {
     }
 
     @Override
-    public CategoriaOutputDTO normalizarCategoria(CategoriaInputDTO categoriaInput) {
-        String categoriaExterna = categoriaInput.getCategoriaExterna().toLowerCase();
+    public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {
+        return MapperDeCategorias.categoriaToOutputDTO(this.normalizarCategoria(MapperDeCategorias.categoriaFromInputDTO(categoria)));
+    }
+
+    @Override
+    public Categoria normalizarCategoria(Categoria categoriaInput) {
+        String categoriaExterna = categoriaInput.getNombre().toLowerCase();
 
         Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaExterna);
 
@@ -26,6 +31,6 @@ public class CategoriaService implements ICategoriaService {
             throw new RuntimeException("Categoria no encontrada");
         }
 
-        return MapperDeCategorias.categoriaToOutputDTO(categoriaNormalizada);
+        return categoriaNormalizada;
     }
 }

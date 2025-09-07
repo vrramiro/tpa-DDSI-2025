@@ -16,13 +16,18 @@ public class UbicacionService implements IUbicacionService {
     }
 
     @Override
-    public UbicacionOutputDTO obtenerUbicacion(Double latitud, Double longitud) {
+    public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
         try {
             Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
 
-            return MapperDeUbicacion.ubicacionOutputDTO(ubicacion);
+            return ubicacion;
         } catch (Exception e) {
             throw new RuntimeException("No se pudo obtener la ubicación", e);
         }
+    }
+
+    @Override
+    public UbicacionOutputDTO obtenerUbicacionOutPut(Double latitud, Double longitud) {
+        return MapperDeUbicacion.ubicacionOutputDTO(this.obtenerUbicacion(latitud, longitud));
     }
 }

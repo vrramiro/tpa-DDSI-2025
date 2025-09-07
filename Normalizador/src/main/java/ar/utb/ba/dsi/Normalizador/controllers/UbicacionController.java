@@ -14,7 +14,7 @@ public class UbicacionController {
 
     @GetMapping("/ubicacion")
     public ResponseEntity<UbicacionOutputDTO> obtenerUbicacion(@RequestParam Double latitud, @RequestParam Double longitud) {
-        UbicacionOutputDTO ubicacion = ubicacionService.obtenerUbicacion(latitud, longitud);
+        UbicacionOutputDTO ubicacion = ubicacionService.obtenerUbicacionOutPut(latitud, longitud);
         return ResponseEntity.ok(ubicacion);
     }
 

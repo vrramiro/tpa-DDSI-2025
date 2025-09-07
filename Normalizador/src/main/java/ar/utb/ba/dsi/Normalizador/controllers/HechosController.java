@@ -16,9 +16,9 @@ public class HechosController {
     @Autowired
     private IHechosService normalizadorService;
 
-    @GetMapping("/curar")
-    public ResponseEntity<HechoOutputDTO> curarHecho(@RequestBody HechoInputDTO hecho) {
-        HechoOutputDTO hechoOutput = normalizadorService.curarHecho(hecho);
+    @GetMapping("/normalizar")
+    public ResponseEntity<HechoOutputDTO> normalizarHecho(@RequestBody HechoInputDTO hecho) {
+        HechoOutputDTO hechoOutput = normalizadorService.normalizarHecho(hecho);
         return ResponseEntity.ok(hechoOutput);
     }
 

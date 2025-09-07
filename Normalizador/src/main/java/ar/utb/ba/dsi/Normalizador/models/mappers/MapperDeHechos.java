@@ -1,12 +1,16 @@
 package ar.utb.ba.dsi.Normalizador.models.mappers;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.HechoInputDTO;
+import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.HechoOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Hecho;
 
 public class MapperDeHechos {
-    public static Hecho hechoFromInput(HechoInputDTO hechoInputDTO){
-        Hecho hecho = new Hecho();
-            //TODO: DESARROLLO
-        return hecho;
+    public static HechoOutputDTO hechoToOutput(Hecho hecho){
+        HechoOutputDTO hechoOutput = new HechoOutputDTO();
+            hechoOutput.setTitulo(hecho.getTitulo());
+            hechoOutput.setDescripcion(hecho.getDescripcion());
+            hechoOutput.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+            hechoOutput.setUbicacion(MapperDeUbicacion.ubicacionOutputDTO(hecho.getUbicacion()));
+            hechoOutput.setCategoria(MapperDeCategorias.categoriaToOutputDTO(hecho.getCategoria()));
+        return hechoOutput;
     }
 }

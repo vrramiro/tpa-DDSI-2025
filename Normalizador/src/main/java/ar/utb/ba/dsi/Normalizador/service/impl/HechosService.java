@@ -8,6 +8,7 @@ import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import ar.utb.ba.dsi.Normalizador.models.entities.Hecho;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
+import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeFecha;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeHechos;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
@@ -17,6 +18,8 @@ import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @Service
@@ -26,32 +29,29 @@ public class HechosService implements IHechosService {
     private IUbicacionService ubicacionService;
     private ICategoriaService categoriaService;
 
+    private static final DateTimeFormatter FORMATTER =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
     @Override
-    public HechoOutputDTO curarHecho(HechoInputDTO hechoInput) {
-        Hecho hecho = MapperDeHechos.hechoFromInput(hechoInput);
+    public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {
+        Hecho hecho = new Hecho();
 
         // Normalizo ubicacion
-        Ubicacion ubicacionHecho = MapperDeUbicacion.ubicacionFromOutput(
-                ubicacionService.obtenerUbicacion(
-                        hecho.getUbicacion().getLatitud(),
-                        hecho.getUbicacion().getLongitud()
-                )
-        );
+        Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hecho.getUbicacion().getLatitud(), hecho.getUbicacion().getLongitud());
         hecho.setUbicacion(ubicacionHecho);
 
         //Normalizo Categoria
-        Categoria categoriaHecho = MapperDeCategorias.categoriaFromOutputDTO(
-                categoriaService.normalizarCategoria(
-                        hechoInput.getCategoria()
-                )
-        );
+        Categoria categoriaHecho = categoriaService.normalizarCategoria(hecho.getCategoria());
         hecho.setCategoria(categoriaHecho);
 
         //Normalizo fecha
+        hecho.setFechaAcontecimiento(
+                MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento())
+        );
 
-        //Sanitizo Hecho
+        //Sanitizo hecho??????????????/
+        //TODO: VER SI PUEDO HACERLO ACA, ESPERO RESPUESTA DE EZE
 
-
-        return MapperDeHechos.hechoOutputDTO
+        return MapperDeHechos.hechoToOutput(hecho);
     }
 }

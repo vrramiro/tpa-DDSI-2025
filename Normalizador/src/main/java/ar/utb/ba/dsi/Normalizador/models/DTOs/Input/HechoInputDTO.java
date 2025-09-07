@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
 public class HechoInputDTO {
   private String titulo;
   private String descripcion;
-  private CategoriaInputDTO categoria;
+  private String categoria;
   private Double latitud;
   private Double longitud;
-  private LocalDateTime fechaAcontecimiento;
+  private String fechaAcontecimiento;
 }

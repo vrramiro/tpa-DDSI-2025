@@ -15,7 +15,7 @@ public class CategoriaController {
 
     @GetMapping("/normalizar")
     public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {
-        CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoria(categoria);
+        CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoriaOutPut(categoria);
         return ResponseEntity.ok(categoriaOutputDTO);
     }
 }
