@@ -9,8 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface IHechosRepositorio extends JpaRepository<Hecho, Long> {
-    /*public void save(List<Hecho> hechos);
-    public List<Hecho> findAll();
-    public void update(Hecho hechos);*/
     public Optional<Hecho> findById(Long id);
 }
