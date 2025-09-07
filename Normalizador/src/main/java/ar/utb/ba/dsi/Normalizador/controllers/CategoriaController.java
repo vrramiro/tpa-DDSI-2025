@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaController {
@@ -17,5 +19,11 @@ public class CategoriaController {
     public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {
         CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoriaOutPut(categoria);
         return ResponseEntity.ok(categoriaOutputDTO);
+    }
+
+    @GetMapping("/categorias")
+    public ResponseEntity<List<CategoriaOutputDTO>> listarCategorias(){
+        List<CategoriaOutputDTO> categorias = categoriaService.obtenerCategorias();
+        return ResponseEntity.ok(categorias);
     }
 }

@@ -27,13 +27,4 @@ public class MapperDeUbicacion {
         return ubicacionOutputDTO;
     }
 
-    public static Ubicacion ubicacionFromOutput(UbicacionOutputDTO output) {
-        Ubicacion ubicacion = new Ubicacion();
-            ubicacion.setLatitud(output.getLatitud());
-            ubicacion.setLongitud(output.getLongitud());
-            ubicacion.setPais(output.getPais());
-            ubicacion.setProvincia(output.getProvincia());
-            ubicacion.setCiudad(output.getCiudad());
-        return ubicacion;
-    }
 }

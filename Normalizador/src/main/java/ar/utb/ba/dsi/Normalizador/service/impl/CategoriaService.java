@@ -8,6 +8,9 @@ import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CategoriaService implements ICategoriaService {
     private final ICategoriaRepository categoriaRepository;
@@ -32,5 +35,10 @@ public class CategoriaService implements ICategoriaService {
         }
 
         return categoriaNormalizada;
+    }
+
+    @Override
+    public List<CategoriaOutputDTO> obtenerCategorias() {
+        return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
     }
 }
