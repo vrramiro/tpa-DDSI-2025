@@ -45,10 +45,9 @@ public class HechosService implements IHechosService {
         Categoria categoriaHecho = categoriaService.normalizarCategoria(hecho.getCategoria());
         hecho.setCategoria(categoriaHecho);
 
-        //Normalizo fecha
-        hecho.setFechaAcontecimiento(
-                MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento())
-        );
+        //Normalizo fechas
+        hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
+        hecho.setFechaCarga(MapperDeFecha.fromString(hechoInput.getFechaCarga()));
 
         // Sanitizo titulo y descripcion
         hecho.setTitulo(hechoInput.getTitulo());

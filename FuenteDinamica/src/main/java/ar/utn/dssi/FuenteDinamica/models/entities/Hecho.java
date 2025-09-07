@@ -32,11 +32,18 @@ public class Hecho {
   @OneToMany(mappedBy = "hecho", cascade = CascadeType.ALL)
   private List<ContenidoMultimedia> multimedia;
 
+  @Column(name = "titula", nullable = false)
   private String titulo;
+
+  @Column(name = "descripcion", nullable = false)
   private String descripcion;
+
+  @Column(name = "fecha_acontecimiento", nullable = false)
   private LocalDateTime fechaAcontecimiento;
+
+  @Column(name = "fecha_carga", nullable = false)
   private LocalDateTime fechaCarga;
 
-
+  @Column(name = "visibilidad", nullable = false)
   private Boolean visible;
 }

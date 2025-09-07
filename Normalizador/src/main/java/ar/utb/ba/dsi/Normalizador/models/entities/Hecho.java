@@ -18,4 +18,5 @@ public class Hecho {
   private String titulo;
   private String descripcion;
   private LocalDateTime fechaAcontecimiento;
+  private LocalDateTime fechaCarga;
 }

@@ -1,19 +1,19 @@
-package ar.utb.ba.dsi.Normalizador.models.DTOs.Output;
-
-import java.time.LocalDateTime;
+package ar.utn.dssi.FuenteDinamica.models.DTOs.inputs;
 
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Data
-@Setter
 @Getter
-public class HechoOutputDTO {
+@Setter
+public class HechoInputDTONormalizador {
     private String titulo;
     private String descripcion;
-    private CategoriaOutputDTO categoria;
-    private UbicacionOutputDTO ubicacion;
+    private CategoriaInputDTO categoria;
+    private UbicacionInputDTO ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
 }

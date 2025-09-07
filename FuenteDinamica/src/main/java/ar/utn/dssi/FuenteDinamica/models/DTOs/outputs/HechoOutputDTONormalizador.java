@@ -7,8 +7,12 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class UbicacionOutputDTO {
+public class HechoOutputDTONormalizador {
+    private String titulo;
+    private String descripcion;
+    private String categoria;
     private Double latitud;
     private Double longitud;
-
+    private String fechaAcontecimiento;
+    private String fechaCarga;
 }
