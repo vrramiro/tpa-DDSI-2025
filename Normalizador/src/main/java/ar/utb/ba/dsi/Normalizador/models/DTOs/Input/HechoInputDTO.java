@@ -1,16 +1,18 @@
 package ar.utb.ba.dsi.Normalizador.models.DTOs.Input;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
+@Getter
+@Setter
 public class HechoInputDTO {
   private String titulo;
   private String descripcion;
-  private String categoria;
+  private CategoriaInputDTO categoria;
   private Double latitud;
   private Double longitud;
   private LocalDateTime fechaAcontecimiento;

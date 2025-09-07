@@ -11,18 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-
-
 public class Hecho {
-
   private Long idHecho;
   private Ubicacion ubicacion;
   private Categoria categoria;
-  private List<ContenidoMultimedia> multimedia;
   private String titulo;
   private String descripcion;
   private LocalDateTime fechaAcontecimiento;
-  private LocalDateTime fechaCarga;
-
-  private Boolean visible;
 }
