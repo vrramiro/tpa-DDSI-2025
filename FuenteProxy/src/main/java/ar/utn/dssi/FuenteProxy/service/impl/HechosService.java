@@ -1,45 +1,54 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.Errores.RepositorioVacio;
-import ar.utn.dssi.FuenteProxy.models.adapters.IServicioExternoAdapter;
-import ar.utn.dssi.FuenteProxy.models.adapters.adaptadoresConcretos.DesastresNaturalesAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
-import ar.utn.dssi.FuenteProxy.models.fuenteMetamapa.IFuenteMetaMapa;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
+import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
+import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.List;
+
+import static reactor.core.publisher.Flux.*;
 
 @Service
 public class HechosService implements IHechosService {
-  public IServicioExternoAdapter desastreNaturalesAdapter;
-  public IFuenteMetaMapa fuenteMetamapa; //una instancia de metamapa
 
-  //POR AHORA SE INYECTA DESPUES VA A CAMBIAR AL USAR VARIAS INSTANCIAS
-  public HechosService(IFuenteMetaMapa fuenteMetamapa) {
-    this.desastreNaturalesAdapter = new DesastresNaturalesAdapter();
+  private IHechoRepository hechoRepository;
+  private IFuenteRepository fuenteRepository;
+
+
+  public HechosService(IHechoRepository hechoRepository, IFuenteRepository fuenteRepository) {
+    this.hechoRepository = hechoRepository;
+    this.fuenteRepository = fuenteRepository;
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
-    List<HechoOutputDTO> hechos = desastreNaturalesAdapter.obtenerHechos();
-
-    if(hechos.isEmpty()) {
-      throw new RepositorioVacio("No hay hechos en el repositorio proxy.");
-    }
-
-    return hechos;
+    return hechoRepository.findAll();
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    List<HechoOutputDTO> hechos = fuenteMetamapa.obtenerHechosMetamapa();
+    List<Fuente> fuentes = fuenteRepository.findTipo(TipoFuente.METAMAPA);
+    //TODO: Ver si conviene hacerlo Mono o no.
+    return List.of();
+  }
 
-    if(hechos.isEmpty()) {
-      throw new RepositorioVacio("No hay hechos en el repositorio proxy metamapa.");
-    }
 
-    return hechos;
+  public void importarHechos() {
+    List<Fuente> fuentes = fuenteRepository.findTipoNot(TipoFuente.METAMAPA);
+    List<HechoOutputDTO> hechosImportados = fuentes.stream()
+            .flatMap(fuente -> fuente.importarHechos().block().stream())
+            .map(this::hechoOutputDTO)
+            .toList();
+
+    hechoRepository.saveAll(hechosImportados);
   }
 
   private HechoOutputDTO hechoOutputDTO(Hecho hecho) {
@@ -55,3 +64,5 @@ public class HechosService implements IHechosService {
     return outputDTO;
   }
 }
+
+

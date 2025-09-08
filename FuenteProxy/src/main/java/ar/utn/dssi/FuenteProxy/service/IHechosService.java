@@ -6,4 +6,5 @@ import java.util.List;
 public interface IHechosService {
   List<HechoOutputDTO> obtenerHechos();
   List<HechoOutputDTO> obtenerHechosInstanciasMetamapa();
+  void importarHechos();
 }

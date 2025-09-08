@@ -1,19 +1,78 @@
-package ar.utn.dssi.FuenteProxy.models.adapters.adaptadoresConcretos;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.DatosLogin;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechosDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.RespuestaLogin;
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.adapters.IServicioExternoAdapter;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesAPI;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
-import ar.utn.dssi.FuenteProxy.models.entities.Origen;
+import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
-import org.springframework.web.reactive.function.client.WebClient;
-import java.util.ArrayList;
+import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
 import java.util.List;
 
+// -------------------- ADAPTER --------------------
+@Component
 public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
+
+    private final DesastresNaturalesAPI api;
+
+    public DesastresNaturalesAdapter(DesastresNaturalesAPI api) {
+        this.api = api;
+    }
+
+    @Override
+    public Mono<List<Hecho>> obtenerHechos() {
+        return api.autenticar("ddsi@gmail.com", "ddsi2025*")
+                .flatMapMany(token -> obtenerTodasLasPaginas(token, 1))
+                .map(this::mapearHecho)
+                .collectList();
+    }
+
+    @Override
+    public TipoFuente getTipoFuente() {
+        return TipoFuente.DESASTRES_NATURALES;
+    }
+
+    private Flux<HechoDesastresNaturales> obtenerTodasLasPaginas(String token, int pagina) {
+        return api.obtenerHechosPorPagina(token, pagina, 100)
+                .flatMapMany(hechos -> {
+                    if (hechos.getHechosObtenidos().isEmpty()) {
+                        return Flux.empty();
+                    }
+                    Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getHechosObtenidos());
+                    if (hechos.getCurrent_page() >= hechos.getLast_page()) {
+                        return actuales;
+                    }
+                    return actuales.concatWith(obtenerTodasLasPaginas(token, pagina + 1));
+                });
+    }
+
+    private Hecho mapearHecho(HechoDesastresNaturales hechoObtenido) {
+        Hecho hecho = new Hecho();
+
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLatitud(hechoObtenido.getLatitud());
+        ubicacion.setLongitud(hechoObtenido.getLongitud());
+
+        Categoria categoria = new Categoria();
+        categoria.setNombre(hechoObtenido.getCategoria());
+
+        hecho.setTitulo(hechoObtenido.getTitulo());
+        hecho.setDescripcion(hechoObtenido.getDescripcion());
+        hecho.setCategoria(categoria);
+        hecho.setUbicacion(ubicacion);
+        hecho.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
+        hecho.setFechaCarga(hechoObtenido.getCreated_at());
+
+        return hecho;
+    }
+}
+
+
+/*public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
   private final WebClient webClient;
   private String token;
 
@@ -23,7 +82,7 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         .build();
   }
 
-  public List<HechoOutputDTO> obtenerHechos(){
+  public Mono<List<Hecho>> obtenerHechos(){
     return this
         .obtenerHechosDeAPI()
         .stream()
@@ -46,7 +105,6 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
 
           return dto;
         })
-        .toList();
   }
 
   private void autenticarse() {
@@ -101,3 +159,4 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         .block();
   }
 }
+*/
