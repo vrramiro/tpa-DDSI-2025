@@ -6,8 +6,8 @@ import ar.utb.ba.dsi.estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utb.ba.dsi.estadisticas.services.IContextoDeCalculoService;
 
 public class ContextoDeCalculoService implements IContextoDeCalculoService {
-  private IAgregadorAdapter agregadorAdapter;
-  private INormalizadorAdapter normalizadorAdapter;
+  private final IAgregadorAdapter agregadorAdapter;
+  private final INormalizadorAdapter normalizadorAdapter;
 
   public ContextoDeCalculoService(IAgregadorAdapter agregadorAdapter, INormalizadorAdapter normalizadorAdapter) {
     this.agregadorAdapter = agregadorAdapter;

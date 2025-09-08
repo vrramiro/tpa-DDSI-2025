@@ -31,7 +31,7 @@ public class HoraMasHechosCategoria implements ICalculadorDeEstadisticas {
 
       if (maxHora != null) {
         Estadistica estadistica = Estadistica.builder()
-            .idContexto(coleccion.getId())
+            .coleccionId(coleccion.getId())
             .tipo(TipoEstadistica.CATEGORIA_HORA_HECHOS)
             .valor(maxHora.getValue())
             .clave(maxHora.getKey().toString())
