@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface IServicioExternoAdapter {
   Mono<List<Hecho>> obtenerHechos();
-  TipoFuente getTipoFuente();
 }
