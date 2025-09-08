@@ -8,13 +8,15 @@ class Hecho {
     - ubicacion: Ubicacion
     - fechaDeAcontecimiento: DateTime
     - fechaDeCarga: DateTime
-    - contenidoMultimedia: List<MultipartFile>
-    - origen: Origen
+    - contenidoMultimedia: List<ContenidoMultimedia>
 }
 
 class Ubicacion {
     - latitud: Double
     - longitud: Double
+    - pais : String
+    - ciudad : String
+    - provincia : String
 }
 
 class Categoria {
@@ -22,19 +24,29 @@ class Categoria {
     - nombre: String
 }
 
-enum Origen {
-    FUENTE_DINAMICA
-}
 
 class ContenidoMultimedia {
-     -url: String
-     -formato: String
-     - tamano: Long
+    - id : Long
+    -url: String
+    -formato: String
+    - tamano: Long
 }
+
+interface INormalizadorAdapter{
+    + obtenerHechoNormalizado(HechoOutputDTONormalizador) : Mono<Hecho>
+}
+
+class NormalizadorAdapter {
+    - webClient : WebClient
+    - timeOutMS : Integer
+    + obtenerHechoNormalizado(HechoOutputDTONormalizador) : Mono<Hecho>
+}
+
 '================== RELACIONES ==================
 Hecho --> Ubicacion
 Hecho --> Categoria
-Hecho --> Origen
 Hecho --> ContenidoMultimedia
+NormalizadorAdapter ..|> INormalizadorAdapter
+INormalizadorAdapter --> Hecho
 
 @enduml

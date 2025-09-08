@@ -3,23 +3,17 @@
 Hecho --> Categoria
 Hecho --> Ubicacion
 
-LectorDeArchivosCSV ..|> ILectorDeArchivos
-LectorDeArchivosCSV ..> HechoFactory
 
-HechoFactoryCSVFile ..|> HechoFactory
-
-FactoryLector --> ILectorDeArchivos
-FactoryLector --> LectorDeArchivosCSV
-
-HechoFactoryCSVFile --> Hecho
 NormalizadorAdapter ..|> INormalizadorAdapter
 INormalizadorAdapter --> Hecho
+Sanitizador --> Hecho
 
 
 '================== CONTENIDO ==================
 class Categoria {
-    - nombre: Strin
-    - idCategoria: Long
+    - nombre: String
+    - id: Long
+    - categoriasExternas : List<String>
 }
 
 class Ubicacion {
@@ -31,40 +25,22 @@ class Ubicacion {
 }
 
 class Hecho {
-    - id: Long
+    - idHecho: Long
     - titulo: String
     - descripcion: String
     - categoria: Categoria
     - ubicacion: Ubicacion
     - fechaAcontecimiento: LocalDateTime
     - fechaCarga: LocalDateTime
-    - enviado: Boolean
 }
 
-'================== IMPORTADOR ==================
-class FactoryLector {
-    + crearLector(File archivo): ILectorDeArchivos
-    - obtenerExtension(String nombreArchivo): String
+class Sanitizador {
+    + sanitizar(Hecho) : Hecho
+    - aplanarTexto(String) : String
 }
 
-class HechoFactoryCSVFile{
-    + crearHecho(String lineaLeida): Hecho
-}
-
-class LectorDeArchivosCSV{
-    - hechoFactory: HechoFactory
-    + importarHechos(File archivo): List<Hecho>
-}
 
 '================== INTERFACES ==================
-
-interface HechoFactory {
-    + crearHecho (String lineaLeida): Hecho
-}
-
-interface ILectorDeArchivos {
-    + importarHechos(File archivo): List<Hecho>
-}
 interface INormalizadorAdapter{
     + obtenerHechoNormalizado(HechoOutputDTONormalizador) : Mono<Hecho>
 }
