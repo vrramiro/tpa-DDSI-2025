@@ -1,6 +1,5 @@
 package ar.utn.dssi.FuenteEstatica.models.DTOs.input;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.CategoriaInputDTO;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

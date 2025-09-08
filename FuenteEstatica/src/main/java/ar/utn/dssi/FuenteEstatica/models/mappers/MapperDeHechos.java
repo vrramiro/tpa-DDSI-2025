@@ -19,7 +19,7 @@ public class MapperDeHechos {
         dtoHecho.setUbicacion(hecho.getUbicacion());
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
-        dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
+        dtoHecho.setIdHechoOrigen(hecho.getId());
         return dtoHecho;
     }
 
@@ -35,14 +35,15 @@ public class MapperDeHechos {
         return null;
     }
 
-    public static HechoOutputDTONormalizador hechoFromInputToOutputNormalizador(HechoInputDTO hechoInputDTO){
+    public static HechoOutputDTONormalizador hechoToOutputNormalizador(Hecho hechoInput){
         HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
-            hecho.setTitulo(hechoInputDTO.getTitulo());
-            hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setLatitud(hechoInputDTO.getLatitud());
-            hecho.setLongitud(hechoInputDTO.getLongitud());
-            hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento().toString());
-            hecho.setFechaCarga(LocalDateTime.now().toString());
+        hecho.setTitulo(hechoInput.getTitulo());
+        hecho.setDescripcion(hechoInput.getDescripcion());
+        hecho.setLatitud(hechoInput.getUbicacion().getLatitud());
+        hecho.setLongitud(hechoInput.getUbicacion().getLongitud());
+        hecho.setFechaAcontecimiento(hechoInput.getFechaAcontecimiento().toString());
+        hecho.setFechaCarga(LocalDateTime.now().toString());
         return hecho;
     }
+
 }
