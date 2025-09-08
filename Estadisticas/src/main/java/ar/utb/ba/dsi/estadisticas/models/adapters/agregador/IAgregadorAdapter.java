@@ -1,12 +1,14 @@
 package ar.utb.ba.dsi.estadisticas.models.adapters.agregador;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.ColeccionInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.HechoInputDTO;
+import ar.utb.ba.dsi.estadisticas.models.entities.Coleccion;
+import ar.utb.ba.dsi.estadisticas.models.entities.Hecho;
+import ar.utb.ba.dsi.estadisticas.models.entities.SolicitudDeEliminacion;
+import org.springframework.stereotype.Component;
 import java.util.List;
 
+@Component
 public interface IAgregadorAdapter {
-    public List<HechoInputDTO> obtenerHechos();
-    public List<ColeccionInputDTO> obtenerColecciones();
-    //TODO Falta el end point en agregador directamente para que me de las solicitudes
-    //public List<SolicitudEliminacionInputDTO> obtenerSolicitudes();
+    public List<Hecho> obtenerHechos();
+    public List<Coleccion> obtenerColecciones();
+    public List<SolicitudDeEliminacion> obtenerSolicitudes();
 }

@@ -1,35 +1,47 @@
 package ar.utb.ba.dsi.estadisticas.models.entities.calculadores.impl;
 
 import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.ColeccionInputDTO;
+import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.HechoInputDTO;
+import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.UbicacionInputDTO;
 import ar.utb.ba.dsi.estadisticas.models.entities.DatosDeCalculo;
 import ar.utb.ba.dsi.estadisticas.models.entities.Estadistica;
 import ar.utb.ba.dsi.estadisticas.models.entities.TipoEstadistica;
 import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.IGeneradorDeEstadisticas;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import ar.utb.ba.dsi.estadisticas.models.entities.Coleccion;
+import ar.utb.ba.dsi.estadisticas.models.entities.Hecho;
+
+import java.time.LocalDateTime; import java.util.*;
 import java.util.stream.Collectors;
 
 public class ProvinciaConMasHechosColeccion implements IGeneradorDeEstadisticas {
+
   @Override
   public List<Estadistica> generarEstadistica(DatosDeCalculo datos) {
-    List<ColeccionInputDTO> colecciones = datos.getColecciones();
+    List<Coleccion> colecciones = datos.getColecciones();
+    List<Estadistica> estadisticas = new ArrayList<>();
+    Map<String, Long> hechosPorProvincia;
 
-    List<Estadistica> estadisticas = new ArrayList<Estadistica>();
+    for(Coleccion coleccion : colecciones) {
+      hechosPorProvincia = coleccion.getHechos() .stream()
+              .map(Hecho ::getProvincia)
+              .collect(Collectors.groupingBy( provincia -> provincia, Collectors.counting()) );
 
-    /*
-    for(ColeccionInputDTO coleccion : colecciones) {
-      Map<String, Long> hechosPorProvincia = coleccion.getHechos().stream().Collectors.groupingBy(
-        hecho -> hecho.getProvincia(),
-        Collectors.counting()
-      );
+      Map.Entry<String, Long> maxProvincia = hechosPorProvincia.entrySet().stream()
+              .max(Map.Entry.comparingByValue()).orElse(null);
 
-      estadisticas.add(Estadistica.builder()
-          .coleccionId(coleccion.getId())
-          .tipo(TipoEstadistica.COLECCION_PROVINCIA_HECHOS))
-          .clave();
+      if (maxProvincia != null) {
+        Estadistica estadistica = Estadistica.builder()
+                .coleccionId(coleccion.getId())
+                .nombreColeccion(coleccion.getNombre())
+                .tipo(TipoEstadistica.COLECCION_PROVINCIA_HECHOS)
+                .valor(maxProvincia.getValue())
+                .clave(maxProvincia.getKey())
+                .fechaDeCalculo(LocalDateTime.now())
+                .build();
+
+        estadisticas.add(estadistica);
+      }
     }
-    */
-    return null;
+    return estadisticas;
   }
 }

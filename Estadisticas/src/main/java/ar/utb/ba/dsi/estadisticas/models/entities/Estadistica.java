@@ -23,9 +23,17 @@ public class Estadistica {
     @Column(name = "tipo_estadistica", nullable = false)
     private TipoEstadistica tipo;
 
+    @Column(name = "colecccion_Id", nullable = true)
     private Long coleccionId;
 
-    private Long categotiaId; // representa a la categoria a la que pertenece la estadistica => tipo cant_hechos_categorias
+    @Column(name = "nombre_coleccion", nullable = true)
+    private String nombreColeccion;
+
+    @Column(name = "categoria_Id", nullable = true)
+    private Long categoriaId; // representa a la categoria a la que pertenece la estadistica => tipo cant_hechos_categorias
+
+    @Column(name = "nombere_categoria", nullable = true)
+    private String nombreCategoria;
 
     @Column(name = "valor", nullable = false)
     private Long valor;

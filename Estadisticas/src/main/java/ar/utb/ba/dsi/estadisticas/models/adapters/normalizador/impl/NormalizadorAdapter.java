@@ -1,10 +1,13 @@
 package ar.utb.ba.dsi.estadisticas.models.adapters.normalizador.impl;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.CategoriaInputDTO;
+import ar.utb.ba.dsi.estadisticas.models.adapters.normalizador.INormalizadorAdapter;
+import ar.utb.ba.dsi.estadisticas.models.entities.Categoria;
+
 import java.util.List;
 
-public class NormalizadorAdapter {
-  public List<CategoriaInputDTO> obtenerCategorias(Long coleccionId) {
+public class NormalizadorAdapter implements INormalizadorAdapter {
+  @Override
+  public List<Categoria> obtenerCategorias() {
     return null;
   }
 }
