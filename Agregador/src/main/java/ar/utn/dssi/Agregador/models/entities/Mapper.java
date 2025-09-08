@@ -14,7 +14,6 @@ public class Mapper {
         hechoObtenido.setUbicacion(hecho.getUbicacion());
         hechoObtenido.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         hechoObtenido.setFechaCarga(hecho.getFechaCarga());
-        hechoObtenido.setOrigen(hecho.getOrigen());
         hechoObtenido.setContenidoMultimedia(hecho.getContenidoMultimedia());
 
         return hechoObtenido;

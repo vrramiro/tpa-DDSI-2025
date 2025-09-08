@@ -1,9 +1,9 @@
 package ar.utn.dssi.FuenteDinamica.controllers;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.ErrorDTO;
-import ar.utn.dssi.FuenteDinamica.models.Errores.DatosFaltantes;
-import ar.utn.dssi.FuenteDinamica.models.Errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteDinamica.models.Errores.RepositorioVacio;
+import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

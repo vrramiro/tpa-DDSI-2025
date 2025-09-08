@@ -32,6 +32,8 @@
 		<module>FuenteEstatica</module>
 		<module>FuenteProxy</module>
 		<module>Estadisticas</module>
+		<module>Normalizador</module>
+
 	</modules>
 
 

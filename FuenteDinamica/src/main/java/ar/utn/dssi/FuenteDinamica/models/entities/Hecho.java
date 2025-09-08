@@ -1,5 +1,6 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,14 +13,37 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
+@Entity
+@Table(name = "hecho")
 public class Hecho {
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idHecho;
-  private String titulo;
-  private String descripcion;
-  private Categoria categoria;
+
+  @Embedded
   private Ubicacion ubicacion;
+
+  @ManyToOne
+  @JoinColumn(name = "categoria_id")
+  private Categoria categoria;
+
+  @OneToMany(mappedBy = "hecho", cascade = CascadeType.ALL)
+  private List<ContenidoMultimedia> multimedia;
+
+  @Column(name = "titula", nullable = false)
+  private String titulo;
+
+  @Column(name = "descripcion", nullable = false)
+  private String descripcion;
+
+  @Column(name = "fecha_acontecimiento", nullable = false)
   private LocalDateTime fechaAcontecimiento;
+
+  @Column(name = "fecha_carga", nullable = false)
   private LocalDateTime fechaCarga;
-  private List<MultipartFile> contenidoMultimedia;
+
+  @Column(name = "visibilidad", nullable = false)
   private Boolean visible;
 }

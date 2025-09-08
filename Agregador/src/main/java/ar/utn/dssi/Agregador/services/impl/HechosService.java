@@ -3,22 +3,20 @@ package ar.utn.dssi.Agregador.services.impl;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Mapper;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
-import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 
 @Service
@@ -27,17 +25,13 @@ public class HechosService implements IHechosService {
     private IHechosRepository hechosRepository;
 
     @Autowired
-    private IColeccionService coleccionService;
+    private IColeccionRepository coleccionRepository;
 
     @Autowired
     private IFuentesService fuentesService;
 
-    @Autowired
-    private IColeccionRepository coleccionRepository;
-
-    //OPERACIONES CRUD SOBRE LOS HECHOS
     @Override
-    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IdFuente) {   //CREATE
+    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IdFuente) {
         try {
             var hecho = new Hecho();
             var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
@@ -51,9 +45,9 @@ public class HechosService implements IHechosService {
             hecho.setCategoria(categoria);
             hecho.setVisible(true);
             hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-            hecho.setIdHecho(hechosRepository.obtenerUltimoId());
-            hecho.setIdOrigen(hechoInputDTO.getIdEnFuente());
-            hecho.setIdFuente(IdFuente);
+            hecho.setId(hechosRepository.obtenerUltimoId());
+            hecho.setIdEnFuente(hechoInputDTO.getIdEnFuente());
+            hecho.setFuente(new Fuente()/*ESTO NO ESTA BIEN!!! ES PARA QUE NO TIRE ERROR AHORA*/); //TODO: OBTENER LA FUENTE EN BASE A SU ID O ALGUNA FORMA
 
             return hecho;
         } catch (Exception e) {
@@ -62,62 +56,35 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {     //READ
+    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
         try {
             Hecho hecho = hechosRepository.findById(idHecho);
 
-            return hechoOutputDTO(hecho);
+            return MapperDeHechos.hechoOutputDTO(hecho);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos() {       //READ
-
+    public List<HechoOutputDTO> obtenerHechos() {
         try {
-            var hechos = this.hechosRepository
+            List<HechoOutputDTO> hechos = this.hechosRepository
                     .findall()
                     .stream()
-                    .map(this::hechoOutputDTO)
-                    .toList();;
-            var hechosProxy = this.fuentesService
-                    .obtenerHechosProxy()
-                    .stream()
-                    .map(this::hechoOutputDTOProxy)
+                    .map(MapperDeHechos::hechoOutputDTO)
                     .toList();
 
-            if (hechos.isEmpty() && (hechosProxy == null || hechosProxy.isEmpty())) {
-                throw new RuntimeException("No hay hechos disponibles");
-            }
+            hechos.addAll(this.fuentesService.hechosMetamapa().stream().map(MapperDeHechos::hechoOutputDTO).toList());
 
-            return Stream.concat(
-                    hechos.stream(),
-                    hechosProxy.stream()
-            ).toList();
+            return hechos;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
     }
 
-
     @Override
-    public Mono<Void> actualizarHechos() {      //UPDATE
-        try {
-            return Flux
-                .fromIterable(this.importarNuevosHechos())
-                .flatMap(hecho -> {
-                    coleccionService.refrescarColecciones(hecho);
-                    return Mono.empty();
-                })
-                .then();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al actualizar los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void eliminarHecho(Long IdHecho) {       //DELETE
+    public void eliminarHecho(Long IdHecho) {
         try {
             //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
             Hecho hecho = this.hechosRepository.findById(IdHecho);
@@ -128,13 +95,19 @@ public class HechosService implements IHechosService {
         }
     }
 
-
-    //IMPORTAR HECHOS NUEVOS DESDE LA FUENTE
-    private List<Hecho> importarNuevosHechos() {
+    @Override
+    public void importarNuevosHechos() {
         try {
-            List<Hecho> hechosNuevos = fuentesService.obtenerNuevosHechos();
+            List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
 
-            return hechosNuevos;
+            //TODO: ACA NORMALIZAR LOS HECHOS..
+
+            List<Coleccion> colecciones = coleccionRepository.findAll();
+
+            //TODO implementar metodo agregarHechos en coleccion
+            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos)); //trabaja varias colecciones por core
+
+            coleccionRepository.saveAll(colecciones);
         } catch (Exception e) {
             throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
         }
@@ -144,8 +117,8 @@ public class HechosService implements IHechosService {
     //GUARDADO DE HECHOS
     public void guardarHecho(Hecho hecho){
         try {
-            Long idEnFuente = hecho.getIdOrigen();
-            Long idFuente = hecho.getIdFuente();
+            Long idEnFuente = hecho.getIdEnFuente();
+            Long idFuente = hecho.getFuente().getId();
 
             Hecho hechoObtenido = hechosRepository.findByIdOrigenAndIdFuente(idEnFuente, idFuente);
 
@@ -156,53 +129,6 @@ public class HechosService implements IHechosService {
             }
         } catch(Exception e) {
             throw new RuntimeException("Error al guardar el hecho: " + e.getMessage(), e);
-        }
-    }
-
-
-    //MODIFICACION DEL TIPO DE HECHO PARA SU TRANSMISION ENTRE MODULOS
-    @Override
-    public HechoOutputDTO hechoOutputDTO(Hecho hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la coleccion
-        try{
-            var dtoHecho = new HechoOutputDTO();
-
-            dtoHecho.setTitulo(hecho.getTitulo());
-            dtoHecho.setDescripcion(hecho.getDescripcion());
-            dtoHecho.setCategoria(hecho.getCategoria());
-            dtoHecho.setUbicacion(hecho.getUbicacion());
-            dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-            dtoHecho.setFechaCarga(hecho.getFechaCarga());
-            dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
-
-            return dtoHecho;
-        } catch(Exception e) {
-            throw new RuntimeException("Error al obtener el dto de hecho: " + e.getMessage(), e);
-        }
-    }
-
-    public List<Hecho> obtenerHechosProxy(){
-        return this.fuentesService
-                .obtenerHechosProxy()
-                .stream()
-                .map(Mapper::hechoInputToHecho)
-                .toList();
-    }
-
-    public HechoOutputDTO hechoOutputDTOProxy(HechoInputDTO hecho) { //Lo vamos a usar cuando queremos mostrar los hechos de la fuenteProxy
-        try {
-            var dtoHecho = new HechoOutputDTO();
-
-            dtoHecho.setTitulo(hecho.getTitulo());
-            dtoHecho.setDescripcion(hecho.getDescripcion());
-            dtoHecho.setCategoria(hecho.getCategoria());
-            dtoHecho.setUbicacion(hecho.getUbicacion());
-            dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-            dtoHecho.setFechaCarga(hecho.getFechaCarga());
-            dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
-
-            return dtoHecho;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener el dto de hecho desde fuente proxy: " + e.getMessage(), e);
         }
     }
 }

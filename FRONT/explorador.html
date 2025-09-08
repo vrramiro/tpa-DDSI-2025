@@ -58,7 +58,21 @@
 
       <label for="ubicacion">Ubicación:</label>
       <input type="text" id="ubicacion" placeholder="Ej: Buenos Aires" class="input">
-
+	  
+	  <label for="coleccion">Coleccion:</label>
+      <select id="coleccion" class="input">
+        <option value="">-- Seleccione --</option>
+        <option>Protesta</option>
+        <option>Ambiental</option>
+        <option>Social</option>
+        <option>Ayuda Humanitaria</option>
+      </select>
+	  
+	  <label>
+		Modo curado 
+		<input type="checkbox">
+	  </label>
+	  
       <button class="btn btn-primary" id="btn-filtrar">Filtrar</button>
     </aside>
 
@@ -71,6 +85,7 @@
   <!-- Botones Extra -->
   <div class="nav-mode">
     <button class="btn btn-outline" >Modo de navegación</button>
+	<a href="estadisticas.html">  <button class="btn btn-outline" id="btn-colecciones">Ver estadisticas</button> </a>
     <a href="listaColecciones.html">  <button class="btn btn-outline" id="btn-colecciones">Ver colecciones</button> </a>
   </div>
 

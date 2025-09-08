@@ -220,6 +220,18 @@ h1 {
     margin-top: auto;
 }
 
+.card-link {
+  text-decoration: none;
+  color: inherit; /* Hereda el color del texto del padre */
+}
+
+/* Opcional: añade un efecto visual al pasar el mouse */
+.card-link:hover .card {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
 /* Tag en pie de tarjeta */
 .footer-tag {
     display: inline-block;
