@@ -50,6 +50,8 @@ interface IServicioExternoAdapter {
 }
 
 interface IFuenteMetaMapa{
+    + obtenerColecciones()
+    + solicitarEliminacion()
 }
 
 class DesastresNaturalesAdapter {
