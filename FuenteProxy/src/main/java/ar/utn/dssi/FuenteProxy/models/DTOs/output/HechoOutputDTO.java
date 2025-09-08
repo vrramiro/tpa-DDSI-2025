@@ -1,7 +1,6 @@
 package ar.utn.dssi.FuenteProxy.models.DTOs.output;
 
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
-import ar.utn.dssi.FuenteProxy.models.entities.Origen;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import lombok.Data;
 import lombok.Getter;

@@ -1,11 +1,12 @@
-package ar.utn.dssi.FuenteProxy.models.adpaters;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
 public interface IServicioExternoAdapter {
   public Mono<List<Hecho>> obtenerHechos();
+  TipoFuente getTipoFuente();
 }

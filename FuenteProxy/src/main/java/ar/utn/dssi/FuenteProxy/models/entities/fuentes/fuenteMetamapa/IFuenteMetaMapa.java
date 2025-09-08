@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteProxy.models.fuenteMetamapa;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.fuenteMetamapa;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import java.util.List;

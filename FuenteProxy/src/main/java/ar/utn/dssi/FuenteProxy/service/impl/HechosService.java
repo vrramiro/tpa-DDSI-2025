@@ -1,9 +1,7 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.Errores.RepositorioVacio;
-import ar.utn.dssi.FuenteProxy.models.adpaters.IServicioExternoAdapter;
-import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechosRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
 import org.springframework.stereotype.Service;

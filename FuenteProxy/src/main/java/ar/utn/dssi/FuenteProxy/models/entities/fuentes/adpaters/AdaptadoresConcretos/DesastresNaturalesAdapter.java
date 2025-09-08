@@ -1,103 +1,73 @@
-package ar.utn.dssi.FuenteProxy.models.adpaters.adaptadoresConcretos;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.DatosLogin;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechosDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.RespuestaLogin;
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.adpaters.IServicioExternoAdapter;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesAPI;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
-import ar.utn.dssi.FuenteProxy.models.entities.Origen;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 
+// -------------------- ADAPTER --------------------
 @Component
 public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
 
-    private final WebClient webClient;
+    private final DesastresNaturalesAPI api;
 
-    public DesastresNaturalesAdapter() {
-        this.webClient = WebClient.builder()
-                .baseUrl("https://api-ddsi.disilab.ar/public") // TODO: Agregar al config
-                .build();
+    public DesastresNaturalesAdapter(DesastresNaturalesAPI api) {
+        this.api = api;
     }
 
-    // -------------------- MÉTODO PRINCIPAL --------------------
+    @Override
     public Mono<List<Hecho>> obtenerHechos() {
-        return autenticarse() // me autentico de forma reactiva
-                .flatMapMany(token -> obtenerTodasLasPaginas(token, 1)) // obtengo todos los hechos de forma reactiva
-                .map(hechoObtenido -> {
-                    Hecho hecho = new Hecho();
-
-                    Ubicacion ubicacion = new Ubicacion();
-                    ubicacion.setLatitud(hechoObtenido.getLatitud());
-                    ubicacion.setLongitud(hechoObtenido.getLongitud());
-
-                    Categoria categoria = new Categoria();
-                    categoria.setNombre(hechoObtenido.getCategoria());
-
-                    hecho.setTitulo(hechoObtenido.getTitulo());
-                    hecho.setDescripcion(hechoObtenido.getDescripcion());
-                    hecho.setCategoria(categoria);
-                    hecho.setUbicacion(ubicacion);
-                    hecho.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
-                    hecho.setFechaCarga(hechoObtenido.getCreated_at());
-
-                    return hecho;
-                })
-                .collectList(); // convierto Flux<Hecho> en Mono<List<Hecho>>
+        return api.autenticar("ddsi@gmail.com", "ddsi2025*")
+                .flatMapMany(token -> obtenerTodasLasPaginas(token, 1))
+                .map(this::mapearHecho)
+                .collectList();
     }
 
-    // -------------------- AUTENTICACIÓN --------------------
-    private Mono<String> autenticarse() {
-        DatosLogin datosLogin = new DatosLogin("ddsi@gmail.com", "ddsi2025*");
-
-        return webClient
-                .post()
-                .uri("/auth/login")
-                .bodyValue(datosLogin)
-                .retrieve()
-                .bodyToMono(RespuestaLogin.class)
-                .map(respuesta -> respuesta.getData().getAccess_token()); // devuelvo solo el token
+    @Override
+    public TipoFuente getTipoFuente() {
+        return TipoFuente.DESASTRES_NATURALES;
     }
 
-    // -------------------- PAGINACIÓN REACTIVA --------------------
     private Flux<HechoDesastresNaturales> obtenerTodasLasPaginas(String token, int pagina) {
-        return hechosPorPagina(token, pagina)
+        return api.obtenerHechosPorPagina(token, pagina, 100)
                 .flatMapMany(hechos -> {
                     if (hechos.getHechosObtenidos().isEmpty()) {
                         return Flux.empty();
                     }
-
                     Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getHechosObtenidos());
-
                     if (hechos.getCurrent_page() >= hechos.getLast_page()) {
-                        return actuales; // no hay más páginas
+                        return actuales;
                     }
-
-                    // concateno los hechos actuales con los de la siguiente página
                     return actuales.concatWith(obtenerTodasLasPaginas(token, pagina + 1));
                 });
     }
 
-    private Mono<HechosDesastresNaturales> hechosPorPagina(String token, int pagina) {
-        return webClient
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/desastres")
-                        .queryParam("page", pagina)
-                        .queryParam("per_page", 100)
-                        .build())
-                .header("Authorization", "Bearer " + token)
-                .retrieve()
-                .bodyToMono(HechosDesastresNaturales.class);
+    private Hecho mapearHecho(HechoDesastresNaturales hechoObtenido) {
+        Hecho hecho = new Hecho();
+
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLatitud(hechoObtenido.getLatitud());
+        ubicacion.setLongitud(hechoObtenido.getLongitud());
+
+        Categoria categoria = new Categoria();
+        categoria.setNombre(hechoObtenido.getCategoria());
+
+        hecho.setTitulo(hechoObtenido.getTitulo());
+        hecho.setDescripcion(hechoObtenido.getDescripcion());
+        hecho.setCategoria(categoria);
+        hecho.setUbicacion(ubicacion);
+        hecho.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
+        hecho.setFechaCarga(hechoObtenido.getCreated_at());
+
+        return hecho;
     }
 }
 
