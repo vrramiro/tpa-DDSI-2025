@@ -4,6 +4,7 @@ import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
+import ar.utn.dssi.FuenteProxy.models.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteProxy.models.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class HechosService implements IHechosService {
@@ -25,7 +27,7 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
-    return hechoRepository.findAll();
+    return hechoRepository.findAll().stream().map(MapperDeHechos::hechoOutputDTO).collect(Collectors.toList());
   }
 
   @Override
@@ -54,7 +56,7 @@ public class HechosService implements IHechosService {
       }
     }
 
-    //TODO: GUARDAR EL HECHO
+    hechoRepository.saveAll(hechosNormalizados);
 
   }
 
