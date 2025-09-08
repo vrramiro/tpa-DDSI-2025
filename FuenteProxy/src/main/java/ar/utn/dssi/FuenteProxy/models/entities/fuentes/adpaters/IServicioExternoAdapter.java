@@ -7,6 +7,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public interface IServicioExternoAdapter {
-  public Mono<List<Hecho>> obtenerHechos();
+  Mono<List<Hecho>> obtenerHechos();
   TipoFuente getTipoFuente();
 }

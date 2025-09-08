@@ -1,10 +1,6 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes;
 
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesAPI;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos.DesastresNaturalesAdapter;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.fuenteMetamapa.IFuenteMetaMapa;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.fuenteMetamapa.impl.FuenteMetaMapa;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -1,11 +1,16 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
-import ar.utn.dssi.FuenteProxy.models.repositories.IHechosRepository;
+import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
+import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -13,54 +18,37 @@ import static reactor.core.publisher.Flux.*;
 
 @Service
 public class HechosService implements IHechosService {
-  private List<IServicioExternoAdapter> serviciosExternos;
-  //public IFuenteMetaMapa fuenteMetamapa; //una instancia de metamapa
 
-  private IHechosRepository hechoRepository;
+  private IHechoRepository hechoRepository;
+  private IFuenteRepository fuenteRepository;
 
-  public HechosService(List<IServicioExternoAdapter> serviciosExternos, IHechosRepository hechoRepository) {
-    this.serviciosExternos = serviciosExternos;
+
+  public HechosService(IHechoRepository hechoRepository, IFuenteRepository fuenteRepository) {
     this.hechoRepository = hechoRepository;
+    this.fuenteRepository = fuenteRepository;
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
-    return List.of();
+    return hechoRepository.findAll();
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
+    List<Fuente> fuentes = fuenteRepository.findTipo(TipoFuente.METAMAPA);
+    //TODO: Ver si conviene hacerlo Mono o no.
     return List.of();
   }
+
 
   public void importarHechos() {
-    fromIterable(serviciosExternos)
-            .flatMap(IServicioExternoAdapter::obtenerHechos)
-            .flatMap(Flux::fromIterable)
-            .doOnNext(hecho -> hechoRepository.save(hecho))
-            .subscribe();
-  }
-/*
-  @Override
-  public List<HechoOutputDTO> obtenerHechos() {
-    List<HechoOutputDTO> hechos = desastreNaturalesAdapter.obtenerHechos();
+    List<Fuente> fuentes = fuenteRepository.findTipoNot(TipoFuente.METAMAPA);
+    List<HechoOutputDTO> hechosImportados = fuentes.stream()
+            .flatMap(fuente -> fuente.importarHechos().block().stream())
+            .map(this::hechoOutputDTO)
+            .toList();
 
-    if(hechos.isEmpty()) {
-      throw new RepositorioVacio("No hay hechos en el repositorio proxy.");
-    }
-
-    return hechos;
-  }
-
-  @Override
-  public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    List<HechoOutputDTO> hechos = fuenteMetamapa.obtenerHechosMetamapa();
-
-    if(hechos.isEmpty()) {
-      throw new RepositorioVacio("No hay hechos en el repositorio proxy metamapa.");
-    }
-
-    return hechos;
+    hechoRepository.saveAll(hechosImportados);
   }
 
   private HechoOutputDTO hechoOutputDTO(Hecho hecho) {
@@ -75,6 +63,6 @@ public class HechosService implements IHechosService {
 
     return outputDTO;
   }
-
-*/
 }
+
+

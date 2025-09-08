@@ -159,4 +159,5 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         .bodyToMono(HechosDesastresNaturales.class)
         .block();
   }
-}/*
+}
+*/

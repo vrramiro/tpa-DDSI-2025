@@ -1,26 +1,48 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes;
 
+import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 
+@Entity
+@Table(name = "fuente")
 public class Fuente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "url", nullable = false)
     private String baseURL;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "tipo_fuente", nullable = false)
     private TipoFuente tipoFuente;
+
+    @Transient
     private IServicioExternoAdapter servicioExternoAdapter;
 
     public Fuente(String baseURL, TipoFuente tipoFuente) {
         this.baseURL = baseURL;
         this.tipoFuente = tipoFuente;
         this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente);
+    }
+
+    @PostLoad
+    void postLoad() {
+        this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente);
+    }
+
+    public Mono<List<Hecho>> importarHechos(){
+        return  servicioExternoAdapter.obtenerHechos();
     }
 
 }
