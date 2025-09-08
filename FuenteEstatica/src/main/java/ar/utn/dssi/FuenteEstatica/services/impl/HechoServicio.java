@@ -2,7 +2,6 @@ package ar.utn.dssi.FuenteEstatica.services.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.impl.NormalizadorAdapter;
 import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
