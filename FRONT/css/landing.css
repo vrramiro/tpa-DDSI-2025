@@ -220,6 +220,15 @@ img, svg, video, canvas {
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding: clamp(1rem, 2.5vw, 1.5rem);
+	cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+	display: flex;
+    flex-direction: column;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
 }
 
 /* Tarjetas de features */
