@@ -1,4 +1,4 @@
-package ar.utb.ba.dsi.estadisticas.models.entities;
+package ar.utb.ba.dsi.estadisticas.models.entities.data;
 
 import lombok.Data;
 import lombok.Getter;

@@ -1,12 +1,14 @@
-package ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs;
+package ar.utb.ba.dsi.estadisticas.models.entities.data;
 
 import lombok.Data;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Data
-public class HechoInputDTO {
+@Getter
+public class Hecho {
     private String categoria;
-    private UbicacionInputDTO ubicacion;
+    private String provincia;
     private LocalDateTime fechaAcontecimiento;
 }

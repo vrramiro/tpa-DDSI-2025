@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.estadisticas.models.adapters.normalizador;
 
-import ar.utb.ba.dsi.estadisticas.models.entities.Categoria;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Categoria;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

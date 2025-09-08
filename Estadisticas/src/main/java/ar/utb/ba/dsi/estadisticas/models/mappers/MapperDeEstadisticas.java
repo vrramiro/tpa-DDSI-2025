@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.estadisticas.models.mappers;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.outputDTOs.EstadisticaOutputDTO;
+import ar.utb.ba.dsi.estadisticas.models.DTOs.outputs.EstadisticaOutputDTO;
 import ar.utb.ba.dsi.estadisticas.models.entities.Estadistica;
 
 public class MapperDeEstadisticas {

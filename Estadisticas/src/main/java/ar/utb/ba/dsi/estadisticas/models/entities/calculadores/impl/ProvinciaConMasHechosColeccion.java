@@ -1,22 +1,19 @@
 package ar.utb.ba.dsi.estadisticas.models.entities.calculadores.impl;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.ColeccionInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.HechoInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.UbicacionInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.entities.DatosDeCalculo;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utb.ba.dsi.estadisticas.models.entities.Estadistica;
 import ar.utb.ba.dsi.estadisticas.models.entities.TipoEstadistica;
-import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.IGeneradorDeEstadisticas;
-import ar.utb.ba.dsi.estadisticas.models.entities.Coleccion;
-import ar.utb.ba.dsi.estadisticas.models.entities.Hecho;
+import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.ICalculadorDeEstadisticas;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Coleccion;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Hecho;
 
 import java.time.LocalDateTime; import java.util.*;
 import java.util.stream.Collectors;
 
-public class ProvinciaConMasHechosColeccion implements IGeneradorDeEstadisticas {
+public class ProvinciaConMasHechosColeccion implements ICalculadorDeEstadisticas {
 
   @Override
-  public List<Estadistica> generarEstadistica(DatosDeCalculo datos) {
+  public List<Estadistica> generarEstadistica(ContextoDeCalculo datos) {
     List<Coleccion> colecciones = datos.getColecciones();
     List<Estadistica> estadisticas = new ArrayList<>();
     Map<String, Long> hechosPorProvincia;

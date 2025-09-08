@@ -1,7 +1,7 @@
 package ar.utb.ba.dsi.estadisticas.models.adapters.normalizador.impl;
 
 import ar.utb.ba.dsi.estadisticas.models.adapters.normalizador.INormalizadorAdapter;
-import ar.utb.ba.dsi.estadisticas.models.entities.Categoria;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Categoria;
 
 import java.util.List;
 

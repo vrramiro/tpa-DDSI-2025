@@ -1,4 +1,4 @@
-package ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs;
+package ar.utb.ba.dsi.estadisticas.models.DTOs.inputs;
 
 import lombok.Data;
 

@@ -1,10 +1,10 @@
 package ar.utb.ba.dsi.estadisticas.models.entities.calculadores.impl;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.CategoriaInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.HechoInputDTO;
-import ar.utb.ba.dsi.estadisticas.models.DTOs.inputDTOs.UbicacionInputDTO;
 import ar.utb.ba.dsi.estadisticas.models.entities.*;
-import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.IGeneradorDeEstadisticas;
+import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.ICalculadorDeEstadisticas;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Categoria;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.ContextoDeCalculo;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.Hecho;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ProvinciaConMasHechosCategoria implements IGeneradorDeEstadisticas {
+public class ProvinciaConMasHechosCategoria implements ICalculadorDeEstadisticas {
 
   @Override
-  public List<Estadistica> generarEstadistica(DatosDeCalculo datos) {
+  public List<Estadistica> generarEstadistica(ContextoDeCalculo datos) {
     List<Categoria> categorias = datos.getCategorias();
     List<Hecho> hechos = datos.getHechos();
     List<Estadistica> estadisticas = new ArrayList<>();

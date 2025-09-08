@@ -1,16 +1,16 @@
 package ar.utb.ba.dsi.estadisticas.services.impl;
 
-import ar.utb.ba.dsi.estadisticas.models.DTOs.outputDTOs.EstadisticaOutputDTO;
-import ar.utb.ba.dsi.estadisticas.models.entities.DatosDeCalculo;
+import ar.utb.ba.dsi.estadisticas.models.DTOs.outputs.EstadisticaOutputDTO;
+import ar.utb.ba.dsi.estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utb.ba.dsi.estadisticas.models.entities.Estadistica;
-import ar.utb.ba.dsi.estadisticas.models.entities.calculadores.IGeneradorDeEstadisticas;
 import ar.utb.ba.dsi.estadisticas.models.entities.exportador.IExportadorArchivos;
 import ar.utb.ba.dsi.estadisticas.models.entities.exportador.impl.ExportadorFactory;
 import ar.utb.ba.dsi.estadisticas.models.entities.TipoArchivo;
 import ar.utb.ba.dsi.estadisticas.models.entities.TipoEstadistica;
+import ar.utb.ba.dsi.estadisticas.models.entities.generadorDeEstadisticas.IGeneradorDeEstadisticas;
 import ar.utb.ba.dsi.estadisticas.models.mappers.MapperDeEstadisticas;
 import ar.utb.ba.dsi.estadisticas.models.repositories.IEstadisticasRepository;
-import ar.utb.ba.dsi.estadisticas.services.IDatosDeCaluculoService;
+import ar.utb.ba.dsi.estadisticas.services.IContextoDeCalculoService;
 import ar.utb.ba.dsi.estadisticas.services.IEstadisticasService;
 import ar.utb.ba.dsi.estadisticas.models.errores.ErrorAlCalcular;
 import org.springframework.stereotype.Service;
@@ -19,28 +19,25 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class EstadisticasService implements IEstadisticasService {
     private final IEstadisticasRepository estadisticasRepository;
-    private final IDatosDeCaluculoService datosDeCalculoService;
-    private final List<IGeneradorDeEstadisticas> generadoresDeEstadisticas;
+    private final IContextoDeCalculoService contextoDeCalculoService;
+    private final IGeneradorDeEstadisticas generadorDeEstadisticas;
 
-    public EstadisticasService(IEstadisticasRepository estadisticasRepository, IDatosDeCaluculoService datosDeCalculoService, List<IGeneradorDeEstadisticas> generadoresDeEstadisticas) {
+    public EstadisticasService(IEstadisticasRepository estadisticasRepository, IContextoDeCalculoService contextoDeCalculoService, IGeneradorDeEstadisticas generadorDeEstadisticas) {
         this.estadisticasRepository = estadisticasRepository;
-        this.datosDeCalculoService = datosDeCalculoService;
-        this.generadoresDeEstadisticas = generadoresDeEstadisticas;
+        this.contextoDeCalculoService = contextoDeCalculoService;
+        this.generadorDeEstadisticas = generadorDeEstadisticas;
     }
 
     @Override
     public void calcularEstadisticas() {
         try {
-            DatosDeCalculo datosDeCalculo = datosDeCalculoService.obtenerDatosDeCalculo();
+            ContextoDeCalculo contextoDeCalculo = contextoDeCalculoService.obtenerContextoDeCalculo();
 
-            List<Estadistica> estadisticasCalculadas = generadoresDeEstadisticas.stream()
-                    .flatMap(generador -> generador.generarEstadistica(datosDeCalculo).stream())
-                    .toList();
+            List<Estadistica> estadisticasCalculadas = generadorDeEstadisticas.generarEstadisticas(contextoDeCalculo);
 
             estadisticasRepository.saveAll(estadisticasCalculadas);
         } catch (Exception e) {
