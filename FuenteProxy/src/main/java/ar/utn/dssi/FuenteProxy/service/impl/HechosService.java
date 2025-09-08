@@ -4,33 +4,30 @@ import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
+import ar.utn.dssi.FuenteProxy.models.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteProxy.models.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import static reactor.core.publisher.Flux.*;
+import java.util.stream.Collectors;
 
 @Service
 public class HechosService implements IHechosService {
 
+  @Autowired
   private IHechoRepository hechoRepository;
   private IFuenteRepository fuenteRepository;
+  private INormalizadorAdapter normalizadorAdapter;
 
-
-  public HechosService(IHechoRepository hechoRepository, IFuenteRepository fuenteRepository) {
-    this.hechoRepository = hechoRepository;
-    this.fuenteRepository = fuenteRepository;
-  }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
-    return hechoRepository.findAll();
+    return hechoRepository.findAll().stream().map(MapperDeHechos::hechoOutputDTO).collect(Collectors.toList());
   }
 
   @Override
@@ -43,26 +40,26 @@ public class HechosService implements IHechosService {
 
   public void importarHechos() {
     List<Fuente> fuentes = fuenteRepository.findTipoNot(TipoFuente.METAMAPA);
-    List<HechoOutputDTO> hechosImportados = fuentes.stream()
-            .flatMap(fuente -> fuente.importarHechos().block().stream())
-            .map(this::hechoOutputDTO)
-            .toList();
+    List<Hecho> hechos = fuentes.stream().flatMap(fuente -> fuente.importarHechos().block().stream()).toList();
 
-    hechoRepository.saveAll(hechosImportados);
+    List<Hecho> hechosNormalizados = new ArrayList<>();
+
+    for (Hecho hecho : hechos) {
+      try {
+        Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block();
+
+        if (hechoNormalizado != null) {
+          hechosNormalizados.add(hechoNormalizado);
+        }
+      } catch (Exception e) {
+        System.err.println("Error normalizando hecho: " + e.getMessage());
+      }
+    }
+
+    hechoRepository.saveAll(hechosNormalizados);
+
   }
 
-  private HechoOutputDTO hechoOutputDTO(Hecho hecho) {
-    var outputDTO = new HechoOutputDTO();
-
-    outputDTO.setTitulo(hecho.getTitulo());
-    outputDTO.setDescripcion(hecho.getDescripcion());
-    outputDTO.setCategoria(hecho.getCategoria());
-    outputDTO.setUbicacion(hecho.getUbicacion());
-    outputDTO.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    outputDTO.setFechaCarga(hecho.getFechaCarga());
-
-    return outputDTO;
-  }
 }
 
 

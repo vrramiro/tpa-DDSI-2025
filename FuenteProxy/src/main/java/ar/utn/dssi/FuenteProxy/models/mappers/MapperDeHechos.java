@@ -1,10 +1,10 @@
-package ar.utn.dssi.FuenteEstatica.models.mappers;
+package ar.utn.dssi.FuenteProxy.models.mappers;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.input.HechoInputDTO;
-import ar.utn.dssi.FuenteEstatica.models.DTOs.input.HechoInputDTONormalizador;
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTONormalizador;
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
+
+import ar.utn.dssi.FuenteProxy.models.DTOs.input.HechoInputDTONormalizador;
+import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 
 import java.time.LocalDateTime;
 

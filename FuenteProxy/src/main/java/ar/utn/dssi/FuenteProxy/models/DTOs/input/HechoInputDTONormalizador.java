@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteEstatica.models.DTOs.input;
+package ar.utn.dssi.FuenteProxy.models.DTOs.input;
 
 import lombok.Data;
 import lombok.Getter;

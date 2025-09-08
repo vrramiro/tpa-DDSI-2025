@@ -3,6 +3,8 @@ package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.*;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
+import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.impl.NormalizadorAdapter;
+import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
@@ -26,7 +28,8 @@ public class HechoFactoryCSVFile implements HechoFactory {
         LocalDate fechaLeida = LocalDate.parse(campos[5].trim(), formatter);
 
         Ubicacion ubicacion = new Ubicacion();
-        //TODO setear ubicacion con latitud y longitud
+            ubicacion.setLatitud(latitudLeida);
+            ubicacion.setLongitud(longitudLeida);
 
         return Hecho.builder()
                 .titulo(tituloLeida)
@@ -36,5 +39,6 @@ public class HechoFactoryCSVFile implements HechoFactory {
                 .fechaAcontecimiento(fechaLeida.atStartOfDay())
                 .fechaCarga(LocalDateTime.now())
                 .build();
+
     }
 }
