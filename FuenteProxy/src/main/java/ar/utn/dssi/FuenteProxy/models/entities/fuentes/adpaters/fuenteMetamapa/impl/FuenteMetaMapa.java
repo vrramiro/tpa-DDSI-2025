@@ -29,10 +29,6 @@ public class FuenteMetaMapa implements IFuenteMetaMapa {
                 );
     }
 
-    @Override
-    public TipoFuente getTipoFuente() {
-        return TipoFuente.METAMAPA;
-    }
 
     private Hecho mapToHecho(HechoOutputDTO dto) {
         Hecho hecho = new Hecho();

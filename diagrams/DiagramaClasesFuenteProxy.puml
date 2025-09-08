@@ -2,44 +2,89 @@
 'https://plantuml.com/sequence-diagram
 '================== HECHOS ==================
 class Hecho {
+    - id: Long
     - titulo: String
     - descripcion: String
     - categoria: Categoria
     - ubicacion: Ubicacion
     - fechaDeAcontecimiento: DateTime
     - fechaDeCarga: DateTime
+    - fuente: Fuente
 }
 
-'================ Categoria ================
+'================ TIPO FUENTE ================
+enum TipoFuente {
+    DESASTRES_NATURALES,
+    METAMAPA
+}
+
+'================ ServicioExternoAdapterFactory ================
+class ServicioExternoAdapterFactory {
+    + IServicioExternoAdapter crearAdapter(TipoFuente tipoFuente)
+}
+
+'================ FUENTE ================
+class Fuente {
+    - id: Long
+    - baseURL: String
+    -tipoFuente: TipoFuente
+    - servicioExternoAdapter: IServicioExternoAdapter
+}
+'================ CATEGORIA ================
 class Categoria {
     - nombre: String
 }
 
 '================ UBICACION ================
 class Ubicacion {
-    - latitud: Long
-    - longitud: Long
+    - latitud: Double
+    - longitud: Double
+    - pais: String
+    - ciudad: String
+    - provincia: String
 }
 
 '================ ADAPTADOR ================
 interface IServicioExternoAdapter {
-    +obtenerHechos():List<HechoOutputDTO>
+    + obtenerHechos():Mono<List<Hecho>>
+}
+
+interface IFuenteMetaMapa{
 }
 
 class DesastresNaturalesAdapter {
-  - webClientAdaptado: DesastresNaturales
-  + obtenerHechos(): List<HechoOutputDTO>
+  - api: DesastresNaturalesAPI
+  + obtenerHechos(): Mono<List<Hecho>>
 }
 
-class DesastresNaturales {
+class DesastresNaturalesAPI {
   - webClient: WebClient
-  + obtenerHechosDeAPI(): List<HechoOutputDTO>
+  + obtenerHechosDeAPI(): Mono<List<Hecho>>
 }
+
+class FuenteMetaMapa{
+  - api: MetaMapaApi
+  + obtenerHechos(): Mono<List<Hecho>>
+}
+
+
+class MetaMapaApi{
+  - webClient: WebClient
+  + obtenerHechosDeAPI(): Mono<List<Hecho>>
+}
+
 
 '================== RELACIONES ==================
 Hecho --> Ubicacion
 Hecho --> Categoria
+Hecho --> Fuente
 
 DesastresNaturalesAdapter ..|> IServicioExternoAdapter
-DesastresNaturalesAdapter --> DesastresNaturales
+DesastresNaturalesAdapter --> DesastresNaturalesAPI
+Fuente --> IServicioExternoAdapter
+IServicioExternoAdapter <|-- IFuenteMetaMapa
+IFuenteMetaMapa <|.. FuenteMetaMapa
+FuenteMetaMapa --> MetaMapaApi
+Fuente ..> ServicioExternoAdapterFactory
+Fuente --> TipoFuente
 @enduml
