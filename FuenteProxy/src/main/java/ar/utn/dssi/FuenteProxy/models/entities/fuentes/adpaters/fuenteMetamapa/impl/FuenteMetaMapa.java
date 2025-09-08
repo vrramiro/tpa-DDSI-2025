@@ -1,12 +1,11 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.fuenteMetamapa.impl;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.MetaMapa.HechosMetaMapa;
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.MetamapaApi;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.fuenteMetamapa.IFuenteMetaMapa;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
@@ -14,27 +13,20 @@ import java.util.stream.Collectors;
 
 @Component
 public class FuenteMetaMapa implements IFuenteMetaMapa {
-    private WebClient instanciaMetamapa;
+    private final MetamapaApi metamapaApi;
 
-    public FuenteMetaMapa(WebClient.Builder webClientBuilder) {
-        //fuente mokeada con postman
-        this.instanciaMetamapa = webClientBuilder.baseUrl("https://88019b83-d71c-4909-a36a-fbeb7145813c.mock.pstmn.io").build();
+    public FuenteMetaMapa(MetamapaApi metamapaApi) {
+        this.metamapaApi = metamapaApi;
     }
 
     @Override
     public Mono<List<Hecho>> obtenerHechos() {
-        return instanciaMetamapa
-                .get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/api/hechos")
-                        .build())
-                .retrieve()
-                .bodyToMono(HechosMetaMapa.class)
+        return metamapaApi.obtenerHechos()
                 .map(hechosMetaMapa -> hechosMetaMapa.getHechosInstanciaMetaMapa()
-                .stream()
-                .map(this::mapToHecho) // transformamos cada DTO en Hecho
-                .collect(Collectors.toList())
-        );
+                        .stream()
+                        .map(this::mapToHecho)
+                        .collect(Collectors.toList())
+                );
     }
 
     @Override
