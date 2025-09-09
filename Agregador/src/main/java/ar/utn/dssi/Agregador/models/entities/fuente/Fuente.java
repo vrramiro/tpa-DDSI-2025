@@ -33,6 +33,6 @@ public class Fuente {
   @Column(nullable = false, name = "base_url")
   private String baseUrl;
 
-  @OneToMany(mappedBy = "fuente")
+  @OneToMany(mappedBy = "fuente", fetch = FetchType.LAZY)
   private List<Hecho> hechos;
 }
