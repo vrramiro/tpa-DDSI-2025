@@ -3,10 +3,7 @@ package ar.utn.dssi.Agregador.models.entities;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import lombok.*;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,12 +22,16 @@ public class Hecho {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private List<MultipartFile> contenidoMultimedia; //cambiar a "Multimedia" y hacer la entidad
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "hecho_id", referencedColumnName = "id")
+    private List<ContenidoMultimedia> contenidoMultimedia;
+
+    @Column(nullable = false, name = "visible")
     private Boolean visible;
+
     //TODO: ver si hacen falta los datos ya sanitizados => titulo y descripcion directamente guardados sanitizados + los originales
 
-
-    //no todos los atributos porque por que compararias la descripcion
     public Boolean mismoHecho(Hecho otroHecho) {
         return this.getTitulo().equals(otroHecho.getTitulo()) &&
             this.getCategoria().equals(otroHecho.getCategoria()) &&

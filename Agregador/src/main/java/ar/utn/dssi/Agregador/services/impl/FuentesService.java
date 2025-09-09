@@ -1,6 +1,7 @@
 package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;
 import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteProxy.FuenteProxy;
 import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
@@ -14,6 +15,11 @@ import java.util.List;
 public class FuentesService implements IFuentesService {
   @Autowired
   private IFuenteRepository fuenteRepository;
+
+  @Override
+  public Fuente obtenerFuentePorId(Long id) {
+    return this.fuenteRepository.findById(id).orElse(null);
+  }
 
   @Override
   public List<Hecho> hechosNuevos() {

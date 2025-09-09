@@ -1,40 +1,69 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
+import java.util.Locale;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Setter;
 import lombok.Getter;
 
 @Setter
 @Getter
 public class Coleccion {
-    private List<Hecho> hechos;
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String handle;
+
+    @Column(nullable = false, name = "titulo")
     private String titulo;
     private List<Hecho> hechos;
     private String descripcion;
-    private List<ICriterioDeFiltrado> criterios;
-    private List<Fuente> fuentesDeHechos;
-    private AlgoritmoConsenso algoritmoConsenso;
-    private String handle;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "coleccion_id", referencedColumnName = "handle")
+    private List<CriterioDePertenencia> criterios;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "consenso_aceptado")
+    private TipoConsenso consenso;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "coleccion_fuente",
+        joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "handle"),
+        inverseJoinColumns = @JoinColumn(name = "fuente_id", referencedColumnName = "id")
+    )
+    private List<Fuente> fuentes;
+
+    @Column(nullable = false, name = "actualizada")
     private Boolean actualizada;
-
-    public Coleccion() {
-        this.hechos = new java.util.ArrayList<>();
-    }
-
-    //TODO no va aca
-    public void aplicarAlgoritmoConsenso(List<Hecho> hechosAConsensuar,List<Fuente> fuentesDelSistema) {
-        List<Hecho> hechosRecienConsensuados = this.algoritmoConsenso.consensuar(hechosAConsensuar, fuentesDelSistema);
-        hechos = hechosRecienConsensuados;
-    }
 
     public void agregarHechos(List<Hecho> nuevosHechos) {
         this.hechos.addAll(nuevosHechos.stream().filter(this::lePertenece).toList());
     }
 
     private Boolean lePertenece(Hecho hecho) {
-        return this.criterios.stream().allMatch(criterio -> criterio.loCumple(hecho));
+        return this.criterios.stream()
+            .allMatch(criterio -> criterio.loCumple(hecho))
+            && this.fuentes.contains(hecho.getFuente());
+    }
+
+    public void eliminarCriterio(CriterioDePertenencia criterio) {
+        this.criterios.remove(criterio);
     }
 }

@@ -13,12 +13,10 @@ import java.util.List;
 
 public interface IHechosService {
     //CRUD
-    Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IDFuente);
     List<HechoOutputDTO> obtenerHechos();
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     void eliminarHecho(Long IDHecho);
 
     //AUX
-    void guardarHecho(Hecho hecho);
      void importarNuevosHechos();
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class MayoriaSimple extends AlgoritmoConsenso {
+public class MayoriaSimple implements AlgoritmoConsenso {
 
     @Override
     public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {

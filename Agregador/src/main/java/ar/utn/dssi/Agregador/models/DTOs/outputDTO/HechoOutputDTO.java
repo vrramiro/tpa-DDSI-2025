@@ -2,7 +2,6 @@ package ar.utn.dssi.Agregador.models.DTOs.outputDTO;
 
 
 import ar.utn.dssi.Agregador.models.entities.Categoria;
-import ar.utn.dssi.Agregador.models.entities.Etiqueta;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 
 import lombok.Data;

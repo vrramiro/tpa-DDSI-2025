@@ -10,4 +10,7 @@ public class Fuente {
   private String nombre;
   private ITipoFuente tipoFuente;
   private String baseUrl;
+
+  @OneToMany(mappedBy = "fuente")
+  private List<Hecho> hechos;
 }
