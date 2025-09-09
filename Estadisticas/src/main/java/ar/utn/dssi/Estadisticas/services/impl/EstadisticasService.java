@@ -13,6 +13,7 @@ import ar.utn.dssi.Estadisticas.models.repositories.IEstadisticasRepository;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import ar.utn.dssi.Estadisticas.models.errores.ErrorAlCalcular;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -22,15 +23,11 @@ import java.util.List;
 
 @Service
 public class EstadisticasService implements IEstadisticasService {
-    private final IEstadisticasRepository estadisticasRepository;
-    private final IContextoDeCalculoService contextoDeCalculoService;
-    private final IGeneradorDeEstadisticas generadorDeEstadisticas;
+    @Autowired
+    private  IEstadisticasRepository estadisticasRepository;
+    private  IContextoDeCalculoService contextoDeCalculoService;
+    private  IGeneradorDeEstadisticas generadorDeEstadisticas;
 
-    public EstadisticasService(IEstadisticasRepository estadisticasRepository, IContextoDeCalculoService contextoDeCalculoService, IGeneradorDeEstadisticas generadorDeEstadisticas) {
-        this.estadisticasRepository = estadisticasRepository;
-        this.contextoDeCalculoService = contextoDeCalculoService;
-        this.generadorDeEstadisticas = generadorDeEstadisticas;
-    }
 
     @Override
     public void calcularEstadisticas() {
