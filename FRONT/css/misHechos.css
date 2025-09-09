@@ -348,6 +348,42 @@ h1 {
 }
 .modal-actions { display: flex; gap: 0.75rem; }
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-link, .page-link-ellipsis {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link-ellipsis {
+    border: none;
+}
+
 /* ============================================================
    FOOTER
    ============================================================ */
