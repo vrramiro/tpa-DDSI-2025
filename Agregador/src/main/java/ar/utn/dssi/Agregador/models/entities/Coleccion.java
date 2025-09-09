@@ -22,6 +22,8 @@ import jakarta.persistence.Table;
 import lombok.Setter;
 import lombok.Getter;
 
+@Entity
+@Table(name = "colecciones")
 @Setter
 @Getter
 public class Coleccion {
@@ -31,7 +33,16 @@ public class Coleccion {
 
     @Column(nullable = false, name = "titulo")
     private String titulo;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "coleccion_hecho",
+        joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "handle"),
+        inverseJoinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id")
+    )
     private List<Hecho> hechos;
+
+    @Column(nullable = false, name = "descripcion")
     private String descripcion;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

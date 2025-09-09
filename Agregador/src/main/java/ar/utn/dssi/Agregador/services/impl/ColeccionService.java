@@ -71,7 +71,7 @@ public class ColeccionService implements IColeccionService {
     //OBTENER TODAS LAS COLECCIONES
     @Override
     public List<ColeccionOutputDTO> obtenerColecciones() {
-        List<Coleccion> colecciones = coleccionRepository.findall();
+        List<Coleccion> colecciones = coleccionRepository.findAll();
 
         return colecciones
                 .stream()
@@ -191,7 +191,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     public void agregarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.getCriteriosDePertenecias().add(nuevoCriterio);
+        coleccion.getCriterios().add(nuevoCriterio);
         this.agregarACache(coleccion);
     }
 
@@ -199,7 +199,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     public void eliminarCriterioDePertenencia(CriterioDePertenencia criterio, String handle) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.getCriteriosDePertenecias().remove(nuevoCriterio);
+        coleccion.eliminarCriterio(criterio);
         this.agregarACache(coleccion);
     }
 
@@ -213,7 +213,7 @@ public class ColeccionService implements IColeccionService {
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION
     private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion) {
-        return Flux.fromIterable(hechosRepositorio.findall())
+        return Flux.fromIterable(hechosRepositorio.findAll())
                 .flatMap(hecho -> Mono.fromRunnable(() -> this.guardarEnColeccion(coleccion, hecho)))
                 .then(Mono.fromRunnable(() -> {
                     coleccion.setActualizada(Boolean.TRUE);
@@ -240,7 +240,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     public Mono<Void> refrescarColecciones(Hecho hecho){    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS... Nose si es depues de que se ejecute esta funcion porque se invoca la cantidad de veces necesarias dependiendo los hechos
         return Flux
-                .fromIterable(coleccionRepository.findall())
+                .fromIterable(coleccionRepository.findAll())
                 .flatMap(coleccion -> {
                     this.guardarEnColeccion(coleccion, hecho);
                     return Mono.empty();
@@ -248,21 +248,6 @@ public class ColeccionService implements IColeccionService {
                 .then();
 
     }
-
-    //CONSENSO REALIZADO POR CRONTASK
-    @Override
-    public void realizarConsenso(){
-        List<Coleccion> colecciones = coleccionRepository.findall();
-
-        colecciones.forEach(coleccion -> {
-            List<Hecho> hechosColeccion = coleccion.getHechos();
-            List<Hecho> hechosColeccionProxy = hechosService.obtenerHechosProxy().stream().filter(coleccion::cumpleCriterios).toList();
-            List<Hecho> hechosAConsensuar = Stream.concat(hechosColeccion.stream(), hechosColeccionProxy.stream()).toList();
-            List<Fuente> fuentes = fuentesService.obtenerFuentes();
-            coleccion.aplicarAlgoritmoConsenso(hechosAConsensuar,fuentes);
-        });
-    }
-
 
     /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
     private void agregarACache(Coleccion coleccion) {
