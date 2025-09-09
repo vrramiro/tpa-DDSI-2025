@@ -147,95 +147,8 @@ h1 { text-align: center; margin: 2rem 0 1rem; color: var(--dark-color); }
 }
 .card-footer { display: flex; justify-content: center; }
 
-/* ===== MODAL GENERAL ===== */
-.modal-overlay {
-  position: fixed; top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  display: none; justify-content: center; align-items: center;
-  z-index: 1000; padding: 1rem;
-}
-.modal-content {
-  background: var(--background-color);
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  width: 95%; max-width: 800px;
-  box-shadow: var(--box-shadow);
-}
-.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-.modal-header h2 { color: var(--dark-color); }
-.close-btn { cursor: pointer; font-size: 1.5rem; font-weight: bold; color: var(--danger-color); }
-.modal-body table { width: 100%; border-collapse: collapse; }
 
-/* MODIFICADO: Estilo de renglones para la tabla */
-.modal-body th, .modal-body td {
-  border: none; /* <-- Quita todos los bordes */
-  border-bottom: 1px solid #eee; /* <-- Añade solo un borde inferior */
-  padding: 0.8rem;
-  text-align: left;
-}
-.modal-body th {
-  background: var(--light-color);
-  color: var(--dark-color);
-  font-weight: 600;
-}
 
-.modal-body tr:last-child td {
-  border-bottom: none; /* <-- Quita el borde del último renglón */
-}
-
-.modal-body tr:hover { background-color: var(--light-color); }
-.fact-link {
-  color: var(--primary-color);
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-}
-.fact-link:hover { text-decoration: underline; }
-
-/* AÑADIDO: Botón Ver en mapa */
-.btn-map {
-  background: var(--secondary-color);
-  color: #fff;
-  border: none;
-  padding: 0.4rem 0.8rem;
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: background 0.2s;
-}
-.btn-map:hover { background: #00695c; }
-
-/* ===== MODAL DE HECHO ===== */
-#factModal .modal-content { max-width: 600px; position: relative; }
-#factModal img { width: 100%; height: auto; margin: 1rem 0; border-radius: var(--border-radius); }
-#factModal #fact-description { margin: 1rem 0; color: var(--text-color); }
-#factModal #fact-category {
-  display: inline-block;
-  background: var(--secondary-color);
-  color: white;
-  padding: 0.4rem 1rem;
-  border-radius: 15px;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-.carousel-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  border: none;
-  font-size: 1.5rem;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  border-radius: 50%;
-  opacity: 0.7;
-  transition: opacity 0.3s;
-}
-.carousel-arrow:hover { opacity: 1; }
-.carousel-arrow.left { left: 10px; }
-.carousel-arrow.right { right: 10px; }
 
 /* ===== FOOTER (YA ESTABA CORREGIDO) ===== */
 .main-footer {
@@ -250,6 +163,42 @@ h1 { text-align: center; margin: 2rem 0 1rem; color: var(--dark-color); }
     margin: 0 .5rem;
 }
 
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-link, .page-link-ellipsis {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link-ellipsis {
+    border: none;
+}
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
