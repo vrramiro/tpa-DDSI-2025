@@ -3,7 +3,8 @@ package ar.utn.dssi.Agregador.controller.ADMIN;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -79,7 +80,7 @@ public class ColeccionesControllerADMIN {
 
   //ESTABLECER EL ALGORITMO DE CONSENSO
   @PutMapping("/{handle}/algortimoConsenso")
-  public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody AlgoritmoConsenso algoritmoConsenso) {
+  public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody TipoConsenso algoritmoConsenso) {   //TODO: VER SI RECIBE UN STRING O UN ENUM...
     coleccionService.actualizarAlgoritmo(handle, algoritmoConsenso);
 
     return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // 202 Accepted

@@ -7,6 +7,8 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
@@ -205,9 +207,9 @@ public class ColeccionService implements IColeccionService {
 
     //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
     @Override
-    public void actualizarAlgoritmo(String handle, AlgoritmoConsenso algoritmoConsenso) {
+    public void actualizarAlgoritmo(String handle, TipoConsenso algoritmoConsenso) {
         Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.setAlgoritmoConsenso(algoritmoConsenso);
+        coleccion.setConsenso(algoritmoConsenso);
         coleccionRepository.update(coleccion);
     }
 

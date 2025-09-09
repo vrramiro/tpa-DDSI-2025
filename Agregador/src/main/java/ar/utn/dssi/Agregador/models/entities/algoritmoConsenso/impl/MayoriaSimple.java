@@ -2,13 +2,14 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class MayoriaSimple implements AlgoritmoConsenso {
+public class MayoriaSimple implements IAlgoritmoConsenso {
 
     @Override
     public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {
