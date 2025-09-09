@@ -2,11 +2,10 @@ package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
-import ar.utn.dssi.Agregador.spam.DetectorDeSpam;
+import ar.utn.dssi.Agregador.models.entities.spam.DetectorDeSpam;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Agregador.models.entities.solicitud.EstadoDeSolicitud;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
-import ar.utn.dssi.Agregador.models.repositories.impl.SolicitudDeEliminacionRepository;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;

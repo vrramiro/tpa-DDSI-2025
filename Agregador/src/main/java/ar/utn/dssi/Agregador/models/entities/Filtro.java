@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities;
 
-import ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado.ICriterioDeFiltrado;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import lombok.*;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Filtro {
-  List<ICriterioDeFiltrado> criteriosDeFiltro;
+  List<CriterioDePertenencia> criteriosDeFiltro;
 
   public Boolean loCumple(Hecho hecho) {
     return this.criteriosDeFiltro

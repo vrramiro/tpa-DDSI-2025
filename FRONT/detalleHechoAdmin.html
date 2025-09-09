@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Hecho - MetaMapa</title>
+  <link rel="stylesheet" href="./css/detalleHecho.css">
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header class="main-header">
+      <a href="landing.html" class="logo">MetaMapa</a>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <nav class="main-nav" id="main-nav">
+        <ul>
+     	  <li><a href="colecciones.html" class="btn btn-secondary">Colecciones</a></li>
+		  <li><a href="explorador.html" class="btn btn-secondary">Explorar</a></li>
+		  <li><a href="crearHechoContribuyente.html" class="btn btn-secondary">Crear hecho</a></li>
+		  <li><a href="panelGestionAdmin.html" class="btn btn-secondary">Gestionar</a></li>
+		  <li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
+          <li>
+            <a href="inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+
+  <!-- CONTENIDO -->
+  <main class="container-detalle">
+    <h2>Detalle del hecho</h2>
+
+    <form class="detalle-form">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" placeholder="Título">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fecha-acontecimiento">Fecha de acontecimiento</label>
+          <input type="date" id="fecha-acontecimiento">
+        </div>
+        <div class="form-group">
+          <label for="fecha-subida">Fecha de subida</label>
+          <input type="date" id="fecha-subida">
+        </div>
+        <div class="form-group">
+          <label for="fecha-edicion">Fecha de edición</label>
+          <input type="date" id="fecha-edicion">
+        </div>
+        <div class="form-group">
+          <label for="fecha-gestion">Fecha de gestión</label>
+          <input type="date" id="fecha-gestion">
+        </div>
+        <div class="form-group">
+          <label for="fecha-eliminacion">Fecha de eliminación</label>
+          <input type="date" id="fecha-eliminacion">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="gestionado">Gestionado por</label>
+          <input type="text" id="gestionado" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+          <label for="autor">Autor</label>
+          <input type="text" id="autor" placeholder="Nombre del autor">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="4" placeholder="Texto..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="multimedia">Multimedia</label>
+        <textarea id="multimedia" rows="3" placeholder="URLs o descripción de archivos multimedia..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary">Volver</button>
+        <button type="submit" class="btn btn-primary">Aceptar</button>
+        <button type="button" class="btn btn-outline">Rechazar</button>
+        <button type="button" class="btn btn-primary">Aceptar con sugerencia</button>
+      </div>
+    </form>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="main-footer">
+    <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
+    <div>
+      <a href="#">Política de Privacidad</a>
+      <a href="#">Contacto</a>
+    </div>
+  </footer>
+
+  <script src="./js/detalleHecho.js"></script>
+ </body>
+</html>

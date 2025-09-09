@@ -1,7 +1,6 @@
 package ar.utn.dssi.Agregador.models.DTOs.outputDTO;
 
 import ar.utn.dssi.Agregador.models.entities.Categoria;
-import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +16,5 @@ public class FuenteServiceOutputDTO {
   private Categoria categoria;
   private Ubicacion ubicacion;  private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
-  private Origen origen;
   private List<MultipartFile> contenidoMultimedia;
 }

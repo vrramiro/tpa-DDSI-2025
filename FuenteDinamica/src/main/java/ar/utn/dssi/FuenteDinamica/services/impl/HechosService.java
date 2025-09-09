@@ -2,62 +2,86 @@ package ar.utn.dssi.FuenteDinamica.services.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
-import ar.utn.dssi.FuenteDinamica.models.Errores.DatosFaltantes;
-import ar.utn.dssi.FuenteDinamica.models.Errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteDinamica.models.Errores.IdNoEncontrado;
-import ar.utn.dssi.FuenteDinamica.models.Errores.RepositorioVacio;
-import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
-import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
-import ar.utn.dssi.FuenteDinamica.models.entities.Origen;
-import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
-import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriasRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.IHechosRepository;
+import ar.utn.dssi.FuenteDinamica.models.entities.*;
+import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
+import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.models.errores.IdNoEncontrado;
+import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
+import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
+import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriaRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IUbicacionRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
 public class HechosService implements IHechosService {
-  @Autowired
-  private IHechosRepository hechosRepository;
-
-  @Autowired
-  private ICategoriasRepository categoriasRepository;
-
   private LocalDateTime ultimoEnvioHechos;
-
   private List<HechoOutputDTO> hechosEditados;
 
+  //REPOSITORIOS
+  @Autowired
+  private IMultimediaRepository IMultimediaRepository;
+  private IHechoRepository IHechoRepository;
+  private ICategoriaRepository ICategoriaRepository;
+  private IUbicacionRepository IUbicacionRepository;
+  private INormalizadorAdapter normalizadorAdapter;
+
+
+  /*/////////////////////// OPERACIONES CRUD ///////////////////////*/
+
+  ////////// CREATE //////////
+  @Override
+  public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
+    validarHechoInput(hechoInputDTO);
+
+    Hecho hecho = normalizadorAdapter
+            .obtenerHechoNormalizado(MapperDeHechos.hechoFromInputToOutputNormalizador(hechoInputDTO)).block();
+
+    hecho.setVisible(true);
+
+    if (hechoInputDTO.getContenidoMultimedia() != null && !hechoInputDTO.getContenidoMultimedia().isEmpty()) {
+      List<ContenidoMultimedia> multimedia = MapperContenidoMultimedia.convertirMultipartAContenido( hechoInputDTO.getContenidoMultimedia(), hecho);
+      hecho.setMultimedia(multimedia);
+    }
+
+    hecho = this.IHechoRepository.save(hecho);
+    return MapperDeHechos.hechoOutputDTO(hecho);
+  }
+
+  ////////// READ //////////
+  //Obtener todos los hechos
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
     try {
-      var hechos = this.hechosRepository.findall();
+      var hechos = this.IHechoRepository.findAll();
       if (hechos.isEmpty()) {
         throw new RepositorioVacio("No hay hechos en la base de datos");
       }
       return hechos.stream()
-              .map(this::hechoOutputDTO)
+              .map(MapperDeHechos::hechoOutputDTO)
               .toList();
     } catch (Exception e) {
       throw new ErrorGeneralRepositorio("Error al obtener los hechos. ");
     }
   }
 
+  //Obtener todos los hechos nuevos
   @Override
   public List<HechoOutputDTO> obtenerHechosNuevos() {
-
     try {
-
       List<HechoOutputDTO> hechos = this.obtenerHechos();
       hechos.removeIf(hecho -> hecho.getFechaCarga().isAfter(ultimoEnvioHechos));
-
       if (hechos.isEmpty()) {
         throw new RepositorioVacio("No hay hechos en la base de datos");
       } return hechos;
@@ -66,81 +90,15 @@ public class HechosService implements IHechosService {
     }
   }
 
-
+  //Obtener hechos por id
   @Override
   public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
-    Hecho hecho = this.hechosRepository.findById(idHecho);
-
-    if (hecho == null) {
-      throw new IdNoEncontrado("No existe el hecho con id: " + idHecho);
-    }
-
-    return this.hechoOutputDTO(hecho);
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
+            .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+    return MapperDeHechos.hechoOutputDTO(hecho);
   }
 
-  public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
-    // Validaciones manuales
-
-    //TODO esta logica de validacion podria ir en una clase ValidadorHechosInput que implementa un metodo validar y recibe el hecho
-    //encapsula la logica de validacion y lo vuelve mas extensible
-
-    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
-      throw new DatosFaltantes("El título es obligatorio.");
-    }
-
-    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
-      throw new DatosFaltantes("La descripción es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento() == null) {
-      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
-    }
-
-    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
-      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
-    }
-
-    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
-      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
-    }
-
-    Categoria categoria = null;
-
-    if(hechoInputDTO.getIdCategoria()!=null) {
-        categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
-        //TODO chequear si hay que hacer categoria service para hacer el manejo de errores aca
-    }
-
-    // Construcción del hecho
-
-    var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
-
-    hecho.setTitulo(hechoInputDTO.getTitulo());
-    hecho.setDescripcion(hechoInputDTO.getDescripcion());
-    hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-    hecho.setFechaCarga(LocalDateTime.now());
-    hecho.setUbicacion(ubicacion);
-    hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
-    hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-    hecho.setIdHecho(this.hechosRepository.obtenerUltimoId());
-    hecho.setVisible(true);
-
-    hecho = this.hechosRepository.save(hecho);
-
-    return this.hechoOutputDTO(hecho);
-  }
-
-  @Override
-  public void editarHecho(HechoInputDTO hecho, Long idHecho){
-    if (hechoEditable(idHecho)) {
-      HechoOutputDTO hechoActualizado = this.actualizarHecho(hecho, idHecho);
-
-      hechosEditados.add(hechoActualizado);
-    }
-  }
-
+  //Obtener los hechos que fueron editados
   @Override
   public List<HechoOutputDTO> obtenerHechosEditados() {
 
@@ -155,9 +113,65 @@ public class HechosService implements IHechosService {
     return hechosAEnviar;
   }
 
+  ////////// UPDATE //////////
   @Override
-  public Boolean hechoEditable(Long idHecho) {
-    Hecho hecho = hechosRepository.findById(idHecho);
+  public void editarHecho(HechoInputDTO hecho, Long idHecho){
+    if (hechoEditable(idHecho)) {
+      HechoOutputDTO hechoActualizado = this.actualizarHecho(hecho, idHecho);
+
+      hechosEditados.add(hechoActualizado);
+    }
+  }
+
+  private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
+            .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+
+    Long idCategoria = hechoInputDTO.getIdCategoria();
+    Categoria categoria = this.ICategoriaRepository.findById(idCategoria)
+            .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + idCategoria));
+
+    return this.crear(hechoInputDTO);
+  }
+
+
+  ////////// DELETE //////////
+  @Override
+  public void eliminarHecho(Long idHecho){
+
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
+            .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+
+    this.IHechoRepository.delete(hecho);
+  }
+
+  /*/////////////////////// FUNCIONES PRIVADAS ///////////////////////*/
+
+  //Funcion para la validacion de hechos input
+  //TODO revisar posible builder/factory
+  private void validarHechoInput(HechoInputDTO hechoInputDTO) {
+    if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
+      throw new DatosFaltantes("El título es obligatorio.");
+    }
+    if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
+      throw new DatosFaltantes("La descripción es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento() == null) {
+      throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
+    }
+    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
+      throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
+    }
+    if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
+      throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
+    }
+  }
+
+  //Verificar si se puede editar el hecho
+  private Boolean hechoEditable(Long idHecho) {
+    Hecho hecho = IHechoRepository.findById(idHecho)
+            .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+
 
     if(hecho == null) {
       throw new IdNoEncontrado("No existe el hecho con id: " + idHecho);
@@ -166,52 +180,4 @@ public class HechosService implements IHechosService {
     return ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) <= 7;
   }
 
-  @Override
-  public void eliminarHecho(Long idHecho){
-
-    if(hechosRepository.findById(idHecho) == null) {
-      throw new IdNoEncontrado("No existe el hecho con id: " + idHecho);
-    }
-
-    this.hechosRepository.delete(idHecho);
-  }
-
-  private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
-    var hecho = new Hecho();
-    var ubicacion = new Ubicacion(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud());
-    var categoria = this.categoriasRepository.findById(hechoInputDTO.getIdCategoria());
-
-    hecho.setTitulo(hechoInputDTO.getTitulo());
-    hecho.setDescripcion(hechoInputDTO.getDescripcion());
-    hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-    hecho.setFechaCarga(LocalDateTime.now());
-    hecho.setUbicacion(ubicacion);
-    hecho.setCategoria(categoria);
-    hecho.setOrigen(Origen.FUENTE_DINAMICA);
-    hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-    hecho.setIdHecho(idHecho);
-
-    try {
-      this.hechosRepository.update(hecho);
-    } catch (Exception e) {
-      throw new ErrorGeneralRepositorio("Error al actualizar el hecho.");
-    }
-
-    return this.hechoOutputDTO(hecho);
-  }
-
-  @Override
-  public HechoOutputDTO hechoOutputDTO(Hecho hecho){
-    var dtoHecho = new HechoOutputDTO();
-
-    dtoHecho.setTitulo(hecho.getTitulo());
-    dtoHecho.setDescripcion(hecho.getDescripcion());
-    dtoHecho.setCategoria(hecho.getCategoria());
-    dtoHecho.setUbicacion(hecho.getUbicacion());
-    dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    dtoHecho.setFechaCarga(hecho.getFechaCarga());
-    dtoHecho.setContenidoMultimedia(hecho.getContenidoMultimedia());
-    dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
-    return dtoHecho;
-  }
 }

@@ -1,7 +1,6 @@
 package ar.utn.dssi.Agregador.models.DTOs.inputDTO;
 
 import ar.utn.dssi.Agregador.models.entities.Categoria;
-import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,7 +17,6 @@ public class HechoInputDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private Origen origen;
     private List<MultipartFile> contenidoMultimedia;
 }
 

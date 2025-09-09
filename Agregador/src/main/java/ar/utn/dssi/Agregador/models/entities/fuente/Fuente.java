@@ -1,36 +1,38 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.models.entities.*;
-import lombok.Builder;
+import ar.utn.dssi.Agregador.models.converters.TipoFuenteConverter;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "fuentes")
 @Getter
-@Setter
-@Builder
 public class Fuente {
-  private Long idFuente;
-  private String url;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(nullable = false, name = "fuente_id")
+  private Long id;
+
+  @Column(nullable = false, name = "nombre")
+  private String nombre;
+
+  @Convert(converter = TipoFuenteConverter.class)
+  @Column(name = "tipo_fuente", nullable = false)
   private ITipoFuente tipoFuente;
 
-  public Fuente(Long idFuente, String url, Origen tipoFuente) {
-    this.idFuente = idFuente;
-    this.url = url;
-    this.tipoFuente = TipoFuenteFactory.crearTipoFuente(url, tipoFuente);
-  }
+  @Column(nullable = false, name = "base_url")
+  private String baseUrl;
 
-  //public Boolean esDeTipo(Origen tipo) {
-    //return tipoFuente.getTipo().equals(tipo);
-  //}
-
-  public List<Hecho> obtenerHechos() {
-    return tipoFuente.obtenerHechos().stream().map(Mapper::hechoInputToHecho).toList();
-  }
-
+  @OneToMany(mappedBy = "fuente", fetch = FetchType.LAZY)
+  private List<Hecho> hechos;
 }

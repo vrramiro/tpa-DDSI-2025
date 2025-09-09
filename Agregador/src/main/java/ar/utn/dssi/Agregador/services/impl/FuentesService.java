@@ -1,67 +1,39 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Origen;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;
+import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteProxy.FuenteProxy;
+import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
+
 import ar.utn.dssi.Agregador.services.IFuentesService;
-import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class FuentesService implements IFuentesService {
-  private List<Fuente> fuentes;
-
   @Autowired
-  private IHechosService hechosService;
+  private IFuenteRepository fuenteRepository;
 
-  public FuentesService() {
-    this.fuentes = new ArrayList<>();
+  @Override
+  public Fuente obtenerFuentePorId(Long id) {
+    return this.fuenteRepository.findById(id).orElse(null);
   }
 
   @Override
-  public List<Hecho> obtenerNuevosHechos() {
-    return this
-        .fuentes
-        .stream()
-        .filter(fuente -> !fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
-        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream()
-            .map(hechoInput -> {
-              Hecho hecho = hechosService.crearHecho(hechoInput, fuente.getIdFuente());
-              hechosService.guardarHecho(hecho);
-              return hecho;
-            })
-        )
+  public List<Hecho> hechosNuevos() {
+    return this.fuenteRepository.findAll().stream()
+        .flatMap(fuente -> fuente.getTipoFuente().hechosNuevos(fuente).stream())
+
         .toList();
   }
 
   @Override
-  public List<HechoInputDTO> obtenerHechosProxy() {
-    return this
-        .fuentes
-        .stream()
-        .filter(fuente -> fuente.getTipoFuente().getTipo().equals(Origen.FUENTE_PROXY))
-        .flatMap(fuente -> fuente.getTipoFuente().obtenerHechos().stream())
+  public List<Hecho> hechosMetamapa() {
+    return this.fuenteRepository.findByTipoFuente(new FuenteProxy()).stream()
+        .flatMap(fuente -> ((ITipoProxy) fuente.getTipoFuente()).hechosMetamapa(fuente).stream())
+
         .toList();
-  }
-
-  @Override
-  public void eliminarHecho(Long IdEnFuente, Long IdFuenteOrigen){
-  }
-
-  public void agregarFuente(Fuente fuente) {
-    this.fuentes.add(fuente);
-  }
-
-  public Fuente obtenerFuentePorId(Long idFuenteOrigen)
-  {
-    return this.fuentes.stream().filter(fuente -> fuente.getIdFuente().equals(idFuenteOrigen)).findFirst().orElse(null);
-  }
-
-  public List<Fuente> obtenerFuentes (){
-    return this.fuentes;
   }
 }

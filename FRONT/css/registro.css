@@ -1,0 +1,355 @@
+/* =============================================================
+   VARIABLES Y RESET BÁSICO
+   ============================================================ */
+
+:root {
+    /* Colores principales */
+    --primary-color: #20c997;
+    --secondary-color: #00897b;
+    --accent-color: #ffc107;
+    --danger-color: #e53935;
+
+    /* Colores de fondo y texto */
+    --light-color: #e0f2f1;
+    --dark-color: #004d40;
+    --text-color: #37474f;
+    --background-color: #ffffff;
+    --border-color: #b2dfdb;
+
+    /* Tipografía */
+    --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+
+    /* Layout y efectos */
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0,0,0,.1);
+
+    /* Escalas de tamaño */
+    --container-max: 1200px;
+    --space-1: .5rem;
+    --space-2: 1rem;
+    --space-3: 1.5rem;
+    --space-4: 2rem;
+}
+
+/* Reset de márgenes, paddings y box-sizing */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Tipografía fluida */
+html {
+    font-size: clamp(15px, 0.6vw + 12px, 18px);
+}
+
+body {
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--light-color);
+    line-height: 1.6;
+}
+
+/* Imágenes y medios siempre fluidos */
+img, svg, video, canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Menos movimiento si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Contenedor centralizado y con ancho máximo */
+.container {
+    width: min(92%, var(--container-max));
+    margin-inline: auto;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+.main-header {
+    background-color: var(--background-color);
+    min-height: 60px;               /* altura mínima */
+    padding: .5rem 5%;              /* padding vertical + horizontal */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;                   /* queda por encima del contenido */
+}
+
+/* Logo */
+.logo {
+    font-size: clamp(1.25rem, 1.2vw + 1rem, 1.6rem);
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+/* Navegación principal */
+.main-nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap; /* se baja en pantallas pequeñas */
+    gap: clamp(.5rem, 2vw, 1rem);   /* espacio fluido entre links */
+}
+
+.main-nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 600;
+    padding: .5rem;
+    border-radius: var(--border-radius);
+    transition: background-color .3s;
+    white-space: nowrap; /* evita cortes incómodos */
+}
+.main-nav a:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+}
+
+/* ============================================================
+   BOTONES
+   ============================================================ */
+.btn {
+    display: inline-block;
+    padding: clamp(10px, .8vw + 8px, 14px) clamp(16px, 1.2vw + 12px, 24px);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color .3s, transform .2s;
+}
+.btn:hover { transform: translateY(-2px); }
+
+.btn-primary   { background-color: var(--primary-color); color: #fff; }
+.btn-secondary { background-color: var(--light-color); color: #fff; }
+.btn-outline   { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
+
+/* ============================================================
+   MAIN - SECCIÓN DE REGISTRO
+   ============================================================ */
+
+/* Tarjeta que envuelve el formulario */
+.card {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin: 2rem auto;
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+}
+
+
+/* Título del formulario */
+.card h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Agrupación de campos */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Etiquetas de cada campo */
+.form-group label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Inputs generales */
+.form-control {
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color .3s, box-shadow .3s;
+}
+
+/* Inputs en foco */
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.2);
+}
+
+/* Botón principal del formulario */
+#register-form .btn-primary {
+    width: 100%;
+    margin-top: var(--space-2);
+}
+
+/* Link alternativo debajo del formulario */
+.switch-page {
+    text-align: center;
+    margin-top: var(--space-2);
+    font-size: .9rem;
+}
+
+/* Estilo del enlace "Inicia sesión" */
+.switch-page .btn-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Hover para el link */
+.switch-page .btn-link:hover {
+    color: var(--secondary-color);
+}
+
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.main-footer {
+    background: var(--dark-color);
+    color: var(--light-color);
+    text-align: center;
+    padding: clamp(1rem, 3vw, 2rem) 5%;
+    margin-top: 2rem;
+}
+.main-footer a {
+    color: var(--light-color);
+    margin: 0 .5rem;
+}
+
+/* ============================================================
+   MEDIA QUERIES PARA QUE SEA ADAPTABLE A MOVILES, COMPU, ETC
+   ============================================================ */
+
+/* Tablet horizontal */
+@media (max-width: 992px) {
+    .main-header { padding-inline: 4%; }
+    .class-bienvenida { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
+}
+
+/* Tablet vertical / móvil mediano */
+@media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .btn { width: 100%; }  /* botones full width en pantallas chicas */
+    .class-bienvenida { padding-inline: 3%; }
+}
+
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
+    .main-nav a { padding: .4rem .5rem; }
+}
+
+/* Botón hamburguesa */
+.menu-toggle {
+    display: none; /* Oculto por defecto */
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+}
+
+/* ============================================================
+   MEDIA QUERIES PARA QUE SEA ADAPTABLE A MOVILES, COMPU, ETC
+   ============================================================ */
+
+/* Tablet horizontal y menores - aquí aplicamos la lógica del menú */
+@media (max-width: 992px) {
+    .menu-toggle {
+        display: block; /* Hacemos visible el botón */
+    }
+
+    .main-nav {
+        display: none; /* Ocultamos el menú de navegación */
+        width: 100%;
+        background: var(--background-color);
+        position: absolute;
+        top: 60px; /* Altura del header */
+        left: 0;
+        box-shadow: var(--box-shadow);
+    }
+
+    .main-nav ul {
+        flex-direction: column; /* Apilamos los links verticalmente */
+        padding: 0;
+        gap: 0;
+    }
+
+    .main-nav ul li {
+        text-align: center;
+        border-bottom: 1px solid #eee;
+    }
+
+    .main-nav ul li a {
+        display: block;
+        padding: 1rem;
+        border-radius: 0;
+    }
+
+    /* Clase que se añade con JS para mostrar el menú */
+    .main-nav.show {
+        display: block;
+    }
+
+}
+
+/* Modal oculto por defecto */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+/* Cuando el modal está enfocado con :target */
+.modal:target {
+    display: flex;
+}
+
+/* Caja del modal */
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Botón de cierre */
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}

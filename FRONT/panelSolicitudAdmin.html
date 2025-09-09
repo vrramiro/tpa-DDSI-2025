@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle de Solicitud - MetaMapa</title>
+  <link rel="stylesheet" href="./css/panelSolicitudAdmin.css">
+</head>
+
+<body>
+  <!-- HEADER -->
+  <header class="main-header">
+    <a href="landing.html" class="logo">MetaMapa</a>
+    <button class="menu-toggle" id="menu-toggle">☰</button>
+    <nav class="main-nav" id="main-nav">
+      <ul>
+		<li><a href="colecciones.html" class="btn btn-secondary">Colecciones</a></li>
+		<li><a href="explorador.html" class="btn btn-secondary">Explorar</a></li>
+		<li><a href="crearHechoContribuyente.html" class="btn btn-secondary">Crear hecho</a></li>
+		<li><a href="panelGestionAdmin.html" class="btn btn-secondary">Gestionar</a></li>
+		<li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
+        <li>
+          <a href="inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- CONTENIDO -->
+  <main class="container">
+    <h1>Detalle de Solicitud</h1>
+
+    <div class="grid-detalle">
+      <!-- Solicitud -->
+      <section class="card">
+        <h2>Solicitud</h2>
+        <p><strong>Fecha de creación:</strong> 01/09/2025</p>
+        <p><strong>Fecha de evaluación:</strong> 05/09/2025</p>
+        <p><strong>Autor:</strong> Juan Pérez</p>
+        <p><strong>Gestionado por:</strong> Ramiro Verga</p>
+
+        <h3>Descripción</h3>
+        <div class="textarea">La informacion prevista es erronea, el incendio fue causado durente los destejos del UUD, no UPD.</div>
+
+        <div class="actions">
+          <button class="btn btn-primary">Aceptar</button>
+          <button class="btn btn-danger">Rechazar</button>
+          <button class="btn btn-secondary">Volver</button>
+        </div>
+      </section>
+
+      <!-- Hecho -->
+      <section class="card">
+        <h2>Hecho: "Incendio en Chascomús"</h2>
+        <p><strong>Fecha del acontecimiento:</strong> 15/07/2025</p>
+        <p><strong>Autor:</strong> Juan Pérez</p>
+        <p><strong>Gestionado por:</strong> Nicolas Tuma Ma</p>
+
+        <h3>Descripción</h3>
+        <div class="textarea">Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales importantes.</div>
+
+        <h3>Multimedia</h3>
+        <img class="card-img" src="https://picsum.photos/400/200?random=2" alt="hecho">
+
+      </section>
+    </div>
+  </main>
+
+<!-- FOOTER  -->
+    <footer class="main-footer">
+        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
+        <div>
+            <a href="#">Política de Privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script src="./js/panelSolicitudAdmin.js"></script>
+
+</body>
+</html>

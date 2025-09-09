@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Solicitudes - MetaMapa</title>
+    <link rel="stylesheet" href="./css/gestionSolicitudes.css">
+</head>
+
+<body>
+    <header class="main-header">
+        <a href="landing.html" class="logo">MetaMapa</a>
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <nav class="main-nav" id="main-nav">
+            <ul>
+				<li><a href="colecciones.html" class="btn btn-secondary">Colecciones</a></li>
+				<li><a href="explorador.html" class="btn btn-secondary">Explorar</a></li>
+				<li><a href="crearHechoContribuyente.html" class="btn btn-secondary">Crear hecho</a></li>
+				<li><a href="panelGestionAdmin.html" class="btn btn-secondary">Gestionar</a></li>
+				<li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
+                <li>
+                    <a href="inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+	
+    <main class="content-container">
+
+        <div class="solicitud-header">
+            <h2>Solicitudes de Eliminacion:</h2>
+			<div class="filter-controls">
+            <label for="status-filter">Filtrar hechos:</label>
+            <select id="status-filter" name="status">
+                <option value="todos">Todos los estados</option>
+                <option value="aprobado">Aprobado</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="rechazado">Rechazado</option>
+            </select>
+			</div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Autor</th>
+                        <th>Fecha de carga</th>
+                        <th>Fecha de Evaluacion</th>
+                        <th>Gestionado por</th>
+						<th>Estado</th>
+						<th>Gestionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Autor Ejemplo 1</td>
+                        <td>2024-08-15</td>
+                        <td>2024-09-01</td>
+						<td>Admin 1</td>
+                        <td>Aprobado</td>
+                        <td class="action-buttons">
+                            <a href="panelSolicitudAdmin.html" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autor Ejemplo 2</td>
+                        <td>2024-07-20</td>
+                        <td>2024-08-25</td>
+                        <td>Pendiente</td>
+						<td>Pendiente</td>
+                        <td class="action-buttons">
+                            <a href="panelSolicitudAdmin.html" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Autor Ejemplo 3</td>
+                        <td>2024-06-01</td>
+                        <td>2024-07-10</td>
+						<td>Admin 2</td>
+                        <td>Rechazado</td>
+                        <td class="action-buttons">
+                            <a href="panelSolicitudAdmin.html" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+		
+		<nav class="pagination" aria-label="Paginación">
+			<a href="#" class="page-link">&laquo;</a>
+			<a href="#" class="page-link active">1</a>
+			<a href="#" class="page-link">2</a>
+			<a href="#" class="page-link">3</a>
+			<a href="#" class="page-link">4</a>
+			<span class="page-link-ellipsis">...</span>
+			<a href="#" class="page-link">&raquo;</a>
+		</nav>
+        
+		<div class="footer-actions">
+            <a href="panelGestionAdmin.html" class="btn btn-primary">Volver</a>
+        </div>
+    </main>
+  
+    <footer class="main-footer">
+        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
+        <div>
+            <a href="#">Política de Privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+  
+  <script src="./js/gestionSolicitudes.js"></script>
+</body>
+</html>
