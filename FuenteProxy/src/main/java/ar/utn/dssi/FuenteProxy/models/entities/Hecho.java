@@ -25,7 +25,8 @@ public class Hecho {
   @Column(name = "descripcion", nullable = false)
   private String descripcion;
 
-  @Embedded
+  @ManyToOne
+  @JoinColumn(name = "categoria_id")
   private Categoria categoria;
 
   @Embedded

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coleccion - MetaMapa</title>
+    <link rel="stylesheet" href="./css/listaHechosColeccion.css">
+</head>
+
+<body>
+    <!-- HEADER -->
+    <header class="main-header">
+        <a href="landing.html" class="logo">MetaMapa</a>
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <nav class="main-nav" id="main-nav">
+            <ul>
+				<li><a href="colecciones.html" class="btn btn-secondary">Colecciones</a></li>
+                <li><a href="explorador.html" class="btn btn-secondary">Explorar</a></li>
+                <li><a href="crearHechoContribuyente.html" class="btn btn-secondary">Crear hecho</a></li>
+                <li><a href="panelGestionAdmin.html" class="btn btn-secondary">Gestionar</a></li>
+				<li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
+                <li>
+                    <a href="inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+
+	<main>
+		<div class="main-actions">
+			<h1>Eventos Ambientales</h1>
+			<a href="explorador.html" class="btn btn-primary">Ver en mapa</a>
+		</div>
+
+		<div class="hechos-list">
+			<article class="hecho-card">
+				<div class="hecho-card-content">
+					<h2 class="hecho-title">Incendio Forestal en las Sierras</h2>
+					<p class="hecho-meta">Publicado: 05/09/2025 | Categoría: Incendios</p>
+					<p class="hecho-description">Un voraz incendio consumió más de 500 hectáreas de bosque nativo en la región serrana, afectando la flora y fauna local. Equipos de bomberos de varias localidades trabajan para controlarlo.</p>
+				</div>
+				<div class="hecho-card-actions">
+					<a href="hecho.html" class="btn btn-outline">Ver más</a>
+				</div>
+			</article>
+
+			<article class="hecho-card">
+				<div class="hecho-card-content">
+					<h2 class="hecho-title">Campaña de Reforestación Comunitaria</h2>
+					<p class="hecho-meta">Publicado: 02/09/2025 | Categoría: Acciones de Conservación</p>
+					<p class="hecho-description">Voluntarios y organizaciones locales se unieron para plantar más de mil árboles autóctonos en la ribera del río, en un esfuerzo por recuperar el ecosistema dañado por la contaminación.</p>
+				</div>
+				<div class="hecho-card-actions">
+					<a href="#" class="btn btn-outline">Ver más</a>
+				</div>
+			</article>
+
+			<article class="hecho-card">
+				<div class="hecho-card-content">
+					<h2 class="hecho-title">Derrame de Petróleo en la Costa</h2>
+					<p class="hecho-meta">Publicado: 28/08/2025 | Categoría: Contaminación</p>
+					<p class="hecho-description">Se ha detectado una mancha de crudo de gran extensión a pocos kilómetros de la costa, amenazando el ecosistema marino y las playas de la región. Se activó el plan de contingencia.</p>
+				</div>
+				<div class="hecho-card-actions">
+					<a href="#" class="btn btn-outline">Ver más</a>
+				</div>
+			</article>
+		</div>
+
+		<nav class="pagination" aria-label="Paginación">
+			<a href="#" class="page-link">&laquo;</a>
+			<a href="#" class="page-link active">1</a>
+			<a href="#" class="page-link">2</a>
+			<a href="#" class="page-link">3</a>
+			<a href="#" class="page-link">4</a>
+			<span class="page-link-ellipsis">...</span>
+			<a href="#" class="page-link">&raquo;</a>
+		</nav>
+
+	</main>
+    	
+	<footer class="main-footer">
+        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
+        <div>
+            <a href="#">Política de Privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script src="./js/listaHechosColeccion.js"></script>
+
+</body>
+
+</html>

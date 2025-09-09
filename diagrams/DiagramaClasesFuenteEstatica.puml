@@ -2,7 +2,6 @@
 
 Hecho --> Categoria
 Hecho --> Ubicacion
-Hecho --> Origen
 
 LectorDeArchivosCSV ..|> ILectorDeArchivos
 LectorDeArchivosCSV ..> HechoFactory
@@ -13,10 +12,8 @@ FactoryLector --> ILectorDeArchivos
 FactoryLector --> LectorDeArchivosCSV
 
 HechoFactoryCSVFile --> Hecho
-
-enum Origen{
-    FUENTE_ESTATICA
-}
+NormalizadorAdapter ..|> INormalizadorAdapter
+INormalizadorAdapter --> Hecho
 
 
 '================== CONTENIDO ==================
@@ -26,9 +23,11 @@ class Categoria {
 }
 
 class Ubicacion {
-    - latitud: Double;
-    - longitud: Double;
-    - lugar: String;
+    - latitud: Double
+    - longitud: Double
+    - pais : String
+    - ciudad : String
+    - provincia : String
 }
 
 class Hecho {
@@ -39,7 +38,6 @@ class Hecho {
     - ubicacion: Ubicacion
     - fechaAcontecimiento: LocalDateTime
     - fechaCarga: LocalDateTime
-    - origen: Origen
     - enviado: Boolean
 }
 
@@ -66,6 +64,17 @@ interface HechoFactory {
 
 interface ILectorDeArchivos {
     + importarHechos(File archivo): List<Hecho>
+}
+interface INormalizadorAdapter{
+    + obtenerHechoNormalizado(HechoOutputDTONormalizador) : Mono<Hecho>
+}
+
+'================== NORMALIZADOR ==================
+
+class NormalizadorAdapter {
+    - webClient : WebClient
+    - timeOutMS : Integer
+    + obtenerHechoNormalizado(HechoOutputDTONormalizador) : Mono<Hecho>
 }
 
 @enduml

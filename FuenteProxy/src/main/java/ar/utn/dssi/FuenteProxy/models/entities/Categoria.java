@@ -1,15 +1,19 @@
 package ar.utn.dssi.FuenteProxy.models.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 @Setter
 @Getter
 
-@Embeddable
+@Entity
+@Table(name = "Categoria")
 public class Categoria {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long idCategoria;
+
   @Column(name = "nombre")
   private String nombre;
 }

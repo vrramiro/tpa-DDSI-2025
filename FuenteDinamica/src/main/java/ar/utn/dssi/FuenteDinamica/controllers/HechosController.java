@@ -2,7 +2,6 @@ package ar.utn.dssi.FuenteDinamica.controllers;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
-import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

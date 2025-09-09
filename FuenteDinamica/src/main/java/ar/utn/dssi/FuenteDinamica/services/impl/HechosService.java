@@ -4,28 +4,24 @@ import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.entities.*;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.impl.NormalizadorAdapter;
 import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
 import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteDinamica.models.errores.IdNoEncontrado;
 import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteDinamica.models.repositories.CategoriaRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.HechoRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.MultimediaRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.UbicacionRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriaRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
+import ar.utn.dssi.FuenteDinamica.models.repositories.IUbicacionRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
+
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 @Service
@@ -35,10 +31,10 @@ public class HechosService implements IHechosService {
 
   //REPOSITORIOS
   @Autowired
-  private MultimediaRepository multimediaRepository;
-  private HechoRepository hechoRepository;
-  private CategoriaRepository categoriaRepository;
-  private UbicacionRepository ubicacionRepository;
+  private IMultimediaRepository IMultimediaRepository;
+  private IHechoRepository IHechoRepository;
+  private ICategoriaRepository ICategoriaRepository;
+  private IUbicacionRepository IUbicacionRepository;
   private INormalizadorAdapter normalizadorAdapter;
 
 
@@ -59,7 +55,7 @@ public class HechosService implements IHechosService {
       hecho.setMultimedia(multimedia);
     }
 
-    hecho = this.hechoRepository.save(hecho);
+    hecho = this.IHechoRepository.save(hecho);
     return MapperDeHechos.hechoOutputDTO(hecho);
   }
 
@@ -68,7 +64,7 @@ public class HechosService implements IHechosService {
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
     try {
-      var hechos = this.hechoRepository.findAll();
+      var hechos = this.IHechoRepository.findAll();
       if (hechos.isEmpty()) {
         throw new RepositorioVacio("No hay hechos en la base de datos");
       }
@@ -97,7 +93,7 @@ public class HechosService implements IHechosService {
   //Obtener hechos por id
   @Override
   public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
-    Hecho hecho = this.hechoRepository.findById(idHecho)
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
             .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
     return MapperDeHechos.hechoOutputDTO(hecho);
   }
@@ -128,11 +124,11 @@ public class HechosService implements IHechosService {
   }
 
   private HechoOutputDTO actualizarHecho(HechoInputDTO hechoInputDTO, Long idHecho) {
-    Hecho hecho = this.hechoRepository.findById(idHecho)
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
             .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
     Long idCategoria = hechoInputDTO.getIdCategoria();
-    Categoria categoria = this.categoriaRepository.findById(idCategoria)
+    Categoria categoria = this.ICategoriaRepository.findById(idCategoria)
             .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + idCategoria));
 
     return this.crear(hechoInputDTO);
@@ -143,10 +139,10 @@ public class HechosService implements IHechosService {
   @Override
   public void eliminarHecho(Long idHecho){
 
-    Hecho hecho = this.hechoRepository.findById(idHecho)
+    Hecho hecho = this.IHechoRepository.findById(idHecho)
             .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
-    this.hechoRepository.delete(hecho);
+    this.IHechoRepository.delete(hecho);
   }
 
   /*/////////////////////// FUNCIONES PRIVADAS ///////////////////////*/
@@ -173,7 +169,7 @@ public class HechosService implements IHechosService {
 
   //Verificar si se puede editar el hecho
   private Boolean hechoEditable(Long idHecho) {
-    Hecho hecho = hechoRepository.findById(idHecho)
+    Hecho hecho = IHechoRepository.findById(idHecho)
             .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
 

@@ -5,13 +5,14 @@ import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAda
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UbicacionService implements IUbicacionService {
     private final IUbicacionAdapter adapter;
 
-    public UbicacionService(IUbicacionAdapter adapter) {
+    public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
         this.adapter = adapter;
     }
 

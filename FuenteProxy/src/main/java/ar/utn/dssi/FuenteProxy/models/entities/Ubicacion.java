@@ -2,17 +2,30 @@ package ar.utn.dssi.FuenteProxy.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Embeddable
 @Getter
 @Setter
-
-@Embeddable
+@AllArgsConstructor
+@NoArgsConstructor
 public class Ubicacion {
+
   @Column(name = "latitud")
-  private Long latitud;
+  private Double latitud;
 
   @Column(name = "longitud")
-  private Long longitud;
+  private Double longitud;
+
+  @Column(name = "pais")
+  private String pais;
+
+  @Column(name = "ciudad")
+  private String ciudad;
+
+  @Column(name = "provincia")
+  private String provincia;
 }
