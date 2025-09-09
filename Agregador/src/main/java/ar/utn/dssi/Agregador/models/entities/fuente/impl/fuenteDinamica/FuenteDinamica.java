@@ -4,13 +4,12 @@ import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
 public class FuenteDinamica implements ITipoFuente {
-  private FuenteDinamicaConcreta fuenteDinamica;
+  private final FuenteDinamicaConcreta fuenteDinamica;
 
   public FuenteDinamica() {
     this.fuenteDinamica = new FuenteDinamicaConcreta();

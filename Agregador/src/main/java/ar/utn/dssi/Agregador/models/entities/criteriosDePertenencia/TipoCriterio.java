@@ -1,4 +1,4 @@
-package ar.utn.dssi.Agregador.models.entities.criteriosDeFiltrado;
+package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia;
 
 public enum TipoCriterio {
     FECHA_DESDE,

@@ -31,34 +31,9 @@ public class HechosService implements IHechosService {
     private IFuentesService fuentesService;
 
     @Override
-    public Hecho crearHecho(HechoInputDTO hechoInputDTO, Long IdFuente) {
-        try {
-            var hecho = new Hecho();
-            var ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
-            var categoria = new Categoria();
-
-            hecho.setTitulo(hechoInputDTO.getTitulo());
-            hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-            hecho.setFechaCarga(LocalDateTime.now());
-            hecho.setUbicacion(ubicacion);
-            hecho.setCategoria(categoria);
-            hecho.setVisible(true);
-            hecho.setContenidoMultimedia(hechoInputDTO.getContenidoMultimedia());
-            hecho.setId(hechosRepository.obtenerUltimoId());
-            hecho.setIdEnFuente(hechoInputDTO.getIdEnFuente());
-            hecho.setFuente(new Fuente()/*ESTO NO ESTA BIEN!!! ES PARA QUE NO TIRE ERROR AHORA*/); //TODO: OBTENER LA FUENTE EN BASE A SU ID O ALGUNA FORMA
-
-            return hecho;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al crear el hecho: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
     public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
         try {
-            Hecho hecho = hechosRepository.findById(idHecho);
+            Hecho hecho = hechosRepository.findById(idHecho).orElseThrow(IllegalArgumentException::new);
 
             return MapperDeHechos.hechoOutputDTO(hecho);
         } catch (Exception e) {
@@ -69,15 +44,11 @@ public class HechosService implements IHechosService {
     @Override
     public List<HechoOutputDTO> obtenerHechos() {
         try {
-            List<HechoOutputDTO> hechos = this.hechosRepository
-                    .findall()
-                    .stream()
-                    .map(MapperDeHechos::hechoOutputDTO)
-                    .toList();
-
-            hechos.addAll(this.fuentesService.hechosMetamapa().stream().map(MapperDeHechos::hechoOutputDTO).toList());
-
-            return hechos;
+            return this.hechosRepository
+                .findAll()
+                .stream()
+                .map(MapperDeHechos::hechoOutputDTO)
+                .toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
         }
@@ -87,9 +58,9 @@ public class HechosService implements IHechosService {
     public void eliminarHecho(Long IdHecho) {
         try {
             //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-            Hecho hecho = this.hechosRepository.findById(IdHecho);
+            Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(IllegalArgumentException::new);
             hecho.setVisible(false);
-            hechosRepository.update(hecho);
+            hechosRepository.save(hecho);
         } catch (Exception e) {
             throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
         }
@@ -104,31 +75,11 @@ public class HechosService implements IHechosService {
 
             List<Coleccion> colecciones = coleccionRepository.findAll();
 
-            //TODO implementar metodo agregarHechos en coleccion
             colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos)); //trabaja varias colecciones por core
 
             coleccionRepository.saveAll(colecciones);
         } catch (Exception e) {
             throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
-        }
-    }
-
-
-    //GUARDADO DE HECHOS
-    public void guardarHecho(Hecho hecho){
-        try {
-            Long idEnFuente = hecho.getIdEnFuente();
-            Long idFuente = hecho.getFuente().getId();
-
-            Hecho hechoObtenido = hechosRepository.findByIdOrigenAndIdFuente(idEnFuente, idFuente);
-
-            if(hechoObtenido == null) {
-                hechosRepository.save(hecho);
-            } else {
-                hechosRepository.update(hecho);
-            }
-        } catch(Exception e) {
-            throw new RuntimeException("Error al guardar el hecho: " + e.getMessage(), e);
         }
     }
 }
