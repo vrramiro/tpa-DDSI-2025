@@ -5,11 +5,13 @@ import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAda
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
+@Component
 public class GeorefAdapter implements IUbicacionAdapter {
     private final WebClient webClient;
 
