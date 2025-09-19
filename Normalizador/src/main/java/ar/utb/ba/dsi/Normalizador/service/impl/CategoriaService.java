@@ -3,6 +3,7 @@ package ar.utb.ba.dsi.Normalizador.service.impl;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
+import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNotFoundException;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
@@ -31,11 +32,12 @@ public class CategoriaService implements ICategoriaService {
         Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaExterna);
 
         if (categoriaNormalizada == null) {
-            throw new RuntimeException("Categoria no encontrada");
+            throw new CategoriaNotFoundException("Categoría no encontrada: " + categoriaInput.getNombre());
         }
 
         return categoriaNormalizada;
     }
+
 
     @Override
     public List<CategoriaOutputDTO> obtenerCategorias() {
