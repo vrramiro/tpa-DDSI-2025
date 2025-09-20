@@ -32,7 +32,7 @@ public class MapperDeHechos {
             hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
             hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
 
-        return null;
+        return hecho;
     }
 
     public static HechoOutputDTONormalizador hechoToOutputNormalizador(Hecho hechoInput){

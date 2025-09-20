@@ -5,6 +5,8 @@ import ar.utn.dssi.FuenteEstatica.models.entities.contenido.*;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.impl.NormalizadorAdapter;
 import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteEstatica.models.repositories.ICategoriaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
@@ -13,6 +15,9 @@ import java.time.LocalDateTime;
 
 @Component
 public class HechoFactoryCSVFile implements HechoFactory {
+    @Autowired
+    private ICategoriaRepository categoriaRepository;
+
     public Hecho crearHecho(String lineaLeida) {
         String[] campos = lineaLeida.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -32,6 +37,7 @@ public class HechoFactoryCSVFile implements HechoFactory {
         Ubicacion ubicacion = new Ubicacion();
             ubicacion.setLatitud(latitudLeida);
             ubicacion.setLongitud(longitudLeida);
+
 
         return Hecho.builder()
                 .titulo(tituloLeida)

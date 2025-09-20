@@ -34,6 +34,15 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
                 .retrieve()
                 .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
                 .timeout(Duration.ofMillis(timeoutMs))
-                .map(MapperDeHechos::hechoFromInputDTONormalizador);
+                .flatMap(dto -> {
+                    if (dto == null) {
+                        return Mono.error(new RuntimeException("El servicio normalizador devolvió null"));
+                    }
+                    Hecho normalizado = MapperDeHechos.hechoFromInputDTONormalizador(dto);
+                    if (normalizado == null) {
+                        return Mono.error(new RuntimeException("El mapper devolvió null"));
+                    }
+                    return Mono.just(normalizado);
+                });
     }
 }
