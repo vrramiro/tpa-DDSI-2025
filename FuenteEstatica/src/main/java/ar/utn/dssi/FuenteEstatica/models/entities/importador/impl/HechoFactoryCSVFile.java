@@ -38,7 +38,6 @@ public class HechoFactoryCSVFile implements HechoFactory {
             ubicacion.setLatitud(latitudLeida);
             ubicacion.setLongitud(longitudLeida);
 
-
         return Hecho.builder()
                 .titulo(tituloLeida)
                 .descripcion(descripcionLeida)
