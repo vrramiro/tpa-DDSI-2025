@@ -12,7 +12,7 @@ public class UbicacionController {
     @Autowired
     private IUbicacionService ubicacionService;
 
-    @GetMapping("/ubicacion")
+    @GetMapping("/normalizar")
     public ResponseEntity<UbicacionOutputDTO> obtenerUbicacion(@RequestParam Double latitud, @RequestParam Double longitud) {
         UbicacionOutputDTO ubicacion = ubicacionService.obtenerUbicacionOutPut(latitud, longitud);
         return ResponseEntity.ok(ubicacion);

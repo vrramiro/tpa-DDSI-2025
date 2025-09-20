@@ -15,7 +15,7 @@ public class CategoriaController {
     @Autowired
     private ICategoriaService categoriaService;
 
-    @GetMapping("/normalizar")
+    @PostMapping("/normalizar")
     public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {
         CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoriaOutPut(categoria);
         return ResponseEntity.ok(categoriaOutputDTO);
