@@ -15,6 +15,7 @@ import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -27,14 +28,17 @@ import java.util.NoSuchElementException;
 @Service
 public class HechoServicio implements IHechoServicio {
 
+    private final INormalizadorAdapter normalizadorAdapter;
+
+    public HechoServicio(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
+        this.normalizadorAdapter = normalizadorAdapter;
+    }
+
     @Autowired
     private IHechosRepositorio hechoRepositorio;
 
     @Autowired
     private FactoryLector factoryLector;
-
-    //TODO Ver de poner un autowired o una inyeccion por constructor
-    private INormalizadorAdapter normalizadorAdapter;
 
     @Value("${cantidadMinimaDeHechos}")
     private Integer cantidadMinimaDeHechos;

@@ -7,11 +7,13 @@ import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
+@Component
 public class NormalizadorAdapter implements INormalizadorAdapter {
     private final WebClient webClient;
     private final Integer timeoutMs;
