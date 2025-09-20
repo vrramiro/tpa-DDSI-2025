@@ -44,8 +44,7 @@ public class HechosService implements IHechosService {
         hecho.setUbicacion(ubicacionHecho);
 
         //Normalizo Categoria
-        Categoria categoriaInput = new Categoria();
-            categoriaInput.setNombre(hechoInput.getCategoria());
+        String categoriaInput = hechoInput.getCategoria();
         Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
         hecho.setCategoria(categoriaHecho);
 

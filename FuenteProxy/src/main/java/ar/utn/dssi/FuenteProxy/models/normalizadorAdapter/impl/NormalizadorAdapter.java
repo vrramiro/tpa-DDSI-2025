@@ -16,7 +16,7 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
     private final WebClient webClient;
     private final Integer timeoutMs;
 
-    public NormalizadorAdapter(@Value("${base-url}") String baseUrl, @Value("${timeout-ms}") Integer timeoutMs) {
+    public NormalizadorAdapter(@Value("${normalizador.base-url}") String baseUrl, @Value("${timeout-ms}") Integer timeoutMs) {
         this.webClient = WebClient.builder().baseUrl(baseUrl).build();
         this.timeoutMs = timeoutMs;
     }

@@ -38,6 +38,7 @@ public class MapperDeHechos {
     public static HechoOutputDTONormalizador hechoToOutputNormalizador(Hecho hechoInput){
         HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
         hecho.setTitulo(hechoInput.getTitulo());
+        hecho.setCategoria(hechoInput.getCategoria().getNombre());
         hecho.setDescripcion(hechoInput.getDescripcion());
         hecho.setLatitud(hechoInput.getUbicacion().getLatitud());
         hecho.setLongitud(hechoInput.getUbicacion().getLongitud());
