@@ -29,6 +29,11 @@ public class HechoServicio implements IHechoServicio {
 
     @Autowired
     private IHechosRepositorio hechoRepositorio;
+
+    @Autowired
+    private FactoryLector factoryLector;
+
+    //TODO Ver de poner un autowired o una inyeccion por constructor
     private INormalizadorAdapter normalizadorAdapter;
 
     @Value("${cantidadMinimaDeHechos}")
@@ -37,11 +42,11 @@ public class HechoServicio implements IHechoServicio {
 
     @Override
     public void importarArchivo(File archivo) {
-        ILectorDeArchivos lectorDeArchivos = FactoryLector.crearLector(archivo);
+        ILectorDeArchivos lectorDeArchivos = factoryLector.crearLector(archivo);
         List<Hecho> hechos = lectorDeArchivos.importarHechos(archivo);
 
         if(hechos.size() <= cantidadMinimaDeHechos){
-            throw new ValidacionException("El archivo no cumple con la cantidad de minima de hechos:" + cantidadMinimaDeHechos);
+            throw new ValidacionException("El archivo no cumple con la cantidad de minima de hechos:" + cantidadMinimaDeHechos +", el archivo tiene: " + hechos.size());
         }
 
         List<Hecho> hechosNormalizados = new ArrayList<>();

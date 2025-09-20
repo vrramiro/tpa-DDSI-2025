@@ -5,11 +5,13 @@ import ar.utn.dssi.FuenteEstatica.models.entities.contenido.*;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.impl.NormalizadorAdapter;
 import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Component
 public class HechoFactoryCSVFile implements HechoFactory {
     public Hecho crearHecho(String lineaLeida) {
         String[] campos = lineaLeida.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
