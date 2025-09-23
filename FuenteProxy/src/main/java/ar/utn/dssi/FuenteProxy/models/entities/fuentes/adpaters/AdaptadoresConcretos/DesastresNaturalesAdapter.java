@@ -1,25 +1,20 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesAPI;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesApi;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-// -------------------- ADAPTER --------------------
-@Component
 public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
+    private final DesastresNaturalesApi api;
 
-    private final DesastresNaturalesAPI api;
-
-    public DesastresNaturalesAdapter(DesastresNaturalesAPI api) {
+    public DesastresNaturalesAdapter(DesastresNaturalesApi api) {
         this.api = api;
     }
 

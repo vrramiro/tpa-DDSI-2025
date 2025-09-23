@@ -5,15 +5,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-@Component
 public class MetamapaApi {
-
     private final WebClient webClient;
 
-    public MetamapaApi() {
-
+    public MetamapaApi(String baseUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://88019b83-d71c-4909-a36a-fbeb7145813c.mock.pstmn.io")
+                .baseUrl(baseUrl)
                 .build();
     }
 
