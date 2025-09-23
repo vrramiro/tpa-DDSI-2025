@@ -25,9 +25,8 @@ public class Hecho {
     @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
-    private Categoria categoria;
+    @Column(name = "categoria", nullable = false)
+    private String categoria;
 
     @Embedded
     private Ubicacion ubicacion;
@@ -39,5 +38,6 @@ public class Hecho {
     @Column(name = "fecha_carga", nullable = false)
     private LocalDateTime fechaCarga;
 
-    private Boolean enviado;
+    @Builder.Default
+    private Boolean enviado = false;
 }

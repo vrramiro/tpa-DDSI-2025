@@ -19,12 +19,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
-import java.util.NoSuchElementException;
 
 @Service
 public class HechoServicio implements IHechoServicio {

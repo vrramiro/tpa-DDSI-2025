@@ -1,6 +1,5 @@
 package ar.utn.dssi.FuenteEstatica.models.mappers;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.input.HechoInputDTO;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.input.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTONormalizador;
@@ -27,19 +26,19 @@ public class MapperDeHechos {
         Hecho hecho = new Hecho();
             hecho.setTitulo(hechoInputDTO.getTitulo());
             hecho.setDescripcion(hechoInputDTO.getDescripcion());
+            hecho.setCategoria(hechoInputDTO.getCategoria().getCategoria());
             hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
-            hecho.setCategoria(MapperDeCategorias.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
             hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
             hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
-
+            hecho.setEnviado(false);
         return hecho;
     }
 
     public static HechoOutputDTONormalizador hechoToOutputNormalizador(Hecho hechoInput){
         HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
         hecho.setTitulo(hechoInput.getTitulo());
-        hecho.setCategoria(hechoInput.getCategoria().getNombre());
         hecho.setDescripcion(hechoInput.getDescripcion());
+        hecho.setCategoria(hechoInput.getCategoria());
         hecho.setLatitud(hechoInput.getUbicacion().getLatitud());
         hecho.setLongitud(hechoInput.getUbicacion().getLongitud());
         hecho.setFechaAcontecimiento(hechoInput.getFechaAcontecimiento().toString());
