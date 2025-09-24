@@ -28,6 +28,8 @@ public class HechosService implements IHechosService {
 
     @Autowired
     private IUbicacionService ubicacionService;
+
+    @Autowired
     private ICategoriaService categoriaService;
 
     private static final DateTimeFormatter FORMATTER =
@@ -38,11 +40,12 @@ public class HechosService implements IHechosService {
         Hecho hecho = new Hecho();
 
         // Normalizo ubicacion
-        Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hecho.getUbicacion().getLatitud(), hecho.getUbicacion().getLongitud());
+        Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hechoInput.getLatitud(), hechoInput.getLongitud());
         hecho.setUbicacion(ubicacionHecho);
 
         //Normalizo Categoria
-        Categoria categoriaHecho = categoriaService.normalizarCategoria(hecho.getCategoria());
+        String categoriaInput = hechoInput.getCategoria();
+        Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
         hecho.setCategoria(categoriaHecho);
 
         //Normalizo fechas

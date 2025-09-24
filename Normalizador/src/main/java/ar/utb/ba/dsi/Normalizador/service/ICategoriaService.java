@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ICategoriaService {
     public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria);
-    public Categoria normalizarCategoria(Categoria categoria);
+    public Categoria normalizarCategoria(String categoriaInput);
     public List<CategoriaOutputDTO> obtenerCategorias();
 }

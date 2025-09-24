@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+FuenteEstatica/src/main/resources/application.properties
+Normalizador/src/main/resources/application.properties

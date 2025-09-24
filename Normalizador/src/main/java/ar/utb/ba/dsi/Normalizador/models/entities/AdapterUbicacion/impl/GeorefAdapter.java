@@ -5,6 +5,8 @@ import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAda
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -30,6 +32,7 @@ public class GeorefAdapter implements IUbicacionAdapter {
                         .queryParam("lon", longitud)
                         .build())
                 .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, resp -> Mono.error(new RuntimeException("Ubicación no encontrada")))
                 .bodyToMono(UbicacionInputDTOGeoref.class)
                 .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
                 .map(MapperDeUbicacion::ubicacionFromInput);
