@@ -11,7 +11,6 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Component
 public class FuenteMetaMapa implements IFuenteMetaMapa {
     private final MetamapaApi metamapaApi;
 

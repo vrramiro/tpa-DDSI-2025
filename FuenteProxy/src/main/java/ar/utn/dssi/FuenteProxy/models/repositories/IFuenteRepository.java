@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface IFuenteRepository extends JpaRepository<Fuente, Long> {
-    List<Fuente> findTipoNot(TipoFuente tipo);
-    List<Fuente> findTipo(TipoFuente tipo);
+    List<Fuente> findFuentesByTipoFuenteNot(TipoFuente tipo);
+    List<Fuente> findFuentesByTipoFuente(TipoFuente tipo);
 }

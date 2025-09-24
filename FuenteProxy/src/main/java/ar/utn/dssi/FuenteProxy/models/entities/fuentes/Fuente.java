@@ -21,7 +21,7 @@ public class Fuente {
     private Long id;
 
     @Column(name = "url", nullable = false)
-    private String baseURL;
+    private String baseUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_fuente", nullable = false)
@@ -30,15 +30,15 @@ public class Fuente {
     @Transient
     private IServicioExternoAdapter servicioExternoAdapter;
 
-    public Fuente(String baseURL, TipoFuente tipoFuente) {
-        this.baseURL = baseURL;
+    public Fuente(String baseUrl, TipoFuente tipoFuente) {
+        this.baseUrl = baseUrl;
         this.tipoFuente = tipoFuente;
-        this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente);
+        this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente, baseUrl);
     }
 
     @PostLoad
     void postLoad() {
-        this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente);
+        this.servicioExternoAdapter = ServicioExternoAdapterFactory.crearAdapter(tipoFuente, baseUrl);
     }
 
     public Mono<List<Hecho>> importarHechos(){

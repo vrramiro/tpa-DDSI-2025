@@ -16,8 +16,11 @@ import java.util.stream.Collectors;
 
 
 public class LectorDeArchivosCSV implements ILectorDeArchivos {
-    private HechoFactory hechoFactory;
+    private final HechoFactory hechoFactory;
 
+    public LectorDeArchivosCSV(HechoFactory hechoFactory) {
+        this.hechoFactory = hechoFactory;
+    }
     @Override
     public List<Hecho> importarHechos(File archivo) {
         List<Hecho> hechos = new ArrayList<>();
@@ -37,6 +40,8 @@ public class LectorDeArchivosCSV implements ILectorDeArchivos {
                 if (hechoObtenido == null){
                     throw new RuntimeException("No se pudo obtener el hecho, faltan campos.");
                 }
+                hechos.add(hechoObtenido);
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

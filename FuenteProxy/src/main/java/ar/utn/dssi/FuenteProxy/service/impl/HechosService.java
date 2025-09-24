@@ -5,7 +5,7 @@ import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
 import ar.utn.dssi.FuenteProxy.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteProxy.models.normalizadorAdapter.INormalizadorAdapter;
+import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
@@ -18,12 +18,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class HechosService implements IHechosService {
-
   @Autowired
   private IHechoRepository hechoRepository;
-  private IFuenteRepository fuenteRepository;
-  private INormalizadorAdapter normalizadorAdapter;
 
+  @Autowired
+  private IFuenteRepository fuenteRepository;
+
+  @Autowired
+  private INormalizadorAdapter normalizadorAdapter;
 
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
@@ -32,14 +34,14 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    List<Fuente> fuentes = fuenteRepository.findTipo(TipoFuente.METAMAPA);
+    List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuente(TipoFuente.METAMAPA);
     //TODO: Ver si conviene hacerlo Mono o no.
     return List.of();
   }
 
 
   public void importarHechos() {
-    List<Fuente> fuentes = fuenteRepository.findTipoNot(TipoFuente.METAMAPA);
+    List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuenteNot(TipoFuente.METAMAPA);
     List<Hecho> hechos = fuentes.stream().flatMap(fuente -> fuente.importarHechos().block().stream()).toList();
 
     List<Hecho> hechosNormalizados = new ArrayList<>();

@@ -10,8 +10,8 @@ public class HechoDesastresNaturales {
   private String titulo;
   private String descripcion;
   private String categoria;
-  private Long latitud;
-  private Long longitud;
+  private Double latitud;
+  private Double longitud;
   private LocalDateTime fecha_hecho;
   private LocalDateTime created_at;
 }

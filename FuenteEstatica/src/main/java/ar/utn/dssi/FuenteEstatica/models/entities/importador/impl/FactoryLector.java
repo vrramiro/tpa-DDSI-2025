@@ -1,26 +1,32 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 
+import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
 import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 
+@Component
 public class FactoryLector {
 
-    public static ILectorDeArchivos crearLector(File archivo) {
-        ILectorDeArchivos instancia = null;
-        String nombreArchivo = archivo.getName();
-        String extension = obtenerExtension(nombreArchivo);
+    private final HechoFactory hechoFactory;
+
+    @Autowired
+    public FactoryLector(HechoFactory hechoFactory) {
+        this.hechoFactory = hechoFactory;
+    }
+
+    public ILectorDeArchivos crearLector(File archivo) {
+        String extension = obtenerExtension(archivo.getName());
 
         switch (extension) {
             case "csv":
-                instancia = new LectorDeArchivosCSV();
-                break;
+                return new LectorDeArchivosCSV(hechoFactory);
             default:
                 throw new ValidacionException("No se ha podido crear el lector de archivo con extensión: " + extension);
         }
-
-        return instancia;
     }
 
     private static String obtenerExtension(String nombreArchivo) {

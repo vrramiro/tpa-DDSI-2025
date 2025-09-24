@@ -1,25 +1,20 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesAPI;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesApi;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
-import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-// -------------------- ADAPTER --------------------
-@Component
 public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
+    private final DesastresNaturalesApi api;
 
-    private final DesastresNaturalesAPI api;
-
-    public DesastresNaturalesAdapter(DesastresNaturalesAPI api) {
+    public DesastresNaturalesAdapter(DesastresNaturalesApi api) {
         this.api = api;
     }
 
@@ -35,10 +30,10 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
     private Flux<HechoDesastresNaturales> obtenerTodasLasPaginas(String token, int pagina) {
         return api.obtenerHechosPorPagina(token, pagina, 100)
                 .flatMapMany(hechos -> {
-                    if (hechos.getHechosObtenidos().isEmpty()) {
+                    if (hechos.getData().isEmpty()) {
                         return Flux.empty();
                     }
-                    Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getHechosObtenidos());
+                    Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getData());
                     if (hechos.getCurrent_page() >= hechos.getLast_page()) {
                         return actuales;
                     }
@@ -50,8 +45,8 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         Hecho hecho = new Hecho();
 
         Ubicacion ubicacion = new Ubicacion();
-        ubicacion.setLatitud(Double.valueOf(hechoObtenido.getLatitud()));
-        ubicacion.setLongitud(Double.valueOf(hechoObtenido.getLongitud()));
+        ubicacion.setLatitud(hechoObtenido.getLatitud());
+        ubicacion.setLongitud(hechoObtenido.getLongitud());
 
         Categoria categoria = new Categoria();
         categoria.setNombre(hechoObtenido.getCategoria());

@@ -15,6 +15,7 @@ import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,26 +23,32 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.File;
-import java.util.NoSuchElementException;
 
 @Service
 public class HechoServicio implements IHechoServicio {
 
+    private final INormalizadorAdapter normalizadorAdapter;
+
+    public HechoServicio(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
+        this.normalizadorAdapter = normalizadorAdapter;
+    }
+
     @Autowired
     private IHechosRepositorio hechoRepositorio;
-    private INormalizadorAdapter normalizadorAdapter;
+
+    @Autowired
+    private FactoryLector factoryLector;
 
     @Value("${cantidadMinimaDeHechos}")
     private Integer cantidadMinimaDeHechos;
 
-
     @Override
     public void importarArchivo(File archivo) {
-        ILectorDeArchivos lectorDeArchivos = FactoryLector.crearLector(archivo);
+        ILectorDeArchivos lectorDeArchivos = factoryLector.crearLector(archivo);
         List<Hecho> hechos = lectorDeArchivos.importarHechos(archivo);
 
         if(hechos.size() <= cantidadMinimaDeHechos){
-            throw new ValidacionException("El archivo no cumple con la cantidad de minima de hechos:" + cantidadMinimaDeHechos);
+            throw new ValidacionException("El archivo no cumple con la cantidad de minima de hechos:" + cantidadMinimaDeHechos +", el archivo tiene: " + hechos.size());
         }
 
         List<Hecho> hechosNormalizados = new ArrayList<>();

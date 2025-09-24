@@ -3,27 +3,22 @@ package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.DatosLogin;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechosDesastresNaturales;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.RespuestaLogin;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-// -------------------- ADAPTEE --------------------
-@Component
-public class DesastresNaturalesAPI {
-
+public class DesastresNaturalesApi {
     private final WebClient webClient;
 
-    public DesastresNaturalesAPI() {
+    public DesastresNaturalesApi(String baseUrl) {
         this.webClient = WebClient.builder()
-                .baseUrl("https://api-ddsi.disilab.ar/public")
+                .baseUrl(baseUrl)
                 .build();
     }
 
     public Mono<String> autenticar(String email, String password) {
         DatosLogin datosLogin = new DatosLogin(email, password);
         return webClient.post()
-                .uri("/auth/login")
+                .uri("/login")
                 .bodyValue(datosLogin)
                 .retrieve()
                 .bodyToMono(RespuestaLogin.class)
@@ -33,7 +28,7 @@ public class DesastresNaturalesAPI {
     public Mono<HechosDesastresNaturales> obtenerHechosPorPagina(String token, int pagina, int perPage) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
-                        .path("/api/desastres")
+                        .path("/desastres")
                         .queryParam("page", pagina)
                         .queryParam("per_page", perPage)
                         .build())

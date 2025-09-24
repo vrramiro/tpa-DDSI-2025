@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteProxy.models.normalizadorAdapter;
+package ar.utn.dssi.FuenteProxy.models.entities.normalizador;
 
 
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
