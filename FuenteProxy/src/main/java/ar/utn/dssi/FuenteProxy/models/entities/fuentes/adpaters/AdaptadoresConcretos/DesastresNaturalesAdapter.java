@@ -30,10 +30,10 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
     private Flux<HechoDesastresNaturales> obtenerTodasLasPaginas(String token, int pagina) {
         return api.obtenerHechosPorPagina(token, pagina, 100)
                 .flatMapMany(hechos -> {
-                    if (hechos.getHechosObtenidos().isEmpty()) {
+                    if (hechos.getData().isEmpty()) {
                         return Flux.empty();
                     }
-                    Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getHechosObtenidos());
+                    Flux<HechoDesastresNaturales> actuales = Flux.fromIterable(hechos.getData());
                     if (hechos.getCurrent_page() >= hechos.getLast_page()) {
                         return actuales;
                     }
@@ -45,8 +45,8 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         Hecho hecho = new Hecho();
 
         Ubicacion ubicacion = new Ubicacion();
-        ubicacion.setLatitud(Double.valueOf(hechoObtenido.getLatitud()));
-        ubicacion.setLongitud(Double.valueOf(hechoObtenido.getLongitud()));
+        ubicacion.setLatitud(hechoObtenido.getLatitud());
+        ubicacion.setLongitud(hechoObtenido.getLongitud());
 
         Categoria categoria = new Categoria();
         categoria.setNombre(hechoObtenido.getCategoria());

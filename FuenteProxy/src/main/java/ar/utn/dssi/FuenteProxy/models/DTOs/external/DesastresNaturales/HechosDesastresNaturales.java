@@ -8,6 +8,6 @@ import java.util.List;
 @Setter
 public class HechosDesastresNaturales {
   private Integer current_page;
-  private List<HechoDesastresNaturales> hechosObtenidos;
+  private List<HechoDesastresNaturales> data;
   private Integer last_page;
 }
