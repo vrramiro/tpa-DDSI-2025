@@ -25,9 +25,8 @@ public class Hecho {
   @Embedded
   private Ubicacion ubicacion;
 
-  @ManyToOne
-  @JoinColumn(name = "categoria_id")
-  private Categoria categoria;
+  @Column(name = "categoria", nullable = false)
+  private String categoria;
 
   @OneToMany(mappedBy = "hecho", cascade = CascadeType.ALL)
   private List<ContenidoMultimedia> multimedia;

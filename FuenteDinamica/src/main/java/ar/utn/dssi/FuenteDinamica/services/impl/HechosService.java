@@ -10,12 +10,12 @@ import ar.utn.dssi.FuenteDinamica.models.errores.IdNoEncontrado;
 import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteDinamica.models.repositories.ICategoriaRepository;
+import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.IUbicacionRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 
@@ -29,13 +29,17 @@ public class HechosService implements IHechosService {
   private LocalDateTime ultimoEnvioHechos;
   private List<HechoOutputDTO> hechosEditados;
 
+  private final INormalizadorAdapter normalizadorAdapter;
+
+  public HechosService(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
+    this.normalizadorAdapter = normalizadorAdapter;
+  }
+
   //REPOSITORIOS
   @Autowired
   private IMultimediaRepository IMultimediaRepository;
   private IHechoRepository IHechoRepository;
-  private ICategoriaRepository ICategoriaRepository;
-  private IUbicacionRepository IUbicacionRepository;
-  private INormalizadorAdapter normalizadorAdapter;
+
 
 
   /*/////////////////////// OPERACIONES CRUD ///////////////////////*/
@@ -45,9 +49,16 @@ public class HechosService implements IHechosService {
   public HechoOutputDTO crear(HechoInputDTO hechoInputDTO) {
     validarHechoInput(hechoInputDTO);
 
-    Hecho hecho = normalizadorAdapter
-            .obtenerHechoNormalizado(MapperDeHechos.hechoFromInputToOutputNormalizador(hechoInputDTO)).block();
+    Ubicacion ubicacion = normalizadorAdapter
+            .obtenerUbicacionNormalizada(
+                    MapperDeUbicacion.ubicacionFromLatitudYLongitud(
+                            hechoInputDTO.getLatitud(),
+                            hechoInputDTO.getLongitud()
+                    )).block();
 
+    Hecho hecho = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
+    hecho.setUbicacion(ubicacion);
+    hecho.setFechaCarga(LocalDateTime.now());
     hecho.setVisible(true);
 
     if (hechoInputDTO.getContenidoMultimedia() != null && !hechoInputDTO.getContenidoMultimedia().isEmpty()) {
@@ -127,9 +138,10 @@ public class HechosService implements IHechosService {
     Hecho hecho = this.IHechoRepository.findById(idHecho)
             .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
-    Long idCategoria = hechoInputDTO.getIdCategoria();
+    //TODO
+    /*Long idCategoria = hechoInputDTO.getIdCategoria();
     Categoria categoria = this.ICategoriaRepository.findById(idCategoria)
-            .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + idCategoria));
+            .orElseThrow(() -> new RuntimeException("Categoria no encontrada con id: " + idCategoria));*/
 
     return this.crear(hechoInputDTO);
   }
