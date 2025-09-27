@@ -43,5 +43,8 @@ public class Hecho {
   @Column(name = "fecha_carga", nullable = false)
   private LocalDateTime fechaCarga;
 
+  @Column(name = "fecha_edicion", nullable = false)
+  private LocalDateTime fechaEdicion;
+
   private Boolean visible;
 }

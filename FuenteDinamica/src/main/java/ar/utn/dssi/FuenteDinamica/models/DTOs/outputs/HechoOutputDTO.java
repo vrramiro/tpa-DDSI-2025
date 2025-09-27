@@ -4,7 +4,6 @@ import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;

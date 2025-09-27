@@ -14,8 +14,6 @@ public class MapperContenidoMultimedia {
         for (MultipartFile file : files) {
             ContenidoMultimedia cm = new ContenidoMultimedia();
             cm.setUrl("/uploads/" + file.getOriginalFilename()); // TODO: Generar la URL real
-            cm.setFormato(file.getContentType());
-            cm.setTamano(file.getSize());
             cm.setHecho(hecho);
 
             listaContenido.add(cm);

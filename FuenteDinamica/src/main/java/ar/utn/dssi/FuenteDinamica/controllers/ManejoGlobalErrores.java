@@ -3,6 +3,7 @@ package ar.utn.dssi.FuenteDinamica.controllers;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.ErrorDTO;
 import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
 import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.models.errores.HechoNoEditable;
 import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,11 @@ public class ManejoGlobalErrores {
     @ExceptionHandler(ErrorGeneralRepositorio.class)
     public ResponseEntity<ErrorDTO> errorGeneralRepositorio(ErrorGeneralRepositorio ex) {
         return construirRespuestaError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(HechoNoEditable.class)
+    public ResponseEntity<ErrorDTO> hechoNoEditable(HechoNoEditable ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ErrorDTO> construirRespuestaError(String mensaje, HttpStatus status) {
