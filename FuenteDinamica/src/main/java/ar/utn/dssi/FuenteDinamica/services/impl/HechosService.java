@@ -32,12 +32,11 @@ public class HechosService implements IHechosService {
     this.normalizadorAdapter = normalizadorAdapter;
   }
 
-  //REPOSITORIOS
-  @Autowired
-  private IMultimediaRepository multimediaRepository;
-
   @Autowired
   private IHechoRepository hechoRepository;
+
+  @Autowired
+  private ContenidoMultimediaService contenidoMultimediaService;
 
   /*/////////////////////// OPERACIONES CRUD ///////////////////////*/
   /// /////// CREATE //////////
@@ -55,14 +54,12 @@ public class HechosService implements IHechosService {
     Hecho hecho = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
     hecho.setUbicacion(ubicacion);
     hecho.setFechaCarga(LocalDateTime.now());
-    hecho.setVisible(true);
 
-    if (hechoInputDTO.getContenidoMultimedia() != null && !hechoInputDTO.getContenidoMultimedia().isEmpty()) {
-      List<ContenidoMultimedia> multimedia = MapperContenidoMultimedia
-              .convertirMultipartAContenido(hechoInputDTO.getContenidoMultimedia(), hecho);
-      hecho.setMultimedia(multimedia);
-      this.multimediaRepository.saveAll(multimedia);
-    }
+    List<ContenidoMultimedia> contenidoMultimedia =
+            this.contenidoMultimediaService.crear(hechoInputDTO.getContenidoMultimedia(), hecho);
+    hecho.setMultimedia(contenidoMultimedia);
+
+    hecho.setVisible(true);
 
     this.hechoRepository.save(hecho);
   }
@@ -165,9 +162,13 @@ public class HechosService implements IHechosService {
     hechoExistente.setDescripcion(hechoNuevo.getDescripcion());
     hechoExistente.setCategoria(hechoNuevo.getCategoria());
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento());
-    //TODO ver como hacer el multimedia
-    // hechoExistente.setMultimedia();
+
+    List<ContenidoMultimedia> contenidoMultimedia =
+            this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
+    hechoExistente.setMultimedia(contenidoMultimedia);
+
     actualizarUbicacion(hechoExistente, hechoNuevo);
+
     hechoExistente.setFechaEdicion(LocalDateTime.now());
   }
 
