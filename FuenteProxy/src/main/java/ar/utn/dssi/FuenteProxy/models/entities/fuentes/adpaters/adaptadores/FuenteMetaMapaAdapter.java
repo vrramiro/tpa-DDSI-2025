@@ -1,33 +1,30 @@
-package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.fuenteMetamapa.impl;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.adaptadores;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.MetamapaApi;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.fuenteMetamapa.IFuenteMetaMapa;
-import org.springframework.stereotype.Component;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos.MetaMapaConcreto;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IFuenteMetaMapaAdapter;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FuenteMetaMapa implements IFuenteMetaMapa {
-    private final MetamapaApi metamapaApi;
+public class FuenteMetaMapaAdapter implements IFuenteMetaMapaAdapter {
+    private final MetaMapaConcreto metaMapaConcreto;
 
-    public FuenteMetaMapa(MetamapaApi metamapaApi) {
-        this.metamapaApi = metamapaApi;
+    public FuenteMetaMapaAdapter(MetaMapaConcreto metaMapaConcreto) {
+        this.metaMapaConcreto = metaMapaConcreto;
     }
 
     @Override
     public Mono<List<Hecho>> obtenerHechos() {
-        return metamapaApi.obtenerHechos()
+        return metaMapaConcreto.obtenerHechos()
                 .map(hechosMetaMapa -> hechosMetaMapa.getHechosInstanciaMetaMapa()
                         .stream()
                         .map(this::mapToHecho)
                         .collect(Collectors.toList())
                 );
     }
-
 
     private Hecho mapToHecho(HechoOutputDTO dto) {
         Hecho hecho = new Hecho();

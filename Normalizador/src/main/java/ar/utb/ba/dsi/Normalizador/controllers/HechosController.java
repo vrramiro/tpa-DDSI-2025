@@ -15,8 +15,13 @@ public class HechosController {
 
     @PostMapping("/normalizar")
     public ResponseEntity<HechoOutputDTO> normalizarHecho(@RequestBody HechoInputDTO hecho) {
-        HechoOutputDTO hechoOutput = normalizadorService.normalizarHecho(hecho);
-        return ResponseEntity.ok(hechoOutput);
+        try {
+            HechoOutputDTO hechoOutput = normalizadorService.normalizarHecho(hecho);
+            return ResponseEntity.ok(hechoOutput);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+
     }
 
 }

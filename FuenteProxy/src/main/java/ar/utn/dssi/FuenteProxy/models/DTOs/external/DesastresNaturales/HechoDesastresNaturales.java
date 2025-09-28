@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class HechoDesastresNaturales {
+  private Integer id;
   private String titulo;
   private String descripcion;
   private String categoria;

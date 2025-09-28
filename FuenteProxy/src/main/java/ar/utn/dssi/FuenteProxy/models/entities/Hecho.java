@@ -17,7 +17,11 @@ import java.time.LocalDateTime;
 @Table(name = "hecho")
 public class Hecho {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Column(name = "hecho_id_externo", nullable = false)
+  private Integer idExterno; //para saber si ese hecho ya esta cargado
 
   @Column(name = "titulo", nullable = false)
   private String titulo;
@@ -25,8 +29,7 @@ public class Hecho {
   @Column(name = "descripcion", nullable = false)
   private String descripcion;
 
-  @ManyToOne
-  @JoinColumn(name = "categoria_id")
+  @Embedded
   private Categoria categoria;
 
   @Embedded
@@ -41,4 +44,7 @@ public class Hecho {
   @ManyToOne
   @JoinColumn(name = "fuente_id", nullable = false)
   private Fuente fuente;
+
+  @Column(name = "eliminado", nullable = false)
+  private Boolean eliminado;
 }

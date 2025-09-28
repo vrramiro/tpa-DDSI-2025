@@ -7,9 +7,9 @@ import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 public class MapperDeCategorias {
     public static Categoria categoriaFromInputDTO(CategoriaInputDTO categoriaInputDTO) {
         Categoria categoria = new Categoria();
-            categoria.setNombre(categoriaInputDTO.getNombre());
+
+        categoria.setNombre(categoriaInputDTO.getNombre());
+
         return categoria;
     }
-
-
 }

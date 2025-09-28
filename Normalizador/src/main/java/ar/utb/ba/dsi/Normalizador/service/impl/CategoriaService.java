@@ -28,11 +28,12 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public Categoria normalizarCategoria(String categoriaInput) {
-        String categoriaExterna = categoriaInput.toLowerCase();
+        //String categoriaExterna = categoriaInput.toLowerCase();
 
-        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaExterna);
+        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
 
         if (categoriaNormalizada == null) {
+            System.out.println("Categoria no encontrada");
             throw new CategoriaNotFoundException("Categoría no encontrada: " + categoriaInput);
         }
 

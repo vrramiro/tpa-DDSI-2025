@@ -42,7 +42,10 @@ public class Fuente {
     }
 
     public Mono<List<Hecho>> importarHechos(){
-        return  servicioExternoAdapter.obtenerHechos();
+        return this.servicioExternoAdapter.obtenerHechos()
+            .map(hechos -> {;
+                hechos.forEach(hecho -> hecho.setFuente(this));
+                return hechos;
+            });
     }
-
 }

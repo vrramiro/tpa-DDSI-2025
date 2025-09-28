@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class HechoOutputDTO {
-  private Long idHechoOrigen;
+  private Long idHecho;
   private String titulo;
   private String descripcion;
   private Categoria categoria;

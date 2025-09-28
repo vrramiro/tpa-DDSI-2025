@@ -29,7 +29,7 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
         HechoOutputDTONormalizador hechoDTO = MapperDeHechos.hechoToOutputNormalizador(hecho);
 
         return webClient.post()
-                .uri("/hecho/normalizar") // la misma URL, sin query params
+                .uri("hecho/normalizar") // la misma URL, sin query params
                 .bodyValue(hechoDTO)          // aquí envías el objeto como body
                 .retrieve()
                 .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada

@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.DatosLogin;
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechosDesastresNaturales;
@@ -6,10 +6,10 @@ import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.Respuesta
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class DesastresNaturalesApi {
+public class DesastresNaturalesConcreto {
     private final WebClient webClient;
 
-    public DesastresNaturalesApi(String baseUrl) {
+    public DesastresNaturalesConcreto(String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .build();

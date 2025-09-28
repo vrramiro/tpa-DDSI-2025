@@ -1,4 +1,4 @@
-package ar.utn.dssi.FuenteProxy.models.Errores;
+package ar.utn.dssi.FuenteProxy.models.errores;
 
 public class RepositorioVacio extends RuntimeException {
     public RepositorioVacio(String mensaje) {

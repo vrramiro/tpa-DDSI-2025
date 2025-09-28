@@ -1,9 +1,9 @@
 package ar.utn.dssi.FuenteProxy.controller;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.output.ErrorDTO;
-import ar.utn.dssi.FuenteProxy.models.Errores.DatosFaltantes;
-import ar.utn.dssi.FuenteProxy.models.Errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteProxy.models.Errores.RepositorioVacio;
+import ar.utn.dssi.FuenteProxy.models.errores.DatosFaltantes;
+import ar.utn.dssi.FuenteProxy.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteProxy.models.errores.RepositorioVacio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

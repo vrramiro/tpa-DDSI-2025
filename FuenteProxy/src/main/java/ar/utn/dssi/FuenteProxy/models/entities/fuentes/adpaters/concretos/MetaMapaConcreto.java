@@ -1,14 +1,13 @@
-package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.MetaMapa.HechosMetaMapa;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-public class MetamapaApi {
+public class MetaMapaConcreto {
     private final WebClient webClient;
 
-    public MetamapaApi(String baseUrl) {
+    public MetaMapaConcreto(String baseUrl) {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .build();

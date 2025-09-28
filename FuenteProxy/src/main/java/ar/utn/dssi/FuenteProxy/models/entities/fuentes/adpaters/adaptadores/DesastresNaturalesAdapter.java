@@ -1,7 +1,7 @@
-package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.AdaptadoresConcretos;
+package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.adaptadores;
 
 import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.Apis.DesastresNaturalesApi;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos.DesastresNaturalesConcreto;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
@@ -12,9 +12,9 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
-    private final DesastresNaturalesApi api;
+    private final DesastresNaturalesConcreto api;
 
-    public DesastresNaturalesAdapter(DesastresNaturalesApi api) {
+    public DesastresNaturalesAdapter(DesastresNaturalesConcreto api) {
         this.api = api;
     }
 
@@ -25,7 +25,6 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
                 .map(this::mapearHecho)
                 .collectList();
     }
-
 
     private Flux<HechoDesastresNaturales> obtenerTodasLasPaginas(String token, int pagina) {
         return api.obtenerHechosPorPagina(token, pagina, 100)
@@ -51,6 +50,7 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         Categoria categoria = new Categoria();
         categoria.setNombre(hechoObtenido.getCategoria());
 
+        hecho.setIdExterno(hechoObtenido.getId());
         hecho.setTitulo(hechoObtenido.getTitulo());
         hecho.setDescripcion(hechoObtenido.getDescripcion());
         hecho.setCategoria(categoria);
