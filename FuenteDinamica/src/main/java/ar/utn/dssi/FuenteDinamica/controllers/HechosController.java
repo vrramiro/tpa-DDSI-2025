@@ -43,7 +43,7 @@ public class HechosController {
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("/{idHecho}")
+  @PutMapping("/{idHecho}/editar")
   public ResponseEntity<Void> editarHecho(@PathVariable Long idHecho, @RequestBody HechoInputDTO hecho) {
     this.hechosService.editarHecho(hecho, idHecho);
     return ResponseEntity.ok().build();

@@ -9,7 +9,6 @@ import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
-import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,13 +67,13 @@ public class HechosService implements IHechosService {
   //Obtener todos los hechos
   @Override
   public List<HechoOutputDTO> obtenerHechos() {
+    List<Hecho> hechos = this.hechoRepository.findAll();
+
+    if (hechos.isEmpty()) {
+      throw new RepositorioVacio("No hay hechos en la base de datos");
+    }
+
     try {
-      List<Hecho> hechos = this.hechoRepository.findAll();
-
-      if (hechos.isEmpty()) {
-        throw new RepositorioVacio("No hay hechos en la base de datos");
-      }
-
       return hechos.stream()
               .map(MapperDeHechos::hechoOutputDTO)
               .toList();
@@ -87,15 +86,15 @@ public class HechosService implements IHechosService {
   //Obtener todos los hechos nuevos
   @Override
   public List<HechoOutputDTO> obtenerHechosNuevos(LocalDateTime fechaDesde) {
+
+    List<Hecho> hechos = this.hechoRepository.findHechosPorSubir(fechaDesde);
+
+    if (hechos.isEmpty()) {
+      throw new RepositorioVacio("No hay hechos en la base de datos");
+    }
+
     try {
-      List<Hecho> hechos = this.hechoRepository.findHechosPorSubir(fechaDesde);
-
-      if (hechos.isEmpty()) {
-        throw new RepositorioVacio("No hay hechos en la base de datos");
-      }
-
       return hechos.stream().map(MapperDeHechos::hechoOutputDTO).toList();
-
     } catch (Exception e) {
       throw new ErrorGeneralRepositorio("Error al obtener los hechos.");
     }
@@ -181,7 +180,8 @@ public class HechosService implements IHechosService {
                       MapperDeUbicacion.ubicacionFromLatitudYLongitud(
                               hechoNuevo.getLatitud(),
                               hechoNuevo.getLongitud()
-                      )).block();
+                      ))
+              .block();
 
       hechoExistente.setUbicacion(ubicacion);
     }

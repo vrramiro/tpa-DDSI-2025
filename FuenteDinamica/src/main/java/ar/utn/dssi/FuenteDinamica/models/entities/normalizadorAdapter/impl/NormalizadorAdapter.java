@@ -35,14 +35,23 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
                 .retrieve()
                 .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
                 .timeout(Duration.ofMillis(timeoutMs))
-                .map(MapperDeHechos::hechoFromInputDTONormalizador);
+                .flatMap(dto -> {
+                    Hecho normalizado = MapperDeHechos.hechoFromInputDTONormalizador(dto);
+                    if (dto == null) {
+                        return Mono.error(new RuntimeException("El servicio normalizador devolvió null"));
+                    }
+                    if (normalizado == null) {
+                        return Mono.error(new RuntimeException("El mapper devolvió null"));
+                    }
+                    return Mono.just(normalizado);
+                });
     }
 
     public Mono<Ubicacion> obtenerUbicacionNormalizada(UbicacionOutputDTONormalizador ubicacionDTO) {
         Double latitud = ubicacionDTO.getLatitud();
         Double longitud = ubicacionDTO.getLongitud();
 
-        return webClient.post()
+        return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/ubicacion/normalizar")
                         .queryParam("latitud", latitud)

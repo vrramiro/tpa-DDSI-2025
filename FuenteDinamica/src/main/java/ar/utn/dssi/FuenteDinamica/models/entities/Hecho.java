@@ -22,6 +22,15 @@ public class Hecho {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long idHecho;
 
+  @Column(name = "titulo", nullable = false)
+  private String titulo;
+
+  @Column(name = "descripcion", nullable = false)
+  private String descripcion;
+
+  @Column(name = "fecha_acontecimiento", nullable = false)
+  private LocalDateTime fechaAcontecimiento;
+
   @Embedded
   private Ubicacion ubicacion;
 
@@ -31,19 +40,10 @@ public class Hecho {
   @OneToMany(mappedBy = "hecho", cascade = CascadeType.ALL)
   private List<ContenidoMultimedia> multimedia;
 
-  @Column(name = "titula", nullable = false)
-  private String titulo;
-
-  @Column(name = "descripcion", nullable = false)
-  private String descripcion;
-
-  @Column(name = "fecha_acontecimiento", nullable = false)
-  private LocalDateTime fechaAcontecimiento;
-
   @Column(name = "fecha_carga", nullable = false)
   private LocalDateTime fechaCarga;
 
-  @Column(name = "fecha_edicion", nullable = false)
+  @Column(name = "fecha_edicion")
   private LocalDateTime fechaEdicion;
 
   private Boolean visible;

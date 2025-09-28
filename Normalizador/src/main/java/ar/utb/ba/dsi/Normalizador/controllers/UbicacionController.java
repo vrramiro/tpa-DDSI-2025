@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequestMapping("/ubicacion")
 public class UbicacionController {
@@ -15,7 +16,12 @@ public class UbicacionController {
     @GetMapping("/normalizar")
     public ResponseEntity<UbicacionOutputDTO> obtenerUbicacion(@RequestParam Double latitud, @RequestParam Double longitud) {
         UbicacionOutputDTO ubicacion = ubicacionService.obtenerUbicacionOutPut(latitud, longitud);
-        return ResponseEntity.ok(ubicacion);
+
+        ResponseEntity<UbicacionOutputDTO> response = ResponseEntity.ok(ubicacion);
+
+        System.out.println("Response enviado: status=" + response.getStatusCode() + ", body=" + response.getBody()); //LOG PARA VER LA RESPUESTA, SACARRR
+
+        return response;
     }
 
 }
