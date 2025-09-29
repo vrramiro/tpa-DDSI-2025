@@ -15,9 +15,8 @@ public class ContenidoMultimedia {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "url", nullable = false)
     private String url;
-    private String formato;
-    private Long tamano;
 
     @ManyToOne
     private Hecho hecho;

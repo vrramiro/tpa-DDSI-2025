@@ -7,10 +7,7 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class UbicacionOutputDTO {
+public class UbicacionOutputDTONormalizador {
     private Double latitud;
     private Double longitud;
-    private String pais;
-    private String ciudad;
-    private String provincia;
 }
