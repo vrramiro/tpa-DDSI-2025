@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.entities.spam.DetectorDeSpam;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Agregador.models.entities.solicitud.EstadoDeSolicitud;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
+import ar.utn.dssi.Agregador.models.repositories.ISolicitudDeEliminacionRepository;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionService {
 
   @Autowired
-  private SolicitudDeEliminacionRepository solicitudDeEliminacionRepository;
+  private ISolicitudDeEliminacionRepository solicitudDeEliminacionRepository;
 
   @Autowired
   private IHechosService hechosService;
@@ -56,28 +58,52 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   //ACEPTAR O RECHAZAR SOLICITUDES DE ELIMINACION
   @Override
   public void aceptarSolicitud(Long idSolicitud){
-    SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
+    SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud)
+            .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con ID: " + idSolicitud));
     solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
     solicitud.setFechaDeEvaluacion(LocalDateTime.now());
     hechosService.eliminarHecho(solicitud.getIdHecho());
 
-    solicitudDeEliminacionRepository.update(solicitud);
+    this.solicitudDeEliminacionRepository.save(solicitud);
   }
 
   @Override
   public void rechazarSolicitud(Long idSolicitud){
-       SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud);
+       SolicitudDeEliminacion solicitud = this.solicitudDeEliminacionRepository.findById(idSolicitud)
+               .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con ID: " + idSolicitud));
        solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
        solicitud.setFechaDeEvaluacion(LocalDateTime.now());
 
-       solicitudDeEliminacionRepository.update(solicitud);
+       this.solicitudDeEliminacionRepository.save(solicitud);
      }
 
   @Override
-  public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes() {
-    return this.solicitudDeEliminacionRepository
-            .findAll()
-            .stream()
+  public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado) {
+    List<SolicitudDeEliminacion> solicitudes;
+
+    switch (tipoEstado.toLowerCase()) {
+      case "spam":
+        solicitudes = this.solicitudDeEliminacionRepository.findByEsSpam(true);
+        break;
+      case "no-spam":
+        solicitudes = this.solicitudDeEliminacionRepository.findByEsSpam(false);
+        break;
+      case "aceptada":
+        solicitudes = this.solicitudDeEliminacionRepository.findByEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
+        break;
+      case "rechazada":
+        solicitudes = this.solicitudDeEliminacionRepository.findByEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
+        break;
+      case "pendiente":
+        solicitudes = this.solicitudDeEliminacionRepository.findByEstadoDeSolicitud(EstadoDeSolicitud.PENDIENTE);
+        break;
+      case "todos":
+      default:
+        solicitudes = this.solicitudDeEliminacionRepository.findAll();
+        break;
+    }
+
+    return solicitudes.stream()
             .map(this::SolicitudEliminacionOutputDTO)
             .toList();
   }
@@ -107,5 +133,4 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
 
     return dtoSolicitudEliminacion;
   }
-
 }

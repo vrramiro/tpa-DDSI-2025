@@ -7,7 +7,6 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
@@ -239,8 +238,11 @@ public class ColeccionService implements IColeccionService {
     /*/////////////////////// CRONS EN COLECCIONES ///////////////////////*/
 
     //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
+    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS...
+    // Nose si es depues de que se ejecute esta funcion porque se
+    // invoca la cantidad de veces necesarias dependiendo los hechos
     @Override
-    public Mono<Void> refrescarColecciones(Hecho hecho){    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS... Nose si es depues de que se ejecute esta funcion porque se invoca la cantidad de veces necesarias dependiendo los hechos
+    public Mono<Void> refrescarColecciones(Hecho hecho){
         return Flux
                 .fromIterable(coleccionRepository.findAll())
                 .flatMap(coleccion -> {
@@ -248,7 +250,6 @@ public class ColeccionService implements IColeccionService {
                     return Mono.empty();
                 })
                 .then();
-
     }
 
     /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/

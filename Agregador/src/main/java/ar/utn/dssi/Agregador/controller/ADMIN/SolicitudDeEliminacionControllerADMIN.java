@@ -16,8 +16,10 @@ public class SolicitudDeEliminacionControllerADMIN {
   private SolicitudDeEliminacionService solicitudesService;
 
   @GetMapping
-  public ResponseEntity<List<SolicitudDeEliminacionOutputDTO>> obtenerSolicitudes(){
-    List<SolicitudDeEliminacionOutputDTO> solicitudesObtenidas = solicitudesService.obtenerSolicitudes();
+  public ResponseEntity<List<SolicitudDeEliminacionOutputDTO>> obtenerSolicitudes(
+          @RequestParam(name = "tipo_estado", required = false, defaultValue = "todos") String tipoEstado) {
+
+    List<SolicitudDeEliminacionOutputDTO> solicitudesObtenidas = solicitudesService.obtenerSolicitudes(tipoEstado);
 
     if (solicitudesObtenidas.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
@@ -26,17 +28,15 @@ public class SolicitudDeEliminacionControllerADMIN {
   }
 
   //TODO hay dos caminos => se toca aceptar y va al metodo aceptar o le da a cualquier boton y se va a procesar solicitud
-  @PostMapping("/{idSolicitud}/aceptar")
+  @PostMapping("/aceptar/{idSolicitud}")
   public ResponseEntity<Void> aceptarSolicitud(@PathVariable Long idSolicitud) {
     solicitudesService.aceptarSolicitud(idSolicitud);
     return ResponseEntity.ok().build();
   }
 
-  @PostMapping("/{idSolicitud}/rechazar")
+  @PostMapping("/rechazar/{idSolicitud}")
   public ResponseEntity<Void> rechazarSolicitud(@PathVariable Long idSolicitud) {
     solicitudesService.rechazarSolicitud(idSolicitud);
     return ResponseEntity.ok().build();
   }
-
-
 }
