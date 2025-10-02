@@ -25,8 +25,14 @@ public class Hecho {
   @Column(name = "titulo", nullable = false)
   private String titulo;
 
-  @Column(name = "descripcion", nullable = false)
+  @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
   private String descripcion;
+
+  @Column(name = "tituloSanitizado", nullable = false)
+  private String tituloSanitizado;
+
+  @Column(name = "descripcionSanitizado", nullable = false, columnDefinition = "TEXT")
+  private String descripcionSanitizado;
 
   @Column(name = "fecha_acontecimiento", nullable = false)
   private LocalDateTime fechaAcontecimiento;
@@ -34,8 +40,8 @@ public class Hecho {
   @Embedded
   private Ubicacion ubicacion;
 
-  @Column(name = "categoria", nullable = false)
-  private String categoria;
+  @Embedded
+  private Categoria categoria;
 
   @OneToMany(mappedBy = "hecho", cascade = CascadeType.ALL)
   private List<ContenidoMultimedia> multimedia;

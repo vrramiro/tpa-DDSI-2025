@@ -7,6 +7,6 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import reactor.core.publisher.Mono;
 
 public interface INormalizadorAdapter {
-    public Mono<Hecho> obtenerHechoNormalizado(HechoOutputDTONormalizador hechoDTO);
+    public Mono<Hecho> obtenerHechoNormalizado(Hecho hecho);
     public Mono<Ubicacion> obtenerUbicacionNormalizada(UbicacionOutputDTONormalizador ubicacionDTO);
     }

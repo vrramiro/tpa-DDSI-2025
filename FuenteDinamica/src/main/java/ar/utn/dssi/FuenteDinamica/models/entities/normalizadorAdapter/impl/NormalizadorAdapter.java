@@ -3,7 +3,6 @@ package ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.impl;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.UbicacionInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.UbicacionOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.UbicacionOutputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
@@ -28,10 +27,12 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
     }
 
     @Override
-    public Mono<Hecho> obtenerHechoNormalizado(HechoOutputDTONormalizador hechoDTO) {
+    public Mono<Hecho> obtenerHechoNormalizado(Hecho hecho) {
+        HechoOutputDTONormalizador output = MapperDeHechos.hechoOutputNormalizadorFromHecho(hecho);
+
         return webClient.post()
                 .uri("/hecho/normalizar") // la misma URL, sin query params
-                .bodyValue(hechoDTO)          // aquí envías el objeto como body
+                .bodyValue(output)          // aquí envías el objeto como body
                 .retrieve()
                 .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
                 .timeout(Duration.ofMillis(timeoutMs))
@@ -72,4 +73,5 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
                     return Mono.just(normalizada);
                 });
     }
+
 }

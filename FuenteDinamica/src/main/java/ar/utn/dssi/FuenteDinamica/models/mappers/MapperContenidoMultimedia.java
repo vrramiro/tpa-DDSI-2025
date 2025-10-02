@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapperContenidoMultimedia {
 
@@ -14,5 +15,9 @@ public class MapperContenidoMultimedia {
         cm.setUrl(urlArchivo);
         cm.setHecho(hecho);
         return cm;
+    }
+
+    public static  List<String> obtenerUrlContenido(List<ContenidoMultimedia> contenidoMultimedia) {
+        return contenidoMultimedia.stream().map(ContenidoMultimedia::getUrl).collect(Collectors.toList());
     }
 }

@@ -4,32 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.Getter;
 
-/*
-{
-  "parametros": {
-    "aplanar": true,
-    "campos": [
-      "lat",
-      "municipio.nombre",
-      "lon",
-      "departamento.nombre",
-      "provincia.nombre",
-      "provincia.id"
-    ],
-    "formato": "json",
-    "lat": -31.133566,
-    "lon": -64.433583
-  },
-  "ubicacion": {
-    "departamento_nombre": "Punilla",
-    "lat": -31.133566,
-    "lon": -64.433583,
-    "municipio_nombre": "Valle Hermoso",
-    "provincia_id": "14",
-    "provincia_nombre": "Córdoba"
-  }
-}
-* */
 @Data
 @Getter
 public class UbicacionInputDTOGeoref {

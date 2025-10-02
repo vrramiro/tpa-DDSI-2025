@@ -2,10 +2,11 @@ package ar.utn.dssi.FuenteDinamica.services.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
+import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.entities.*;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteDinamica.models.errores.*;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
+import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeCategoria;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import reactor.core.publisher.Mono;
 
 
 import java.time.LocalDateTime;
@@ -43,24 +43,18 @@ public class HechosService implements IHechosService {
   public void crear(HechoInputDTO hechoInputDTO) {
     validarHechoInput(hechoInputDTO);
 
-    Ubicacion ubicacion = normalizadorAdapter
-            .obtenerUbicacionNormalizada(
-                    MapperDeUbicacion.ubicacionFromLatitudYLongitud(
-                            hechoInputDTO.getLatitud(),
-                            hechoInputDTO.getLongitud()
-                    )).block();
+    Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(MapperDeHechos.hechoFromInputDTO(hechoInputDTO)).block();
 
-    Hecho hecho = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
-    hecho.setUbicacion(ubicacion);
-    hecho.setFechaCarga(LocalDateTime.now());
+    hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
-    List<ContenidoMultimedia> contenidoMultimedia =
-            this.contenidoMultimediaService.crear(hechoInputDTO.getContenidoMultimedia(), hecho);
-    hecho.setMultimedia(contenidoMultimedia);
+    List<ContenidoMultimedia> contenidoMultimedia = this.contenidoMultimediaService
+            .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
 
-    hecho.setVisible(true);
+    hechoNormalizado.setMultimedia(contenidoMultimedia);
 
-    this.hechoRepository.save(hecho);
+    hechoNormalizado.setVisible(true);
+
+    this.hechoRepository.save(hechoNormalizado);
   }
 
   /// /////// READ //////////
@@ -159,7 +153,7 @@ public class HechosService implements IHechosService {
   private void actualizarCamposHecho(Hecho hechoExistente, HechoInputDTO hechoNuevo) {
     hechoExistente.setTitulo(hechoNuevo.getTitulo());
     hechoExistente.setDescripcion(hechoNuevo.getDescripcion());
-    hechoExistente.setCategoria(hechoNuevo.getCategoria());
+    hechoExistente.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoNuevo.getCategoria()));
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento());
 
     List<ContenidoMultimedia> contenidoMultimedia =

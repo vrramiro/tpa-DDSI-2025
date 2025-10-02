@@ -28,9 +28,12 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public Categoria normalizarCategoria(String categoriaInput) {
-        //String categoriaExterna = categoriaInput.toLowerCase();
 
-        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
+        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByNombre(categoriaInput);
+
+        if (categoriaNormalizada == null) {
+            categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
+        }
 
         if (categoriaNormalizada == null) {
             System.out.println("Categoria no encontrada");

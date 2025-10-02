@@ -15,8 +15,22 @@ public class HechoOutputDTO {
   private Long idHechoOrigen;
   private String titulo;
   private String descripcion;
-  private String categoria;
-  private Ubicacion ubicacion;
+  private String tituloSanitizado;
+  private String descripcionSanitizada;
+  private CategoriaOutputDTO categoria;
+  private UbicacionOutputDTO ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
 }
+
+/* ESTO ES LO QUE DEBE RECIBIR EL AGREGADOR:
+    private Long idExterno;
+    private String titulo;
+    private String descripcion;
+    private String tituloSanitizado;
+    private String descripcionSanitizada;
+    private CategoriaInputDTO categoria;
+    private UbicacionInputDTO ubicacion;
+    private LocalDateTime fechaAcontecimiento;
+    private LocalDateTime fechaCarga;
+ */
