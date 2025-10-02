@@ -5,8 +5,6 @@ import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.HechoOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import ar.utb.ba.dsi.Normalizador.models.entities.Hecho;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.HechoNoEcontrado;
 import ar.utb.ba.dsi.Normalizador.models.entities.sanitizador.Sanitizador;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeFecha;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeHechos;
@@ -29,28 +27,24 @@ public class HechosService implements IHechosService {
     public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {
         Hecho hecho = new Hecho();
 
-        try {
-            // Normalizo ubicacion
-            Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hechoInput.getLatitud(), hechoInput.getLongitud());
-            hecho.setUbicacion(ubicacionHecho);
+        // Normalizo ubicacion
+        Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hechoInput.getLatitud(), hechoInput.getLongitud());
+        hecho.setUbicacion(ubicacionHecho);
 
-            //Normalizo Categoria
-            String categoriaInput = hechoInput.getCategoria();
-            Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
+        //Normalizo Categoria
+        String categoriaInput = hechoInput.getCategoria();
+        Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
 
-            hecho.setCategoria(categoriaHecho);
+        hecho.setCategoria(categoriaHecho);
 
-            //Normalizo fechas
-            hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
+        //Normalizo fechas
+        hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
 
-            // Sanitizo titulo y descripcion
-            hecho.setTitulo(hechoInput.getTitulo());
-            hecho.setDescripcion(hechoInput.getDescripcion());
-            Sanitizador.sanitizar(hecho);
+        // Sanitizo titulo y descripcion
+        hecho.setTitulo(hechoInput.getTitulo());
+        hecho.setDescripcion(hechoInput.getDescripcion());
+        Sanitizador.sanitizar(hecho);
 
-            return MapperDeHechos.hechoToOutput(hecho);
-        } catch (HechoNoEcontrado | CategoriaNoEcontrada e) {
-            throw e;
-        }
+        return MapperDeHechos.hechoToOutput(hecho);
     }
 }
