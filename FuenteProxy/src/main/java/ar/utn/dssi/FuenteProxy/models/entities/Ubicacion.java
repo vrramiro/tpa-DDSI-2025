@@ -13,7 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ubicacion {
-
   @Column(name = "latitud")
   private Double latitud;
 
@@ -28,4 +27,8 @@ public class Ubicacion {
 
   @Column(name = "provincia")
   private String provincia;
+
+  public Boolean invalida() {
+    return this.ciudad == null || this.provincia == null;
+  }
 }

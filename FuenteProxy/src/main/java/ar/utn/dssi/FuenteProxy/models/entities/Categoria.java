@@ -7,13 +7,11 @@ import lombok.Setter;
 @Setter
 @Getter
 
-@Entity
-@Table(name = "Categoria")
+@Embeddable
 public class Categoria {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "categoria_id")
   private Long idCategoria;
 
-  @Column(name = "nombre")
+  @Column(name = "categoria_nombre", nullable = false)
   private String nombre;
 }
