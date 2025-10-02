@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteProxy.service;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 

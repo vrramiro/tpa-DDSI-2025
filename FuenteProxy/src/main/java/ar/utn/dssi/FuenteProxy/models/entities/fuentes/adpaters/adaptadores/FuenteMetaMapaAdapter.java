@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.adaptadores;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos.MetaMapaConcreto;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IFuenteMetaMapaAdapter;

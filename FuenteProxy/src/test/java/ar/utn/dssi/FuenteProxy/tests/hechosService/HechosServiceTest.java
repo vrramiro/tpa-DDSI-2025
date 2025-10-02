@@ -8,12 +8,12 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
-import ar.utn.dssi.FuenteProxy.models.errores.HechoNoEcontrado;
+import ar.utn.dssi.FuenteProxy.error.HechoNoEcontrado;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.impl.HechosService;
@@ -173,6 +173,11 @@ public class HechosServiceTest {
     // Verificamos que nunca se llame al repositorio cuando el hecho no existe
     verify(hechoRepository, times(1)).findById(idHecho);
     verify(hechoRepository, never()).save(any());
+  }
+
+  @Test
+  public void deberiaDevolverListaConHechosImportadosNuevos() {
+    List<Hecho> hechosNuevos = new ArrayList<>();
   }
 
   // Método auxiliar para crear hechos de prueba de manera consistente

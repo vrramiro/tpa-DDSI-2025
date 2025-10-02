@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.adaptadores;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechoDesastresNaturales;
+import ar.utn.dssi.FuenteProxy.dto.external.DesastresNaturales.HechoDesastresNaturales;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos.DesastresNaturalesConcreto;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.IServicioExternoAdapter;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
@@ -56,7 +56,7 @@ public class DesastresNaturalesAdapter implements IServicioExternoAdapter {
         hecho.setCategoria(categoria);
         hecho.setUbicacion(ubicacion);
         hecho.setFechaAcontecimiento(hechoObtenido.getFecha_hecho());
-        hecho.setFechaCarga(hechoObtenido.getCreated_at());
+        //hecho.setFechaCarga(hechoObtenido.getCreated_at()); TODO sacar si no funca
 
         return hecho;
     }

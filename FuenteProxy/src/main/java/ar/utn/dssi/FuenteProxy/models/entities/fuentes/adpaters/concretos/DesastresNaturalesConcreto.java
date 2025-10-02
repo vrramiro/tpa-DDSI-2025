@@ -1,8 +1,8 @@
 package ar.utn.dssi.FuenteProxy.models.entities.fuentes.adpaters.concretos;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.DatosLogin;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.HechosDesastresNaturales;
-import ar.utn.dssi.FuenteProxy.models.DTOs.external.DesastresNaturales.RespuestaLogin;
+import ar.utn.dssi.FuenteProxy.dto.external.DesastresNaturales.DatosLogin;
+import ar.utn.dssi.FuenteProxy.dto.external.DesastresNaturales.HechosDesastresNaturales;
+import ar.utn.dssi.FuenteProxy.dto.external.DesastresNaturales.RespuestaLogin;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 

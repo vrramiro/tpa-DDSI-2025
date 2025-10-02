@@ -1,12 +1,11 @@
 package ar.utn.dssi.FuenteProxy.models.entities.normalizador.impl;
 
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.input.HechoInputDTONormalizador;
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteProxy.dto.input.HechoInputDTONormalizador;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
-import ar.utn.dssi.FuenteProxy.models.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteProxy.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,11 +28,11 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
         HechoOutputDTONormalizador hechoDTO = MapperDeHechos.hechoToOutputNormalizador(hecho);
 
         return webClient.post()
-                .uri("hecho/normalizar") // la misma URL, sin query params
-                .bodyValue(hechoDTO)          // aquí envías el objeto como body
-                .retrieve()
-                .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
-                .timeout(Duration.ofMillis(timeoutMs))
-                .map(MapperDeHechos::hechoFromInputDTONormalizador);
+            .uri("/hecho/normalizar") // la misma URL, sin query params
+            .bodyValue(hechoDTO)          // aquí envías el objeto como body
+            .retrieve()
+            .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
+            .timeout(Duration.ofMillis(timeoutMs))
+            .map(MapperDeHechos::hechoFromInputDTONormalizador);
     }
 }

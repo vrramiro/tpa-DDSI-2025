@@ -5,7 +5,6 @@ import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAda
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -25,16 +24,22 @@ public class GeorefAdapter implements IUbicacionAdapter {
     }
 
     public Mono<Ubicacion> obtenerUbicacionDeAPI(Double latitud, Double longitud) {
+        String campos = String.join(",", "lat", "lon", "municipio.nombre", "provincia.nombre", "departamento.nombre");
+
         return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/ubicacion")
-                        .queryParam("lat", latitud)
-                        .queryParam("lon", longitud)
-                        .build())
-                .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, resp -> Mono.error(new RuntimeException("Ubicación no encontrada")))
-                .bodyToMono(UbicacionInputDTOGeoref.class)
-                .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
-                .map(MapperDeUbicacion::ubicacionFromInput);
+            .uri(uriBuilder -> uriBuilder
+                .path("/ubicacion")
+                .queryParam("lat", latitud)
+                .queryParam("lon", longitud)
+                .queryParam("aplanar", true)
+                .queryParam("campos", campos)
+                .queryParam("formato", "json")
+                .build())
+            .retrieve()
+            .onStatus(HttpStatusCode::is4xxClientError, resp -> Mono.error(new RuntimeException("Error georef " + resp.statusCode() + ": Ubicacion no encontrada para latitud: " + latitud + " y longitud: " + longitud)))
+            .onStatus(HttpStatusCode::is5xxServerError, resp -> Mono.error(new RuntimeException("Error del servidor de georef")))
+            .bodyToMono(UbicacionInputDTOGeoref.class)
+            .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
+            .map(MapperDeUbicacion::ubicacionFromInput);
     }
 }

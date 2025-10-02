@@ -1,9 +1,7 @@
 package ar.utn.dssi.FuenteProxy.controller;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
-import jakarta.websocket.server.PathParam;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

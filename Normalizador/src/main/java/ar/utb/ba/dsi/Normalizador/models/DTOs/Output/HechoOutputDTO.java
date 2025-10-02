@@ -15,5 +15,5 @@ public class HechoOutputDTO {
     private CategoriaOutputDTO categoria;
     private UbicacionOutputDTO ubicacion;
     private LocalDateTime fechaAcontecimiento;
-    private LocalDateTime fechaCarga;
+    private LocalDateTime fechaCarga; // esta fecha esta al pedo, se deberia generar despues de normalizar
 }

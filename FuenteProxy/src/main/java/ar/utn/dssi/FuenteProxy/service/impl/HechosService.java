@@ -1,38 +1,45 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
-import ar.utn.dssi.FuenteProxy.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
 import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
-import ar.utn.dssi.FuenteProxy.models.errores.HechoNoEcontrado;
-import ar.utn.dssi.FuenteProxy.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
+import ar.utn.dssi.FuenteProxy.error.FechaUltimaComunicacionFutura;
+import ar.utn.dssi.FuenteProxy.error.HechoNoEcontrado;
+import ar.utn.dssi.FuenteProxy.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import ar.utn.dssi.FuenteProxy.service.INormalizacionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class HechosService implements IHechosService {
-  @Autowired
-  private IHechoRepository hechoRepository;
+  private final IHechoRepository hechoRepository;
+  private final IFuenteRepository fuenteRepository;
+  private final INormalizacionService normalizacionService;
 
-  @Autowired
-  private IFuenteRepository fuenteRepository;
-
-  @Autowired
-  private INormalizadorAdapter normalizadorAdapter;
+  public HechosService(IHechoRepository hechoRepository, IFuenteRepository fuenteService, INormalizacionService normalizacionService) {
+    this.hechoRepository = hechoRepository;
+    this.fuenteRepository = fuenteService;
+    this.normalizacionService = normalizacionService;
+  }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaUltimaComunicacion) {
     if(fechaUltimaComunicacion == null) {
       throw new IllegalArgumentException("Error al cargar la fecha de ultima comunicacion");
+    }
+
+    if(fechaUltimaComunicacion.isAfter(LocalDateTime.now())) {
+      throw new FechaUltimaComunicacionFutura("La fecha de ultima comunicacion no puede ser futura");
     }
 
     List<Hecho> hechos = hechoRepository.findByEliminadoFalseAndFechaCargaIsAfter(fechaUltimaComunicacion);
@@ -42,40 +49,59 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuente(TipoFuente.METAMAPA);
-    //TODO: Ver si conviene hacerlo Mono o no.
-    return List.of();
+    try{
+      List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuente(TipoFuente.METAMAPA);
+      List<Hecho> hechosMetamapa = fuentes.parallelStream().flatMap( fuente -> fuente.importarHechos().block().stream()).toList();
+      return hechosMetamapa.stream().map(MapperDeHechos::hechoOutputDTO).toList();
+    } catch (Exception e){
+      throw new RuntimeException("Error al obtener hechos de instancias Metamapa: " + e.getMessage());
+    }
   }
 
   @Override
   public void importarHechos() {
-    List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuenteNot(TipoFuente.METAMAPA);
+    List<Hecho> hechosNuevos = this.hechosNuevos();
 
-    List<Hecho> hechos = fuentes.stream().flatMap(fuente -> fuente.importarHechos().block().stream()).toList();
+    if(!hechosNuevos.isEmpty()) {
+      List<Hecho> hechosAGuardar = hechosNuevos
+          .parallelStream()
+          .map(hecho -> {
+            log.info("Normalizando hecho: {}", hecho.getTitulo());
+            return normalizacionService.normalizar(hecho);
+          })
+          .filter(hecho -> !hecho.getUbicacion().invalida()) // Evito guardar hechos que hayan llegado sin ubicacion porque georef no la reconocio
+          .toList(); //TODO abstraer en el service pasando la lista de hechos
 
-    List<Hecho> hechosNormalizados = new ArrayList<>();
+      hechosAGuardar.forEach(hecho -> hecho.setFechaCarga(LocalDateTime.now()));
 
-    try {
-      for (Hecho hecho : hechos) {
-        if(hechoRepository.existsByIdExternoAndFuente(hecho.getIdExterno(), hecho.getFuente())) {
-          System.out.println("Ya existe el hecho con idExterno " + hecho.getIdExterno() + " y fuente " + hecho.getFuente().getId());
-          continue;
-        }
-
-        Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block();
-
-        if (hechoNormalizado != null) {
-          System.out.println("normalice: " + hechoNormalizado.getCategoria().getNombre());
-          hechosNormalizados.add(hechoNormalizado);
-        }
+      try {
+        System.out.println("termine de normalizar, guardando hechos...");
+        hechoRepository.saveAll(hechosAGuardar);
+      } catch (Exception e) {
+        System.out.println("Error al guardar los hechos: " + e.getMessage());
       }
 
-      hechoRepository.saveAll(hechosNormalizados);
-    } catch (Exception e) {
-      System.out.println("Error al normalizar hechos: " + e.getMessage());
+      System.out.println("termine de normalizar");
     }
+  }
 
-    System.out.println("termine de normalizar");
+  private List<Hecho> hechosNuevos() {
+    List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuenteNot(TipoFuente.METAMAPA);
+
+    List<Hecho> hechosObtenidos = fuentes.stream().flatMap(fuente -> fuente.importarHechos().block().stream()).toList();
+
+    Set<Integer> idsExternos = hechosObtenidos.stream().map(Hecho::getIdExterno).collect(Collectors.toSet());
+
+    Set<Long> idsFuentes = fuentes.stream().map(Fuente::getId).collect(Collectors.toSet());
+
+    Set<String> clavesExistentes = hechoRepository.findByIdExternoInAndFuenteIdIn(idsExternos, idsFuentes)
+        .stream()
+        .map(Hecho::combinacionIdExternoFuenteId)
+        .collect(Collectors.toSet());
+
+    return hechosObtenidos.stream()
+        .filter(hecho -> !clavesExistentes.contains(hecho.combinacionIdExternoFuenteId()))
+        .toList();
   }
 
   @Override

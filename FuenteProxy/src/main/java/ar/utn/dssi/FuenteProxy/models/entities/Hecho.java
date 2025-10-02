@@ -26,7 +26,7 @@ public class Hecho {
   @Column(name = "titulo", nullable = false)
   private String titulo;
 
-  @Column(name = "descripcion", nullable = false)
+  @Column(name = "descripcion", nullable = false, length = 10000)
   private String descripcion;
 
   @Embedded
@@ -47,4 +47,8 @@ public class Hecho {
 
   @Column(name = "eliminado", nullable = false)
   private Boolean eliminado;
+
+  public String combinacionIdExternoFuenteId() {
+    return this.idExterno + "-" + this.fuente.getId();
+  }
 }
