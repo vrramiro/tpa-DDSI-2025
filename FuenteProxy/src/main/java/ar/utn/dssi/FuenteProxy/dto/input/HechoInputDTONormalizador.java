@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 public class HechoInputDTONormalizador {
     private String titulo;
     private String descripcion;
+    private String tituloSanitizado;
+    private String descripcionSanitizada;
     private CategoriaInputDTONormalizador categoria;
     private UbicacionInputDTONormalizador ubicacion;
     private LocalDateTime fechaAcontecimiento;
-    private LocalDateTime fechaCarga;
 }
