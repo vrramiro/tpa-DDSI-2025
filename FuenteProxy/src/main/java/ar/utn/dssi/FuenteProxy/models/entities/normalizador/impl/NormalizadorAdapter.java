@@ -3,6 +3,8 @@ package ar.utn.dssi.FuenteProxy.models.entities.normalizador.impl;
 
 import ar.utn.dssi.FuenteProxy.dto.input.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteProxy.mappers.MapperDeCategorias;
+import ar.utn.dssi.FuenteProxy.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
@@ -33,6 +35,21 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
             .retrieve()
             .bodyToMono(HechoInputDTONormalizador.class) // respuesta esperada
             .timeout(Duration.ofMillis(timeoutMs))
-            .map(MapperDeHechos::hechoFromInputDTONormalizador);
+            .map(this::mapearHecho);
+    }
+
+    private Hecho mapearHecho(HechoInputDTONormalizador hechoInputDTO){
+        Hecho hecho = new Hecho();
+
+        hecho.setTitulo(hechoInputDTO.getTitulo());
+        hecho.setDescripcion(hechoInputDTO.getDescripcion());
+        hecho.setTituloSanitizado(hechoInputDTO.getTituloSanitizado());
+        hecho.setDescripcionSanitizada(hechoInputDTO.getDescripcionSanitizada());
+        hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
+        hecho.setCategoria(MapperDeCategorias.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
+        hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+        //hecho.setFechaCarga(hechoInputDTO.getFechaCarga()); TODO eliminar
+
+        return hecho;
     }
 }

@@ -26,8 +26,14 @@ public class Hecho {
   @Column(name = "titulo", nullable = false)
   private String titulo;
 
-  @Column(name = "descripcion", nullable = false, length = 10000)
+  @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
   private String descripcion;
+
+  @Column(name = "titulo_sanitizado", nullable = false)
+  private String tituloSanitizado;
+
+  @Column(name = "descripcion_sanitizada", nullable = false, columnDefinition = "TEXT")
+  private String descripcionSanitizada;
 
   @Embedded
   private Categoria categoria;

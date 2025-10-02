@@ -50,4 +50,11 @@ public class HechosController {
       return ResponseEntity.notFound().build();
     }
   }
+
+  //TODO:
+  //Traer hechos metamapa
+  //Traer colecciones
+  //Traer hechos de colecciones
+  //Solicitud de eliminacion meiante metodo eliminar hecho => agregar id de fuente dentro del json para que pueda identificar si es metamapa o no
+  //(la solicitud semandaria por el body si es que se acepta la eliminacion dentro de ESTE sistema)
 }
