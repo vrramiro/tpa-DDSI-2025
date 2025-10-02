@@ -1,9 +1,7 @@
 package ar.utn.dssi.FuenteDinamica.controllers;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.ErrorDTO;
-import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
-import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
+import ar.utn.dssi.FuenteDinamica.models.errores.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -26,6 +24,26 @@ public class ManejoGlobalErrores {
 
     @ExceptionHandler(ErrorGeneralRepositorio.class)
     public ResponseEntity<ErrorDTO> errorGeneralRepositorio(ErrorGeneralRepositorio ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(HechoNoEditable.class)
+    public ResponseEntity<ErrorDTO> hechoNoEditable(HechoNoEditable ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DirectorioNoCreado.class)
+    public ResponseEntity<ErrorDTO> directorioNoCreado(DirectorioNoCreado ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(ArchivoMultimediaVacio.class)
+    public ResponseEntity<ErrorDTO> archivoMultimediaVacio(ArchivoMultimediaVacio ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FallaGuardadoArchivoMultimedia.class)
+    public ResponseEntity<ErrorDTO> FallaGuardadoArchivoMultimedia(FallaGuardadoArchivoMultimedia ex) {
         return construirRespuestaError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

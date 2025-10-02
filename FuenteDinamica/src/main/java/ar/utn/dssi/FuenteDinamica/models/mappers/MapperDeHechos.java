@@ -10,13 +10,13 @@ import java.time.LocalDateTime;
 
 public class MapperDeHechos {
 
-    public static HechoOutputDTO hechoOutputDTO(Hecho hecho){
+    public static HechoOutputDTO hechoOutputDTO(Hecho hecho) {
         HechoOutputDTO dtoHecho = new HechoOutputDTO();
 
         dtoHecho.setTitulo(hecho.getTitulo());
         dtoHecho.setDescripcion(hecho.getDescripcion());
         dtoHecho.setCategoria(hecho.getCategoria());
-        dtoHecho.setUbicacion(hecho.getUbicacion());
+        dtoHecho.setUbicacion(MapperDeUbicacion.ubicacionOuputFromUbicacion(hecho.getUbicacion()));
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
         dtoHecho.setContenidoMultimedia(hecho.getMultimedia());
@@ -24,19 +24,28 @@ public class MapperDeHechos {
         return dtoHecho;
     }
 
-    public static Hecho hechoFromInputDTONormalizador(HechoInputDTONormalizador hechoInputDTO){
+    public static Hecho hechoFromInputDTONormalizador(HechoInputDTONormalizador hechoInputDTO) {
         Hecho hecho = new Hecho();
             hecho.setTitulo(hechoInputDTO.getTitulo());
             hecho.setDescripcion(hechoInputDTO.getDescripcion());
             hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
-            hecho.setCategoria(MapperDeCategorias.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
+            hecho.setCategoria(hechoInputDTO.getCategoria().getCategoria());
             hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
             hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
 
-        return null;
+        return hecho;
     }
 
-    public static HechoOutputDTONormalizador hechoFromInputToOutputNormalizador(HechoInputDTO hechoInputDTO){
+    public static Hecho hechoFromInputDTO(HechoInputDTO hechoInputDTO) {
+        Hecho hecho = new Hecho();
+        hecho.setTitulo(hechoInputDTO.getTitulo());
+        hecho.setDescripcion(hechoInputDTO.getDescripcion());
+        hecho.setCategoria(hechoInputDTO.getCategoria());
+        hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+        return hecho;
+    }
+
+    public static HechoOutputDTONormalizador hechoFromInputToOutputNormalizador(HechoInputDTO hechoInputDTO) {
         HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
             hecho.setTitulo(hechoInputDTO.getTitulo());
             hecho.setDescripcion(hechoInputDTO.getDescripcion());
