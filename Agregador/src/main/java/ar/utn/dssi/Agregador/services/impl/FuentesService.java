@@ -9,6 +9,9 @@ import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,8 +27,7 @@ public class FuentesService implements IFuentesService {
   @Override
   public List<Hecho> hechosNuevos() {
     return this.fuenteRepository.findAll().stream()
-        .flatMap(fuente -> fuente.getTipoFuente().hechosNuevos(fuente).stream())
-
+        .flatMap(fuente -> actualizarFuenteYObtenerHechos(fuente).stream())
         .toList();
   }
 
@@ -33,7 +35,13 @@ public class FuentesService implements IFuentesService {
   public List<Hecho> hechosMetamapa() {
     return this.fuenteRepository.findByTipoFuente(new FuenteProxy()).stream()
         .flatMap(fuente -> ((ITipoProxy) fuente.getTipoFuente()).hechosMetamapa(fuente).stream())
-
         .toList();
+  }
+
+  private List<Hecho> actualizarFuenteYObtenerHechos(Fuente fuente) {
+    List<Hecho> hechos = fuente.getTipoFuente().hechosNuevos(fuente);
+    fuente.setUltimaActualizacion(LocalDateTime.now());
+    this.fuenteRepository.save(fuente);
+    return hechos;
   }
 }

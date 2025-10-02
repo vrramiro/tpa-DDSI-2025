@@ -37,13 +37,13 @@ public class HechosController {
     return ResponseEntity.ok(hechos);
   }
 
-  @PatchMapping("/{idHecho}/visibilidad")
+  @PatchMapping("/visibilidad/{idHecho}")
   public ResponseEntity<Void> actualizarVisibilidad(@PathVariable Long idHecho, @RequestBody Boolean visibilidad) {
     this.hechosService.actualizarVisibilidad(idHecho,visibilidad);
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("/{idHecho}/editar")
+  @PutMapping("/editar/{idHecho}")
   public ResponseEntity<Void> editarHecho(@PathVariable Long idHecho, @RequestBody HechoInputDTO hecho) {
     this.hechosService.editarHecho(hecho, idHecho);
     return ResponseEntity.ok().build();

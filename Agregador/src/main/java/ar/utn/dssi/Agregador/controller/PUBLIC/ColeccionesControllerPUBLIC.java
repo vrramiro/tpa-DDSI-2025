@@ -21,7 +21,7 @@ public class ColeccionesControllerPUBLIC {
   @Autowired
   private IColeccionService coleccionService;
 
-  @GetMapping("/{idColeccion}/hechos")
+  @GetMapping("/hechos/{idColeccion}")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String handle) {
     List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(handle);
 

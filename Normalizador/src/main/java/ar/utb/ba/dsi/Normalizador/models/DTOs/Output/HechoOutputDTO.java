@@ -18,3 +18,4 @@ public class HechoOutputDTO {
     private UbicacionOutputDTO ubicacion;
     private LocalDateTime fechaAcontecimiento;
 }
+

@@ -1,25 +1,21 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoEstaticaInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.CategoriaOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.UbicacionOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Multimedia;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import java.util.List;
 
 public class MapperDeHechos {
+
   static public HechoOutputDTO hechoOutputDTO(Hecho hecho) {
     HechoOutputDTO dtoHecho = new HechoOutputDTO();
 
-    dtoHecho.setTitulo(hecho.getTitulo());
+    /*dtoHecho.setTitulo(hecho.getTitulo()); //TODO: REVISAR QUE ESTAN MAL LOS DTOS
     dtoHecho.setDescripcion(hecho.getDescripcion());
 
-    CategoriaOutputDTO categoriaOutputDTO = new CategoriaOutputDTO();
-    categoriaOutputDTO.setNombre(hecho.getCategoria().getNombre());
+    String categoriaOutputDTO = hecho.getCategoria().getNombre();
 
     dtoHecho.setCategoria(categoriaOutputDTO);
 
@@ -33,7 +29,7 @@ public class MapperDeHechos {
 
     List<String> urlsMultimedia = hecho.getContenidoMultimedia().stream().map(Multimedia::getUrl).toList();
 
-    dtoHecho.setContenidoMultimedia(urlsMultimedia);
+    dtoHecho.setContenidoMultimedia(urlsMultimedia);*/
 
     return dtoHecho;
   }

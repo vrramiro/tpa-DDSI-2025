@@ -11,5 +11,5 @@ public interface ISolicitudDeEliminacionService {
     SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion);
     void aceptarSolicitud(Long idSolicitud);
     void rechazarSolicitud(Long idSolicitud);
-    List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes();
+    List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado);
 }

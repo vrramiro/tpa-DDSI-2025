@@ -18,6 +18,5 @@ public class HechoOutputDTO {
     private Ubicacion ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
-    private List<Etiqueta> etiquetas;
     private List<MultipartFile> contenidoMultimedia;
 }
