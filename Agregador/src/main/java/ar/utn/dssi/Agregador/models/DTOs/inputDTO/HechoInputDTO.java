@@ -13,8 +13,8 @@ public class HechoInputDTO {
     private Long idEnFuente;
     private String titulo;
     private String descripcion;
-    private Categoria categoria;
-    private Ubicacion ubicacion;
+    private Categoria categoria; //TODO: TIENE QUE SER DTO
+    private Ubicacion ubicacion;        //TODO: TIENE QUE SER DTO
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
     private List<MultipartFile> contenidoMultimedia;

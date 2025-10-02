@@ -17,3 +17,4 @@ public class HechoOutputDTO {
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;
 }
+
