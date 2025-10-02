@@ -1,10 +1,8 @@
 package ar.utb.ba.dsi.Normalizador.models.entities;
 
-import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,6 +15,7 @@ public class Hecho {
   private Categoria categoria;
   private String titulo;
   private String descripcion;
+  private String tituloSanitizado;
+  private String descripcionSanitizada;
   private LocalDateTime fechaAcontecimiento;
-  private LocalDateTime fechaCarga;
 }

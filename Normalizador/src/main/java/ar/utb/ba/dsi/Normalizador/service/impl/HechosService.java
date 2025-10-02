@@ -13,22 +13,17 @@ import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeHechos;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import ar.utb.ba.dsi.Normalizador.service.IHechosService;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.format.DateTimeFormatter;
 
 @Service
 public class HechosService implements IHechosService {
+    private final IUbicacionService ubicacionService;
+    private final ICategoriaService categoriaService;
 
-    @Autowired
-    private IUbicacionService ubicacionService;
-
-    @Autowired
-    private ICategoriaService categoriaService;
-
-    private static final DateTimeFormatter FORMATTER =
-            DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+    public HechosService(IUbicacionService ubicacionService, ICategoriaService categoriaService) {
+        this.ubicacionService = ubicacionService;
+        this.categoriaService = categoriaService;
+    }
 
     @Override
     public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {
@@ -47,7 +42,6 @@ public class HechosService implements IHechosService {
 
             //Normalizo fechas
             hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
-            hecho.setFechaCarga(MapperDeFecha.fromString(hechoInput.getFechaCarga())); //TODO sacar esta fecha esta al pedo se deberia cargar en el lugar que pide la normalizacion
 
             // Sanitizo titulo y descripcion
             hecho.setTitulo(hechoInput.getTitulo());

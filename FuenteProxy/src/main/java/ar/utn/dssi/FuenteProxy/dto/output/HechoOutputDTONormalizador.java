@@ -14,5 +14,4 @@ public class HechoOutputDTONormalizador {
     private Double latitud;
     private Double longitud;
     private String fechaAcontecimiento; //TODO hacer cambio a LocalDateTime => tambien en el normalzador (inputDTO)
-    private String fechaCarga;
 }
