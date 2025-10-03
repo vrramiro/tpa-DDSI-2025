@@ -18,32 +18,32 @@ public class HechosController {
   @Autowired
   private IHechosService hechosService;
 
-  @PostMapping("/crear")
+  @PostMapping
   public ResponseEntity<Void> crearHecho(@RequestBody HechoInputDTO hecho) {
     this.hechosService.crear(hecho);
     return ResponseEntity.ok().build();
   }
 
-  @GetMapping("/hechos")
+  @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
     List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos();
     return ResponseEntity.ok(hechos);
   }
 
-  @GetMapping("/hechosNuevos")
+  @GetMapping("/nuevos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosNuevos
           (@RequestParam(name = "fechaDesde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
     List<HechoOutputDTO> hechos = this.hechosService.obtenerHechosNuevos(fechaDesde);
     return ResponseEntity.ok(hechos);
   }
 
-  @PatchMapping("/visibilidad/{idHecho}")
-  public ResponseEntity<Void> actualizarVisibilidad(@PathVariable Long idHecho, @RequestBody Boolean visibilidad) {
+  @PatchMapping("/{idHecho}/visibilidad")
+  public ResponseEntity<Void> actualizarVisibilidad(@PathVariable Long idHecho, @RequestParam Boolean visibilidad) {
     this.hechosService.actualizarVisibilidad(idHecho,visibilidad);
     return ResponseEntity.ok().build();
   }
 
-  @PutMapping("/editar/{idHecho}")
+  @PutMapping("/{idHecho}")
   public ResponseEntity<Void> editarHecho(@PathVariable Long idHecho, @RequestBody HechoInputDTO hecho) {
     this.hechosService.editarHecho(hecho, idHecho);
     return ResponseEntity.ok().build();
