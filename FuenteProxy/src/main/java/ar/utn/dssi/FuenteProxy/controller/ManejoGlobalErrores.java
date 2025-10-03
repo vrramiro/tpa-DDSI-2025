@@ -3,8 +3,10 @@ package ar.utn.dssi.FuenteProxy.controller;
 import ar.utn.dssi.FuenteProxy.dto.output.ErrorDTO;
 import ar.utn.dssi.FuenteProxy.error.DatosFaltantes;
 import ar.utn.dssi.FuenteProxy.error.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteProxy.error.FechaUltimaComunicacionFutura;
 import ar.utn.dssi.FuenteProxy.error.HechoNormalizadoNoObtenido;
 import ar.utn.dssi.FuenteProxy.error.RepositorioVacio;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -33,6 +35,11 @@ public class ManejoGlobalErrores {
     @ExceptionHandler(HechoNormalizadoNoObtenido.class)
     public ResponseEntity<ErrorDTO> hechoNormalizadoNoObtenido(HechoNormalizadoNoObtenido ex) {
         return construirRespuestaError(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FechaUltimaComunicacionFutura.class)
+    public ResponseEntity<ErrorDTO> fechaUltimaComunicacionFutura(FechaUltimaComunicacionFutura ex) {
+        return construirRespuestaError(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     private ResponseEntity<ErrorDTO> construirRespuestaError(String mensaje, HttpStatus status) {
