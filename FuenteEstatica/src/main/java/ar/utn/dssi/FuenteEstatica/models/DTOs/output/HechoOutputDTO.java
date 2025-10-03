@@ -1,7 +1,5 @@
 package ar.utn.dssi.FuenteEstatica.models.DTOs.output;
 
-
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Ubicacion;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;

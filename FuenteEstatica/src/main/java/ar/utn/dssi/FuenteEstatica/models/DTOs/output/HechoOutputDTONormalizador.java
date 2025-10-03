@@ -14,5 +14,4 @@ public class HechoOutputDTONormalizador {
     private Double latitud;
     private Double longitud;
     private String fechaAcontecimiento;
-    private String fechaCarga;
 }
