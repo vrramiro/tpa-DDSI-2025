@@ -76,40 +76,5 @@ public class MapperDeHechos {
   }
 
   // HechoFuenteDinamicaInputDTO -> Hecho
-  static public Hecho hechoFromInputDTODinamica(HechoFuenteDinamicaInputDTO input) {
-    Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
-    hecho.setTitulo(input.getTitulo());
-    hecho.setDescripcion(input.getDescripcion());
-    hecho.setTituloSanitizado(input.getTituloSanitizado());
-    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
 
-    Categoria categoria = new Categoria();
-    categoria.setId(input.getCategoria().getId());
-    categoria.setNombre(input.getCategoria().getNombre());
-    hecho.setCategoria(categoria);
-
-    Ubicacion ubicacion = new Ubicacion();
-    ubicacion.setLatitud(input.getUbicacion().getLatitud());
-    ubicacion.setLongitud(input.getUbicacion().getLongitud());
-    ubicacion.setPais(input.getUbicacion().getPais());
-    ubicacion.setCiudad(ubicacion.getCiudad());
-    ubicacion.setProvincia(ubicacion.getProvincia());
-    hecho.setUbicacion(ubicacion);
-
-
-    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
-    hecho.setFechaCarga(input.getFechaCarga());
-    hecho.setVisible(true);
-
-    if (input.getContenidoMultimedia() != null) {
-      hecho.setContenidoMultimedia(
-              input.getContenidoMultimedia().stream()
-                      .map(ContenidoMultimedia::new)
-                      .collect(Collectors.toList())
-      );
-    }
-
-    return hecho;
-  }
 }
