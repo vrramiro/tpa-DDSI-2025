@@ -1,7 +1,5 @@
 package ar.utn.dssi.FuenteEstatica.models.DTOs.output;
 
-
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Ubicacion;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,15 +20,3 @@ public class HechoOutputDTO {
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
 }
-
-/* ESTO ES LO QUE DEBE RECIBIR EL AGREGADOR:
-    private Long idExterno;
-    private String titulo;
-    private String descripcion;
-    private String tituloSanitizado;
-    private String descripcionSanitizada;
-    private CategoriaInputDTO categoria;
-    private UbicacionInputDTO ubicacion;
-    private LocalDateTime fechaAcontecimiento;
-    private LocalDateTime fechaCarga;
- */
