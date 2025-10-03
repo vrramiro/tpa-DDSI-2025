@@ -1,12 +1,8 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
@@ -15,7 +11,6 @@ import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -35,7 +30,7 @@ public class HechosService implements IHechosService {
         try {
             Hecho hecho = hechosRepository.findById(idHecho).orElseThrow(IllegalArgumentException::new);
 
-            return MapperDeHechos.hechoOutputDTO(hecho);
+            return MapperDeHechos.hechoToOutputDTO(hecho);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
         }
@@ -47,7 +42,7 @@ public class HechosService implements IHechosService {
             return this.hechosRepository
                 .findAll()
                 .stream()
-                .map(MapperDeHechos::hechoOutputDTO)
+                .map(MapperDeHechos::hechoToOutputDTO)
                 .toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
@@ -70,8 +65,6 @@ public class HechosService implements IHechosService {
     public void importarNuevosHechos() {
         try {
             List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
-
-            //TODO: ACA NORMALIZAR LOS HECHOS..
 
             List<Coleccion> colecciones = coleccionRepository.findAll();
 

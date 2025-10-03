@@ -2,10 +2,12 @@ package ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.CategoriaInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.UbicacionInputDTO;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Data
 public class HechoFuenteDinamicaInputDTO {
     private Long idExterno;
 

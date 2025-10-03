@@ -1,7 +1,10 @@
 package ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
 public class HechoFuenteProxyInputDTO {
     private Long idExterno;
     private String titulo;

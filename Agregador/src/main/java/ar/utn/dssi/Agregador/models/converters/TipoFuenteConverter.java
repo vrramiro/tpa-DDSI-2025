@@ -1,12 +1,9 @@
 package ar.utn.dssi.Agregador.models.converters;
 
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteDinamica.FuenteDinamica;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteDinamica.FuenteDinamicaConcreta;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteEstatica.FuenteEstatica;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteEstatica.FuenteEstaticaConcreta;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteProxy.FuenteProxy;
-import ar.utn.dssi.Agregador.models.entities.fuente.impl.fuenteProxy.FuenteProxyConcreta;
+import ar.utn.dssi.Agregador.models.entities.fuente.impl.FuenteDinamica;
+import ar.utn.dssi.Agregador.models.entities.fuente.impl.FuenteEstatica;
+import ar.utn.dssi.Agregador.models.entities.fuente.impl.FuenteProxy;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

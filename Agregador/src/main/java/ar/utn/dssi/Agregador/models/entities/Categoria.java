@@ -26,4 +26,5 @@ public class Categoria {
     @OneToMany(mappedBy = "categoria")
     @Column(nullable = false)
     private List<Hecho> hechos;
+
 }

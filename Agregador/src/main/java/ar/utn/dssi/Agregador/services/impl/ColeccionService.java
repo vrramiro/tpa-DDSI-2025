@@ -22,6 +22,7 @@ import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Flux;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Slf4j
 @Service
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
@@ -121,7 +123,7 @@ public class ColeccionService implements IColeccionService {
             List<HechoOutputDTO> hechosColeccion = coleccion.getHechos()
                     .stream()
                     .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, coleccion))
-                    .map(MapperDeHechos::hechoOutputDTO)
+                    .map(MapperDeHechos::hechoToOutputDTO)
                     .toList();
 
             return hechosColeccion;
@@ -149,7 +151,7 @@ public class ColeccionService implements IColeccionService {
         var coleccion = coleccionRepository.findByHandle(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
         var hechosColeccion = coleccion.getHechos();
 
-        return hechosColeccion.stream().map(MapperDeHechos::hechoOutputDTO).toList();
+        return hechosColeccion.stream().map(MapperDeHechos::hechoToOutputDTO).toList();
     }
 
     // GUARDAR UN HECHO EN LA COLECCION
@@ -168,12 +170,28 @@ public class ColeccionService implements IColeccionService {
     //AGREGADO DE FUENTE A LA COLECCION
     @Override
     public void agregarFuente(Long idFuente, String handle){
-        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
-        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
+        if(idFuente == null) {
+            throw IllegalArgumentException("idFuente mal cargado");
+        }
 
-        CriterioDePertenencia criterio = CriterioDePertenenciaFactory.crearCriterio(TipoCriterio.FUENTE, fuenteAAgregar.getId().toString());
-        this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
-        coleccionRepository.save(coleccionAModificar);
+        if(handle == null) {
+            throw IllegalArgumentException("handle de coleccion mal cargado");
+        }
+
+        try {
+            Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
+            Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
+
+            //TODO cambia
+            if(!coleccionAModificar.tieneFuente(fuenteAAgregar)) {
+                coleccionAModificar.addFuente(fuenteAAgregar);
+                coleccionRepository.save(coleccionAModificar);
+            } else {
+                log.info("La coleccion ya tiene esta fuente.");
+            }
+        } catch(Exception e) {
+            throw e;
+        }
     }
 
     //ELIMINADO DE FUENTE A LA COLECCION

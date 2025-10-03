@@ -3,7 +3,6 @@ package ar.utn.dssi.Agregador.models.entities;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,9 +12,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,8 +46,14 @@ public class Hecho {
     @Column(nullable = false, name = "titulo")
     private String titulo;
 
+    @Column(nullable = false, name = "titulo_sanitizado")
+    private String tituloSanitizado;
+
     @Column(nullable = false, name = "descripcion")
     private String descripcion;
+
+    @Column(nullable = false, name = "descripcion_sanitizada")
+    private String descripcionSanitizado;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
@@ -66,24 +75,24 @@ public class Hecho {
     @Column(nullable = false, name = "visible")
     private Boolean visible;
 
-    //TODO: ver si hacen falta los datos ya sanitizados => titulo y descripcion directamente guardados sanitizados + los originales
 
     public Boolean mismoHecho(Hecho otroHecho) {
-        return this.getTitulo().equals(otroHecho.getTitulo()) &&
-            this.getCategoria().equals(otroHecho.getCategoria()) &&
-            this.getUbicacion().equals(otroHecho.getUbicacion()) &&
-            this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
+        return this.titulo.equals(otroHecho.getTitulo()) &&
+                this.categoria.equals(otroHecho.getCategoria()) &&
+                this.ubicacion.equals(otroHecho.getUbicacion()) &&
+                this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
     }
 
+
     public boolean tituloSimilar(Hecho otroHecho) {
-        return true; //TODO: Implementar, seguramente usando similitud de cosenos y TF-IDF (aptovechando alguna libreria)
+        return this.getTitulo().equals(otroHecho.getTituloSanitizado());
     }
 
     public boolean mismosAtributos(Hecho otroHecho) {
-        return this.getDescripcion().equals(otroHecho.getDescripcion())
-            || this.getCategoria().equals(otroHecho.getCategoria())
-            || this.getUbicacion().equals(otroHecho.getUbicacion())
-            || this.getFechaAcontecimiento().equals(otroHecho.getFechaAcontecimiento());
+        return this.descripcion.equals(otroHecho.getDescripcion())
+            || this.categoria.equals(otroHecho.getCategoria())
+            || this.ubicacion.equals(otroHecho.getUbicacion())
+            || this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
     }
 
     public boolean distintaFuente(Hecho hecho) {

@@ -2,11 +2,11 @@ package ar.utn.dssi.Agregador.models.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Embeddable
 public class Ubicacion {
     @Column(name = "pais")

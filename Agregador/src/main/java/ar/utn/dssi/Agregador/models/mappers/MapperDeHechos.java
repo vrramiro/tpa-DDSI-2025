@@ -1,64 +1,115 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteDinamicaInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteEstaticaIntputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteProxyInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import java.util.List;
+
+import java.util.stream.Collectors;
 
 public class MapperDeHechos {
 
-  static public HechoOutputDTO hechoOutputDTO(Hecho hecho) {
-    HechoOutputDTO dtoHecho = new HechoOutputDTO();
+  // Hecho -> HechoOutputDTO
+  static public HechoOutputDTO hechoToOutputDTO(Hecho hecho) {
+    HechoOutputDTO dto = new HechoOutputDTO();
+    dto.setTitulo(hecho.getTitulo());
+    dto.setDescripcion(hecho.getDescripcion());
+    dto.setCategoria(hecho.getCategoria());
+    dto.setUbicacion(hecho.getUbicacion());
+    dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
+    dto.setFechaCarga(hecho.getFechaCarga());
 
-    /*dtoHecho.setTitulo(hecho.getTitulo()); //TODO: REVISAR QUE ESTAN MAL LOS DTOS
-    dtoHecho.setDescripcion(hecho.getDescripcion());
+    dto.setContenidoMultimedia(null); //TODO: VER GESTION MULTIMEDIA
 
-    String categoriaOutputDTO = hecho.getCategoria().getNombre();
-
-    dtoHecho.setCategoria(categoriaOutputDTO);
-
-    UbicacionOutputDTO ubicacionOutputDTO = new UbicacionOutputDTO();
-    ubicacionOutputDTO.setLatitud(hecho.getUbicacion().getLatitud());
-    ubicacionOutputDTO.setLongitud(hecho.getUbicacion().getLongitud());
-
-    dtoHecho.setUbicacion(ubicacionOutputDTO);
-    dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-    dtoHecho.setFechaCarga(hecho.getFechaCarga());
-
-    List<String> urlsMultimedia = hecho.getContenidoMultimedia().stream().map(Multimedia::getUrl).toList();
-
-    dtoHecho.setContenidoMultimedia(urlsMultimedia);*/
-
-    return dtoHecho;
+    return dto;
   }
 
-  static public Hecho hecho(HechoInputDTO hechoInputDTO) {
+
+  // HechoFuenteProxyInputDTO -> Hecho
+  static public Hecho hechoFromInputDTOProxy(HechoFuenteProxyInputDTO input) {
     Hecho hecho = new Hecho();
+    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setTitulo(input.getTitulo());
+    hecho.setDescripcion(input.getDescripcion());
+    hecho.setTituloSanitizado(input.getTituloSanitizado());
+    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
+    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
+    hecho.setFechaCarga(input.getFechaCarga());
+    hecho.setVisible(true);
 
-    hecho.setTitulo(hechoInputDTO.getTitulo());
-    hecho.setDescripcion(hechoInputDTO.getDescripcion());
-
-    Categoria categoria = new Categoria();
-    categoria.setNombre(hechoInputDTO.getCategoria());
-
-    hecho.setCategoria(categoria);
-
-    Ubicacion ubicacion = new Ubicacion(hechoInputDTO.getUbicacion().getLatitud(), hechoInputDTO.getUbicacion().getLongitud());
-
-    hecho.setUbicacion(ubicacion);
-    hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-    hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
-
-    List<Multimedia> multimedia = hechoInputDTO.getContenidoMultimedia().stream().map(Multimedia::new).toList();
-
-    hecho.setContenidoMultimedia(multimedia);
+    // Fuente externa se debería setear aparte (lookup en BD usando idFuenteExterna)
 
     return hecho;
   }
 
-  static public Hecho hechoEstaticaToHecho(HechoEstaticaInputDTO hechoEstaticaInputDTO) {
-    return null;
+  // HechoFuenteEstaticaInputDTO -> Hecho
+  static public Hecho hechoFromInputDTOEstatica(HechoFuenteEstaticaIntputDTO input) {
+    Hecho hecho = new Hecho();
+    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setTitulo(input.getTitulo());
+    hecho.setDescripcion(input.getDescripcion());
+    hecho.setTituloSanitizado(input.getTituloSanitizado());
+    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
+
+    Categoria categoria = new Categoria();
+    categoria.setId(input.getCategoria().getId());
+    categoria.setNombre(input.getCategoria().getNombre());
+    hecho.setCategoria(categoria);
+
+    Ubicacion ubicacion = new Ubicacion();
+    ubicacion.setLatitud(input.getUbicacion().getLatitud());
+    ubicacion.setLongitud(input.getUbicacion().getLongitud());
+    ubicacion.setPais(input.getUbicacion().getPais());
+    ubicacion.setCiudad(ubicacion.getCiudad());
+    ubicacion.setProvincia(ubicacion.getProvincia());
+    hecho.setUbicacion(ubicacion);
+
+
+    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
+    hecho.setFechaCarga(input.getFechaCarga());
+    hecho.setVisible(true);
+    return hecho;
+  }
+
+  // HechoFuenteDinamicaInputDTO -> Hecho
+  static public Hecho hechoFromInputDTODinamica(HechoFuenteDinamicaInputDTO input) {
+    Hecho hecho = new Hecho();
+    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setTitulo(input.getTitulo());
+    hecho.setDescripcion(input.getDescripcion());
+    hecho.setTituloSanitizado(input.getTituloSanitizado());
+    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
+
+    Categoria categoria = new Categoria();
+    categoria.setId(input.getCategoria().getId());
+    categoria.setNombre(input.getCategoria().getNombre());
+    hecho.setCategoria(categoria);
+
+    Ubicacion ubicacion = new Ubicacion();
+    ubicacion.setLatitud(input.getUbicacion().getLatitud());
+    ubicacion.setLongitud(input.getUbicacion().getLongitud());
+    ubicacion.setPais(input.getUbicacion().getPais());
+    ubicacion.setCiudad(ubicacion.getCiudad());
+    ubicacion.setProvincia(ubicacion.getProvincia());
+    hecho.setUbicacion(ubicacion);
+
+
+    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
+    hecho.setFechaCarga(input.getFechaCarga());
+    hecho.setVisible(true);
+
+    if (input.getContenidoMultimedia() != null) {
+      hecho.setContenidoMultimedia(
+              input.getContenidoMultimedia().stream()
+                      .map(ContenidoMultimedia::new)
+                      .collect(Collectors.toList())
+      );
+    }
+
+    return hecho;
   }
 }

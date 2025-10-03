@@ -4,7 +4,6 @@ import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioFechaDesde;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioFechaHasta;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioPorCategoria;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioPorFuente;
 
 import java.time.LocalDate;
 
@@ -22,8 +21,9 @@ public class CriterioDePertenenciaFactory {
             /*case UBICACION:
                 Ubicacion ubicacion = new Ubicacion();
                 return new CriterioUbicacion();*/ //TODO: IMPLEMENTACION
+            /*
             case FUENTE:
-                return new CriterioPorFuente(Long.parseLong(valorDelCriterio));
+                return new CriterioPorFuente(Long.parseLong(valorDelCriterio));*/
             default:
                 return null;
         }

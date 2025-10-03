@@ -1,10 +1,10 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
-import java.util.Locale;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -76,5 +76,13 @@ public class Coleccion {
 
     public void eliminarCriterio(CriterioDePertenencia criterio) {
         this.criterios.remove(criterio);
+    }
+
+    public Boolean tieneFuente(Fuente fuente) {
+        return this.fuentes.contains(fuente);
+    }
+
+    public void addFuente(Fuente fuente) {
+        this.fuentes.add(fuente);
     }
 }
