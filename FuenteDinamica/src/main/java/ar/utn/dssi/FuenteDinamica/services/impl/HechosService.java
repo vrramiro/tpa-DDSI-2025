@@ -2,7 +2,6 @@ package ar.utn.dssi.FuenteDinamica.services.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.entities.*;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteDinamica.models.errores.*;
@@ -42,8 +41,9 @@ public class HechosService implements IHechosService {
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
     validarHechoInput(hechoInputDTO);
+    Hecho hechoANormalizar = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
 
-    Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(MapperDeHechos.hechoFromInputDTO(hechoInputDTO)).block();
+    Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hechoANormalizar).block();
 
     hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
@@ -130,7 +130,6 @@ public class HechosService implements IHechosService {
   /*/////////////////////// FUNCIONES PRIVADAS ///////////////////////*/
 
   //Funcion para la validacion de hechos input
-  //TODO revisar posible builder/factory
   private void validarHechoInput(HechoInputDTO hechoInputDTO) {
     if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
       throw new DatosFaltantes("El título es obligatorio.");
