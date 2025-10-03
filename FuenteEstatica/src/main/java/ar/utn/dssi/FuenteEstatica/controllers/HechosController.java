@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/fuente/hechos")
+@RequestMapping("/hechos")
 
 public class HechosController {
     @Autowired
@@ -36,7 +36,7 @@ public class HechosController {
         }
     }
 
-    @GetMapping("/hechos")
+    @GetMapping("/nuevos")
     public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
             (@RequestParam(name = "fechaDesde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
         List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos(fechaDesde);

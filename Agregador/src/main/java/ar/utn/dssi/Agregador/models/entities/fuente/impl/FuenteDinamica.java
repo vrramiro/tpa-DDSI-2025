@@ -45,7 +45,7 @@ public class FuenteDinamica implements ITipoFuente {
 
   private Flux<HechoFuenteDinamicaInputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {
     WebClient webClient = WebClient.builder()
-            .baseUrl(baseUrl)
+            .baseUrl(baseUrl+ "/hechos")
             .build();
 
     return webClient.get()

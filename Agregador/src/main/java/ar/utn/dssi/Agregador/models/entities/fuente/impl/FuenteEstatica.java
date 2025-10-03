@@ -1,33 +1,89 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteEstaticaIntputDTO;
+import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
 public class FuenteEstatica implements ITipoFuente {
 
+  @Value("${fuente-estatica.timeout-ms}")
+  private Integer timeoutMs;
 
   @Override
   public List<Hecho> hechosNuevos(Fuente fuente) {
-    return this.getHechos(fuente.getBaseUrl()).stream().map(MapperDeHechos::hechoFromInputDTOEstatica).toList();
+    LocalDateTime ultimoEnvioFuente = fuente.getUltimaActualizacion();
+    LocalDateTime fechaDesde;
+
+    if (ultimoEnvioFuente == null) {
+      fechaDesde = LocalDateTime.now();
+    } else {
+      fechaDesde = ultimoEnvioFuente;
+    }
+
+    return getHechos(fuente.getBaseUrl(), fechaDesde)
+            .map(this::hechoFromInputDTOEstatica)
+            .collectList()
+            .block();
   }
 
-  public List<HechoFuenteEstaticaIntputDTO> getHechos(String baseUrl) {
-    WebClient webClient = WebClient.builder().baseUrl(baseUrl + "/api/hechos").build();
+  private Flux<HechoFuenteEstaticaIntputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {
+    WebClient webClient = WebClient.builder()
+            .baseUrl(baseUrl + "/hechos")
+            .build();
 
     return webClient.get()
+            .uri(uriBuilder -> uriBuilder
+                    .path("/nuevos")
+                    .queryParam("fechaDesde", fechaDesde)
+                    .build())
             .retrieve()
             .bodyToFlux(HechoFuenteEstaticaIntputDTO.class)
-            .collectList()
-            .block()
-            .stream()
-            .toList();
+            .timeout(Duration.ofMillis(timeoutMs))
+            .onErrorResume(e -> {
+              e.printStackTrace();
+              return Flux.empty();
+            });
+  }
+
+  private Hecho hechoFromInputDTOEstatica(HechoFuenteEstaticaIntputDTO input) {
+    Hecho hecho = new Hecho();
+    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setTitulo(input.getTitulo());
+    hecho.setDescripcion(input.getDescripcion());
+    hecho.setTituloSanitizado(input.getTituloSanitizado());
+    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
+
+    Categoria categoria = new Categoria();
+    categoria.setId(input.getCategoria().getId());
+    categoria.setNombre(input.getCategoria().getNombre());
+    hecho.setCategoria(categoria);
+
+
+    Ubicacion ubicacion = new Ubicacion();
+    ubicacion.setLatitud(input.getUbicacion().getLatitud());
+    ubicacion.setLongitud(input.getUbicacion().getLongitud());
+    ubicacion.setPais(input.getUbicacion().getPais());
+    ubicacion.setCiudad(input.getUbicacion().getCiudad());
+    ubicacion.setProvincia(input.getUbicacion().getProvincia());
+    hecho.setUbicacion(ubicacion);
+
+
+    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
+    hecho.setFechaCarga(input.getFechaCarga());
+    hecho.setVisible(true);
+
+    return hecho;
   }
 }
