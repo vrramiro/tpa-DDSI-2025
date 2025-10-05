@@ -1,16 +1,20 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
+@DiscriminatorValue("por_provincia")
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "por_provincia")
 public class CriterioPorProvincia extends CriterioDePertenencia {
   @Column(name = "provincia", nullable = false)

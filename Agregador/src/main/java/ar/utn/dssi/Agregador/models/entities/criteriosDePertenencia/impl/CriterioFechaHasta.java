@@ -6,12 +6,17 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
-@AllArgsConstructor
+@DiscriminatorValue("por_fecha_hasta")
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name = "fecha_hasta")
 public class CriterioFechaHasta extends CriterioDePertenencia {
   @Column(name = "fecha_hasta", nullable = false)
