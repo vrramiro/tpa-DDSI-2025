@@ -3,7 +3,6 @@ package ar.utn.dssi.Agregador.controller.ADMIN;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,9 +36,9 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.ok(colecciones); // status 200
   }
 
-  @GetMapping("/hechos/{idColeccion}")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(idColeccion);
+  @GetMapping("/hechos/{handle}")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String handle) {
+    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(handle);
 
     if(hechosDeColeccion.isEmpty()){
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
@@ -48,41 +47,17 @@ public class ColeccionesControllerADMIN {
     return ResponseEntity.ok(hechosDeColeccion); // status 200
   }
 
-  @PutMapping("/coleccion/{idColeccion}")
+  @PutMapping("/coleccion/{handle}")
   public ResponseEntity<ColeccionOutputDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionInputDTO coleccionInputDTO){
     ColeccionOutputDTO coleccionOutputDTO = coleccionService.actualizarColeccion(handle, coleccionInputDTO);
 
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(coleccionOutputDTO); // status 201
   }
 
-  @DeleteMapping("/coleccion/{idColeccion}")
+  @DeleteMapping("/coleccion/{handle}")
   public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle){
     coleccionService.eliminarColeccion(handle);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
   }
-
-  //AGREGAR O QUITAR FUENTES DE UNA COLECCION
-  @PutMapping("/coleccion/{idColeccion}/{idFuente}")
-  public ResponseEntity<Void> agregarFuente(@PathVariable Long idFuente, @PathVariable String handle) {
-    coleccionService.agregarFuente(idFuente, handle);
-
-    return ResponseEntity.ok().build();
-  }
-
-  @DeleteMapping("/coleccion/{idColeccion}/{idFuente}")
-  public ResponseEntity<Void> eliminarFuente(@PathVariable Long idFuente, @PathVariable String handle){
-    coleccionService.eliminarFuente(idFuente, handle);
-
-    return ResponseEntity.ok().build(); // status 200
-  }
-
-  //ESTABLECER EL ALGORITMO DE CONSENSO
-  @PutMapping("/algortimoConsenso/{handle}")
-  public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody TipoConsenso algoritmoConsenso) {   //TODO: VER SI RECIBE UN STRING O UN ENUM...
-    coleccionService.actualizarAlgoritmo(handle, algoritmoConsenso);
-
-    return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // 202 Accepted
-  }
-
 }
