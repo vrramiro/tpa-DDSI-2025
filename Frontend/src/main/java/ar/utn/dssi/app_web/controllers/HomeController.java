@@ -18,4 +18,10 @@ public class HomeController {
         model.addAttribute("titulo", "Explorador");
         return "home/explorador";
     }
+
+    @GetMapping("/panel_gestion")
+    public String gestion(Model model) {
+        model.addAttribute("titulo", "Panel de Gestion");
+        return "home/panelGestion";
+    }
 }

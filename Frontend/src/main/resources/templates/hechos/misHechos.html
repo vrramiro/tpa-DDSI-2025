@@ -1,36 +1,16 @@
-<!DOCTYPE html>
-<html lang="es">
-
+<html th:replace="~{layout/base:: html}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mis Hechos - MetaMapa</title>
-  <link rel="stylesheet" href="../../static/css/misHechos.css">
+  <!-- CSS específico de esta vista -->
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/hechos/misHechos.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+  </th:block>
 </head>
 
-<body>
-    <!-- HEADER -->
-    <header class="main-header">
-      <a href="../home/landing.html" class="logo">MetaMapa</a>
-      <button class="menu-toggle" id="menu-toggle">☰</button>
-      <nav class="main-nav" id="main-nav">
-        <ul>
-          	<li><a href="../colecciones/colecciones.html" class="btn btn-secondary">Colecciones</a></li>
-            <li><a href="../home/explorador.html" class="btn btn-secondary">Explorar</a></li>
-		    <li><a href="crearHechoContribuyente.html" class="btn btn-secondary">Crear hecho</a></li>
-			<li><a href="../home/panelGestionAdmin.html" class="btn btn-secondary">Gestionar</a></li>
-			<li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
-          <li>
-            <a href="../home/inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-
+<div th:fragment="contenido" class="row">
   <h1>Mis Hechos</h1>
 
   <div class="grid">
-	<a href="hecho.html" class="card-link">
     <div class="card">
       <div class="card-header">
         <span class="card-title">Protesta en Plaza Mayor</span>
@@ -44,7 +24,7 @@
         <span class="footer-tag">Protesta</span>
       </div>
     </div>
-	</a>
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">Incendio en Chascomús</span>
@@ -58,7 +38,7 @@
         <span class="footer-tag">Ambiental</span>
       </div>
     </div>
-	
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">Entrega de ayuda humanitaria</span>
@@ -72,7 +52,7 @@
         <span class="footer-tag">Ayuda Humanitaria</span>
       </div>
     </div>
-	
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">Marcha estudiantil</span>
@@ -86,13 +66,13 @@
         <span class="footer-tag">Social</span>
       </div>
     </div>
-	
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">Ladron de quesos Atrapado</span>
         <span class="card-date">01/05/2025</span>
       </div>
-      <img class="card-img" src="../../static/img/img.png" alt="hecho">
+      <img class="card-img" th:src="@{/img/img.png}" alt="hecho">
       <div class="card-details">
         <p class="card-description">Luego de una intensa persecucion en el supermercado chino, se logro atrapar al ladron de quesos roquefort. Notifica en desarrollo</p>
       </div>
@@ -100,13 +80,13 @@
         <span class="footer-tag">Ambiental</span>
       </div>
     </div>
-	
+
     <div class="card">
       <div class="card-header">
         <span class="card-title">Huelga de transporte</span>
         <span class="card-date">28/04/2025</span>
       </div>
-      <img class="card-img" src="../../static/img/img_1.png" alt="hecho">
+      <img class="card-img" th:src="@{/img/img_1.png}" alt="hecho">
       <div class="card-details">
         <p class="card-description">Liderados por el piquetero Ramiro De La Vega, un paro total de transporte público afectó a millones de personas en la ciudad y el área metropolitana, en reclamo de mejoras salariales.</p>
       </div>
@@ -114,7 +94,7 @@
         <span class="footer-tag">Protesta</span>
       </div>
     </div>
-	
+
   </div>
 
   <div class="modal-overlay" id="eventModal">
@@ -149,13 +129,9 @@
 		<a href="#" class="page-link">&raquo;</a>
 	</nav>
 
-
-  <footer>
-    © 2025 MetaMapa. Todos los derechos reservados.
-    <br>
-    <a href="#">Política de Privacidad</a> | <a href="#">Contacto</a>
-  </footer>
-
-    <script src="../../static/js/misHechos.js"></script>
-</body>
+  <th:block th:fragment="scripts">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/hechos/misHechos.js}"></script>
+  </th:block>
+</div>
 </html>

@@ -62,5 +62,9 @@
   <div class="nav-mode">
     <a href="estadisticas.html">  <button class="btn btn-outline" id="btn-colecciones">Ver estadisticas</button> </a>
   </div>
+
+  <th:block th:fragment="scripts">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/home/explorador.js}"></script>
+  </th:block>
 </div>
-</html>

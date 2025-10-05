@@ -1,0 +1,70 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+  <!-- CSS específico de esta vista -->
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/hechos/crearHecho.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+  </th:block>
+</head>
+
+<main th:fragment="contenido" class="container">
+  <section class="form-container">
+    <h1>Crear Hecho</h1>
+
+    <form action="#" method="POST" class="form">
+      <div>
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo" placeholder="Ingrese el título del hecho">
+      </div>
+
+      <div>
+        <label for="fecha">Fecha de acontecimiento</label>
+        <input type="date" id="fecha" name="fecha">
+      </div>
+
+      <div>
+        <label>Ubicación</label>
+        <div class="map-placeholder">Mapa (seleccionable)</div>
+      </div>
+
+      <div>
+        <label for="categoria">Categoría</label>
+        <select id="categoria" name="categoria">
+          <option>Seleccione una categoría</option>
+          <option>Política</option>
+          <option>Social</option>
+          <option>Ambiental</option>
+          <option>Otro</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" rows="4" placeholder="Escriba una descripción del hecho"></textarea>
+      </div>
+
+      <div>
+        <label for="multimedia">Multimedia</label>
+        <input type="file" id="multimedia" name="multimedia">
+      </div>
+
+      <div class="form-options">
+        <label class="anonimo-option">
+          <span>Publicar como anónimo</span>
+          <input type="checkbox" id="anonimo" name="anonimo">
+        </label>
+      </div>
+
+      <div class="submit-container">
+        <button type="submit" class="btn btn-primary">Crear</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+  <th:block th:fragment="scripts">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/hechos/crearHecho.js}"></script>
+  </th:block>
+</div>
+</html>
