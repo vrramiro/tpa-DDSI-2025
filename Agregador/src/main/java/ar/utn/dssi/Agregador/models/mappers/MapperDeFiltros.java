@@ -7,7 +7,7 @@ import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import java.time.LocalDate;
 
 public class MapperDeFiltros {
-  public static Filtro filtro(FiltroInputDTO filtroInput, Categoria categoria) {
+  /*public static Filtro filtro(FiltroInputDTO filtroInput, Categoria categoria) {
     Filtro filtro = new Filtro();
 
     if(categoria != null) {
@@ -36,5 +36,5 @@ public class MapperDeFiltros {
     }
 
     return filtro;
-  }
+  }*/ //TODO: REVISAR? LOS FILTROS NO TIENEN ESTOS DATOS
 }

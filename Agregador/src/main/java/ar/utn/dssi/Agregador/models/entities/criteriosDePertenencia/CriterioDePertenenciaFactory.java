@@ -11,13 +11,17 @@ public class CriterioDePertenenciaFactory {
     public static CriterioDePertenencia crearCriterio(TipoCriterio tipo, String valorDelCriterio) {
         switch(tipo) {
             case FECHA_DESDE:
-                return new CriterioFechaDesde();
+                LocalDate fechaDesde = LocalDate.parse(valorDelCriterio);
+                return new CriterioFechaDesde(fechaDesde);
             case FECHA_HASTA:
-                return new CriterioFechaHasta();
+                LocalDate fechaHasta = LocalDate.parse(valorDelCriterio);
+                return new CriterioFechaHasta(fechaHasta);
             case CATEGORIA:
                 Categoria categoria = new Categoria();
                 categoria.setNombre(valorDelCriterio);
-                return new CriterioPorCategoria();
+                CriterioPorCategoria criterioCategoria = new CriterioPorCategoria();
+                criterioCategoria.agregarCategorias(categoria);
+                return criterioCategoria;
             /*case UBICACION:
                 Ubicacion ubicacion = new Ubicacion();
                 return new CriterioUbicacion();*/ //TODO: IMPLEMENTACION

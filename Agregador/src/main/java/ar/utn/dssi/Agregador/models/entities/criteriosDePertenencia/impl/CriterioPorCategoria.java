@@ -12,9 +12,13 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "por_categoria")
 public class CriterioPorCategoria extends CriterioDePertenencia {
     @ManyToMany
@@ -28,5 +32,9 @@ public class CriterioPorCategoria extends CriterioDePertenencia {
     @Override
     public Boolean loCumple(Hecho hecho) {
         return this.categorias.contains(hecho.getCategoria());
+    }
+
+    public void agregarCategorias(Categoria categoria) {
+        this.categorias.add(categoria);
     }
 }

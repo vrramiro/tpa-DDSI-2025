@@ -171,11 +171,11 @@ public class ColeccionService implements IColeccionService {
     @Override
     public void agregarFuente(Long idFuente, String handle){
         if(idFuente == null) {
-            throw IllegalArgumentException("idFuente mal cargado");
+            throw new IllegalArgumentException("idFuente mal cargado");
         }
 
         if(handle == null) {
-            throw IllegalArgumentException("handle de coleccion mal cargado");
+            throw new IllegalArgumentException("handle de coleccion mal cargado");
         }
 
         try {

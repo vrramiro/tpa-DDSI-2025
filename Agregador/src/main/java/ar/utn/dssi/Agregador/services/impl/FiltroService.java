@@ -21,7 +21,9 @@ public class FiltroService implements IFiltrosService {
         if (filtroInputDTO.getCategoria() != null && !filtroInputDTO.getCategoria().isBlank()) {
             Categoria categoria = new Categoria();
                 categoria.setNombre(filtroInputDTO.getCategoria());
-            criterios.add(new CriterioPorCategoria(categoria));
+            CriterioPorCategoria criterioCategoria = new CriterioPorCategoria();
+            criterioCategoria.agregarCategorias(categoria);
+            criterios.add(criterioCategoria);
         }
 
         if (filtroInputDTO.getFecha_acontecimiento_desde() != null) {
@@ -32,7 +34,7 @@ public class FiltroService implements IFiltrosService {
             criterios.add(new CriterioFechaHasta(filtroInputDTO.getFecha_acontecimiento_hasta()));
         }
 
-        if (filtroInputDTO.getLatitud() != null && filtroInputDTO.getLongitud() != null) {
+        /*if (filtroInputDTO.getLatitud() != null && filtroInputDTO.getLongitud() != null) {
             Ubicacion ubicacion = new Ubicacion(filtroInputDTO.getLatitud(), filtroInputDTO.getLongitud());
 
             criterios.add(new CriterioUbicacion(ubicacion));
@@ -40,7 +42,7 @@ public class FiltroService implements IFiltrosService {
 
         if (filtroInputDTO.getIdFuente() != null) {
             criterios.add(new CriterioPorFuente(filtroInputDTO.getIdFuente()));
-        }
+        }*/ //TODO: GESTIONAR ESTOS CASOS
 
         return Filtro.builder()
                 .criteriosDeFiltro(criterios)
