@@ -1,9 +1,9 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia;
 
-import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioFechaDesde;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioFechaHasta;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioPorCategoria;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.CriterioPorProvincia;
 
 import java.time.LocalDate;
 
@@ -11,23 +11,21 @@ public class CriterioDePertenenciaFactory {
     public static CriterioDePertenencia crearCriterio(TipoCriterio tipo, String valorDelCriterio) {
         switch(tipo) {
             case FECHA_DESDE:
-                LocalDate fechaDesde = LocalDate.parse(valorDelCriterio);
-                return new CriterioFechaDesde(fechaDesde);
+                CriterioFechaDesde criterioFechaDesde = new CriterioFechaDesde();
+                criterioFechaDesde.setFechaDesde(LocalDate.parse(valorDelCriterio));
+                return criterioFechaDesde;
             case FECHA_HASTA:
-                LocalDate fechaHasta = LocalDate.parse(valorDelCriterio);
-                return new CriterioFechaHasta(fechaHasta);
+                CriterioFechaHasta criterioFechaHasta = new CriterioFechaHasta();
+                criterioFechaHasta.setFechaHasta(LocalDate.parse(valorDelCriterio));
+                return criterioFechaHasta;
             case CATEGORIA:
-                Categoria categoria = new Categoria();
-                categoria.setNombre(valorDelCriterio);
                 CriterioPorCategoria criterioCategoria = new CriterioPorCategoria();
-                criterioCategoria.agregarCategorias(categoria);
+                criterioCategoria.setCategoria(valorDelCriterio);
                 return criterioCategoria;
-            /*case UBICACION:
-                Ubicacion ubicacion = new Ubicacion();
-                return new CriterioUbicacion();*/ //TODO: IMPLEMENTACION
-            /*
-            case FUENTE:
-                return new CriterioPorFuente(Long.parseLong(valorDelCriterio));*/
+            case PROVINCIA:
+                CriterioPorProvincia criterioProvincia = new CriterioPorProvincia();
+                criterioProvincia.setProvincia(valorDelCriterio);
+                return criterioProvincia;
             default:
                 return null;
         }
