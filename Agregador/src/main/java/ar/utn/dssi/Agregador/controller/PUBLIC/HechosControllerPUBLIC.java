@@ -1,14 +1,10 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
