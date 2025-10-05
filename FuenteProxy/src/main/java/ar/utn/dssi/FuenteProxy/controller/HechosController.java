@@ -14,12 +14,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/hechos")
+@RequestMapping("/hechos")
 public class HechosController {
   @Autowired
   public IHechosService hechosService;
 
-  @GetMapping
+  @GetMapping("/nuevos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@RequestParam LocalDateTime fechaUltimaComunicacion) {
     try {
       List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos(fechaUltimaComunicacion);

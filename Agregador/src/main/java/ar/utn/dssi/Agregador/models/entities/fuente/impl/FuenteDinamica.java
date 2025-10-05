@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Component
 public class FuenteDinamica implements ITipoFuente {
 
-  @Value("${fuente-dinamica.timeout-ms}")
+  @Value("${timeout-ms}")
   private Integer timeoutMs;
 
   @Override

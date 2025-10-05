@@ -24,23 +24,4 @@ public class MapperDeHechos {
     return dto;
   }
 
-
-  // HechoFuenteProxyInputDTO -> Hecho
-  static public Hecho hechoFromInputDTOProxy(HechoFuenteProxyInputDTO input) {
-    Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
-    hecho.setTitulo(input.getTitulo());
-    hecho.setDescripcion(input.getDescripcion());
-    hecho.setTituloSanitizado(input.getTituloSanitizado());
-    hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
-    hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
-    hecho.setFechaCarga(input.getFechaCarga());
-    hecho.setVisible(true);
-
-    // Fuente externa se debería setear aparte (lookup en BD usando idFuenteExterna)
-
-    return hecho;
-  }
-
-
 }
