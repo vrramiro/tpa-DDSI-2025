@@ -1,0 +1,106 @@
+/* Layout principal */
+main {
+    flex: 1;
+    padding-bottom: 3rem;
+}
+
+h1 {
+    text-align: center;
+    margin: 2rem 0 1rem;
+    color: var(--dark-color);
+}
+
+/* Grid de tarjetas */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.card {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    transition: transform .2s;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card-header {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: .5rem;
+}
+
+.card-details {
+    background: var(--light-color);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+}
+
+/* Botón "Ver Coleccion" como enlace sin subrayado */
+.card-footer .btn,
+.card-footer .btn:link,
+.card-footer .btn:visited,
+.card-footer .btn:hover,
+.card-footer .btn:active {
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Paginación */
+.grid .pagination {
+    grid-column: 1 / -1;    /* ocupar todo el ancho del grid */
+    justify-self: center;   /* centrar el nav en el grid */
+    width: 100%;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center; /* centrar items */
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-link,
+.page-link-ellipsis {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link-ellipsis {
+    border: none;
+}
