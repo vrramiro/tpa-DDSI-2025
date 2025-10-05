@@ -1,5 +1,5 @@
 /* ============================================================
-   VARIABLES Y RESET BÁSICO (idéntico a landing.css)
+   VARIABLES Y RESET
    ============================================================ */
 :root {
     --primary-color: #20c997;
@@ -24,9 +24,9 @@
     --space-3: 1.5rem;
     --space-4: 2rem;
 }
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Tipografía fluida */
 html { font-size: clamp(15px, 0.6vw + 12px, 18px); }
 
 body {
@@ -34,12 +34,15 @@ body {
     color: var(--text-color);
     background-color: var(--light-color);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
 
 /* ============================================================
-   HEADER (copiado de landing.css)
+   HEADER / NAV
    ============================================================ */
 .main-header {
+    position: sticky;
     background-color: var(--background-color);
     min-height: 60px;
     padding: .5rem 5%;
@@ -47,16 +50,17 @@ body {
     justify-content: space-between;
     align-items: center;
     box-shadow: var(--box-shadow);
-    position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 3000;
 }
+
 .logo {
     font-size: clamp(1.25rem, 1.2vw + 1rem, 1.6rem);
     font-weight: 700;
     color: var(--primary-color);
     text-decoration: none;
 }
+
 .main-nav ul {
     list-style: none;
     display: flex;
@@ -76,6 +80,7 @@ body {
     background-color: var(--light-color);
     color: var(--primary-color);
 }
+
 .menu-toggle {
     display: none;
     font-size: 1.8rem;
@@ -86,7 +91,7 @@ body {
 }
 
 /* ============================================================
-   BOTONES (idénticos a landing)
+   BOTONES
    ============================================================ */
 .btn {
     display: inline-block;
@@ -100,12 +105,14 @@ body {
     transition: background-color .3s, transform .2s;
 }
 .btn:hover { transform: translateY(-2px); }
+
 .btn-primary   { background-color: var(--primary-color); color: #fff; }
-.btn-secondary { background-color: var(--light-color); color: #fff; }
+.btn-secondary { background-color: var(--light-color); color: var(--dark-color); }
 .btn-outline   { background-color: transparent; border: 2px solid var(--primary-color); color: var(--primary-color); }
+.btn-danger    { background-color: var(--danger-color); color: #fff; }
 
 /* ============================================================
-   FOOTER (copiado de landing.css)
+   FOOTER
    ============================================================ */
 .main-footer {
     background: var(--dark-color);
@@ -120,22 +127,11 @@ body {
 }
 
 /* ============================================================
-   MEDIA QUERIES (copiadas de landing.css)
-   ============================================================ */
+   RESPONSIVE   TODO ver si rompe
+   ============================================================*/
+
 @media (max-width: 992px) {
     .main-header { padding-inline: 4%; }
-    .main-nav ul { justify-content: flex-end; }
-}
-@media (max-width: 768px) {
-    .main-header { padding-inline: 3%; }
-    .main-nav ul { gap: .5rem; }
-    .btn { width: 100%; }
-}
-@media (max-width: 480px) {
-    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
-    .main-nav a { padding: .4rem .5rem; }
-}
-@media (max-width: 992px) {
     .menu-toggle { display: block; }
     .main-nav {
         display: none;
@@ -152,91 +148,12 @@ body {
     .main-nav.show { display: block; }
 }
 
-/* ============================================================
-   ESTILOS EXCLUSIVOS DE EXPLORAR
-   ============================================================ */
-h1 {
-  text-align: center;
-  margin: 2rem 0 1rem;
-  color: var(--dark-color);
-}
-.layout {
-  display: flex;
-  gap: 2rem;
-  width: 90%;
-  max-width: 1200px;
-  margin: auto;
-}
-.filters {
-  flex: 1.2;
-  max-width: 300px;
-  background: var(--background-color);
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.filters h2 { color: var(--dark-color); }
-.input {
-  width: 100%;
-  padding: .6rem;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-}
-.mapa {
-  flex: 2.5;
-  background: var(--background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  color: gray;
-}
-.nav-mode {
-  text-align: center;
-  margin-top: 2rem;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-/* ============================================================
-   RESPONSIVE PARA LAYOUT MAPA + FILTROS
-   ============================================================ */
-@media (max-width: 992px) {
-  .layout {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .filters {
-    max-width: 100%;
-    order: 1;
-  }
-
-  .mapa {
-    order: 2;
-    min-height: 300px;
-  }
-
-  .nav-mode {
-    flex-direction: column;
-    gap: .8rem;
-  }
+@media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .btn { width: 100%; }
 }
 
 @media (max-width: 480px) {
-  h1 {
-    font-size: 1.2rem;
-  }
-  .filters h2 {
-    font-size: 1rem;
-  }
-  .mapa {
-    min-height: 250px;
-  }
+    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
+    .main-nav a { padding: .4rem .5rem; }
 }

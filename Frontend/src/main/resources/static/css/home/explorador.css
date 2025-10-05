@@ -1,0 +1,104 @@
+/* ============================================================
+   ESTILOS EXCLUSIVOS DE EXPLORAR
+   ============================================================ */
+h1 {
+    text-align: center;
+    margin: 2rem 0 1rem;
+    color: var(--dark-color);
+}
+.layout {
+    display: flex;
+    gap: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+.filters {
+    flex: 1.2;
+    max-width: 300px;
+    background: var(--background-color);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.filters h2 { color: var(--dark-color); }
+.input {
+    width: 100%;
+    padding: .6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+}
+.mapa {
+    flex: 2.5;
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    color: gray;
+}
+.nav-mode {
+    text-align: center;
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+/* ============================================================
+   RESPONSIVE PARA LAYOUT MAPA + FILTROS
+   ============================================================ */
+@media (max-width: 992px) {
+    .layout {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters {
+        max-width: 100%;
+        order: 1;
+    }
+
+    .mapa {
+        order: 2;
+        min-height: 300px;
+    }
+
+    .nav-mode {
+        flex-direction: column;
+        gap: .8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.2rem;
+    }
+    .filters h2 {
+        font-size: 1rem;
+    }
+    .mapa {
+        min-height: 250px;
+    }
+}
+
+/* Altura base en desktop */
+.mapa {
+    position: relative;
+    height: clamp(320px, 70vh, 680px); /* 70% de alto de pantalla aprox. */
+    width: 100%;
+    border-radius: 12px;   /* opcional, por estética */
+    overflow: hidden;      /* opcional, para que respete el borde redondeado */
+}
+
+/* El mapa ocupa todo el contenedor */
+#map {
+    position: absolute;
+    inset: 0; /* top/right/bottom/left: 0 */
+}
+
