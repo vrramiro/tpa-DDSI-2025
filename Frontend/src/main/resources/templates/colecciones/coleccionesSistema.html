@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base:: html}">
 <head>
     <th:block th:fragment="styles">
         <link th:href="@{/css/colecciones/coleccionesSistema.css}" rel="stylesheet">
@@ -27,8 +26,7 @@
         <div class="card-details"><p class="card-description">Colección sobre distribución de recursos, campañas de ayuda y asistencia comunitaria.</p></div>
         <div class="card-footer"><a href="../hechos/listaHechosColeccion.html" class="btn btn-outline">Ver Coleccion</a></div>
       </div>
-
-  </main>
+    </div>
 
 
   <nav class="pagination" aria-label="Paginación">
@@ -41,15 +39,9 @@
 	<a href="#" class="page-link">&raquo;</a>
   </nav>
 
-
-  <footer class="main-footer">
-        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
-        <div>
-            <a href="#">Política de Privacidad</a>
-            <a href="#">Contacto</a>
-        </div>
-    </footer>
-
-  <script src="../../static/js/colecciones.js"></script>
-</body>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/colecciones/colecciones.js}"></script>
+    </th:block>
+</div>
 </html>
