@@ -4,7 +4,6 @@ import java.util.List;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,7 +44,7 @@ public class Coleccion {
     @Column(nullable = false, name = "descripcion")
     private String descripcion;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true) //orphanRemoval para que si se elimina el criterio de la coleccion, se elimine de la bd
     @JoinColumn(name = "coleccion_id", referencedColumnName = "handle")
     private List<CriterioDePertenencia> criterios;
 
@@ -74,15 +73,21 @@ public class Coleccion {
             && this.fuentes.contains(hecho.getFuente());
     }
 
-    public void eliminarCriterio(CriterioDePertenencia criterio) {
-        this.criterios.remove(criterio);
-    }
-
     public Boolean tieneFuente(Fuente fuente) {
         return this.fuentes.contains(fuente);
     }
 
-    public void addFuente(Fuente fuente) {
-        this.fuentes.add(fuente);
+    public void actualizarCriterios(List<CriterioDePertenencia> criterios) {
+        this.criterios.clear();
+        this.criterios.addAll(criterios);
+    }
+
+    public void liberarHechos() {
+        this.hechos.clear();
+    }
+
+    public void actualizarFuentes(List<Fuente> fuentes) {
+        this.fuentes.clear();
+        this.fuentes.addAll(fuentes);
     }
 }
