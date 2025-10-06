@@ -31,4 +31,25 @@ public class HechoController {
         model.addAttribute("titulo", "Mis Hechos");
         return "hechos/misHechos";
     }
+
+    // Controllers para verificar funcionamiento de la vista (Borrar si no son necesarias)
+    @GetMapping("/detalleHechoAdmin")
+    public String detalleHechoAdmin() {
+        return "hechos/detalleHechoAdmin";
+    }
+
+    @GetMapping("/gestionHecho")
+    public String gestionHecho() {
+        return "hechos/gestionHechosAdmin";
+    }
+
+    @GetMapping("/hechoUnico")
+    public String hechoUnico() {
+        return "hechos/hecho";
+    }
+
+    @GetMapping("/listaHechosColeccion")
+    public String hechosCoelccion() {
+        return "hechos/listaHechosColeccion";
+    }
 }

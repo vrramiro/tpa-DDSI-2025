@@ -1,31 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base::html}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hecho - MetaMapa</title>
-    <link rel="stylesheet" href="../../static/css/hecho.css">
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/hecho.css}" rel="stylesheet">
+    </th:block>
 </head>
 
-<body>
-    <!-- HEADER -->
-    <header class="main-header">
-        <a href="../home/landing.html" class="logo">MetaMapa</a>
-        <button class="menu-toggle" id="menu-toggle">☰</button>
-        <nav class="main-nav" id="main-nav">
-            <ul>
-			    <li><a href="../colecciones/coleccionesSistema.html" class="btn btn-secondary">Colecciones</a></li>
-			    <li><a href="../home/explorador.html" class="btn btn-secondary">Explorar</a></li>
-			    <li><a href="crearHecho.html" class="btn btn-secondary">Crear hecho</a></li>
-			    <li><a href="../home/panelGestion.html" class="btn btn-secondary">Gestionar</a></li>
-			    <li><a href="misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
-                <li>
-                    <a href="../home/inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
+<div th:fragment="contenido">
 
     <main class="hecho-container">
         <div class="hecho-card">
@@ -62,16 +44,9 @@
     </main>
 
 
-    <footer class="main-footer">
-        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
-        <div>
-            <a href="#">Política de Privacidad</a>
-            <a href="#">Contacto</a>
-        </div>
-    </footer>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/hechos/gestionHecho.js}"></script>
+    </th:block>
 
-    <script src="../../static/js/hecho.js"></script>
-
-</body>
-
+</div>
 </html>
