@@ -8,7 +8,7 @@ import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,14 +16,15 @@ import java.util.List;
 
 @Service
 public class HechosService implements IHechosService {
-    @Autowired
-    private IHechosRepository hechosRepository;
+    private final IHechosRepository hechosRepository;
+    private final IColeccionRepository coleccionRepository;
+    private final IFuentesService fuentesService;
 
-    @Autowired
-    private IColeccionRepository coleccionRepository;
-
-    @Autowired
-    private IFuentesService fuentesService;
+    public HechosService(IHechosRepository hechosRepository, IColeccionRepository coleccionRepository, IFuentesService fuentesService) {
+        this.hechosRepository = hechosRepository;
+        this.coleccionRepository = coleccionRepository;
+        this.fuentesService = fuentesService;
+    }
 
     @Override
     public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
@@ -50,6 +51,7 @@ public class HechosService implements IHechosService {
     }
 
     @Override
+    @Transactional
     public void eliminarHecho(Long IdHecho) {
         try {
             //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
