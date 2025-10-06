@@ -1,9 +1,7 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
+import ar.utn.dssi.Agregador.models.entities.FiltroCriterioPertenecia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.*;
 import ar.utn.dssi.Agregador.services.IFiltrosService;
@@ -15,7 +13,7 @@ public class FiltroService implements IFiltrosService {
     public List<CriterioDePertenencia> criteriosDelFiltro;
 
     @Override
-    public Filtro crearFiltro(FiltroInputDTO filtroInputDTO) {
+    public FiltroCriterioPertenecia crearFiltro(FiltroInputDTO filtroInputDTO) {
         List<CriterioDePertenencia> criterios = new ArrayList<>();
 
         if (filtroInputDTO.getCategoria() != null && !filtroInputDTO.getCategoria().isBlank()) {
@@ -44,7 +42,7 @@ public class FiltroService implements IFiltrosService {
             criterios.add(new CriterioPorFuente(filtroInputDTO.getIdFuente()));
         }*/ //TODO: GESTIONAR ESTOS CASOS
 
-        return Filtro.builder()
+        return FiltroCriterioPertenecia.builder()
                 .criteriosDeFiltro(criterios)
                 .build();
     }

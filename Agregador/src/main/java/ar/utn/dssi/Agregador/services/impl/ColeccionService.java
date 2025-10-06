@@ -12,7 +12,7 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
+import ar.utn.dssi.Agregador.models.entities.FiltroCriterioPertenecia;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -148,7 +148,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
         try {
-            Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
+            FiltroCriterioPertenecia filtro = filtrosService.crearFiltro(filtroInputDTO);
             Coleccion coleccion = this.verificarActualizada(coleccionRepository.findColeccionByHandle(handle)
                 .orElseThrow(() -> new ColeccionNoEncontrada(handle)));
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);

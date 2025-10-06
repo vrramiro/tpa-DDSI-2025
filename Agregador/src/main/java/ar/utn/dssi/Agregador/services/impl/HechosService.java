@@ -11,6 +11,7 @@ import ar.utn.dssi.Agregador.services.IHechosService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -26,6 +27,7 @@ public class HechosService implements IHechosService {
         this.fuentesService = fuentesService;
     }
 
+
     @Override
     public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
         try {
@@ -37,11 +39,13 @@ public class HechosService implements IHechosService {
         }
     }
 
+
+
     @Override
-    public List<HechoOutputDTO> obtenerHechos() {
+    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, Double latitud, Double longitud, Long fuenteId) {
         try {
             return this.hechosRepository
-                .findAll()
+                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, latitud, longitud, fuenteId)
                 .stream()
                 .map(MapperDeHechos::hechoToOutputDTO)
                 .toList();
