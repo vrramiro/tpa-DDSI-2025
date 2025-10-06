@@ -7,7 +7,6 @@ import ar.utn.dssi.Agregador.models.entities.fuente.impl.FuenteProxy;
 import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
 
 import ar.utn.dssi.Agregador.services.IFuentesService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,8 +14,11 @@ import java.util.List;
 
 @Service
 public class FuentesService implements IFuentesService {
-  @Autowired
-  private IFuenteRepository fuenteRepository;
+  private final IFuenteRepository fuenteRepository;
+
+  public FuentesService(IFuenteRepository fuenteRepository) {
+    this.fuenteRepository = fuenteRepository;
+  }
 
   @Override
   public Fuente obtenerFuentePorId(Long id) {
@@ -46,5 +48,12 @@ public class FuentesService implements IFuentesService {
         .toList();
   }
 
+  @Override
+  public List<Fuente> obtenerFuentesPorTiposDeFuente(List<String> tiposDeFuente) {
+    List<String> tiposNormalizados = tiposDeFuente.stream()
+        .map(tipo -> tipo.trim().toUpperCase())
+        .toList();
 
+    return this.fuenteRepository.findFuenteByTipoFuenteIn(tiposNormalizados);
+  }
 }
