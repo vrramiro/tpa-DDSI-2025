@@ -1,31 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base:: html}">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion de Colecciones - MetaMapa</title>
-    <link rel="stylesheet" href="../../static/css/gestionColecciones.css">
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+    </th:block>
 </head>
 
-<body>
-    <header class="main-header">
-        <a href="../home/landing.html" class="logo">MetaMapa</a>
-        <button class="menu-toggle" id="menu-toggle">☰</button>
-        <nav class="main-nav" id="main-nav">
-            <ul>
-				<li><a href="coleccionesSistema.html" class="btn btn-secondary">Colecciones</a></li>
-				<li><a href="../home/explorador.html" class="btn btn-secondary">Explorar</a></li>
-				<li><a href="../hechos/crearHecho.html" class="btn btn-secondary">Crear hecho</a></li>
-				<li><a href="../home/panelGestion.html" class="btn btn-secondary">Gestionar</a></li>
-				<li><a href="../hechos/misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
-                <li>
-                    <a href="../home/inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
-                </li>
-            </ul>
-        </nav>
-    </header>
-	
+<div th:fragment="contenido" class="row">
+
     <main class="content-container">
 		<h2>Colecciones:</h2>
         <div class="collection-header">
@@ -105,15 +87,10 @@
             <a href="../home/panelGestion.html" class="btn btn-primary">Volver</a>
         </div>
     </main>
-  
-    <footer class="main-footer">
-        <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
-        <div>
-            <a href="#">Política de Privacidad</a>
-            <a href="#">Contacto</a>
-        </div>
-    </footer>
-  
-  <script src="../../static/js/gestionColecciones.js"></script>
-</body>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/colecciones/gestionColecciones.js}"></script>
+    </th:block>
+
+</div>
 </html>

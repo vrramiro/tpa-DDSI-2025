@@ -16,4 +16,20 @@ public class ColeccionController {
         model.addAttribute("titulo", "Colecciones");
         return "colecciones/coleccionesSistema";
     }
+
+    // Controllers para verificar funcionamiento de la vista (Borrar si no son necesarias)
+    @GetMapping("/crearColeccion")
+    public String detalleHechoAdmin() {
+        return "colecciones/crearColecciones";
+    }
+
+    @GetMapping("/gestionColecciones")
+    public String gestionHecho() {
+        return "colecciones/gestionColeccionesAdmin";
+    }
+
+    @GetMapping("/modificar")
+    public String hechoUnico() {
+        return "colecciones/modificarColecciones";
+    }
 }
