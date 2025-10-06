@@ -2,6 +2,7 @@ package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -24,5 +25,15 @@ public class CriterioPorCategoria extends CriterioDePertenencia {
     @Override
     public Boolean loCumple(Hecho hecho) {
         return this.categoria.equals(hecho.getCategoria().getNombre());
+    }
+
+    @Override
+    public TipoCriterio getTipoCriterio() {
+        return TipoCriterio.CATEGORIA;
+    }
+
+    @Override
+    public Boolean mismoValor(String valor) {
+      return this.categoria.equals(valor);
     }
 }

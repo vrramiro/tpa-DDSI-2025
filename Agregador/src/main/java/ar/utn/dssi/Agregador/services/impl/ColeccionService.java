@@ -1,8 +1,10 @@
 package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
+import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FuenteInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
@@ -12,10 +14,7 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
@@ -24,9 +23,10 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
+import ar.utn.dssi.Agregador.services.ICriterioDePertenenciaService;
 import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
-import ar.utn.dssi.Agregador.services.IHechosService;
+//import ar.utn.dssi.Agregador.services.IHechosService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -42,21 +42,23 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
     private final IHechosRepository hechosRepositorio;
-    private final IHechosService hechosService;
+    //private final IHechosService hechosService;
     private final IFuentesService fuentesService;
     private final IFiltrosService filtrosService;
+    private final ICriterioDePertenenciaService criterioDePertenenciaService;
     private final ModoNavegacionFactory modoNavegacionFactory;
     private final Map<String, Coleccion> coleccionCache = new ConcurrentHashMap<>();  //ConcurrentHashMap permite que varios hilos modifiquen la colección al mismo tiempo, y busco por handle
 
     public ColeccionService(IColeccionRepository coleccionRepository, IHechosRepository hechosRepositorio,
-                            IHechosService hechosService, FuentesService fuentesService, IFiltrosService filtrosService,
-                            ModoNavegacionFactory modoNavegacionFactory) {
+                            /*IHechosService hechosService,*/ FuentesService fuentesService, IFiltrosService filtrosService,
+                            ModoNavegacionFactory modoNavegacionFactory, ICriterioDePertenenciaService criterioDePertenenciaService) {
         this.coleccionRepository = coleccionRepository;
         this.hechosRepositorio = hechosRepositorio;
-        this.hechosService = hechosService;
+        //this.hechosService = hechosService;
         this.fuentesService = fuentesService;
         this.filtrosService = filtrosService;
         this.modoNavegacionFactory = modoNavegacionFactory;
+        this.criterioDePertenenciaService = criterioDePertenenciaService;
     }
 
     @Override
@@ -81,21 +83,10 @@ public class ColeccionService implements IColeccionService {
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
 
-    private void validarDatosColeccion(ColeccionInputDTO input) {
-        if(input.getTitulo() == null || input.getTitulo().isEmpty())
-            throw new DatosDeColeccionFaltantes("El titulo es obligatorio.");
-
-        if(input.getDescripcion() == null || input.getDescripcion().isEmpty())
-            throw new DatosDeColeccionFaltantes("La descripcion es obligatoria.");
-
-        if(input.getCriteriosDePertenecias() == null || input.getCriteriosDePertenecias().isEmpty())
-            throw new DatosDeColeccionFaltantes("Debe tener al menos un criterio de pertenencia.");
-    }
-
     @Override
     @Transactional
     public List<ColeccionOutputDTO> obtenerColecciones() {
-        List<Coleccion> colecciones = coleccionRepository.findColeccionByActualizada(true);
+        List<Coleccion> colecciones = this.obtenerColeccionesActualizadas();
 
         return colecciones
             .stream()
@@ -106,37 +97,51 @@ public class ColeccionService implements IColeccionService {
     @Override
     @Transactional
     public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO input) {
-        Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle);
+        Coleccion coleccion = this.obtenerColeccion(handle);
 
         if(!coleccion.getActualizada()) throw new ColeccionAguardandoActualizacion("La coleccion ya fue modificada, aguarde a que se actualice.");
 
         this.validarDatosColeccion(input);
 
-        coleccion.setTitulo(input.getTitulo());
-        coleccion.setDescripcion(input.getDescripcion());
+        if(!coleccion.getTitulo().equals(input.getTitulo())) coleccion.setTitulo(input.getTitulo());
+        if(!coleccion.getDescripcion().equals(input.getDescripcion())) coleccion.setDescripcion(input.getDescripcion());
 
-        List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
-                .stream()
-                .map(MapperDeCriterio::criterioFromCriterioInputDTO)
-                .toList();
+        Boolean cambiaronCriterios = criterioDePertenenciaService.actualizarCriterios(coleccion, input.getCriteriosDePertenecias());
 
+        Boolean cambiaronFuentes = false;
 
+        List<String> tiposDeFuentesInput = input.getFuentes().stream().map(FuenteInputDTO::getTipoFuente).toList();
+
+        List<Fuente> fuentesAAgregar = fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentesInput);
+
+        // Evito actualizar si son las mismas fuentes => comparo por set para no preocuparme por el orden
+        if(!fuentesAAgregar.stream().allMatch(coleccion::tieneFuente)) {
+            coleccion.actualizarFuentes(fuentesAAgregar);
+            cambiaronFuentes = true;
+        }
+
+        if(cambiaronCriterios || cambiaronFuentes) {
+            coleccion.setActualizada(Boolean.FALSE);
+            coleccion.liberarHechos();
+        }
 
         coleccionRepository.save(coleccion);
-        this.agregarACache(coleccion);  //Se van a actualizar los hechos asincronincamente
+
+        this.agregarACache(coleccion);  //Se van a actualizar los hechos asincronincamente => TODO usamos un cron o lanzamos un job
 
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
 
     @Override
     public void eliminarColeccion(String handle) {
-        try {
-            Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle);
-            if (coleccion != null) {
-                coleccionRepository.delete(coleccion);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar la coleccion: " + e.getMessage(), e);
+        if(handle == null || handle.isEmpty()) {
+            throw new DatosDeColeccionFaltantes("Handle mal cargado");
+        }
+
+        Coleccion coleccion = this.obtenerColeccion(handle);
+
+        if (coleccion != null) {
+            coleccionRepository.delete(coleccion);
         }
     }
 
@@ -144,7 +149,8 @@ public class ColeccionService implements IColeccionService {
     public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
         try {
             Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
-            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findColeccionByHandle(handle));
+            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findColeccionByHandle(handle)
+                .orElseThrow(() -> new ColeccionNoEncontrada(handle)));
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
 
           return coleccion.getHechos()
@@ -159,8 +165,8 @@ public class ColeccionService implements IColeccionService {
 
     //OBTENER HECHOS DE COLECCION
     @Override
-    public List<HechoOutputDTO> hechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findColeccionByHandle(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
+    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
+        var coleccion = this.obtenerColeccion(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
         var hechosColeccion = coleccion.getHechos();
 
         return hechosColeccion.stream().map(MapperDeHechos::hechoToOutputDTO).toList();
@@ -177,65 +183,6 @@ public class ColeccionService implements IColeccionService {
             coleccion.getHechos().add(hecho);
             coleccionRepository.save(coleccion);
         }
-    }
-
-    //AGREGADO DE FUENTE A LA COLECCION
-    @Override
-    public void agregarFuente(Long idFuente, String handle){
-        if(idFuente == null) {
-            throw new IllegalArgumentException("idFuente mal cargado");
-        }
-
-        if(handle == null) {
-            throw new IllegalArgumentException("handle de coleccion mal cargado");
-        }
-
-        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
-        Coleccion coleccionAModificar = coleccionRepository.findColeccionByHandle(handle);
-
-        //TODO cambia
-        if(!coleccionAModificar.tieneFuente(fuenteAAgregar)) {
-            coleccionAModificar.addFuente(fuenteAAgregar);
-            coleccionRepository.save(coleccionAModificar);
-        } else {
-            log.info("La coleccion ya tiene esta fuente.");
-        }
-    }
-
-    //ELIMINADO DE FUENTE A LA COLECCION
-    @Override
-    public void eliminarFuente(Long idFuente, String handle) {
-        Fuente fuenteAEliminar = fuentesService.obtenerFuentePorId(idFuente);
-        Coleccion coleccionAModificar = coleccionRepository.findColeccionByHandle(handle);
-
-        //TODO
-        //coleccionAModificar.eliminarFuente(fuenteAEliminar);
-
-        coleccionRepository.save(coleccionAModificar);
-    }
-
-    //AGREGACION DE UN CRITERIO DE PERTENENCIA
-    @Override
-    public void agregarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle) {
-        Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle);
-        coleccion.getCriterios().add(nuevoCriterio);
-        this.agregarACache(coleccion);
-    }
-
-    //ELIMINACION DE UN CRITERIO DE PERTENENCIA
-    @Override
-    public void eliminarCriterioDePertenencia(CriterioDePertenencia criterio, String handle) {
-        Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle);
-        coleccion.eliminarCriterio(criterio);
-        this.agregarACache(coleccion);
-    }
-
-    //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
-    @Override
-    public void actualizarAlgoritmo(String handle, TipoConsenso algoritmoConsenso) {
-        Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle);
-        coleccion.setConsenso(algoritmoConsenso);
-        coleccionRepository.save(coleccion);
     }
 
     //REFRESCO DE LOS HECHOS EN UNA COLECCION
@@ -298,5 +245,29 @@ public class ColeccionService implements IColeccionService {
         coleccionCache.clear();
     }
 
+    private void validarDatosColeccion(ColeccionInputDTO input) {
+        if(input.getTitulo() == null || input.getTitulo().isEmpty())
+            throw new DatosDeColeccionFaltantes("El titulo es obligatorio.");
+
+        if(input.getDescripcion() == null || input.getDescripcion().isEmpty())
+            throw new DatosDeColeccionFaltantes("La descripcion es obligatoria.");
+
+        if(input.getCriteriosDePertenecias() == null || input.getCriteriosDePertenecias().isEmpty())
+            throw new DatosDeColeccionFaltantes("Debe tener al menos un criterio de pertenencia.");
+
+        if(input.getFuentes() == null || input.getFuentes().isEmpty())
+            throw new DatosDeColeccionFaltantes("Debe tener al menos una fuente.");
+
+        if(input.getConsenso() == null || input.getConsenso().isEmpty())
+            throw new DatosDeColeccionFaltantes("El algoritmo de consenso es obligatorio.");
+    }
+
+    private Coleccion obtenerColeccion(String handle) {
+        return coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
+    }
+
+    private List<Coleccion> obtenerColeccionesActualizadas() {
+        return coleccionRepository.findColeccionByActualizada(true);
+    }
 }
 

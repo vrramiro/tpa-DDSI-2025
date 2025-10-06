@@ -24,4 +24,8 @@ public abstract class CriterioDePertenencia {
     private Long id;
 
     public abstract Boolean loCumple(Hecho unHecho);
+
+    public abstract TipoCriterio getTipoCriterio();
+
+    public abstract Boolean mismoValor(String valor);
 }

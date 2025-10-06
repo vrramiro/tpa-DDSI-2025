@@ -2,6 +2,7 @@ package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -25,5 +26,15 @@ public class CriterioFechaHasta extends CriterioDePertenencia {
   @Override
   public Boolean loCumple(Hecho unHecho) {
     return unHecho.getFechaCarga().toLocalDate().isBefore(this.fechaHasta);
+  }
+
+  @Override
+  public TipoCriterio getTipoCriterio() {
+    return TipoCriterio.FECHA_HASTA;
+  }
+
+  @Override
+  public Boolean mismoValor(String valor) {
+    return this.fechaHasta.toString().equals(valor);
   }
 }
