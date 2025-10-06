@@ -1,6 +1,8 @@
 package ar.utn.dssi.Agregador.controller;
 
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
+import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
+import ar.utn.dssi.Agregador.error.CriterioDistintoTipo;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ErrorDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,16 @@ public class GeneralExceptionHandler {
   @ExceptionHandler(ColeccionAguardandoActualizacion.class)
   public ResponseEntity<ErrorDTO> handleColeccionAguardandoActualizacion(ColeccionAguardandoActualizacion ex) {
     return handleException(ex.getMessage(), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(ColeccionNoEncontrada.class)
+  public ResponseEntity<ErrorDTO> handleColeccionNoEncontrada(ColeccionNoEncontrada ex) {
+    return handleException(ex.getMessage(), HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(CriterioDistintoTipo.class)
+  public ResponseEntity<ErrorDTO> handleCriterioDistintoTipo(CriterioDistintoTipo ex) {
+    return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   public ResponseEntity<ErrorDTO> handleException(String mensaje, HttpStatus status) {
