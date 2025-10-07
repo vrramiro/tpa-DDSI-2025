@@ -1,11 +1,16 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.DTO.HechoDTO;
 import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/hechos")
@@ -18,6 +23,18 @@ public class HechoController {
     public String mostrarFormularioCrear(Model model) {
         model.addAttribute("titulo", "Crear Nuevo Hecho");
         return "hechos/crearHecho";
+    }
+
+    @PostMapping("/crear")
+    public String crearHecho(@ModelAttribute("hecho") HechoDTO hechoDTO,
+                             BindingResult bindingResult,
+                             Model model,
+                             RedirectAttributes redirectAttributes) {
+
+        try {
+            HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO);
+        }
+
     }
 
     @GetMapping("/mis_hechos")

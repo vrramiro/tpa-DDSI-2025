@@ -9,7 +9,7 @@ public class HechoDTO {
     private String titulo;
     private String descripcion;
     private String categoria;
-    private String ubicacion;
+    private UbicacionDTO ubicacion;
     private String longitud;
     private String latitud;
     private String fechaAcontecimiento;
