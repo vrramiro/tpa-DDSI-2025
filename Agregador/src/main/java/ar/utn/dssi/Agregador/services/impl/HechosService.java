@@ -42,10 +42,10 @@ public class HechosService implements IHechosService {
 
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, Double latitud, Double longitud, Long fuenteId) {
+    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long fuenteId) {
         try {
             return this.hechosRepository
-                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, latitud, longitud, fuenteId)
+                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, fuenteId)
                 .stream()
                 .map(MapperDeHechos::hechoToOutputDTO)
                 .toList();

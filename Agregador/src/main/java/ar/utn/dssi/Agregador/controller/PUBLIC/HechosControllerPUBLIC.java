@@ -29,19 +29,14 @@ public class HechosControllerPUBLIC {
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoDesde,
           @RequestParam(name = "fechaAcontecimientoHasta", required = false)
           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoHasta,
-          @RequestParam(name = "latitud", required = false) Double latitud,
-          @RequestParam(name = "longitud", required = false) Double longitud,
+          @RequestParam(name = "ciudad", required = false) String ciudad,
+          @RequestParam(name = "provincia", required = false) String provincia,
           @RequestParam(name = "fuente", required = false) Long fuenteId
-  ) {
-    // Valido que la latitud y longitud sean en conjunto
-    if ((latitud != null && longitud == null) || (latitud == null && longitud != null)) {
-      return ResponseEntity.badRequest().body(null);
-    }
-
+  ){
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
             fechaReporteDesde, fechaReporteHasta,
             fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-            latitud, longitud, fuenteId
+            provincia, ciudad, fuenteId
     );
 
     if (hechos.isEmpty()) {

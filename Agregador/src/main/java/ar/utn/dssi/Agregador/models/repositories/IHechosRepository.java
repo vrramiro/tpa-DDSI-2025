@@ -27,8 +27,8 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
           @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
           @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,
           @Param("fechaAcontecimientoHasta") LocalDateTime fechaAcontecimientoHasta,
-          @Param("latitud") Double latitud,
-          @Param("longitud") Double longitud,
+          @Param("ciudad") String ciudad,
+          @Param("provincia") String provincia,
           @Param("fuenteId") Long fuenteId
   );
 
