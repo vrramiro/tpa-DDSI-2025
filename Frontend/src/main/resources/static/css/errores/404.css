@@ -44,17 +44,19 @@
     gap: 1rem;
 }
 
-/* Botones coherentes con base.css */
+/* Botones */
 .btn {
     padding: 0.6rem 1.3rem;
     border-radius: var(--border-radius);
     font-weight: 600;
+    text-decoration: none;
 }
 
 .btn-primary {
     background-color: var(--primary-color);
     border: none;
     color: #fff;
+    text-decoration: none;
 }
 
 .btn-outline-primary {
