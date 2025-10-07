@@ -51,7 +51,7 @@ public class ColeccionesControllerADMIN {
 
   @PutMapping("/{handle}")
   public ResponseEntity<ColeccionOutputDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionInputDTO coleccionInputDTO){
-    ColeccionOutputDTO coleccionOutputDTO = coleccionService.actualizarColeccion(handle, coleccionInputDTO);
+    ColeccionOutputDTO coleccionOutputDTO = coleccionService.editarColeccion(handle, coleccionInputDTO);
 
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(coleccionOutputDTO); // status 201
   }

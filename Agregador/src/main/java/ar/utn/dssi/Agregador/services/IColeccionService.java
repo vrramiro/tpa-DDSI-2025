@@ -3,10 +3,8 @@ package ar.utn.dssi.Agregador.services;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -15,9 +13,8 @@ public interface IColeccionService {
     //CRUD
     ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
     List<ColeccionOutputDTO> obtenerColecciones();
-    ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
+    ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
     List<HechoOutputDTO> navegacionColeccion(ModoNavegacion modoNavegacion, String handle);
     List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
-    Mono<Void> refrescarColecciones(Hecho hecho);
 }

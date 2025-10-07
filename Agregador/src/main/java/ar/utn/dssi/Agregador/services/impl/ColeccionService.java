@@ -12,6 +12,7 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
@@ -19,53 +20,38 @@ import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
-import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.ICriterioDePertenenciaService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
-//import ar.utn.dssi.Agregador.services.IHechosService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Flux;
 
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
-    private final IHechosRepository hechosRepositorio;
-    //private final IHechosService hechosService;
     private final IFuentesService fuentesService;
     private final ICriterioDePertenenciaService criterioDePertenenciaService;
     private final ModoNavegacionFactory modoNavegacionFactory;
-    private final Map<String, Coleccion> coleccionCache = new ConcurrentHashMap<>();  //ConcurrentHashMap permite que varios hilos modifiquen la colección al mismo tiempo, y busco por handle
 
-    public ColeccionService(IColeccionRepository coleccionRepository, IHechosRepository hechosRepositorio,
-                            /*IHechosService hechosService,*/ FuentesService fuentesService,
-                            ModoNavegacionFactory modoNavegacionFactory, ICriterioDePertenenciaService criterioDePertenenciaService) {
-        this.coleccionRepository = coleccionRepository;
-        this.hechosRepositorio = hechosRepositorio;
-        //this.hechosService = hechosService;
-        this.fuentesService = fuentesService;
-        this.modoNavegacionFactory = modoNavegacionFactory;
-        this.criterioDePertenenciaService = criterioDePertenenciaService;
-    }
+    private final ApplicationEventPublisher publicador;
 
     @Override
     @Transactional
     public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
-        var coleccion = new Coleccion();
+        Coleccion coleccion = new Coleccion();
 
         this.validarDatosColeccion(input);
 
         coleccion.setTitulo(input.getTitulo());
         coleccion.setDescripcion(input.getDescripcion());
-        coleccion.setActualizada(Boolean.TRUE);
+        coleccion.setActualizada(Boolean.FALSE); //se tiene que cargar con hechos
         List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
                 .stream()
                 .map(MapperDeCriterio::criterioFromCriterioInputDTO)
@@ -73,7 +59,9 @@ public class ColeccionService implements IColeccionService {
         coleccion.setCriterios(criterios);
         coleccion.setConsenso(MapperDeConsenso.consensoFromConsensoInputDTO(input.getConsenso()));
 
-        coleccionRepository.save(coleccion);
+        coleccion = coleccionRepository.save(coleccion);
+
+        publicador.publishEvent(coleccion.getHandle());
 
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
@@ -91,7 +79,7 @@ public class ColeccionService implements IColeccionService {
 
     @Override
     @Transactional
-    public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO input) {
+    public  ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO input) {
         Coleccion coleccion = this.obtenerColeccion(handle);
 
         if(!coleccion.getActualizada()) throw new ColeccionAguardandoActualizacion("La coleccion ya fue modificada, aguarde a que se actualice.");
@@ -122,7 +110,7 @@ public class ColeccionService implements IColeccionService {
 
         coleccionRepository.save(coleccion);
 
-        this.agregarACache(coleccion);  //Se van a actualizar los hechos asincronincamente => TODO usamos un cron o lanzamos un job
+        if(!coleccion.getActualizada()) publicador.publishEvent(coleccion.getHandle());
 
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
@@ -165,79 +153,6 @@ public class ColeccionService implements IColeccionService {
         var hechosColeccion = coleccion.getHechos();
 
         return hechosColeccion.stream().map(MapperDeHechos::hechoToOutputDTO).toList();
-    }
-
-    // GUARDAR UN HECHO EN LA COLECCION
-    private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
-        boolean cumpleCriterios = coleccion
-                .getCriterios()
-                .stream()
-                .allMatch(criterio -> criterio.loCumple(hecho));
-
-        if (cumpleCriterios) {
-            coleccion.getHechos().add(hecho);
-            coleccionRepository.save(coleccion);
-        }
-    }
-
-    //REFRESCO DE LOS HECHOS EN UNA COLECCION
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion) {
-        return Flux.fromIterable(hechosRepositorio.findAll())
-                .flatMap(hecho -> Mono.fromRunnable(() -> this.guardarEnColeccion(coleccion, hecho)))
-                .then(Mono.fromRunnable(() -> {
-                    coleccion.setActualizada(Boolean.TRUE);
-                    this.eliminarDeCache(coleccion.getHandle());
-                }));
-    }
-
-    private Coleccion verificarActualizada(Coleccion coleccion){
-        if (coleccion.getActualizada() == Boolean.TRUE) {
-            return coleccion;
-        } else if (coleccion.getActualizada() == Boolean.FALSE && coleccionCache.containsKey(coleccion.getHandle())) {
-            this.refrescarHechosEnColeccion(coleccion)
-                    .then(Mono.fromRunnable(() -> coleccionRepository.save(coleccion)))
-                        .subscribe();
-            return coleccion;
-        } else {
-            throw new IllegalStateException("No se puede actualizar el coleccion, se desconoce su estado actual");
-        }
-    }
-
-    /*/////////////////////// CRONS EN COLECCIONES ///////////////////////*/
-
-    //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
-    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS...
-    // Nose si es depues de que se ejecute esta funcion porque se
-    // invoca la cantidad de veces necesarias dependiendo los hechos
-    @Override
-    public Mono<Void> refrescarColecciones(Hecho hecho){
-        return Flux
-                .fromIterable(coleccionRepository.findAll())
-                .flatMap(coleccion -> {
-                    this.guardarEnColeccion(coleccion, hecho);
-                    return Mono.empty();
-                })
-                .then();
-    }
-
-    /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
-    private void agregarACache(Coleccion coleccion) {
-        String handle = coleccion.getHandle();
-        coleccionCache.put(handle, coleccion); //EL PUT SI YA EXISTE PISA
-    }
-
-    private Coleccion obtenerDeCache(String handle) {
-        return coleccionCache.get(handle);
-    }
-
-    private void eliminarDeCache(String handle) {
-        coleccionCache.remove(handle);
-    }
-
-    private void limpiarCache() {
-        // marcar todas las colecciones como actualizadas
-        coleccionCache.values().forEach(c -> c.setActualizada(Boolean.TRUE));
-        coleccionCache.clear();
     }
 
     private void validarDatosColeccion(ColeccionInputDTO input) {
