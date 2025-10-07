@@ -46,7 +46,7 @@
                         <td>2024-09-01</td>
                         <td>Aprobado</td>
                         <td class="action-buttons">
-                            <a href="hecho.html" class="btn btn-edit">Ver Mas</a>
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                         </td>
                     </tr>
                     <tr>
@@ -56,7 +56,7 @@
                         <td>2024-08-25</td>
                         <td>Pendiente</td>
                         <td class="action-buttons">
-                            <a href="hecho.html" class="btn btn-edit">Ver Mas</a>
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                         </td>
                     </tr>
                     <tr>
@@ -66,7 +66,7 @@
                         <td>2024-07-10</td>
                         <td>Rechazado</td>
                         <td class="action-buttons">
-                            <a href="hecho.html" class="btn btn-edit">Ver Mas</a>
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                         </td>
                     </tr>
                 </tbody>
@@ -84,7 +84,7 @@
 		</nav>
 		
         <div class="footer-actions">
-            <a href="../home/panelGestion.html" class="btn btn-primary">Volver</a>
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
         </div>
     </main>
 

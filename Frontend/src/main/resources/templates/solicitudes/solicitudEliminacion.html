@@ -1,36 +1,11 @@
-<!DOCTYPE html>
-<html lang="es">
+<html th:replace="~{layout/base:: html}">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Solicitud de Eliminacion Hecho - MetaMapa</title>
-  <link rel="stylesheet" href="../../static/css/solicitudEliminacion.css">
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/solicitudes/solicitudEliminacion.css}" rel="stylesheet">
+  </th:block>
 </head>
-<body>
-
-  <!-- Navbar -->
-
-  <!-- HEADER -->
-  <header class="main-header">
-    <a href="../home/landing.html" class="logo">MetaMapa</a>
-    <button class="menu-toggle" id="menu-toggle">☰</button>
-    <nav class="main-nav" id="main-nav">
-      <ul>
-     	<li><a href="../colecciones/coleccionesSistema.html" class="btn btn-secondary">Colecciones</a></li>
-		<li><a href="../home/explorador.html" class="btn btn-secondary">Explorar</a></li>
-		<li><a href="../hechos/crearHecho.html" class="btn btn-secondary">Crear hecho</a></li>
-		<li><a href="../home/panelGestion.html" class="btn btn-secondary">Gestionar</a></li>
-		<li><a href="../hechos/misHechos.html" class="btn btn-secondary">Mis hechos</a></li>
-        <li>
-          <a href="../home/inicioSesion.html" class="btn btn-primary">Iniciar Sesión</a>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-
-  <!-- Contenido principal -->
-  <main class="form-container">
+<div th:fragment="contenido" class="row">
+<section class="form-container">
     <h1>Solicitud de Eliminacion </h1>
 
 	<h2 for="descripcion">Descripción</h2>
@@ -45,17 +20,10 @@
         <button type="submit">Crear</button>
       </div>
     </form>
-  </main>
-
-  <!-- Footer -->
-  <footer class="main-footer">
-    <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
-    <div>
-      <a href="#">Política de Privacidad</a>
-      <a href="#">Contacto</a>
-    </div>
-  </footer>
-
-  <script src="../../static/js/solicitudEliminacion.js"></script>
-</body>
+</section>
+  <th:block th:fragment="scripts">
+   <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/solicitudes/solicitudEliminacion.js}"></script>
+  </th:block>
+</div>
 </html>

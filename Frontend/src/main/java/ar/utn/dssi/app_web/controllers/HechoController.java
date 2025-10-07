@@ -1,15 +1,11 @@
 package ar.utn.dssi.app_web.controllers;
 
-import ar.utn.dssi.app_web.DTO.HechoDTO;
 import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/hechos")
@@ -32,24 +28,34 @@ public class HechoController {
         return "hechos/misHechos";
     }
 
-    // Controllers para verificar funcionamiento de la vista (Borrar si no son necesarias)
-    @GetMapping("/detalleHechoAdmin")
+    //TODO VER QUE ES ESTO
+    @GetMapping("/detalle_hech_admin")
     public String detalleHechoAdmin() {
         return "hechos/detalleHechoAdmin";
     }
 
-    @GetMapping("/gestionHecho")
-    public String gestionHecho() {
+    @GetMapping("/gestion_hecho")
+    public String gestionHecho(Model model) {
+        model.addAttribute("titulo", "Gestion de Hechos");
         return "hechos/gestionHechosAdmin";
     }
 
-    @GetMapping("/hechoUnico")
-    public String hechoUnico() {
+    @GetMapping("/hecho_unico")
+    public String hechoUnico(Model model) {
+        //En titulo estaria bueno que este el nombre del hecho
+        model.addAttribute("titulo", "Hecho");
         return "hechos/hecho";
     }
 
-    @GetMapping("/listaHechosColeccion")
-    public String hechosCoelccion() {
+    @GetMapping("/lista_hechos_coleccion")
+    public String hechosCoelccion(Model model) {
+        model.addAttribute("titulo", "Hechos de Coleccion");
         return "hechos/listaHechosColeccion";
+    }
+
+    @GetMapping("/editar")
+    public String mostrarFormularioEdicion(Model model) {
+        model.addAttribute("titulo", "Editar Hecho");
+        return "hechos/editarHecho";
     }
 }

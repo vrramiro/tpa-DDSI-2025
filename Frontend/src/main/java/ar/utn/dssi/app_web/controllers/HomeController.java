@@ -24,4 +24,22 @@ public class HomeController {
         model.addAttribute("titulo", "Panel de Gestion");
         return "home/panelGestion";
     }
+
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("titulo", "Inicio Sesion");
+        return "home/inicioSesion";
+    }
+
+    @GetMapping("/registro")
+    public String registro(Model model) {
+        model.addAttribute("titulo", "Registro");
+        return "home/registro";
+    }
+
+    @GetMapping("/estadisticas")
+    public String estadisticas(Model model) {
+        model.addAttribute("titulo", "Estadisticas");
+        return "home/estadisticas";
+    }
 }

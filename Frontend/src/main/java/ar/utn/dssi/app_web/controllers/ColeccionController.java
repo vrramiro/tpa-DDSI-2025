@@ -18,18 +18,21 @@ public class ColeccionController {
     }
 
     // Controllers para verificar funcionamiento de la vista (Borrar si no son necesarias)
-    @GetMapping("/crearColeccion")
-    public String detalleHechoAdmin() {
+    @GetMapping("/crear_coleccion")
+    public String detalleHechoAdmin(Model model) {
+        model.addAttribute("titulo", "Crear Coleccion");
         return "colecciones/crearColecciones";
     }
 
-    @GetMapping("/gestionColecciones")
-    public String gestionHecho() {
+    @GetMapping("/gestion_colecciones")
+    public String gestionHecho(Model model) {
+        model.addAttribute("titulo", "Gestion de Colecciones");
         return "colecciones/gestionColeccionesAdmin";
     }
 
     @GetMapping("/modificar")
-    public String hechoUnico() {
+    public String hechoUnico(Model model) {
+        model.addAttribute("titulo", "Editar Coleccion");
         return "colecciones/modificarColecciones";
     }
 }

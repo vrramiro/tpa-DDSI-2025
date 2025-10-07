@@ -9,10 +9,9 @@
 
 <div th:fragment="contenido">
 
-	<main>
 		<div class="main-actions">
 			<h1>Eventos Ambientales</h1>
-			<a href="../home/explorador.html" class="btn btn-primary">Ver en mapa</a>
+			<a th:href="@{/explorador}" class="btn btn-primary">Ver en mapa</a>
 		</div>
 
 		<div class="hechos-list">
@@ -23,7 +22,7 @@
 					<p class="hecho-description">Un voraz incendio consumió más de 500 hectáreas de bosque nativo en la región serrana, afectando la flora y fauna local. Equipos de bomberos de varias localidades trabajan para controlarlo.</p>
 				</div>
 				<div class="hecho-card-actions">
-					<a href="hecho.html" class="btn btn-outline">Ver más</a>
+					<a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
 				</div>
 			</article>
 
@@ -34,7 +33,7 @@
 					<p class="hecho-description">Voluntarios y organizaciones locales se unieron para plantar más de mil árboles autóctonos en la ribera del río, en un esfuerzo por recuperar el ecosistema dañado por la contaminación.</p>
 				</div>
 				<div class="hecho-card-actions">
-					<a href="#" class="btn btn-outline">Ver más</a>
+					<a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
 				</div>
 			</article>
 
@@ -45,7 +44,7 @@
 					<p class="hecho-description">Se ha detectado una mancha de crudo de gran extensión a pocos kilómetros de la costa, amenazando el ecosistema marino y las playas de la región. Se activó el plan de contingencia.</p>
 				</div>
 				<div class="hecho-card-actions">
-					<a href="#" class="btn btn-outline">Ver más</a>
+					<a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
 				</div>
 			</article>
 		</div>
@@ -59,8 +58,6 @@
 			<span class="page-link-ellipsis">...</span>
 			<a href="#" class="page-link">&raquo;</a>
 		</nav>
-
-	</main>
 
 	<th:block th:fragment="scripts">
 		<script th:src="@{/js/hechos/listaHechosColeccion.js}"></script>

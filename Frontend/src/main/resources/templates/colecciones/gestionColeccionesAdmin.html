@@ -20,7 +20,7 @@
                 <option value="rechazado">Rechazado</option>
               </select>
             </div>
-			<a href="crearColecciones.html" class="btn btn-primary">Crear colección</a>
+			<a th:href="@{/colecciones/crear_coleccion}" class="btn btn-primary">Crear colección</a>
         </div>
 
         <div class="table-container">
@@ -43,7 +43,7 @@
                         <td>2024-09-01</td>
                         <td>Aprobado</td>
                         <td class="action-buttons">
-                            <a href="modificarColecciones.html" class="btn btn-edit">Modificar</a>
+                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
                             <button class="btn btn-delete">Eliminar</button>
                         </td>
                     </tr>
@@ -54,7 +54,7 @@
                         <td>2024-08-25</td>
                         <td>Pendiente</td>
                         <td class="action-buttons">
-                            <a href="modificarColecciones.html" class="btn btn-edit">Modificar</a>
+                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
                             <button class="btn btn-delete">Eliminar</button>
                         </td>
                     </tr>
@@ -65,7 +65,7 @@
                         <td>2024-07-10</td>
                         <td>Rechazado</td>
                         <td class="action-buttons">
-                            <a href="modificarColecciones.html" class="btn btn-edit">Modificar</a>
+                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
                             <button class="btn btn-delete">Eliminar</button>
                         </td>
                     </tr>
@@ -84,7 +84,7 @@
 		</nav>
 		
         <div class="footer-actions">
-            <a href="../home/panelGestion.html" class="btn btn-primary">Volver</a>
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
         </div>
     </main>
 
