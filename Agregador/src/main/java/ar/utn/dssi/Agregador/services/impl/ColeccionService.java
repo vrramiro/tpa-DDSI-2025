@@ -37,8 +37,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
-    private final IHechosRepository hechosRepositorio;
-    //private final IHechosService hechosService;
     private final IFuentesService fuentesService;
     private final IFiltrosService filtrosService;
     private final ICriterioDePertenenciaService criterioDePertenenciaService;

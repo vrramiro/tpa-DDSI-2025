@@ -18,5 +18,4 @@ public interface IColeccionService {
     void eliminarColeccion(String handle);
     List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle);
     List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
-    Mono<Void> refrescarColecciones(Hecho hecho);
 }
