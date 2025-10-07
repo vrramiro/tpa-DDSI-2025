@@ -18,9 +18,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "por_categoria")
 public class CriterioPorCategoria extends CriterioDePertenencia {
-    @Column(name = "categoria")
+    @Column(name = "categoria", nullable = false)
     private String categoria;
 
     @Override

@@ -21,6 +21,6 @@ public class Ubicacion {
     @Column(name = "latitud")
     private Double latitud;
 
-    @Column(name = "latitud")
+    @Column(name = "longitud")
     private Double longitud;
 }

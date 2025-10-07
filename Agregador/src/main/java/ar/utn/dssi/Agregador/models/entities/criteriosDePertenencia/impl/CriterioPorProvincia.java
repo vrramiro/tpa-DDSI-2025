@@ -16,7 +16,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "por_provincia")
 public class CriterioPorProvincia extends CriterioDePertenencia {
   @Column(name = "provincia", nullable = false)
   private String provincia;

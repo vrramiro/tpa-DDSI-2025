@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SolicitudDeEliminacionInputDTO {
-  private Long IdHecho;
+  private Long idHecho;
   private String descripcion;
 }

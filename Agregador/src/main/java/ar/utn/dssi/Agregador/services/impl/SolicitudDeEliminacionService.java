@@ -35,9 +35,10 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   //CREAR SOLICITUDES DE ELIMINACION
   @Override
   public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
-    var solicitud = new SolicitudDeEliminacion();
+    SolicitudDeEliminacion solicitud = new SolicitudDeEliminacion();
+    solicitud.setHecho(hechosRepository.findById(solicitudDeEliminacion.getIdHecho())
+            .orElseThrow(() -> new NoSuchElementException("No se encontró el hecho con ID: " + solicitudDeEliminacion.getIdHecho())));
 
-    solicitud.setIdHecho(solicitudDeEliminacion.getIdHecho());
     solicitud.setFechaDeCreacion(LocalDateTime.now());
     setDescripcion(solicitudDeEliminacion.getDescripcion(), solicitud);
 
@@ -52,7 +53,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
 
     solicitudDeEliminacionRepository.save(solicitud);
 
-    return this.SolicitudEliminacionOutputDTO(solicitud);
+    return this.solicitudEliminacionOutputDTO(solicitud);
   }
 
   //ACEPTAR O RECHAZAR SOLICITUDES DE ELIMINACION
@@ -62,7 +63,8 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
             .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con ID: " + idSolicitud));
     solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
     solicitud.setFechaDeEvaluacion(LocalDateTime.now());
-    hechosService.eliminarHecho(solicitud.getIdHecho());
+
+    hechosService.eliminarHecho(solicitud.getHecho().getId());
 
     this.solicitudDeEliminacionRepository.save(solicitud);
   }
@@ -81,6 +83,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado) {
     List<SolicitudDeEliminacion> solicitudes;
 
+    //TODO EMBELLECER ESTO
     switch (tipoEstado.toLowerCase()) {
       case "spam":
         solicitudes = this.solicitudDeEliminacionRepository.findByEsSpam(true);
@@ -104,7 +107,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     }
 
     return solicitudes.stream()
-            .map(this::SolicitudEliminacionOutputDTO)
+            .map(this::solicitudEliminacionOutputDTO)
             .toList();
   }
 
@@ -115,21 +118,14 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
        solicitudDeEliminacion.setDescripcion(descripcion);
      }
 
-     //TODO: FUNCION QUE HACE LA SOLICITUD DE ELIMINACION EN UN OUTPUT
-  private SolicitudDeEliminacionOutputDTO SolicitudEliminacionOutputDTO(SolicitudDeEliminacion solicitud) {
+  private SolicitudDeEliminacionOutputDTO solicitudEliminacionOutputDTO(SolicitudDeEliminacion solicitud) {
     var dtoSolicitudEliminacion = new SolicitudDeEliminacionOutputDTO();
-
-    try {
 
       dtoSolicitudEliminacion.setDescripcion(solicitud.getDescripcion());
       dtoSolicitudEliminacion.setEstadoDeSolicitud(solicitud.getEstadoDeSolicitud());
-      dtoSolicitudEliminacion.setFechaDeCreacion(solicitud.getFechaDeEvaluacion());
+      dtoSolicitudEliminacion.setFechaDeCreacion(solicitud.getFechaDeCreacion());
       dtoSolicitudEliminacion.setFechaDeEvaluacion(solicitud.getFechaDeEvaluacion());
       dtoSolicitudEliminacion.setEsSpam(solicitud.isEsSpam());
-
-    } catch(Exception e) {
-      throw new RuntimeException("Error al obtener el dto de solicitud de eliminacion: " + e.getMessage(), e);
-    }
 
     return dtoSolicitudEliminacion;
   }

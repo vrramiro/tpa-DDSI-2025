@@ -18,7 +18,7 @@ import java.util.List;
 @Component
 public class FuenteEstatica implements ITipoFuente {
 
-  @Value("${fuente-estatica.timeout-ms}")
+  @Value("${timeout-ms}")
   private Integer timeoutMs;
 
   @Override

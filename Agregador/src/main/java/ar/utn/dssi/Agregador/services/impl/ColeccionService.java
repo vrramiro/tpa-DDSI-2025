@@ -11,12 +11,9 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
@@ -29,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
@@ -57,6 +55,11 @@ public class ColeccionService implements IColeccionService {
                 .map(MapperDeCriterio::criterioFromCriterioInputDTO)
                 .toList();
         coleccion.setCriterios(criterios);
+        coleccion.setFuentes(fuentesService.obtenerFuentesPorTiposDeFuente(input.getFuentes()
+            .stream()
+            .map(FuenteInputDTO::getTipoFuente)
+            .toList())
+        );
         coleccion.setConsenso(MapperDeConsenso.consensoFromConsensoInputDTO(input.getConsenso()));
 
         coleccion = coleccionRepository.save(coleccion);
@@ -105,7 +108,6 @@ public class ColeccionService implements IColeccionService {
 
         if(cambiaronCriterios || cambiaronFuentes) {
             coleccion.setActualizada(Boolean.FALSE);
-            coleccion.liberarHechos();
         }
 
         coleccionRepository.save(coleccion);
@@ -129,30 +131,18 @@ public class ColeccionService implements IColeccionService {
     }
 
     @Override
-    public List<HechoOutputDTO> navegacionColeccion( ModoNavegacion modoNavegacion, String handle) {
-        try {
+    public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad, Long fuenteId){
+        Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
-            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findColeccionByHandle(handle)
-                .orElseThrow(() -> new ColeccionNoEncontrada(handle)));
-            IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
+        if(!coleccion.getActualizada()) throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navergación.");
 
-          return coleccion.getHechos()
-                  .stream()
-                  .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
-                  .map(MapperDeHechos::hechoToOutputDTO)
-                  .toList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
-        }
-    }
+        IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
 
-    //OBTENER HECHOS DE COLECCION
-    @Override
-    public List<HechoOutputDTO> obtenerHechosDeColeccion(String handle) {
-        var coleccion = this.obtenerColeccion(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
-        var hechosColeccion = coleccion.getHechos();
-
-        return hechosColeccion.stream().map(MapperDeHechos::hechoToOutputDTO).toList();
+        return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, fuenteId)
+              .stream()
+              .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
+              .map(MapperDeHechos::hechoToOutputDTO)
+              .toList();
     }
 
     private void validarDatosColeccion(ColeccionInputDTO input) {

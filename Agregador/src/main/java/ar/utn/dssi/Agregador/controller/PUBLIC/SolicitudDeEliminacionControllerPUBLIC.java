@@ -14,7 +14,7 @@ public class SolicitudDeEliminacionControllerPUBLIC {
   @Autowired
   private SolicitudDeEliminacionService solicitudesService;
 
-  @PostMapping("/solicitudEliminacion")
+  @PostMapping
   public ResponseEntity<SolicitudDeEliminacionOutputDTO> crearSolicitudDeEliminacion(@RequestBody SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
     SolicitudDeEliminacionOutputDTO solicitud = solicitudesService.crearSolicitudDeEliminacion(solicitudDeEliminacion);
 

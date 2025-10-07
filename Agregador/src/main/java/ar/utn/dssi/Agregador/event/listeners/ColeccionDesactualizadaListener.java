@@ -29,7 +29,9 @@ public class ColeccionDesactualizadaListener {
         .orElseThrow(() -> new ColeccionNoEncontrada(handleColeccion));
 
     List<Hecho> hechos = this.hechosRepository.findAll();
+    coleccionDesactualizada.liberarHechos();
     coleccionDesactualizada.agregarHechos(hechos);
+    coleccionDesactualizada.setActualizada(true);
 
     this.coleccionRepository.save(coleccionDesactualizada);
   }

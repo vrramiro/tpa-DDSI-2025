@@ -56,7 +56,7 @@ public class Coleccion {
     @JoinTable(
         name = "coleccion_fuente",
         joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "handle"),
-        inverseJoinColumns = @JoinColumn(name = "fuente_id", referencedColumnName = "id")
+        inverseJoinColumns = @JoinColumn(name = "fuente_id", referencedColumnName = "fuente_id")
     )
     private List<Fuente> fuentes;
 

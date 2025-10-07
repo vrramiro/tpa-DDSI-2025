@@ -18,7 +18,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "fecha_desde")
 public class CriterioFechaDesde extends CriterioDePertenencia {
   @Column(name = "fecha_desde", nullable = false)
   private LocalDate fechaDesde;

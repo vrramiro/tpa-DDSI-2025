@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Entity
-@Table(name = "fuentes")
+@Table(name = "fuente")
 @Getter
 public class Fuente {
   @Id
