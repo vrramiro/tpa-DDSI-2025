@@ -3,7 +3,6 @@ package ar.utn.dssi.Agregador.services.impl;
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FuenteInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
@@ -12,6 +11,7 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Filtro;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -22,7 +22,6 @@ import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.ICriterioDePertenenciaService;
-import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -38,9 +37,9 @@ import java.util.List;
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
     private final IFuentesService fuentesService;
-    private final IFiltrosService filtrosService;
     private final ICriterioDePertenenciaService criterioDePertenenciaService;
     private final ModoNavegacionFactory modoNavegacionFactory;
+
     private final ApplicationEventPublisher publicador;
 
     @Override
@@ -130,16 +129,16 @@ public class ColeccionService implements IColeccionService {
     }
 
     @Override
-    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
+    public List<HechoOutputDTO> navegacionColeccion( ModoNavegacion modoNavegacion, String handle) {
         try {
-            Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
+
             Coleccion coleccion = this.verificarActualizada(coleccionRepository.findColeccionByHandle(handle)
                 .orElseThrow(() -> new ColeccionNoEncontrada(handle)));
             IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
 
           return coleccion.getHechos()
                   .stream()
-                  .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, coleccion))
+                  .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
                   .map(MapperDeHechos::hechoToOutputDTO)
                   .toList();
         } catch (Exception e) {

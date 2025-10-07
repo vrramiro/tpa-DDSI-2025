@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Filtro {
+public class FiltroCriterioPertenecia { //TODO: NO ESTA RELACIONADO AL FILTRADO, SINO AL CRITERIO
   List<CriterioDePertenencia> criteriosDeFiltro;
 
   public Boolean loCumple(Hecho hecho) {

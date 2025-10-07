@@ -1,11 +1,5 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.entities.Categoria;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import java.time.LocalDate;
-
 public class MapperDeFiltros {
   /*public static Filtro filtro(FiltroInputDTO filtroInput, Categoria categoria) {
     Filtro filtro = new Filtro();

@@ -1,6 +1,5 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import ar.utn.dssi.Agregador.services.IColeccionService;
@@ -30,8 +29,8 @@ public class ColeccionesControllerPUBLIC {
 
   //TODO esto esta mal,post con body
   @GetMapping("/hechos/navegacion/{handle}")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute ModoNavegacion modoNavegacion, @PathVariable String handle) {
-    List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(filtros, modoNavegacion, handle);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute ModoNavegacion modoNavegacion, @PathVariable String handle) {
+    List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(modoNavegacion, handle);
 
     if(hechos.isEmpty()) {
       return ResponseEntity.noContent().build(); // status 204
