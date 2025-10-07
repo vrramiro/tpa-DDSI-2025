@@ -1,7 +1,6 @@
 package ar.utn.dssi.Agregador.services;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
@@ -18,7 +17,7 @@ public interface IColeccionService {
     List<ColeccionOutputDTO> obtenerColecciones();
     ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
-    List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle);
+    List<HechoOutputDTO> navegacionColeccion(ModoNavegacion modoNavegacion, String handle);
     List<HechoOutputDTO> obtenerHechosDeColeccion(String handle);
     Mono<Void> refrescarColecciones(Hecho hecho);
 }

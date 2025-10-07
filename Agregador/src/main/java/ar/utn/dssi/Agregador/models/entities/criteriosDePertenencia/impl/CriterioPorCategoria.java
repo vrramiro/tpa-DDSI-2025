@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl;
 
+import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
@@ -36,4 +37,6 @@ public class CriterioPorCategoria extends CriterioDePertenencia {
     public Boolean mismoValor(String valor) {
       return this.categoria.equals(valor);
     }
+
+
 }
