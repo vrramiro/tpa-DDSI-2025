@@ -3,6 +3,10 @@ package ar.utn.dssi.Agregador.controller;
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
 import ar.utn.dssi.Agregador.error.CriterioDistintoTipo;
+import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.error.SolicitudDescripcionMuyCorta;
+import ar.utn.dssi.Agregador.error.SolicitudNoEncontrada;
+import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ErrorDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
 import org.springframework.http.HttpStatus;
@@ -31,6 +35,26 @@ public class GeneralExceptionHandler {
   @ExceptionHandler(CriterioDistintoTipo.class)
   public ResponseEntity<ErrorDTO> handleCriterioDistintoTipo(CriterioDistintoTipo ex) {
     return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(SolicitudNoEncontrada.class)
+  public ResponseEntity<ErrorDTO> handleSolicitudNoEncontrada(SolicitudNoEncontrada ex) {
+    return handleException(ex.getMessage(), HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(SolicitudYaProcesada.class)
+  public ResponseEntity<ErrorDTO> handleSolicitudYaProcesada(SolicitudYaProcesada ex) {
+    return handleException(ex.getMessage(), HttpStatus.CONFLICT);
+  }
+
+  @ExceptionHandler(SolicitudDescripcionMuyCorta.class)
+  public ResponseEntity<ErrorDTO> handleSolicitudDescripcionMuyCorta(SolicitudDescripcionMuyCorta ex) {
+    return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(HechoNoEcontrado.class)
+  public ResponseEntity<ErrorDTO> handleHechoNoEncontrado(HechoNoEcontrado ex) {
+    return handleException(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 
   public ResponseEntity<ErrorDTO> handleException(String mensaje, HttpStatus status) {
