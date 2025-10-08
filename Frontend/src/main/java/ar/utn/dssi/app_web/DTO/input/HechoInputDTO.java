@@ -1,15 +1,14 @@
-package ar.utn.dssi.app_web.DTO;
+package ar.utn.dssi.app_web.DTO.input;
 
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class HechoDTO {
+public class HechoInputDTO {
     private String titulo;
     private String descripcion;
-    private String categoria;
-    private UbicacionDTO ubicacion;
+    private CategoriaInputDTO categoria;
     private String longitud;
     private String latitud;
     private String fechaAcontecimiento;

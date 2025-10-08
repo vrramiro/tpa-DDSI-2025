@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.controllers;
 
-import ar.utn.dssi.app_web.DTO.HechoDTO;
+import ar.utn.dssi.app_web.DTO.input.HechoInputDTO;
+import ar.utn.dssi.app_web.DTO.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -26,15 +27,17 @@ public class HechoController {
     }
 
     @PostMapping("/crear")
-    public String crearHecho(@ModelAttribute("hecho") HechoDTO hechoDTO,
+    public String crearHecho(@ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
                              BindingResult bindingResult,
                              Model model,
                              RedirectAttributes redirectAttributes) {
 
         try {
-            HechoDTO hechoCreado = hechosService.crearHecho(hechoDTO);
+            HechoOutputDTO hechoCreado = hechosService.crearHecho(hechoInputDTO);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
+        return "redirect:/";
     }
 
     @GetMapping("/mis_hechos")

@@ -12,7 +12,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 public class SecurityConfig {
-
+/*
     @Bean
     public AuthenticationManager authManager(HttpSecurity http, CustomAuthProvider provider) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -52,5 +52,5 @@ public class SecurityConfig {
                 );
 
         return http.build();
-    }
+    }*/
 }
