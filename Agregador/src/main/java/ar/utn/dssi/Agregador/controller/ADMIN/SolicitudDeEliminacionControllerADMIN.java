@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.controller.ADMIN;
 
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudProcesadaInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,9 @@ public class SolicitudDeEliminacionControllerADMIN {
   private SolicitudDeEliminacionService solicitudesService;
 
   @GetMapping
-  public ResponseEntity<List<SolicitudDeEliminacionOutputDTO>> obtenerSolicitudes(
-          @RequestParam(name = "tipo_estado", required = false, defaultValue = "todos") String tipoEstado) {
-
-    List<SolicitudDeEliminacionOutputDTO> solicitudesObtenidas = solicitudesService.obtenerSolicitudes(tipoEstado);
+  public ResponseEntity<List<SolicitudDeEliminacionOutputDTO>> obtenerSolicitudes(@RequestParam(name = "estado", required = false) String estado,
+                                                                                  @RequestParam(name = "spam", required = false) Boolean spam) {
+    List<SolicitudDeEliminacionOutputDTO> solicitudesObtenidas = solicitudesService.obtenerSolicitudes(estado, spam);
 
     if (solicitudesObtenidas.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
@@ -27,16 +27,9 @@ public class SolicitudDeEliminacionControllerADMIN {
     return ResponseEntity.ok(solicitudesObtenidas); // status 200
   }
 
-  //TODO hay dos caminos => se toca aceptar y va al metodo aceptar o le da a cualquier boton y se va a procesar solicitud
-  @PostMapping("/aceptar/{idSolicitud}")
-  public ResponseEntity<Void> aceptarSolicitud(@PathVariable Long idSolicitud) {
-    solicitudesService.aceptarSolicitud(idSolicitud);
-    return ResponseEntity.ok().build();
-  }
-
-  @PostMapping("/rechazar/{idSolicitud}")
-  public ResponseEntity<Void> rechazarSolicitud(@PathVariable Long idSolicitud) {
-    solicitudesService.rechazarSolicitud(idSolicitud);
+  @PostMapping("/procesar/{idSolicitud}")
+  public ResponseEntity<SolicitudDeEliminacionOutputDTO> procesarSolicitud(@PathVariable Long idSolicitud, @RequestBody SolicitudProcesadaInputDTO solicitud) {
+    solicitudesService.procesarSolicitud(idSolicitud, solicitud);
     return ResponseEntity.ok().build();
   }
 }
