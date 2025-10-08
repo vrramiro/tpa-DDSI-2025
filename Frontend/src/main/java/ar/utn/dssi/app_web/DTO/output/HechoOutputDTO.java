@@ -2,15 +2,17 @@ package ar.utn.dssi.app_web.DTO.output;
 
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 public class HechoOutputDTO {
     private String titulo;
     private String descripcion;
-    private CategoriaOutputDTO categoria;
+    private String categoria;
     private UbicacionOutputDTO ubicacion;
-    private String fechaAcontecimiento;
-    private String fechaCarga;
-    private List<String> contenidoMultimedia;
+    private LocalDateTime fechaAcontecimiento;
+    private LocalDateTime fechaCarga;
+    private List<ContenidoMultimediaOuputDTO> contenidoMultimedia;
 }
+

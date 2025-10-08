@@ -2,8 +2,11 @@ package ar.utn.dssi.app_web.controllers;
 
 import ar.utn.dssi.app_web.DTO.input.HechoInputDTO;
 import ar.utn.dssi.app_web.DTO.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.exceptions.ValidationException;
 import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class HechoController {
 
+    private static final Logger log = LoggerFactory.getLogger(HechoController.class);
     private final HechoServices hechosService;
 
     @GetMapping("/nuevo")
@@ -34,10 +38,21 @@ public class HechoController {
 
         try {
             HechoOutputDTO hechoCreado = hechosService.crearHecho(hechoInputDTO);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            redirectAttributes.addFlashAttribute("mensaje", "Hecho creado exitosamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+            return "redirect:/explorador/" + hechoCreado;
         }
-        return "redirect:/";
+        catch (ValidationException e) {
+            convertirValidationExceptionABindingResult(e, bindingResult);
+            model.addAttribute("titulo", "Crear Nuevo Hecho");
+            return "redirect:/crear";
+        }
+        catch (Exception e) {
+            log.error("Error al crear hecho", e);
+            model.addAttribute("error", "Error al crear el hecho: " + e.getMessage());
+            model.addAttribute("titulo", "Crear Nuevo Hecho");
+            return "redirect:/crear";
+        }
     }
 
     @GetMapping("/mis_hechos")
@@ -77,5 +92,11 @@ public class HechoController {
     public String mostrarFormularioEdicion(Model model) {
         model.addAttribute("titulo", "Editar Hecho");
         return "hechos/editarHecho";
+    }
+
+    private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
+        if(e.hasFieldErrors()) {
+            e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
+        }
     }
 }
