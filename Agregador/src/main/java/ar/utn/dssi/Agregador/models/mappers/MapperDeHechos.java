@@ -1,27 +1,43 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
-
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteProxyInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.CategoriaOutputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ContenidoMultimediaOuputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.UbicacionOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 
-
 public class MapperDeHechos {
-
-  // Hecho -> HechoOutputDTO
   static public HechoOutputDTO hechoToOutputDTO(Hecho hecho) {
     HechoOutputDTO dto = new HechoOutputDTO();
     dto.setTitulo(hecho.getTitulo());
     dto.setDescripcion(hecho.getDescripcion());
-    dto.setCategoria(hecho.getCategoria());
-    dto.setUbicacion(hecho.getUbicacion());
+
+    CategoriaOutputDTO categoria = new CategoriaOutputDTO();
+    categoria.setNombre(hecho.getCategoria().getNombre());
+    dto.setCategoria(categoria);
+
+    UbicacionOutputDTO ubicacion = new UbicacionOutputDTO();
+    ubicacion.setPais(hecho.getUbicacion().getPais());
+    ubicacion.setProvincia(hecho.getUbicacion().getProvincia());
+    ubicacion.setCiudad(hecho.getUbicacion().getCiudad());
+    ubicacion.setLatitud(hecho.getUbicacion().getLatitud());
+    ubicacion.setLongitud(hecho.getUbicacion().getLongitud());
+    dto.setUbicacion(ubicacion);
+
     dto.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
     dto.setFechaCarga(hecho.getFechaCarga());
 
-    dto.setContenidoMultimedia(null); //TODO: VER GESTION MULTIMEDIA
+    dto.setContenidoMultimedia(hecho.getContenidoMultimedia()
+        .stream()
+        .map(contenido -> {
+          ContenidoMultimediaOuputDTO contenidoDTO = new ContenidoMultimediaOuputDTO();
+          contenidoDTO.setUrl(contenido.getUrl());
+          return contenidoDTO;
+        })
+        .toList()
+    );
 
     return dto;
   }
-
 }

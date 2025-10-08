@@ -2,7 +2,7 @@ package ar.utn.dssi.Agregador.controller.PUBLIC;
 
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +15,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hechos")
+@RequiredArgsConstructor
 public class HechosControllerPUBLIC {
-  @Autowired
-  private IHechosService hechosService;
+  private final IHechosService hechosService;
 
   @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(
@@ -45,5 +45,4 @@ public class HechosControllerPUBLIC {
 
     return ResponseEntity.ok(hechos);
   }
-
 }
