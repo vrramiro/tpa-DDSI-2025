@@ -50,11 +50,13 @@ public class ColeccionService implements IColeccionService {
         coleccion.setTitulo(input.getTitulo());
         coleccion.setDescripcion(input.getDescripcion());
         coleccion.setActualizada(Boolean.FALSE); //se tiene que cargar con hechos
+
         List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
                 .stream()
                 .map(MapperDeCriterio::criterioFromCriterioInputDTO)
                 .toList();
         coleccion.setCriterios(criterios);
+
         coleccion.setFuentes(fuentesService.obtenerFuentesPorTiposDeFuente(input.getFuentes()
             .stream()
             .map(FuenteInputDTO::getTipoFuente)

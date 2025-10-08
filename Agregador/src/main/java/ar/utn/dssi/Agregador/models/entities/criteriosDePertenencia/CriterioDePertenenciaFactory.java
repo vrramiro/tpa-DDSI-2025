@@ -9,23 +9,16 @@ import java.time.LocalDate;
 
 public class CriterioDePertenenciaFactory {
     public static CriterioDePertenencia crearCriterio(TipoCriterio tipo, String valorDelCriterio) {
+        System.out.println("ya entre " + valorDelCriterio);
         switch(tipo) {
             case FECHA_DESDE:
-                CriterioFechaDesde criterioFechaDesde = new CriterioFechaDesde();
-                criterioFechaDesde.setFechaDesde(LocalDate.parse(valorDelCriterio));
-                return criterioFechaDesde;
+                return new CriterioFechaDesde(LocalDate.parse(valorDelCriterio));
             case FECHA_HASTA:
-                CriterioFechaHasta criterioFechaHasta = new CriterioFechaHasta();
-                criterioFechaHasta.setFechaHasta(LocalDate.parse(valorDelCriterio));
-                return criterioFechaHasta;
+                return new CriterioFechaHasta(LocalDate.parse(valorDelCriterio));
             case CATEGORIA:
-                CriterioPorCategoria criterioCategoria = new CriterioPorCategoria();
-                criterioCategoria.setCategoria(valorDelCriterio);
-                return criterioCategoria;
+                return new CriterioPorCategoria(valorDelCriterio);
             case PROVINCIA:
-                CriterioPorProvincia criterioProvincia = new CriterioPorProvincia();
-                criterioProvincia.setProvincia(valorDelCriterio);
-                return criterioProvincia;
+                return  new CriterioPorProvincia(valorDelCriterio);
             default:
                 return null;
         }

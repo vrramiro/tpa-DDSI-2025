@@ -22,7 +22,7 @@ import lombok.Setter;
 import lombok.Getter;
 
 @Entity
-@Table(name = "colecciones")
+@Table(name = "coleccion")
 @Setter
 @Getter
 public class Coleccion {
