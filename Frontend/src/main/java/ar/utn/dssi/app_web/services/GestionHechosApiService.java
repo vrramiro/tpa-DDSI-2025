@@ -28,7 +28,7 @@ public class GestionHechosApiService {
     }
 
     public UbicacionOutputDTO obtenerUbicacion (Double latitud, Double longitud) {
-
+        return null;  //para poder probar vistas
     }
 
 
@@ -40,5 +40,6 @@ public class GestionHechosApiService {
         catch(Exception e){
 
         }
+        return false;  //para poder probar vistas
     }
 }

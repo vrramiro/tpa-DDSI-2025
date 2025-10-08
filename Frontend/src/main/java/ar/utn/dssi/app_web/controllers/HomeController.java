@@ -48,5 +48,11 @@ public class HomeController {
         model.addAttribute("titulo", "Error 404");
         return "errores/404";
     }
+
+    @GetMapping("/403")
+    public String error403(Model model) {
+        model.addAttribute("titulo", "Error 403");
+        return "errores/403";
+    }
 }
 
