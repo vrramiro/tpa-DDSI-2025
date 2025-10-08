@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "solicitudes_de_eliminacion")
-@Setter
 @Getter
+@Setter
 public class SolicitudDeEliminacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,5 +45,15 @@ public class SolicitudDeEliminacion {
 
     @Column(nullable = false, name = "es_spam")
     private boolean esSpam;
+
+    public void aceptar() {
+        this.estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
+        this.fechaDeEvaluacion = LocalDateTime.now();
+    }
+
+    public void rechazar() {
+        this.estadoDeSolicitud = EstadoDeSolicitud.RECHAZADA;
+        this.fechaDeEvaluacion = LocalDateTime.now();
+    }
 }
 
