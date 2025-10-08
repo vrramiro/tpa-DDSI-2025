@@ -9,7 +9,7 @@ import java.util.List;
 public class HechoOutputDTO {
     private String titulo;
     private String descripcion;
-    private CategoriaOutputDTO categoria;
+    private String categoria;
     private UbicacionOutputDTO ubicacion;
     private LocalDateTime fechaAcontecimiento;
     private LocalDateTime fechaCarga;

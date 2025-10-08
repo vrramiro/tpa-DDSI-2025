@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 public class HechosService implements IHechosService {
     private final IHechosRepository hechosRepository;
@@ -27,7 +27,6 @@ public class HechosService implements IHechosService {
         this.fuentesService = fuentesService;
     }
 
-
     @Override
     public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
         try {
@@ -39,14 +38,13 @@ public class HechosService implements IHechosService {
         }
     }
 
-
-
     @Override
     public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long fuenteId) {
         try {
             return this.hechosRepository
                 .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, fuenteId)
                 .stream()
+                .filter(Hecho::getVisible) // Filtrar solo los hechos visibles
                 .map(MapperDeHechos::hechoToOutputDTO)
                 .toList();
         } catch (Exception e) {
@@ -57,14 +55,10 @@ public class HechosService implements IHechosService {
     @Override
     @Transactional
     public void eliminarHecho(Long IdHecho) {
-        try {
-            //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-            Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(IllegalArgumentException::new);
-            hecho.setVisible(false);
-            hechosRepository.save(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
-        }
+        //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
+        Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(() -> new HechoNoEcontrado("No se encontro el hecho con id: " + IdHecho));
+        hecho.setVisible(false);
+        hechosRepository.save(hecho);
     }
 
     @Override

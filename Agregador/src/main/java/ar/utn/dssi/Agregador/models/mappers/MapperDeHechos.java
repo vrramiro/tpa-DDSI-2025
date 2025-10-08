@@ -1,6 +1,5 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.CategoriaOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ContenidoMultimediaOuputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 
@@ -12,10 +11,7 @@ public class MapperDeHechos {
     HechoOutputDTO dto = new HechoOutputDTO();
     dto.setTitulo(hecho.getTitulo());
     dto.setDescripcion(hecho.getDescripcion());
-
-    CategoriaOutputDTO categoria = new CategoriaOutputDTO();
-    categoria.setNombre(hecho.getCategoria().getNombre());
-    dto.setCategoria(categoria);
+    dto.setCategoria(hecho.getCategoria().getNombre());
 
     UbicacionOutputDTO ubicacion = new UbicacionOutputDTO();
     ubicacion.setPais(hecho.getUbicacion().getPais());
