@@ -12,8 +12,9 @@ import java.util.List;
 @Repository
 public interface IHechoRepository extends JpaRepository<Hecho, Long> {
 
-
     @Query("SELECT h FROM Hecho h " +
-            "WHERE h.fechaCarga >= :fechaLimite OR (h.fechaEdicion IS NOT NULL AND h.fechaEdicion >= :fechaLimite)")
-    List<Hecho> findHechosPorSubir(@Param("fechaLimite") LocalDateTime fechaLimite);
+            "WHERE (:fechaLimite IS NULL) " +
+            "OR (h.fechaCarga >= :fechaLimite " +
+            "OR (h.fechaEdicion IS NOT NULL AND h.fechaEdicion >= :fechaLimite))")
+    List<Hecho> findHechosByFechaLimite(@Param("fechaLimite") LocalDateTime fechaLimite);
 }
