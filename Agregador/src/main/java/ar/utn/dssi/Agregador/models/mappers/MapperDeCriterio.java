@@ -5,6 +5,7 @@ import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
+import java.time.LocalDate;
 
 public class MapperDeCriterio {
   public static CriterioDePertenencia criterioFromCriterioInputDTO(CriterioDePertenenciaInputDTO input) {
@@ -21,6 +22,18 @@ public class MapperDeCriterio {
       return CriterioDePertenenciaFactory.crearCriterio(tipo, input.getValor());
     } catch (IllegalArgumentException e) {
       throw new IllegalArgumentException("Tipo de criterio no reconocido: " + input.getTipo());
+    }
+  }
+
+  public static LocalDate parsearFecha(String fecha) {
+    try {
+      LocalDate fechaNueva = LocalDate.parse(fecha);
+
+      if(fechaNueva.isAfter(LocalDate.now())) throw new IllegalArgumentException("La fecha no puede ser futura: " + fecha);
+
+      return fechaNueva;
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Formato de fecha inválido. Se esperaba AAAA-MM-DD, se recibió: " + fecha);
     }
   }
 
