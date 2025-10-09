@@ -40,6 +40,6 @@ public class Fuente {
   @OneToMany(mappedBy = "fuente", fetch = FetchType.LAZY)
   private List<Hecho> hechos;
 
-  @Setter @Column(name = "ultimaActualizacion")
+  @Setter @Column(name = "ultima_actualizacion")
   private LocalDateTime ultimaActualizacion;
 }
