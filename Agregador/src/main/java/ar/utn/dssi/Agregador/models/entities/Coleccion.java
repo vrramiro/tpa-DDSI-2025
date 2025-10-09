@@ -52,7 +52,7 @@ public class Coleccion {
     @Column(name = "consenso_aceptado")
     private TipoConsenso consenso;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "coleccion_fuente",
         joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "handle"),

@@ -63,8 +63,7 @@ public class ColeccionesControllerADMIN {
        @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
        @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
        @RequestParam(name = "ciudad", required = false) String ciudad,
-       @RequestParam(name = "provincia", required = false) String provincia,
-       @RequestParam(name = "fuente", required = false) Long fuenteId
+       @RequestParam(name = "provincia", required = false) String provincia
       ) {
     List<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
         modoNavegacion,
@@ -74,8 +73,7 @@ public class ColeccionesControllerADMIN {
         fechaAcontecimientoDesde,
         fechaAcontecimientoHasta,
         provincia,
-        ciudad,
-        fuenteId);
+        ciudad);
 
     if(hechos.isEmpty()) {
       return ResponseEntity.noContent().build(); // status 204
