@@ -1,6 +1,5 @@
 package ar.utn.dssi.FuenteDinamica.models.DTOs.outputs;
 
-import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,13 +11,13 @@ import java.util.List;
 @Getter
 @Setter
 public class HechoOutputDTO {
-  private Long idHechoOrigen;
+  private Long idOrigen;
 
   private String titulo;
   private String descripcion;
 
   private String tituloSanitizado;
-  private String descripcionSanitizado;
+  private String descripcionSanitizada;
 
   private CategoriaOutputDTO categoria;
   private UbicacionOutputDTO ubicacion;

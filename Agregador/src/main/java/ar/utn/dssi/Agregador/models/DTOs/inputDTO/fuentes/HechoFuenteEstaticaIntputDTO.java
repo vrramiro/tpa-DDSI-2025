@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class HechoFuenteEstaticaIntputDTO {
-    private Long idExterno;
+    private Long idOrigen;
 
     private String titulo;
     private String descripcion;

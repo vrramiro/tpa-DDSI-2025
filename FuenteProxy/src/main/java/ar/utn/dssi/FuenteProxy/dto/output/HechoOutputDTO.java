@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class HechoOutputDTO {
-  private Long idHecho;
+  private Long idOrigen;
   private String titulo;
   private String descripcion;
   private String tituloSanitizado;
@@ -23,4 +23,4 @@ public class HechoOutputDTO {
   private Ubicacion ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
-}
+} //TODO: CATEGORIA Y UBICACION NO DEBEN SER ENTIDADES DE DOMINIO
