@@ -19,21 +19,14 @@ import java.util.List;
 public class FuenteEstatica implements ITipoFuente {
 
   @Value("${timeout-ms}")
-  private Integer timeoutMs;
+  private Integer timeoutMs=15000;
 
   @Override
   public List<Hecho> hechosNuevos(Fuente fuente) {
     LocalDateTime ultimoEnvioFuente = fuente.getUltimaActualizacion();
-    LocalDateTime fechaDesde;
 
-    if (ultimoEnvioFuente == null) {
-      fechaDesde = LocalDateTime.now();
-    } else {
-      fechaDesde = ultimoEnvioFuente;
-    }
-
-    return getHechos(fuente.getBaseUrl(), fechaDesde)
-            .map(this::hechoFromInputDTOEstatica)
+    return getHechos(fuente.getBaseUrl(), ultimoEnvioFuente)
+            .map(hecho -> hechoFromInputDTOEstatica(hecho, fuente))
             .collectList()
             .block();
   }
@@ -45,7 +38,6 @@ public class FuenteEstatica implements ITipoFuente {
 
     return webClient.get()
             .uri(uriBuilder -> uriBuilder
-                    .path("/nuevos")
                     .queryParam("fechaDesde", fechaDesde)
                     .build())
             .retrieve()
@@ -57,16 +49,18 @@ public class FuenteEstatica implements ITipoFuente {
             });
   }
 
-  private Hecho hechoFromInputDTOEstatica(HechoFuenteEstaticaIntputDTO input) {
+  private Hecho hechoFromInputDTOEstatica(HechoFuenteEstaticaIntputDTO input,  Fuente fuente) {
     Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setIdEnFuente(input.getIdOrigen());
+    hecho.setFuente(fuente);
+
     hecho.setTitulo(input.getTitulo());
     hecho.setDescripcion(input.getDescripcion());
     hecho.setTituloSanitizado(input.getTituloSanitizado());
     hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
 
     Categoria categoria = new Categoria();
-    categoria.setId(input.getCategoria().getId());
+    categoria.setId(input.getCategoria().getIdCategoria());
     categoria.setNombre(input.getCategoria().getNombre());
     hecho.setCategoria(categoria);
 

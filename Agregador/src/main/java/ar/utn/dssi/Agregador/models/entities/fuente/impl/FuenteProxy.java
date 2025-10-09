@@ -1,11 +1,9 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteDinamicaInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteProxyInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -65,7 +63,7 @@ public class FuenteProxy implements ITipoProxy {
 
   public Hecho hechoFromInputDTOProxy(HechoFuenteProxyInputDTO input) {
     Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setIdEnFuente(input.getIdOrigen());
     hecho.setTitulo(input.getTitulo());
     hecho.setDescripcion(input.getDescripcion());
     hecho.setTituloSanitizado(input.getTituloSanitizado());
