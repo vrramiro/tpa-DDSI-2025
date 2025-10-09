@@ -3,6 +3,7 @@ package ar.utn.dssi.Agregador.controller;
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
 import ar.utn.dssi.Agregador.error.CriterioDistintoTipo;
+import ar.utn.dssi.Agregador.error.CriterioTipoIncorrecto;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.error.SolicitudDescripcionMuyCorta;
 import ar.utn.dssi.Agregador.error.SolicitudNoEncontrada;
@@ -55,6 +56,11 @@ public class GeneralExceptionHandler {
   @ExceptionHandler(HechoNoEcontrado.class)
   public ResponseEntity<ErrorDTO> handleHechoNoEncontrado(HechoNoEcontrado ex) {
     return handleException(ex.getMessage(), HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(CriterioTipoIncorrecto.class)
+  public ResponseEntity<ErrorDTO> handleCriterioTipoIncorrecto(CriterioTipoIncorrecto ex) {
+    return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
   public ResponseEntity<ErrorDTO> handleException(String mensaje, HttpStatus status) {
