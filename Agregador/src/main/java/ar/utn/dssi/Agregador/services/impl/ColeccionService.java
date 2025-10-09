@@ -2,11 +2,14 @@ package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
+import ar.utn.dssi.Agregador.event.ColeccionDesactualizadaEvent;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.CriterioDePertenenciaInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FuenteInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
@@ -18,7 +21,6 @@ import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactor
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
-import ar.utn.dssi.Agregador.services.ICriterioDePertenenciaService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -35,7 +39,6 @@ import java.util.List;
 public class ColeccionService implements IColeccionService {
     private final IColeccionRepository coleccionRepository;
     private final IFuentesService fuentesService;
-    private final ICriterioDePertenenciaService criterioDePertenenciaService;
     private final ModoNavegacionFactory modoNavegacionFactory;
 
     private final ApplicationEventPublisher publicador;
@@ -43,28 +46,20 @@ public class ColeccionService implements IColeccionService {
     @Override
     @Transactional
     public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
-        Coleccion coleccion = new Coleccion();
+        validarDatosColeccion(input);
 
-        this.validarDatosColeccion(input);
+        Coleccion coleccion = new Coleccion();
 
         coleccion.setTitulo(input.getTitulo());
         coleccion.setDescripcion(input.getDescripcion());
-        coleccion.setActualizada(Boolean.FALSE); //se tiene que cargar con hechos
-        List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
-                .stream()
-                .map(MapperDeCriterio::criterioFromCriterioInputDTO)
-                .toList();
-        coleccion.setCriterios(criterios);
-        coleccion.setFuentes(fuentesService.obtenerFuentesPorTiposDeFuente(input.getFuentes()
-            .stream()
-            .map(FuenteInputDTO::getTipoFuente)
-            .toList())
-        );
+        coleccion.marcarDesactualizada();
+        inicializarCriterios(coleccion, input);
+        inicializarFuentes(coleccion, input);
         coleccion.setConsenso(MapperDeConsenso.consensoFromConsensoInputDTO(input.getConsenso()));
 
         coleccion = coleccionRepository.save(coleccion);
 
-        publicador.publishEvent(coleccion.getHandle());
+        publicador.publishEvent(new ColeccionDesactualizadaEvent(coleccion.getHandle()));
 
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
@@ -92,19 +87,8 @@ public class ColeccionService implements IColeccionService {
         if(!coleccion.getTitulo().equals(input.getTitulo())) coleccion.setTitulo(input.getTitulo());
         if(!coleccion.getDescripcion().equals(input.getDescripcion())) coleccion.setDescripcion(input.getDescripcion());
 
-        Boolean cambiaronCriterios = criterioDePertenenciaService.actualizarCriterios(coleccion, input.getCriteriosDePertenecias());
-
-        Boolean cambiaronFuentes = false;
-
-        List<String> tiposDeFuentesInput = input.getFuentes().stream().map(FuenteInputDTO::getTipoFuente).toList();
-
-        List<Fuente> fuentesAAgregar = fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentesInput);
-
-        // Evito actualizar si son las mismas fuentes => comparo por set para no preocuparme por el orden
-        if(!fuentesAAgregar.stream().allMatch(coleccion::tieneFuente)) {
-            coleccion.actualizarFuentes(fuentesAAgregar);
-            cambiaronFuentes = true;
-        }
+        boolean cambiaronCriterios = actualizarCriterios(coleccion, input);
+        boolean cambiaronFuentes = actualizarFuentes(coleccion, input);
 
         if(cambiaronCriterios || cambiaronFuentes) {
             coleccion.setActualizada(Boolean.FALSE);
@@ -112,22 +96,16 @@ public class ColeccionService implements IColeccionService {
 
         coleccionRepository.save(coleccion);
 
-        if(!coleccion.getActualizada()) publicador.publishEvent(coleccion.getHandle());
+        if(!coleccion.getActualizada()) publicador.publishEvent(new ColeccionDesactualizadaEvent(coleccion.getHandle()));
 
         return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
 
     @Override
     public void eliminarColeccion(String handle) {
-        if(handle == null || handle.isEmpty()) {
-            throw new DatosDeColeccionFaltantes("Handle mal cargado");
-        }
+        Coleccion coleccion = obtenerColeccion(handle);
 
-        Coleccion coleccion = this.obtenerColeccion(handle);
-
-        if (coleccion != null) {
-            coleccionRepository.delete(coleccion);
-        }
+        coleccionRepository.delete(coleccion);
     }
 
     @Override
@@ -168,6 +146,41 @@ public class ColeccionService implements IColeccionService {
 
     private List<Coleccion> obtenerColeccionesActualizadas() {
         return coleccionRepository.findColeccionByActualizada(true);
+    }
+
+    private void inicializarCriterios(Coleccion coleccion, ColeccionInputDTO input) {
+        List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
+            .stream()
+            .map(MapperDeCriterio::criterioFromCriterioInputDTO)
+            .toList();
+
+        coleccion.setCriterios(criterios);
+    }
+
+    private void inicializarFuentes(Coleccion coleccion, ColeccionInputDTO input) {
+            List<String> tiposDeFuente = input.getFuentes()
+                .stream()
+                .map(FuenteInputDTO::getTipoFuente)
+                .toList();
+
+        coleccion.setFuentes(fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuente));
+    }
+
+    private boolean actualizarCriterios(Coleccion coleccion, ColeccionInputDTO input) {
+        Map<TipoCriterio, String> datosCriteriosNuevos = input.getCriteriosDePertenecias().stream()
+            .collect(Collectors
+                .toMap(c -> MapperDeCriterio.tipoCriterioFromString(c.getTipo()),
+                    CriterioDePertenenciaInputDTO::getValor));
+
+        return coleccion.actualizarCriterios(datosCriteriosNuevos);
+    }
+
+    private boolean actualizarFuentes(Coleccion coleccion, ColeccionInputDTO input) {
+        List<String> tiposDeFuentesInput = input.getFuentes().stream().map(FuenteInputDTO::getTipoFuente).toList();
+
+        List<Fuente> fuentesAAgregar = fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentesInput);
+
+        return coleccion.actualizarFuentes(fuentesAAgregar);
     }
 }
 
