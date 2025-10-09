@@ -6,7 +6,6 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,5 +32,22 @@ public class CriterioPorProvincia extends CriterioDePertenencia {
   @Override
   public Boolean mismoValor(String valor) {
     return this.provincia.equals(valor);
+  }
+
+  @Override
+  public String getValor() {
+    return this.provincia;
+  }
+
+  @Override
+  public boolean setValor(String valor) {
+    boolean cambio = false;
+
+    if(!mismoValor(valor)) {
+      this.provincia = valor;
+      cambio = true;
+    }
+
+    return cambio;
   }
 }

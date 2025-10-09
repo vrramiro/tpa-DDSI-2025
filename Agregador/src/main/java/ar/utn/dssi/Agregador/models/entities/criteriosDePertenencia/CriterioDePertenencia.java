@@ -28,4 +28,8 @@ public abstract class CriterioDePertenencia {
     public abstract TipoCriterio getTipoCriterio();
 
     public abstract Boolean mismoValor(String valor);
+
+    public abstract String getValor();
+
+    public abstract boolean setValor(String valor);
 }
