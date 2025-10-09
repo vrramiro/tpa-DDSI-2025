@@ -39,10 +39,10 @@ public class HechosService implements IHechosService {
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long fuenteId) {
+    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia) {
         try {
             return this.hechosRepository
-                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, fuenteId)
+                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
                 .stream()
                 .filter(Hecho::getVisible) // Filtrar solo los hechos visibles
                 .map(MapperDeHechos::hechoToOutputDTO)
@@ -62,13 +62,17 @@ public class HechosService implements IHechosService {
     }
 
     @Override
+    @Transactional
     public void importarNuevosHechos() {
         try {
             List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
+            System.out.println(hechosNuevos);
+            hechosRepository.saveAll(hechosNuevos);
 
             List<Coleccion> colecciones = coleccionRepository.findAll();
+            System.out.println("HECHOS TRAIDOS: " + hechosNuevos.size());
 
-            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos)); //trabaja varias colecciones por core
+            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
 
             coleccionRepository.saveAll(colecciones);
         } catch (Exception e) {

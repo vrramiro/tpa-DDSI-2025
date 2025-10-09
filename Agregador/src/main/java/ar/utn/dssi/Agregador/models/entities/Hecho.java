@@ -55,9 +55,7 @@ public class Hecho {
     @Column(nullable = false, name = "descripcion_sanitizada")
     private String descripcionSanitizado;
 
-    //TODO embeber
-    @ManyToOne
-    @JoinColumn(name = "categoria_id", nullable = false)
+    @Embedded
     private Categoria categoria;
 
     @Embedded
