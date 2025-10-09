@@ -16,7 +16,7 @@ public class MapperDeHechos {
         dtoHecho.setUbicacion(MapperDeUbicacion.OutputFromUbicacion(hecho.getUbicacion()));
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
-        dtoHecho.setIdHechoOrigen(hecho.getId());
+        dtoHecho.setIdOrigen(hecho.getId());
         return dtoHecho;
     }
 

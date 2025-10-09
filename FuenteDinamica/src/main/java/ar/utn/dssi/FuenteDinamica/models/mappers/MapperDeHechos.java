@@ -8,8 +8,6 @@ import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 
-import java.time.LocalDateTime;
-
 public class MapperDeHechos {
 
     public static HechoOutputDTO hechoOutputDTO(Hecho hecho) {
@@ -17,14 +15,16 @@ public class MapperDeHechos {
 
         dtoHecho.setTitulo(hecho.getTitulo());
         dtoHecho.setDescripcion(hecho.getDescripcion());
+
         dtoHecho.setTituloSanitizado(hecho.getTituloSanitizado());
-        dtoHecho.setDescripcionSanitizado(hecho.getDescripcionSanitizado());
+        dtoHecho.setDescripcionSanitizada(hecho.getDescripcionSanitizado());
+
         dtoHecho.setCategoria(MapperDeCategoria.categoriaToOutputDTO(hecho.getCategoria()));
         dtoHecho.setUbicacion(MapperDeUbicacion.ubicacionOuputFromUbicacion(hecho.getUbicacion()));
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
         dtoHecho.setContenidoMultimedia(MapperContenidoMultimedia.obtenerUrlContenido(hecho.getMultimedia()));
-        dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
+        dtoHecho.setIdOrigen(hecho.getIdHecho());
         return dtoHecho;
     }
 
