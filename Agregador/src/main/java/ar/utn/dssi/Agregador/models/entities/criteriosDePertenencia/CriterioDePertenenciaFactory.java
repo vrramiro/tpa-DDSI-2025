@@ -9,7 +9,6 @@ import java.time.LocalDate;
 
 public class CriterioDePertenenciaFactory {
     public static CriterioDePertenencia crearCriterio(TipoCriterio tipo, String valorDelCriterio) {
-        System.out.println("ya entre " + valorDelCriterio);
         switch(tipo) {
             case FECHA_DESDE:
                 return new CriterioFechaDesde(LocalDate.parse(valorDelCriterio));
