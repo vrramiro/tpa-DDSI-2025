@@ -1,8 +1,13 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -64,30 +69,92 @@ public class Coleccion {
     private Boolean actualizada;
 
     public void agregarHechos(List<Hecho> nuevosHechos) {
-        this.hechos.addAll(nuevosHechos.stream().filter(this::lePertenece).toList());
-    }
+        Set<Long> idsFuentes = this.fuentes.stream()
+            .map(Fuente::getId)
+            .collect(Collectors.toSet());
 
-    private Boolean lePertenece(Hecho hecho) {
-        return this.criterios.stream()
-            .allMatch(criterio -> criterio.loCumple(hecho))
-            && this.fuentes.contains(hecho.getFuente());
+        nuevosHechos.stream()
+            .filter(h -> idsFuentes.contains(h.getFuente().getId()))
+            .filter(h -> this.criterios.stream().allMatch(c -> c.loCumple(h)))
+            .forEach(h -> this.hechos.add(h));
     }
 
     public Boolean tieneFuente(Fuente fuente) {
-        return this.fuentes.contains(fuente);
+        return this.fuentes.stream()
+            .anyMatch(f -> f.getId().equals(fuente.getId()));
     }
 
-    public void actualizarCriterios(List<CriterioDePertenencia> criterios) {
-        this.criterios.clear();
-        this.criterios.addAll(criterios);
+    //actualiza solo los criterios que no estaban antes y elimina los que desaparecieron
+    public boolean actualizarCriterios(Map<TipoCriterio, String> criteriosNuevos) {
+        boolean cambio = false;
+
+        Map<TipoCriterio, CriterioDePertenencia> criteriosActuales = this.criterios.stream()
+            .collect(Collectors.toMap(CriterioDePertenencia::getTipoCriterio, c -> c));
+
+        for(Map.Entry<TipoCriterio, String> criterioNuevo : criteriosNuevos.entrySet()) {
+            TipoCriterio tipo = criterioNuevo.getKey();
+            String valorNuevo = criterioNuevo.getValue();
+
+            if(criteriosActuales.containsKey(tipo)) {
+                //obtengo el criterio de este tipo porque doy por sentado que una coleccion no tiene más de un criterio del mismo tipo
+                CriterioDePertenencia criterioActual = criteriosActuales.get(tipo);
+
+                //setValor devuelve true si hubo un cambio => de lo contrario continua
+                if(criterioActual.setValor(valorNuevo)) cambio = true;
+            } else {
+                CriterioDePertenencia criterioCreado = CriterioDePertenenciaFactory.crearCriterio(tipo, valorNuevo);
+                this.criterios.add(criterioCreado);
+                cambio = true;
+            }
+        }
+
+        List<CriterioDePertenencia> criterioAEliminar = this.criterios.stream()
+            .filter(c -> !criteriosNuevos.containsKey(c.getTipoCriterio()))
+            .collect(Collectors.toList());
+
+        if(!criterioAEliminar.isEmpty()) {
+            this.criterios.removeAll(criterioAEliminar);
+            cambio = true;
+        }
+
+        if(cambio) marcarDesactualizada();
+
+        return cambio;
     }
 
     public void liberarHechos() {
         this.hechos.clear();
     }
 
-    public void actualizarFuentes(List<Fuente> fuentes) {
-        this.fuentes.clear();
-        this.fuentes.addAll(fuentes);
+    public boolean actualizarFuentes(List<Fuente> fuentesNuevas) {
+        Set<Long> idsFuentesActuales = this.fuentes.stream()
+            .map(Fuente::getId)
+            .collect(Collectors.toSet());
+
+        Set<Long> idsFuentesNuevas = fuentesNuevas.stream()
+            .map(Fuente::getId)
+            .collect(Collectors.toSet());
+
+        boolean cambiaron = !idsFuentesActuales.equals(idsFuentesNuevas);
+
+        if(cambiaron) {
+            this.actualizada = false;
+            this.fuentes.clear();
+            this.fuentes.addAll(fuentesNuevas);
+        }
+
+        return cambiaron;
+    }
+
+    public void marcarActualizada() {
+        this.actualizada = true;
+    }
+
+    public void marcarDesactualizada() {
+        this.actualizada = false;
+    }
+
+    public boolean estaActualizada() {
+        return this.actualizada;
     }
 }
