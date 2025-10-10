@@ -2,7 +2,9 @@ package ar.utn.dssi.Agregador.controller;
 
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
+import ar.utn.dssi.Agregador.error.ColeccionTituloDuplicado;
 import ar.utn.dssi.Agregador.error.CriterioDistintoTipo;
+import ar.utn.dssi.Agregador.error.CriterioPorFechasIncorrecto;
 import ar.utn.dssi.Agregador.error.CriterioTipoIncorrecto;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.error.SolicitudDescripcionMuyCorta;
@@ -61,6 +63,16 @@ public class GeneralExceptionHandler {
   @ExceptionHandler(CriterioTipoIncorrecto.class)
   public ResponseEntity<ErrorDTO> handleCriterioTipoIncorrecto(CriterioTipoIncorrecto ex) {
     return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(CriterioPorFechasIncorrecto.class)
+  public ResponseEntity<ErrorDTO> hendleCriterioPorFechasIncorrecto(CriterioPorFechasIncorrecto ex) {
+    return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(ColeccionTituloDuplicado.class)
+  public ResponseEntity<ErrorDTO> handleColeccionTituloDuplicado(ColeccionTituloDuplicado ex) {
+    return handleException(ex.getMessage(), HttpStatus.CONFLICT);
   }
 
   public ResponseEntity<ErrorDTO> handleException(String mensaje, HttpStatus status) {
