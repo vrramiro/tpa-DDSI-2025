@@ -6,14 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
   Optional<Coleccion> findColeccionByHandle(String handle);
   List<Coleccion> findColeccionByActualizada(Boolean actualizada);
-
+  Optional<Coleccion> findColeccionByTitulo(String titulo);
   @Query("SELECT h FROM Coleccion c JOIN c.hechos h " +
       "WHERE c.handle = :handler " +
       "AND (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +

@@ -2,6 +2,8 @@ package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
+import ar.utn.dssi.Agregador.error.ColeccionTituloDuplicado;
+import ar.utn.dssi.Agregador.error.CriterioPorFechasIncorrecto;
 import ar.utn.dssi.Agregador.event.ColeccionDesactualizadaEvent;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.CriterioDePertenenciaInputDTO;
@@ -10,12 +12,12 @@ import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
+import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeColecciones;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeConsenso;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
@@ -31,6 +33,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -46,16 +50,12 @@ public class ColeccionService implements IColeccionService {
     @Override
     @Transactional
     public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
-        validarDatosColeccion(input);
+        validarDatosBasicos(input);
+        validarCriterios(input);
+        validarDuplicadoPorTitulo(input.getTitulo());
 
-        Coleccion coleccion = new Coleccion();
-
-        coleccion.setTitulo(input.getTitulo());
-        coleccion.setDescripcion(input.getDescripcion());
-        coleccion.marcarDesactualizada();
-        inicializarCriterios(coleccion, input);
-        inicializarFuentes(coleccion, input);
-        coleccion.setConsenso(MapperDeConsenso.consensoFromConsensoInputDTO(input.getConsenso()));
+        Coleccion coleccion = MapperDeColecciones.coleccionFromColeccionInputDTO(input);
+        coleccion.setFuentes(fuentesNuevas(input));
 
         coleccion = coleccionRepository.save(coleccion);
 
@@ -78,23 +78,32 @@ public class ColeccionService implements IColeccionService {
     @Override
     @Transactional
     public  ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO input) {
-        Coleccion coleccion = this.obtenerColeccion(handle);
+        validarDatosBasicos(input);
+        validarCriterios(input);
 
-        if(!coleccion.getActualizada()) throw new ColeccionAguardandoActualizacion("La coleccion ya fue modificada, aguarde a que se actualice.");
+        Coleccion coleccion = obtenerColeccionSiExiste(handle);
 
-        this.validarDatosColeccion(input);
+        if(!coleccion.getActualizada())
+            throw new ColeccionAguardandoActualizacion("La coleccion ya fue modificada, aguarde a que se actualice.");
 
-        if(!coleccion.getTitulo().equals(input.getTitulo())) coleccion.setTitulo(input.getTitulo());
-        if(!coleccion.getDescripcion().equals(input.getDescripcion())) coleccion.setDescripcion(input.getDescripcion());
+        if(!coleccion.getTitulo().equals(input.getTitulo()))
+            validarDuplicadoPorTitulo(input.getTitulo());
 
-        boolean cambiaronCriterios = actualizarCriterios(coleccion, input);
-        boolean cambiaronFuentes = actualizarFuentes(coleccion, input);
-
-        if(cambiaronCriterios || cambiaronFuentes) {
-            coleccion.setActualizada(Boolean.FALSE);
+        if(!validarCambioCriterios(coleccion, input) && !validarCambioFuentes(coleccion, input)) {
+            coleccion.setTitulo(input.getTitulo());
+            coleccion.setDescripcion(input.getDescripcion());
+            intentarGuardarColeccion(coleccion);
+            return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
         }
 
-        coleccionRepository.save(coleccion);
+        Coleccion coleccionEditada = MapperDeColecciones.coleccionFromColeccionInputDTO(input);
+
+        // Para que el ORM actualice el registro con el save y se haga la actualizacion gracias a las cascadas y orphanRemoval
+        coleccionEditada.setHandle(handle);
+        coleccionEditada.setFuentes(fuentesNuevas(input));
+
+        // Los hechos se pierden al editar la coleccion, dado que deben ser recalculados
+        intentarGuardarColeccion(coleccionEditada);
 
         if(!coleccion.getActualizada()) publicador.publishEvent(new ColeccionDesactualizadaEvent(coleccion.getHandle()));
 
@@ -103,7 +112,7 @@ public class ColeccionService implements IColeccionService {
 
     @Override
     public void eliminarColeccion(String handle) {
-        Coleccion coleccion = obtenerColeccion(handle);
+        Coleccion coleccion = obtenerColeccionSiExiste(handle);
 
         coleccionRepository.delete(coleccion);
     }
@@ -123,7 +132,7 @@ public class ColeccionService implements IColeccionService {
               .toList();
     }
 
-    private void validarDatosColeccion(ColeccionInputDTO input) {
+    private void validarDatosBasicos(ColeccionInputDTO input) {
         if(input.getTitulo() == null || input.getTitulo().isEmpty())
             throw new DatosDeColeccionFaltantes("El titulo es obligatorio.");
 
@@ -136,11 +145,11 @@ public class ColeccionService implements IColeccionService {
         if(input.getFuentes() == null || input.getFuentes().isEmpty())
             throw new DatosDeColeccionFaltantes("Debe tener al menos una fuente.");
 
-        if(input.getConsenso() == null || input.getConsenso().isEmpty())
+        if(input.getConsenso() == null)
             throw new DatosDeColeccionFaltantes("El algoritmo de consenso es obligatorio.");
     }
 
-    private Coleccion obtenerColeccion(String handle) {
+    private Coleccion obtenerColeccionSiExiste(String handle) {
         return coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
     }
 
@@ -148,39 +157,67 @@ public class ColeccionService implements IColeccionService {
         return coleccionRepository.findColeccionByActualizada(true);
     }
 
-    private void inicializarCriterios(Coleccion coleccion, ColeccionInputDTO input) {
-        List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias()
-            .stream()
-            .map(MapperDeCriterio::criterioFromCriterioInputDTO)
-            .toList();
-
-        coleccion.setCriterios(criterios);
-    }
-
-    private void inicializarFuentes(Coleccion coleccion, ColeccionInputDTO input) {
-            List<String> tiposDeFuente = input.getFuentes()
-                .stream()
-                .map(FuenteInputDTO::getTipoFuente)
-                .toList();
-
-        coleccion.setFuentes(fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuente));
-    }
-
-    private boolean actualizarCriterios(Coleccion coleccion, ColeccionInputDTO input) {
+    private boolean validarCambioCriterios(Coleccion coleccion, ColeccionInputDTO input) {
         Map<TipoCriterio, String> datosCriteriosNuevos = input.getCriteriosDePertenecias().stream()
             .collect(Collectors
-                .toMap(c -> MapperDeCriterio.tipoCriterioFromString(c.getTipo()),
+                .toMap(CriterioDePertenenciaInputDTO::getTipo,
                     CriterioDePertenenciaInputDTO::getValor));
 
-        return coleccion.actualizarCriterios(datosCriteriosNuevos);
+        Map<TipoCriterio, String> datosCriteriosActuales = coleccion.getCriterios().stream()
+            .collect(Collectors
+                .toMap(CriterioDePertenencia::getTipoCriterio,
+                    CriterioDePertenencia::getValor));
+
+        return !datosCriteriosNuevos.equals(datosCriteriosActuales);
     }
 
-    private boolean actualizarFuentes(Coleccion coleccion, ColeccionInputDTO input) {
-        List<String> tiposDeFuentesInput = input.getFuentes().stream().map(FuenteInputDTO::getTipoFuente).toList();
+    private boolean validarCambioFuentes(Coleccion coleccion, ColeccionInputDTO input) {
+        Set<TipoFuente> tiposDeFuentesInput = input.getFuentes().stream()
+            .map(FuenteInputDTO::getTipoFuente)
+            .collect(Collectors.toSet());
 
-        List<Fuente> fuentesAAgregar = fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentesInput);
+        Set<TipoFuente> tiposDeFuentesActuales = coleccion.getFuentes().stream()
+            .map(f -> f.getTipoFuente().getTipoFuente())
+            .collect(Collectors.toSet());
 
-        return coleccion.actualizarFuentes(fuentesAAgregar);
+        return !tiposDeFuentesInput.equals(tiposDeFuentesActuales);
+    }
+
+    private void validarDuplicadoPorTitulo(String titulo) {
+        Optional<Coleccion> coleccionDuplicada = coleccionRepository.findColeccionByTitulo(titulo);
+        if(coleccionDuplicada.isPresent())
+            throw new ColeccionTituloDuplicado(titulo);
+    }
+
+    private void validarCriterios(ColeccionInputDTO input) {
+        Map<TipoCriterio, String> criterios = input.getCriteriosDePertenecias().stream()
+            .collect(Collectors.toMap(CriterioDePertenenciaInputDTO::getTipo, CriterioDePertenenciaInputDTO::getValor));
+
+        if(criterios.size() != input.getCriteriosDePertenecias().size())
+            throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo.");
+
+        LocalDate fechaDesde = criterios.containsKey(TipoCriterio.FECHA_DESDE) ? MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE)) : null;
+
+        if(fechaDesde != null && fechaDesde.isAfter(LocalDate.now()))
+            throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+    }
+
+    private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
+        List<String> tiposDeFuentes = input.getFuentes().stream()
+            .map(f -> f.getTipoFuente().toString())
+            .collect(Collectors.toList());
+
+        //tiene que ser string xq para persistir se usa un converter que pasa el ITipoFuente a string
+        return fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentes);
+    }
+
+    private void intentarGuardarColeccion(Coleccion coleccion) {
+        try {
+            coleccionRepository.save(coleccion);
+        } catch (Exception e) {
+            log.error("Error al guardar la coleccion: {}", e.getMessage());
+            throw e;
+        }
     }
 }
 
