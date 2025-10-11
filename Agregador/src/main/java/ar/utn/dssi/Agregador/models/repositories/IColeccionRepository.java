@@ -19,7 +19,6 @@ public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
       "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
       "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
       "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
-      "AND (:fuenteId IS NULL OR h.fuente.id = :fuenteId) " +
       "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad) " +
       "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) "
       )
@@ -30,8 +29,7 @@ public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
       @Param("fechaAcontecimientoDesde") LocalDate fechaAcontecimientoDesde,
       @Param("fechaAcontecimientoHasta") LocalDate fechaAcontecimientoHasta,
       @Param("ciudad") String ciudad,
-      @Param("provincia") String provincia,
-      @Param("fuenteId") Long fuenteId
+      @Param("provincia") String provincia
   );
 
 }

@@ -25,15 +25,9 @@ public class HechosController {
   }
 
   @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
-    List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos();
-    return ResponseEntity.ok(hechos);
-  }
-
-  @GetMapping("/nuevos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechosNuevos
-          (@RequestParam(name = "fechaDesde") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
-    List<HechoOutputDTO> hechos = this.hechosService.obtenerHechosNuevos(fechaDesde);
+          (@RequestParam(name = "fechaDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
+    List<HechoOutputDTO> hechos = this.hechosService.obtenerHechos(fechaDesde);
     return ResponseEntity.ok(hechos);
   }
 

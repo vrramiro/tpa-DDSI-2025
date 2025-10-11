@@ -68,7 +68,7 @@ public class FuenteProxy implements ITipoProxy {
 
   public Hecho hechoFromInputDTOProxy(HechoFuenteProxyInputDTO input) {
     Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setIdEnFuente(input.getIdOrigen());
     hecho.setTitulo(input.getTitulo());
     hecho.setDescripcion(input.getDescripcion());
     hecho.setTituloSanitizado(input.getTituloSanitizado());

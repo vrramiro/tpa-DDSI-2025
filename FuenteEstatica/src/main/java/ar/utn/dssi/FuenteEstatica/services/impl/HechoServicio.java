@@ -95,7 +95,7 @@ public class HechoServicio implements IHechoServicio {
             throw new IllegalArgumentException("Error al cargar la fecha de ultima comunicacion");
         }
 
-        var hechos = this.hechoRepositorio.findHechosPorSubir(fechaDesde);
+        var hechos = this.hechoRepositorio.findHechosByFechaLimite(fechaDesde);
 
         if (hechos.isEmpty()) {
             throw new RepositorioVacio("El repositorio esta vacio, no tiene datos.");

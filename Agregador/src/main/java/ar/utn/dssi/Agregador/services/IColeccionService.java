@@ -15,6 +15,6 @@ public interface IColeccionService {
     List<ColeccionOutputDTO> obtenerColecciones();
     ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
-    List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad, Long fuenteId);
+    List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad);
 
 }

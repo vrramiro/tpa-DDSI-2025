@@ -13,25 +13,14 @@ public class CriterioDePertenenciaFactory {
     public static CriterioDePertenencia crearCriterio(Long id, TipoCriterio tipo, String valorDelCriterio) {
         switch(tipo) {
             case FECHA_DESDE:
-                CriterioFechaDesde criterioFechaDesde = new CriterioFechaDesde();
-                criterioFechaDesde.setFechaDesde(LocalDate.parse(valorDelCriterio));
-                criterioFechaDesde.setId(id);
-                return criterioFechaDesde;
+                return new CriterioFechaDesde(LocalDate.parse(valorDelCriterio));
             case FECHA_HASTA:
-                CriterioFechaHasta criterioFechaHasta = new CriterioFechaHasta();
-                criterioFechaHasta.setFechaHasta(LocalDate.parse(valorDelCriterio));
-                criterioFechaHasta.setId(id);
-                return criterioFechaHasta;
+                return new CriterioFechaHasta(LocalDate.parse(valorDelCriterio));
             case CATEGORIA:
-                CriterioPorCategoria criterioCategoria = new CriterioPorCategoria();
-                criterioCategoria.setCategoria(valorDelCriterio);
-                criterioCategoria.setId(id);
-                return criterioCategoria;
+                return new CriterioPorCategoria(valorDelCriterio);
             case PROVINCIA:
-                CriterioPorProvincia criterioProvincia = new CriterioPorProvincia();
-                criterioProvincia.setProvincia(valorDelCriterio);
-                criterioProvincia.setId(id);
-                return criterioProvincia;
+                return  new CriterioPorProvincia(valorDelCriterio);
+
             default:
                 return null;
         }

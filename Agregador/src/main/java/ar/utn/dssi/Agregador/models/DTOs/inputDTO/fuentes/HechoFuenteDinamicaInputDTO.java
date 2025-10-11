@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class HechoFuenteDinamicaInputDTO {
-    private Long idExterno;
+    private Long idOrigen;
 
     private String titulo;
     private String descripcion;

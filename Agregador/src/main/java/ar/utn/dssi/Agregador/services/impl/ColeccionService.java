@@ -50,6 +50,7 @@ public class ColeccionService implements IColeccionService {
     @Override
     @Transactional
     public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
+
         validarDatosBasicos(input);
         validarCriterios(input);
         validarDuplicadoPorTitulo(input.getTitulo());
@@ -118,14 +119,14 @@ public class ColeccionService implements IColeccionService {
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad, Long fuenteId){
+    public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad){
         Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
         if(!coleccion.getActualizada()) throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navergación.");
 
         IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
 
-        return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, fuenteId)
+        return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
               .stream()
               .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
               .map(MapperDeHechos::hechoToOutputDTO)

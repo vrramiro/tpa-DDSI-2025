@@ -19,17 +19,15 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
           "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
           "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
           "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
-          "AND (:fuenteId IS NULL OR h.fuente.id = :fuenteId) " +
-          "AND ( (:latitud IS NULL AND :longitud IS NULL) " +
-          "      OR (h.ubicacion.latitud = :latitud AND h.ubicacion.longitud = :longitud) )")
+          "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad)" +
+          "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia)")
   List<Hecho> filtrarHechos(
           @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
           @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
           @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,
           @Param("fechaAcontecimientoHasta") LocalDateTime fechaAcontecimientoHasta,
           @Param("ciudad") String ciudad,
-          @Param("provincia") String provincia,
-          @Param("fuenteId") Long fuenteId
+          @Param("provincia") String provincia
   );
 
 

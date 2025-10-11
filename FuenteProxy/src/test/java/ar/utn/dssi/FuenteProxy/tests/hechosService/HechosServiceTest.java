@@ -64,8 +64,8 @@ public class HechosServiceTest {
 
     // Assert - Verificamos que todo funcionó como esperábamos
     assertThat(resultado).hasSize(2);
-    assertThat(resultado.get(0).getIdHecho()).isEqualTo(1L);
-    assertThat(resultado.get(1).getIdHecho()).isEqualTo(2L);
+    assertThat(resultado.get(0).getIdOrigen()).isEqualTo(1L);
+    assertThat(resultado.get(1).getIdOrigen()).isEqualTo(2L);
 
     // Verificamos que el repositorio fue llamado exactamente una vez con el parámetro correcto
     verify(hechoRepository, times(1))
@@ -156,7 +156,7 @@ public class HechosServiceTest {
     List<HechoOutputDTO> resultadoDespues = hechosService.obtenerHechos(fechaTest);
 
     assertThat(resultadoDespues.size()).isEqualTo(1);
-    assertThat(resultadoDespues.get(0).getIdHecho()).isEqualTo(2L);
+    assertThat(resultadoDespues.get(0).getIdOrigen()).isEqualTo(2L);
   }
 
   @Test

@@ -22,21 +22,15 @@ import java.util.stream.Collectors;
 public class FuenteDinamica implements ITipoFuente {
 
   @Value("${timeout-ms}")
-  private Integer timeoutMs;
+  private Integer timeoutMs=15000;
 
   @Override
   public List<Hecho> hechosNuevos(Fuente fuente) {
     LocalDateTime ultimoEnvioFuente = fuente.getUltimaActualizacion();
-    LocalDateTime fechaDesde;
 
-    if (ultimoEnvioFuente == null) {
-      fechaDesde = LocalDateTime.now();
-    } else {
-      fechaDesde = ultimoEnvioFuente;
-    }
 
-    return getHechos(fuente.getBaseUrl(), fechaDesde)
-            .map(this::hechoFromInputDTODinamica)
+    return getHechos(fuente.getBaseUrl(), ultimoEnvioFuente)
+            .map(hecho -> this.hechoFromInputDTODinamica(hecho, fuente))
             .collectList()
             .block();
   }
@@ -53,7 +47,6 @@ public class FuenteDinamica implements ITipoFuente {
 
     return webClient.get()
             .uri(uriBuilder -> uriBuilder
-                    .path("/nuevos")
                     .queryParam("fechaDesde", fechaDesde)
                     .build())
             .retrieve()
@@ -66,9 +59,10 @@ public class FuenteDinamica implements ITipoFuente {
   }
 
 
-  private Hecho hechoFromInputDTODinamica(HechoFuenteDinamicaInputDTO input) {
+  private Hecho hechoFromInputDTODinamica(HechoFuenteDinamicaInputDTO input, Fuente fuente) {
     Hecho hecho = new Hecho();
-    hecho.setIdEnFuente(input.getIdExterno());
+    hecho.setIdEnFuente(input.getIdOrigen());
+    hecho.setFuente(fuente);
     hecho.setTitulo(input.getTitulo());
     hecho.setDescripcion(input.getDescripcion());
     hecho.setTituloSanitizado(input.getTituloSanitizado());
@@ -76,7 +70,7 @@ public class FuenteDinamica implements ITipoFuente {
 
     // Categoria
       Categoria categoria = new Categoria();
-      categoria.setId(input.getCategoria().getId());
+      categoria.setId(input.getCategoria().getIdCategoria());
       categoria.setNombre(input.getCategoria().getNombre());
       hecho.setCategoria(categoria);
 

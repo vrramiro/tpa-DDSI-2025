@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class HechoOutputDTO {
-  private Long idHechoOrigen;
+  private Long idOrigen;
   private String titulo;
   private String descripcion;
   private String tituloSanitizado;

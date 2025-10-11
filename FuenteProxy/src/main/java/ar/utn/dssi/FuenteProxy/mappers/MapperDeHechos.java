@@ -1,7 +1,6 @@
 package ar.utn.dssi.FuenteProxy.mappers;
 
 
-import ar.utn.dssi.FuenteProxy.dto.input.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
@@ -18,7 +17,7 @@ public class MapperDeHechos {
         dtoHecho.setUbicacion(hecho.getUbicacion());
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
-        dtoHecho.setIdHecho(hecho.getId());
+        dtoHecho.setIdOrigen(hecho.getId());
         return dtoHecho;
     }
 

@@ -60,28 +60,9 @@ public class HechosService implements IHechosService {
   /// /////// READ //////////
   //Obtener todos los hechos
   @Override
-  public List<HechoOutputDTO> obtenerHechos() {
-    List<Hecho> hechos = this.hechoRepository.findAll();
+  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde) {
 
-    if (hechos.isEmpty()) {
-      throw new RepositorioVacio("No hay hechos en la base de datos");
-    }
-
-    try {
-      return hechos.stream()
-              .map(MapperDeHechos::hechoOutputDTO)
-              .toList();
-
-    } catch (Exception e) {
-      throw new ErrorGeneralRepositorio("Error al obtener los hechos. ");
-    }
-  }
-
-  //Obtener todos los hechos nuevos
-  @Override
-  public List<HechoOutputDTO> obtenerHechosNuevos(LocalDateTime fechaDesde) {
-
-    List<Hecho> hechos = this.hechoRepository.findHechosPorSubir(fechaDesde);
+    List<Hecho> hechos = this.hechoRepository.findHechosByFechaLimite(fechaDesde);
 
     if (hechos.isEmpty()) {
       throw new RepositorioVacio("No hay hechos en la base de datos");

@@ -24,7 +24,7 @@ import lombok.Setter;
 import lombok.Getter;
 
 @Entity
-@Table(name = "colecciones")
+@Table(name = "coleccion")
 @Setter
 @Getter
 public class Coleccion {
@@ -54,7 +54,7 @@ public class Coleccion {
     @Column(name = "consenso_aceptado")
     private TipoConsenso consenso;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "coleccion_fuente",
         joinColumns = @JoinColumn(name = "coleccion_id", referencedColumnName = "handle"),

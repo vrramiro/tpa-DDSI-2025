@@ -6,9 +6,11 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -16,8 +18,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CriterioPorCategoria extends CriterioDePertenencia {
-    @Column(name = "categoria", nullable = false)
+    @Column(name = "categoria")
     private String categoria;
 
     @Override
