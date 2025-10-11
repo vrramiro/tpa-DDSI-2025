@@ -1,6 +1,8 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -64,30 +66,26 @@ public class Coleccion {
     private Boolean actualizada;
 
     public void agregarHechos(List<Hecho> nuevosHechos) {
-        this.hechos.addAll(nuevosHechos.stream().filter(this::lePertenece).toList());
-    }
+        Set<Long> idsFuentes = this.fuentes.stream()
+            .map(Fuente::getId)
+            .collect(Collectors.toSet());
 
-    private Boolean lePertenece(Hecho hecho) {
-        return this.criterios.stream()
-            .allMatch(criterio -> criterio.loCumple(hecho))
-            && this.fuentes.contains(hecho.getFuente());
+        nuevosHechos.stream()
+            .filter(h -> idsFuentes.contains(h.getFuente().getId()))
+            .filter(h -> this.criterios.stream().allMatch(c -> c.loCumple(h)))
+            .forEach(h -> this.hechos.add(h));
     }
 
     public Boolean tieneFuente(Fuente fuente) {
-        return this.fuentes.contains(fuente);
-    }
-
-    public void actualizarCriterios(List<CriterioDePertenencia> criterios) {
-        this.criterios.clear();
-        this.criterios.addAll(criterios);
+        return this.fuentes.stream()
+            .anyMatch(f -> f.getId().equals(fuente.getId()));
     }
 
     public void liberarHechos() {
         this.hechos.clear();
     }
 
-    public void actualizarFuentes(List<Fuente> fuentes) {
-        this.fuentes.clear();
-        this.fuentes.addAll(fuentes);
+    public void marcarComoActualizada() {
+        this.actualizada = Boolean.TRUE;
     }
 }

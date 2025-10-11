@@ -6,6 +6,7 @@ import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.Ubicacion;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoFuente;
+import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,6 +30,11 @@ public class FuenteEstatica implements ITipoFuente {
             .map(hecho -> hechoFromInputDTOEstatica(hecho, fuente))
             .collectList()
             .block();
+  }
+
+  @Override
+  public TipoFuente getTipoFuente() {
+    return TipoFuente.ESTATICA;
   }
 
   private Flux<HechoFuenteEstaticaIntputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {

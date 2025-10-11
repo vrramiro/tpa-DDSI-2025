@@ -36,4 +36,21 @@ public class CriterioPorProvincia extends CriterioDePertenencia {
   public Boolean mismoValor(String valor) {
     return this.provincia.equals(valor);
   }
+
+  @Override
+  public String getValor() {
+    return this.provincia;
+  }
+
+  @Override
+  public boolean setValor(String valor) {
+    boolean cambio = false;
+
+    if(!mismoValor(valor)) {
+      this.provincia = valor;
+      cambio = true;
+    }
+
+    return cambio;
+  }
 }

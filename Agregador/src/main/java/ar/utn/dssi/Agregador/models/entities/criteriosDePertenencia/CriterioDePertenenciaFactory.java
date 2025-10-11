@@ -8,7 +8,9 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl.Criteri
 import java.time.LocalDate;
 
 public class CriterioDePertenenciaFactory {
-    public static CriterioDePertenencia crearCriterio(TipoCriterio tipo, String valorDelCriterio) {
+    //Si llega id null es porque es nuevo
+    //Si llega id con valor es porque ya existia y se esta editando
+    public static CriterioDePertenencia crearCriterio(Long id, TipoCriterio tipo, String valorDelCriterio) {
         switch(tipo) {
             case FECHA_DESDE:
                 return new CriterioFechaDesde(LocalDate.parse(valorDelCriterio));
@@ -18,6 +20,7 @@ public class CriterioDePertenenciaFactory {
                 return new CriterioPorCategoria(valorDelCriterio);
             case PROVINCIA:
                 return  new CriterioPorProvincia(valorDelCriterio);
+
             default:
                 return null;
         }
