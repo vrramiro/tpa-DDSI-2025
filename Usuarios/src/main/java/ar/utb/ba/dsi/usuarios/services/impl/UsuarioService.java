@@ -6,11 +6,21 @@ import ar.utb.ba.dsi.usuarios.error.UsuarioDuplicadoExcepcion;
 import ar.utb.ba.dsi.usuarios.models.entities.Usuario;
 import ar.utb.ba.dsi.usuarios.models.repositories.IUsuarioRepository;
 import ar.utb.ba.dsi.usuarios.services.IUsuarioService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UsuarioService implements IUsuarioService {
-    IUsuarioRepository usuarioRepository;
+
+    private final IUsuarioRepository usuarioRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UsuarioService(IUsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    }
 
     @Override
     public void crearUsuario(UsuarioDTO usuarioDTO) {

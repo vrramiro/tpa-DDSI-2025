@@ -19,7 +19,6 @@ public class JwtUtil {
 
     return Jwts.builder()
         .setSubject(usuario.getNombre())
-        .claim("rol", usuario.getRol())
         .setIssuer("gestion-alumnos-server")
         .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
         .signWith(key)
