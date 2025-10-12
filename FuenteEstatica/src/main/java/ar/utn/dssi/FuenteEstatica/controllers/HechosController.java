@@ -1,0 +1,43 @@
+package ar.utn.dssi.FuenteEstatica.controllers;
+
+
+import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+@RestController
+@RequestMapping("/fuente/hechos")
+
+public class HechosController {
+    @Autowired
+    private IHechoServicio hechoServicio;
+
+    @PostMapping("/importar")
+    public ResponseEntity<Void> importarArchivo(@RequestParam("archivo") MultipartFile archivo) {
+
+        try {
+            File tempFile = File.createTempFile("importado-", archivo.getOriginalFilename());
+            archivo.transferTo(tempFile);
+
+            this.hechoServicio.importarArchivo(tempFile);
+            return ResponseEntity.ok().build();
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/hechos")
+    public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
+        List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos();
+        return ResponseEntity.ok(hechos);
+        //TODO implementar endpoin para filtrado de hechos enviados
+    }
+}

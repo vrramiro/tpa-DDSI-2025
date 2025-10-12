@@ -1,0 +1,128 @@
+@startuml
+' Diseño del sistema de hechos y colecciones
+
+'================== ENUMS ==================
+enum Origen {
+    ARCHIVO
+    CONTRIBUYENTE
+}
+
+enum EstadoDeSolicitud {
+    RECHAZADA
+    ACEPTADA
+    PENDIENTE
+}
+
+'================== INTERFACES ==================
+
+interface ImportadorDeArchivos {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+interface CriterioDePertenencia {
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+'================== HECHOS ==================
+class Hecho {
+    - titulo: String
+    - descripcion: String
+    - categoria: Categoria
+    - ubicacion: Ubicacion
+    - contenido: ContenidoMultimedia
+    - fechaDeAcontecimiento: DateTime
+    - fechaDeCarga: DateTime
+    - origen: Origen
+    - etiquetas: List<Etiqueta>
+    - visible: Bool
+}
+
+class Ubicacion {
+    - latitud: Int
+    - longitud: Int
+    - lugar: String
+}
+
+class Categoria {
+    - nombre: String
+}
+
+class Etiqueta {
+    - nombre: String
+}
+
+class HechosEliminados {
+    - hechosEliminados: List<Hecho>
+    + agregarHecho(Hecho hechoEliminado): void
+}
+
+'================== COLECCIÓN ==================
+class Coleccion {
+    - titulo: String
+    - descripcion: String
+    - hechos : List<Hecho>
+    - fuenteDeHechos : Fuente
+    - criteriosDePertenencia : List<CriterioDePertenencia>
+    + cargarHechos() : void
+}
+
+Coleccion o-- Hecho
+Coleccion --> FuenteEstatica
+Coleccion ----> CriterioDePertenencia
+
+'================== FUENTES ==================
+class FuenteEstatica {
+    - importadorDeArchivos: ImportadorDeArchivos
+    - archivoDeHechos: File
+    + obtenerHechos(): List<Hecho>
+}
+
+FuenteEstatica --> ImportadorDeArchivos
+
+class ImportadorDeArchivosCSV {
+    + importarHechos(File unArchivo): List<Hecho>
+}
+ImportadorDeArchivosCSV ..|> ImportadorDeArchivos
+
+'================== CRITERIOS ==================
+class CriterioPorCategoria {
+    - categoriaACumplir: Categoria
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+class CriterioPorFecha {
+    - fechaACumplir: LocalDateTime
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+class CriterioPorUbicacion {
+    - ubicacion: Ubicacion
+    + hechoLoCumple(Hecho unoHecho): bool
+}
+
+CriterioPorCategoria ..|> CriterioDePertenencia
+CriterioPorFecha ..|> CriterioDePertenencia
+CriterioPorUbicacion ..|> CriterioDePertenencia
+
+'================== SOLICITUDES ==================
+class SolicitudDeEliminacion {
+    - hecho: Hecho
+    - descripcion: String
+    - estadoDeSolicitud: EstadoDeSolicitud
+    - fechaDeCreacion: DateTime
+    + aceptarSolicitud(): void
+    + rechazarSolicitud(): void
+}
+
+SolicitudDeEliminacion *-- Hecho
+SolicitudDeEliminacion --> EstadoDeSolicitud
+SolicitudDeEliminacion --> HechosEliminados
+
+'================== RELACIONES ==================
+Hecho --> Categoria
+Hecho --> Origen
+Hecho --> Contribuyente
+Hecho --> Ubicacion
+Hecho --> Etiqueta
+
+@enduml
+

@@ -1,0 +1,16 @@
+package ar.utn.dssi.FuenteDinamica.services;
+
+import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
+import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
+
+import java.util.List;
+
+public interface IHechosService {
+  List<HechoOutputDTO> obtenerHechos();
+  List<HechoOutputDTO> obtenerHechosNuevos();
+  HechoOutputDTO obtenerHechoPorId(Long idHecho);
+  HechoOutputDTO crear(HechoInputDTO hecho);
+  void editarHecho(HechoInputDTO hecho, Long idHecho);
+  void eliminarHecho(Long idHecho);
+  List<HechoOutputDTO> obtenerHechosEditados();
+}
