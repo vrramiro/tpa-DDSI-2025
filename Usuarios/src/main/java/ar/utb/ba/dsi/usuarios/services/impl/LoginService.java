@@ -2,6 +2,7 @@ package ar.utb.ba.dsi.usuarios.services.impl;
 
 import ar.utb.ba.dsi.usuarios.dto.input.CredencialesDTO;
 import ar.utb.ba.dsi.usuarios.dto.output.AuthResponseDTO;
+import ar.utb.ba.dsi.usuarios.dto.output.UserRolesDTO;
 import ar.utb.ba.dsi.usuarios.error.UsuarioContraseniaIncorrecta;
 import ar.utb.ba.dsi.usuarios.error.UsuarioDatosFaltantes;
 import ar.utb.ba.dsi.usuarios.error.UsuarioNoEncontrado;
@@ -11,6 +12,8 @@ import ar.utb.ba.dsi.usuarios.services.ILoginService;
 import ar.utb.ba.dsi.usuarios.utils.JwtUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class LoginService implements ILoginService {
@@ -23,6 +26,7 @@ public class LoginService implements ILoginService {
     this.passwordEncoder = new BCryptPasswordEncoder();
   }
 
+  @Override
   public AuthResponseDTO autenticarUsuario(CredencialesDTO credenciales) {
     validacionBasica(credenciales);
 
@@ -39,6 +43,22 @@ public class LoginService implements ILoginService {
     authResponseDTO.setRefreshToken(refreshToken);
 
     return authResponseDTO;
+  }
+
+  @Override
+  public UserRolesDTO obtenerRolesUsuario(String username) {
+    Optional<Usuario> usuarioOpt = usuariosRepository.findUsuarioByNombreUsuario(username);
+
+    if (usuarioOpt.isEmpty()) {
+      throw new UsuarioNoEncontrado(username);
+    }
+
+    Usuario usuario = usuarioOpt.get();
+
+    return UserRolesDTO.builder()
+            .username(usuario.getNombreUsuario())
+            .rol(usuario.getRol())
+            .build();
   }
 
   private void validacionBasica(CredencialesDTO credenciales) {

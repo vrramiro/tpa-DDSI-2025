@@ -3,6 +3,7 @@ package ar.utb.ba.dsi.usuarios.controller;
 import ar.utb.ba.dsi.usuarios.dto.output.ErrorDTO;
 import ar.utb.ba.dsi.usuarios.error.UsuarioContraseniaIncorrecta;
 import ar.utb.ba.dsi.usuarios.error.UsuarioDatosFaltantes;
+import ar.utb.ba.dsi.usuarios.error.UsuarioNoEncontrado;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -16,8 +17,8 @@ public class GeneralExceptionHandler {
     return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
   }
 
-  @ExceptionHandler(UsuarioDatosFaltantes.class)
-  public ResponseEntity<ErrorDTO> handleUsuarioNoEncontrado(UsuarioDatosFaltantes ex) {
+  @ExceptionHandler(UsuarioNoEncontrado.class)
+  public ResponseEntity<ErrorDTO> handleUsuarioNoEncontrado(UsuarioNoEncontrado ex) {
     return handleException(ex.getMessage(), HttpStatus.NOT_FOUND);
   }
 

@@ -15,7 +15,7 @@ public class MapperDeCategoria {
 
   public static CategoriaOutputDTO outputDTOFromCategoria(Categoria categoria) {
     CategoriaOutputDTO categoriaOutputDTO = new CategoriaOutputDTO();
-    categoriaOutputDTO.setId(categoria.getIdCategoria());
+    categoriaOutputDTO.setIdCategoria(categoria.getIdCategoria());
     categoriaOutputDTO.setNombre(categoria.getCategoria());
     return categoriaOutputDTO;
   }

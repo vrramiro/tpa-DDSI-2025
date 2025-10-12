@@ -14,17 +14,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class GestionHechosApiService {
 
     private static final Logger log = LoggerFactory.getLogger(GestionHechosApiService.class);
-    private final WebClient webClient;
-    private final WebApiCallerService webApiCallerService;
-    private final String normalizadorSeriviceUrl;
+    private final String normalizadorServiceUrl;
 
     @Autowired
     public GestionHechosApiService(
-            WebApiCallerService webApiCallerService,
-            @Value("${normalizador.service.url}") String normalizadorSeriviceUrl) {
-        this.webClient = WebClient.builder().build();
-        this.webApiCallerService = webApiCallerService;
-        this.normalizadorSeriviceUrl = normalizadorSeriviceUrl;
+            @Value("${normalizador.service.url}") String normalizadorServiceUrl) {
+        this.normalizadorServiceUrl = normalizadorServiceUrl;
     }
 
     public UbicacionOutputDTO obtenerUbicacion(Double latitud, Double longitud) {

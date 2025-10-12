@@ -13,7 +13,7 @@ public class UsuarioService implements IUsuarioService {
     IUsuarioRepository usuarioRepository;
 
     @Override
-    public UsuarioDTO crearUsuario(UsuarioDTO usuarioDTO) {
+    public void crearUsuario(UsuarioDTO usuarioDTO) {
         validarDatosBasicos(usuarioDTO);
         validarDuplicidadUsuario(usuarioDTO);
 
@@ -21,9 +21,10 @@ public class UsuarioService implements IUsuarioService {
         usuario.setNombre(usuarioDTO.getNombre());
         usuario.setApellido(usuarioDTO.getApellido());
         usuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
-        usuario.setContrasenia(usuarioDTO.getContrasenia());
+        usuario.setContrasenia(bCryptPasswordEncoder.encode(usuarioDTO.getContrasenia()));
         usuario.setRol(usuarioDTO.getRol());
-        return null;
+
+        usuarioRepository.save(usuario);
     }
 
     private void validarDuplicidadUsuario(UsuarioDTO usuarioDTO) {
