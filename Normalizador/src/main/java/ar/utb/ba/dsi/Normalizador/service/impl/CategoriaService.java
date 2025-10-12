@@ -3,7 +3,7 @@ package ar.utb.ba.dsi.Normalizador.service.impl;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNotFoundException;
+import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
@@ -28,12 +28,16 @@ public class CategoriaService implements ICategoriaService {
 
     @Override
     public Categoria normalizarCategoria(String categoriaInput) {
-        String categoriaExterna = categoriaInput.toLowerCase();
 
-        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaExterna);
+        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByNombre(categoriaInput);
 
         if (categoriaNormalizada == null) {
-            throw new CategoriaNotFoundException("Categoría no encontrada: " + categoriaInput);
+            categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
+        }
+
+        if (categoriaNormalizada == null) {
+            System.out.println("Categoria no encontrada");
+            throw new CategoriaNoEcontrada("Categoría no encontrada: " + categoriaInput);
         }
 
         return categoriaNormalizada;

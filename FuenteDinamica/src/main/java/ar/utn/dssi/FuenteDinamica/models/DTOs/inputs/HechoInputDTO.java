@@ -14,7 +14,7 @@ import java.util.List;
 public class HechoInputDTO {
   private String titulo;
   private String descripcion;
-  private Long idCategoria;
+  private CategoriaInputDTO categoria;
   private Double latitud;
   private Double longitud;
   private LocalDateTime fechaAcontecimiento;

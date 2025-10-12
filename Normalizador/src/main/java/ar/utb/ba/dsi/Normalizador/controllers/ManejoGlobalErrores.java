@@ -27,13 +27,13 @@ public class ManejoGlobalErrores {
         return construirRespuestaError(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(CategoriaNotFoundException.class)
-    public ResponseEntity<ErrorDTO> categoriaNotFound(CategoriaNotFoundException ex) {
+    @ExceptionHandler(CategoriaNoEcontrada.class)
+    public ResponseEntity<ErrorDTO> categoriaNotFound(CategoriaNoEcontrada ex) {
         return construirRespuestaError(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(NoEncontrado.class)
-    public ResponseEntity<ErrorDTO> noEncontrado(NoEncontrado ex) {
+    @ExceptionHandler(HechoNoEcontrado.class)
+    public ResponseEntity<ErrorDTO> noEncontrado(HechoNoEcontrado ex) {
         return construirRespuestaError(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 

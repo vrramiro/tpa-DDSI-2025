@@ -3,17 +3,24 @@ package ar.utb.ba.dsi.Normalizador.models.mappers;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.UbicacionInputDTOGeoref;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
-import lombok.Value;
 
 public class MapperDeUbicacion {
-
     public static Ubicacion ubicacionFromInput(UbicacionInputDTOGeoref input) {
         Ubicacion ubicacion = new Ubicacion();
-            ubicacion.setLatitud(input.getUbicacion().getLat());
-            ubicacion.setLongitud(input.getUbicacion().getLon());
-            ubicacion.setPais("Argentina");
-            ubicacion.setProvincia(input.getUbicacion().getProvincia().getNombre());
-            ubicacion.setCiudad(input.getUbicacion().getDepartamento().getNombre());
+        ubicacion.setLatitud(input.getUbicacion().getLat());
+        ubicacion.setLongitud(input.getUbicacion().getLon());
+        ubicacion.setPais("Argentina");
+        ubicacion.setProvincia(input.getUbicacion().getProvincia());
+
+        String municipio = input.getUbicacion().getMunicipio();
+        String departamento = input.getUbicacion().getDepartamento();
+
+        if (municipio != null && !municipio.isEmpty()) {
+            ubicacion.setCiudad(municipio);
+        } else {
+            ubicacion.setCiudad(departamento);
+        }
+
         return ubicacion;
     }
 

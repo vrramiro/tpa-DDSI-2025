@@ -3,87 +3,82 @@ package ar.utn.dssi.Agregador.controller.ADMIN;
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.services.IColeccionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/admin/colecciones")
 public class ColeccionesControllerADMIN {
-  @Autowired
-  private IColeccionService coleccionService;
+  private final IColeccionService coleccionService;
+
+  public ColeccionesControllerADMIN(IColeccionService coleccionService) {
+    this.coleccionService = coleccionService;
+  }
 
   //OPERACIONES CRUD SOBRE COLECCIONES
-  @PostMapping("/hecho")
-  public ResponseEntity<ColeccionOutputDTO> crearColeccion(@RequestBody ColeccionInputDTO coleccionInputDTO){
+  @PostMapping
+  public ResponseEntity<ColeccionOutputDTO> crearColeccion(@RequestBody ColeccionInputDTO coleccionInputDTO) {
     ColeccionOutputDTO coleccionOutputDTO = coleccionService.crearColeccion(coleccionInputDTO);
 
     return ResponseEntity.status(HttpStatus.CREATED).body(coleccionOutputDTO); // status 201
   }
 
   @GetMapping
-  public ResponseEntity<List<ColeccionOutputDTO>> obtenerColecciones(){
+  public ResponseEntity<List<ColeccionOutputDTO>> obtenerColecciones() {
     List<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones();
 
     if(colecciones.isEmpty()){
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); //status 204
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
     }
 
     return ResponseEntity.ok(colecciones); // status 200
   }
 
-  @GetMapping("/{idColeccion}/hechos")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String idColeccion) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(idColeccion);
-
-    if(hechosDeColeccion.isEmpty()){
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
-    }
-
-    return ResponseEntity.ok(hechosDeColeccion); // status 200
-  }
-
-  @PutMapping("/{idColeccion}/coleccion")
-  public ResponseEntity<ColeccionOutputDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionInputDTO coleccionInputDTO){
-    ColeccionOutputDTO coleccionOutputDTO = coleccionService.actualizarColeccion(handle, coleccionInputDTO);
+  @PutMapping("/{handle}")
+  public ResponseEntity<ColeccionOutputDTO> actualizarColeccion(@PathVariable String handle, @RequestBody ColeccionInputDTO coleccionInputDTO) {
+    ColeccionOutputDTO coleccionOutputDTO = coleccionService.editarColeccion(handle, coleccionInputDTO);
 
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(coleccionOutputDTO); // status 201
   }
 
-  @DeleteMapping("/{idColeccion}/coleccion")
-  public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle){
+  @DeleteMapping("/{handle}")
+  public ResponseEntity<Void> eliminarColeccion(@PathVariable String handle) {
     coleccionService.eliminarColeccion(handle);
 
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
   }
 
-  //AGREGAR O QUITAR FUENTES DE UNA COLECCION
-  @PutMapping("/{idColeccion}/{idFuente}/coleccion")
-  public ResponseEntity<Void> agregarFuente(@PathVariable Long idFuente, @PathVariable String handle) {
-    coleccionService.agregarFuente(idFuente, handle);
+  @GetMapping("/{handle}/hechos")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
+      (@PathVariable String handle,
+       @RequestParam(name = "modoNavegacion", defaultValue = "MODO_IRRESTRICTO") String modoNavegacion,
+       @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+       @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+       @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+       @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+       @RequestParam(name = "ciudad", required = false) String ciudad,
+       @RequestParam(name = "provincia", required = false) String provincia
+      ) {
+    List<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
+        modoNavegacion,
+        handle,
+        fechaReporteDesde,
+        fechaReporteHasta,
+        fechaAcontecimientoDesde,
+        fechaAcontecimientoHasta,
+        provincia,
+        ciudad);
 
-    return ResponseEntity.ok().build();
+    if(hechos.isEmpty()) {
+      return ResponseEntity.noContent().build(); // status 204
+    }
+
+    return ResponseEntity.ok(hechos); // status 200
   }
-
-  @DeleteMapping("/{idColeccion}/{idFuente}/coleccion")
-  public ResponseEntity<Void> eliminarFuente(@PathVariable Long idFuente, @PathVariable String handle){
-    coleccionService.eliminarFuente(idFuente, handle);
-
-    return ResponseEntity.ok().build(); // status 200
-  }
-
-  //ESTABLECER EL ALGORITMO DE CONSENSO
-  @PutMapping("/{handle}/algortimoConsenso")
-  public ResponseEntity<Void> actualizarAlgoritmo(@PathVariable String handle, @RequestBody TipoConsenso algoritmoConsenso) {   //TODO: VER SI RECIBE UN STRING O UN ENUM...
-    coleccionService.actualizarAlgoritmo(handle, algoritmoConsenso);
-
-    return ResponseEntity.status(HttpStatus.ACCEPTED).build(); // 202 Accepted
-  }
-
 }

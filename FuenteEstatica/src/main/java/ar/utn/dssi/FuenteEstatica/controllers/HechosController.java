@@ -4,6 +4,7 @@ package ar.utn.dssi.FuenteEstatica.controllers;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/fuente/hechos")
+@RequestMapping("/hechos")
 
 public class HechosController {
     @Autowired
@@ -34,10 +36,10 @@ public class HechosController {
         }
     }
 
-    @GetMapping("/hechos")
-    public ResponseEntity<List<HechoOutputDTO>> obtenerHechos() {
-        List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos();
+    @GetMapping("/nuevos")
+    public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
+            (@RequestParam(name = "fechaDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
+        List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos(fechaDesde);
         return ResponseEntity.ok(hechos);
-        //TODO implementar endpoin para filtrado de hechos enviados
     }
 }

@@ -6,21 +6,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MapperContenidoMultimedia {
-    public static List<ContenidoMultimedia> convertirMultipartAContenido(List<MultipartFile> files, Hecho hecho) {
-        List<ContenidoMultimedia> listaContenido = new ArrayList<>();
 
-        for (MultipartFile file : files) {
-            ContenidoMultimedia cm = new ContenidoMultimedia();
-            cm.setUrl("/uploads/" + file.getOriginalFilename()); // TODO: Generar la URL real
-            cm.setFormato(file.getContentType());
-            cm.setTamano(file.getSize());
-            cm.setHecho(hecho);
+    public static ContenidoMultimedia convertirAContenido(String urlArchivo, Hecho hecho) {
+        ContenidoMultimedia cm = new ContenidoMultimedia();
+        cm.setUrl(urlArchivo);
+        cm.setHecho(hecho);
+        return cm;
+    }
 
-            listaContenido.add(cm);
-        }
-
-        return listaContenido;
+    public static  List<String> obtenerUrlContenido(List<ContenidoMultimedia> contenidoMultimedia) {
+        return contenidoMultimedia.stream().map(ContenidoMultimedia::getUrl).collect(Collectors.toList());
     }
 }

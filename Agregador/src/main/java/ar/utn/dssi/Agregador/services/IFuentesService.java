@@ -5,7 +5,8 @@ import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import java.util.List;
 
 public interface IFuentesService {
-  public List<Hecho> hechosNuevos();
-  public List<Hecho> hechosMetamapa();
-  public Fuente obtenerFuentePorId(Long idFuente);
+  List<Hecho> hechosNuevos();
+  List<Hecho> hechosMetamapa();
+  Fuente obtenerFuentePorId(Long idFuente);
+  List<Fuente> obtenerFuentesPorTiposDeFuente(List<String> tiposDeFuente);
 }

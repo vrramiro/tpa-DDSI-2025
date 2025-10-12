@@ -12,8 +12,10 @@ import lombok.Setter;
 public class HechoOutputDTO {
     private String titulo;
     private String descripcion;
+    private String tituloSanitizado;
+    private String descripcionSanitizada;
     private CategoriaOutputDTO categoria;
     private UbicacionOutputDTO ubicacion;
     private LocalDateTime fechaAcontecimiento;
-    private LocalDateTime fechaCarga;
 }
+

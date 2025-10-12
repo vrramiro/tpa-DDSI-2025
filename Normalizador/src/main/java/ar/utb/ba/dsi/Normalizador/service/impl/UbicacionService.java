@@ -3,7 +3,7 @@ package ar.utb.ba.dsi.Normalizador.service.impl;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.NoEncontrado;
+import ar.utb.ba.dsi.Normalizador.models.entities.errores.HechoNoEcontrado;
 import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,13 +19,17 @@ public class UbicacionService implements IUbicacionService {
 
     @Override
     public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
-            Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
+      Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
 
-            if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
-                throw new NoEncontrado("Ubicacion no encontrada en Argentina");
-            }
+      if(ubicacion == null) {
+          throw new HechoNoEcontrado("La ubicacion es nula.");
+      }
 
-            return ubicacion;
+      if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
+        System.out.println("La ciudad y la provincia son nulas");
+      }
+
+      return ubicacion;
     }
 
     @Override

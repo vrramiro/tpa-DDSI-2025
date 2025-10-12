@@ -5,8 +5,6 @@ import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 
-import java.time.LocalDateTime;
-
 public class MapperDeHechos {
 
     public static HechoOutputDTO hechoOutputDTO(Hecho hecho){
@@ -14,11 +12,11 @@ public class MapperDeHechos {
 
         dtoHecho.setTitulo(hecho.getTitulo());
         dtoHecho.setDescripcion(hecho.getDescripcion());
-        dtoHecho.setCategoria(hecho.getCategoria());
-        dtoHecho.setUbicacion(hecho.getUbicacion());
+        dtoHecho.setCategoria(MapperDeCategoria.outputDTOFromCategoria(hecho.getCategoria()));
+        dtoHecho.setUbicacion(MapperDeUbicacion.OutputFromUbicacion(hecho.getUbicacion()));
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
-        dtoHecho.setIdHechoOrigen(hecho.getId());
+        dtoHecho.setIdOrigen(hecho.getId());
         return dtoHecho;
     }
 
@@ -26,11 +24,9 @@ public class MapperDeHechos {
         Hecho hecho = new Hecho();
             hecho.setTitulo(hechoInputDTO.getTitulo());
             hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setCategoria(hechoInputDTO.getCategoria().getCategoria());
+            hecho.setCategoria(MapperDeCategoria.categoriaFromInput(hechoInputDTO.getCategoria()));
             hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
             hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-            hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
-            hecho.setEnviado(false);
         return hecho;
     }
 
@@ -38,11 +34,10 @@ public class MapperDeHechos {
         HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
         hecho.setTitulo(hechoInput.getTitulo());
         hecho.setDescripcion(hechoInput.getDescripcion());
-        hecho.setCategoria(hechoInput.getCategoria());
+        hecho.setCategoria(hechoInput.getCategoria().getCategoria());
         hecho.setLatitud(hechoInput.getUbicacion().getLatitud());
         hecho.setLongitud(hechoInput.getUbicacion().getLongitud());
         hecho.setFechaAcontecimiento(hechoInput.getFechaAcontecimiento().toString());
-        hecho.setFechaCarga(LocalDateTime.now().toString());
         return hecho;
     }
 

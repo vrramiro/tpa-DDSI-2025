@@ -15,8 +15,10 @@ public class ConsensuadorDeHechos implements IConsensuadorDeHechos {
   }
 
   public void consensuar(List<Hecho> hechos) {
+    /*
     this.algoritmosConsenso.forEach(algoritmoConsenso -> {
       algoritmoConsenso.consensuar(hechos);
     });
+    */
   }
 }

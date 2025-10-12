@@ -1,18 +1,11 @@
 package ar.utn.dssi.Agregador.services;
 
 import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -20,20 +13,8 @@ public interface IColeccionService {
     //CRUD
     ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
     List<ColeccionOutputDTO> obtenerColecciones();
-    ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
+    ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO coleccionInputDTO);
     void eliminarColeccion(String handle);
+    List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad);
 
-    List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle);
-
-    List<HechoOutputDTO> hechosDeColeccion(String handle);
-
-    void agregarFuente(Long idFuente,String handle);
-    void eliminarFuente(Long idFuente, String handle);
-
-    Mono<Void> refrescarColecciones(Hecho hecho);
-
-    void agregarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle);
-    void eliminarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle);
-
-    void actualizarAlgoritmo(String handle, TipoConsenso algoritmoConsenso);
 }

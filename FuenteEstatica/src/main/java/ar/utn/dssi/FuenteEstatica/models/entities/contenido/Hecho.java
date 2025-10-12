@@ -3,7 +3,6 @@ package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 
@@ -25,8 +24,8 @@ public class Hecho {
     @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "categoria", nullable = false)
-    private String categoria;
+    @Embedded
+    private Categoria categoria;
 
     @Embedded
     private Ubicacion ubicacion;
@@ -37,7 +36,4 @@ public class Hecho {
     @CreatedDate
     @Column(name = "fecha_carga", nullable = false)
     private LocalDateTime fechaCarga;
-
-    @Builder.Default
-    private Boolean enviado = false;
 }

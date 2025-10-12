@@ -6,44 +6,69 @@ import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
-import java.time.LocalDateTime;
+import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 
 public class MapperDeHechos {
 
-    public static HechoOutputDTO hechoOutputDTO(Hecho hecho){
+    public static HechoOutputDTO hechoOutputDTO(Hecho hecho) {
         HechoOutputDTO dtoHecho = new HechoOutputDTO();
 
         dtoHecho.setTitulo(hecho.getTitulo());
         dtoHecho.setDescripcion(hecho.getDescripcion());
-        dtoHecho.setCategoria(hecho.getCategoria());
-        dtoHecho.setUbicacion(hecho.getUbicacion());
+
+        dtoHecho.setTituloSanitizado(hecho.getTituloSanitizado());
+        dtoHecho.setDescripcionSanitizada(hecho.getDescripcionSanitizado());
+
+        dtoHecho.setCategoria(MapperDeCategoria.categoriaToOutputDTO(hecho.getCategoria()));
+        dtoHecho.setUbicacion(MapperDeUbicacion.ubicacionOuputFromUbicacion(hecho.getUbicacion()));
         dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
         dtoHecho.setFechaCarga(hecho.getFechaCarga());
-        dtoHecho.setContenidoMultimedia(hecho.getMultimedia());
-        dtoHecho.setIdHechoOrigen(hecho.getIdHecho());
+        dtoHecho.setContenidoMultimedia(MapperContenidoMultimedia.obtenerUrlContenido(hecho.getMultimedia()));
+        dtoHecho.setIdOrigen(hecho.getIdHecho());
         return dtoHecho;
     }
 
-    public static Hecho hechoFromInputDTONormalizador(HechoInputDTONormalizador hechoInputDTO){
+    public static Hecho hechoFromInputDTONormalizador(HechoInputDTONormalizador hechoInputDTO) {
         Hecho hecho = new Hecho();
-            hecho.setTitulo(hechoInputDTO.getTitulo());
-            hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
-            hecho.setCategoria(MapperDeCategorias.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
-            hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-            hecho.setFechaCarga(hechoInputDTO.getFechaCarga());
 
-        return null;
+        hecho.setTitulo(hechoInputDTO.getTitulo());
+        hecho.setDescripcion(hechoInputDTO.getDescripcion());
+
+        hecho.setTituloSanitizado(hechoInputDTO.getTituloSanitizado());
+        hecho.setDescripcionSanitizado(hechoInputDTO.getDescripcionSanitizada());
+
+        hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
+        hecho.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
+        hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+
+        return hecho;
     }
 
-    public static HechoOutputDTONormalizador hechoFromInputToOutputNormalizador(HechoInputDTO hechoInputDTO){
-        HechoOutputDTONormalizador hecho = new HechoOutputDTONormalizador();
-            hecho.setTitulo(hechoInputDTO.getTitulo());
-            hecho.setDescripcion(hechoInputDTO.getDescripcion());
-            hecho.setLatitud(hechoInputDTO.getLatitud());
-            hecho.setLongitud(hechoInputDTO.getLongitud());
-            hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento().toString());
-            hecho.setFechaCarga(LocalDateTime.now().toString());
+    public static Hecho hechoFromInputDTO(HechoInputDTO hechoInputDTO) {
+        Hecho hecho = new Hecho();
+        hecho.setTitulo(hechoInputDTO.getTitulo());
+        hecho.setDescripcion(hechoInputDTO.getDescripcion());
+        hecho.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
+
+        hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+
+        Ubicacion ubicacion = new Ubicacion();
+        ubicacion.setLatitud(hechoInputDTO.getLatitud());
+        ubicacion.setLongitud(hechoInputDTO.getLongitud());
+        hecho.setUbicacion(ubicacion);
+
         return hecho;
+    }
+
+    public static HechoOutputDTONormalizador hechoOutputNormalizadorFromHecho(Hecho hecho) {
+        HechoOutputDTONormalizador output = new HechoOutputDTONormalizador();
+
+        output.setTitulo(hecho.getTitulo());
+            output.setDescripcion(hecho.getDescripcion());
+            output.setCategoria(hecho.getCategoria().getNombre());
+            output.setLatitud(hecho.getUbicacion().getLatitud());
+            output.setLongitud(hecho.getUbicacion().getLongitud());
+            output.setFechaAcontecimiento(hecho.getFechaAcontecimiento().toString());
+        return output;
     }
 }

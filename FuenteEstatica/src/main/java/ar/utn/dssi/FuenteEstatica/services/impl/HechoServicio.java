@@ -2,8 +2,6 @@ package ar.utn.dssi.FuenteEstatica.services.impl;
 
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
 import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
@@ -12,18 +10,19 @@ import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.impl.FactoryLector;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
 import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
+import java.util.concurrent.atomic.AtomicInteger;
 
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.io.File;
 
+@Slf4j
 @Service
 public class HechoServicio implements IHechoServicio {
 
@@ -51,66 +50,58 @@ public class HechoServicio implements IHechoServicio {
             throw new ValidacionException("El archivo no cumple con la cantidad de minima de hechos:" + cantidadMinimaDeHechos +", el archivo tiene: " + hechos.size());
         }
 
-        List<Hecho> hechosNormalizados = new ArrayList<>();
+        AtomicInteger contador = new AtomicInteger(0);
+        int total = hechos.size();
 
-        for (Hecho hecho : hechos) {
-            try {
-                Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block(); // si es Mono
+        List<Hecho> hechosNormalizados = hechos.parallelStream()
+                .map(hecho -> {
+                    try {
+                        Hecho normalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block();
 
-                if (hechoNormalizado != null) {
-                    hechosNormalizados.add(hechoNormalizado);
-                }
-            } catch (Exception e) {
-                System.err.println("Error normalizando hecho: " + e.getMessage());
-            }
-        }
+                        if (normalizado == null) {
+                            throw new IllegalStateException("El normalizador devolvió null para el hecho: " + hecho.getTitulo());
+                        }
 
-        // Guardar hechos ya normalizados
+                        int actual = contador.incrementAndGet();
+                        if (!hecho.getUbicacion().invalida()) {
+                            log.info("Normalizando hecho {}/{}: {}, Ubicacion {} {} {}"
+                                    , actual, total, hecho.getTitulo(),
+                                    normalizado.getUbicacion().getCiudad(),
+                                    normalizado.getUbicacion().getProvincia(),
+                                    normalizado.getUbicacion().getPais());
+                        } else {
+                            log.info("Normalizando hecho {}/{}: {} - Sin ubicación válida {},{}",
+                                    actual, total, hecho.getTitulo(), hecho.getUbicacion().getLatitud(),
+                                    hecho.getUbicacion().getLongitud());
+                        }
+                        return normalizado;
+                    } catch (Exception e) {
+                        System.err.println("Error normalizando hecho: " + e.getMessage());
+                        return hecho;
+                    }
+                })
+                .filter(hecho -> !hecho.getUbicacion().invalida())
+                .toList();
+
+        hechosNormalizados.forEach(hecho -> hecho.setFechaCarga(LocalDateTime.now()));
+
         hechoRepositorio.saveAll(hechosNormalizados);
     }
 
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos() {
-        var hechos = this.hechoRepositorio.findAll();
+    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde) {
+        if(fechaDesde == null) {
+            throw new IllegalArgumentException("Error al cargar la fecha de ultima comunicacion");
+        }
+
+        var hechos = this.hechoRepositorio.findHechosByFechaLimite(fechaDesde);
 
         if (hechos.isEmpty()) {
             throw new RepositorioVacio("El repositorio esta vacio, no tiene datos.");
         }
 
-        var hechosAEnviar = hechos.stream().map(MapperDeHechos::hechoOutputDTO).toList();
-        List<String> errores = actualizacionAEnviado(hechos);
-
-        if(!errores.isEmpty()){
-            throw new ErrorActualizarRepositorio(
-                    "No se pudo actualizar los hechos: " + String.join(", ", errores),
-                    HttpStatus.NOT_FOUND
-            );
-        }
-        return hechosAEnviar;
+        return hechos.stream().map(MapperDeHechos::hechoOutputDTO).toList();
     }
-
-    private List<String> actualizacionAEnviado(List<Hecho> hechos) {
-        var hechosNuevos = hechos.stream().filter(hecho-> hecho.getEnviado().equals(false));
-
-        List<String> errores = new ArrayList<>();
-        hechosNuevos.
-                forEach(hecho -> {
-                        try {
-                            if(hecho.getId() == null) {
-                                errores.add(hecho.getTitulo());
-                            } else {
-                                hecho.setEnviado(true);
-                                hechoRepositorio.save(hecho);
-                            }
-                        } catch (Exception e) {
-                            throw new ErrorGeneralRepositorio("Error en el repositorio");
-                        }
-                }
-        );
-        return errores;
-    }
-
-
 }
 

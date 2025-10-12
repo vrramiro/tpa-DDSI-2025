@@ -8,8 +8,9 @@ public class MapperDeHechos {
         HechoOutputDTO hechoOutput = new HechoOutputDTO();
             hechoOutput.setTitulo(hecho.getTitulo());
             hechoOutput.setDescripcion(hecho.getDescripcion());
+            hechoOutput.setTituloSanitizado(hecho.getTituloSanitizado());
+            hechoOutput.setDescripcionSanitizada(hecho.getDescripcionSanitizada());
             hechoOutput.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
-            hechoOutput.setFechaCarga(hecho.getFechaCarga());
             hechoOutput.setUbicacion(MapperDeUbicacion.ubicacionOutputDTO(hecho.getUbicacion()));
             hechoOutput.setCategoria(MapperDeCategorias.categoriaToOutputDTO(hecho.getCategoria()));
         return hechoOutput;

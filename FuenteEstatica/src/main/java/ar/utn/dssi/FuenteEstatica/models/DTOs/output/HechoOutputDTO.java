@@ -1,7 +1,5 @@
 package ar.utn.dssi.FuenteEstatica.models.DTOs.output;
 
-
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Ubicacion;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,11 +10,13 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class HechoOutputDTO {
-  private Long idHechoOrigen;
+  private Long idOrigen;
   private String titulo;
   private String descripcion;
-  private String categoria;
-  private Ubicacion ubicacion;
+  private String tituloSanitizado;
+  private String descripcionSanitizada;
+  private CategoriaOutputDTO categoria;
+  private UbicacionOutputDTO ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
 }

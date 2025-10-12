@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Embeddable
 @Getter
 @Setter
@@ -19,4 +17,9 @@ public class Ubicacion {
     private String pais;
     private String ciudad;
     private String provincia;
+
+    public Boolean invalida() {
+        return this.longitud == null || this.latitud == null ||
+                this.ciudad == null || this.provincia == null || this.pais == null;
+    }
 }

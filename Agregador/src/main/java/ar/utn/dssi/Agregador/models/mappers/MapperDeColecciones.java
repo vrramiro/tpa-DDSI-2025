@@ -1,4 +1,38 @@
 package ar.utn.dssi.Agregador.models.mappers;
 
+import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MapperDeColecciones {
+  public static ColeccionOutputDTO coleccionOutputDTOFromColeccion(Coleccion coleccion) {
+    var coleccionDto = new ColeccionOutputDTO();
+
+    coleccionDto.setTitulo(coleccion.getTitulo());
+    coleccionDto.setDescripcion(coleccion.getDescripcion());
+    coleccionDto.setHechos(coleccion.getHechos());
+
+    return coleccionDto;
+  }
+
+  //carga solo datos basicos, las fuentes no son obtenibles a este nivel las debe cargar el service => vienen del repo
+  //el handle solo se carga en caso de ser necesario
+  public static Coleccion coleccionFromColeccionInputDTO(ColeccionInputDTO input) {
+    Coleccion coleccion = new Coleccion();
+    coleccion.setTitulo(input.getTitulo());
+    coleccion.setDescripcion(input.getDescripcion());
+    List<CriterioDePertenencia> criterios = input.getCriteriosDePertenecias().stream()
+        .map(MapperDeCriterio::criterioFromCriterioInputDTO)
+        .collect(Collectors.toCollection(ArrayList::new));
+    coleccion.setCriterios(criterios);
+    coleccion.setHechos(new ArrayList<>());
+    coleccion.setFuentes(new ArrayList<>());
+    coleccion.setActualizada(Boolean.FALSE);
+    coleccion.setConsenso(input.getConsenso());
+    return coleccion;
+  }
 }

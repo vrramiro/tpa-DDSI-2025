@@ -1,22 +1,18 @@
 package ar.utn.dssi.Agregador.services;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
-import org.apache.logging.log4j.simple.internal.SimpleProvider;
-import reactor.core.publisher.Mono;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IHechosService {
-    //CRUD
-    List<HechoOutputDTO> obtenerHechos();
+    //CRUD.
+    List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia);
     HechoOutputDTO obtenerHechoPorId(Long idHecho);
     void eliminarHecho(Long IDHecho);
 
     //AUX
      void importarNuevosHechos();
+
+
 }

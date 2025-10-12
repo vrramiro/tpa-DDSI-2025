@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.DTOs.inputDTO;
 
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +9,7 @@ import java.util.List;
 public class ColeccionInputDTO {
     private String titulo;
     private String descripcion;
-    private List<CriterioDePertenencia> criteriosDePertenecias;
-    private String handle;
+    private List<CriterioDePertenenciaInputDTO> criteriosDePertenecias;
+    private List<FuenteInputDTO> fuentes;
+    private TipoConsenso consenso;
 }

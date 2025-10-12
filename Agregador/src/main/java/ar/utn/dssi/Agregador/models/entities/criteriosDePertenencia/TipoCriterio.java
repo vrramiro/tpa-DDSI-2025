@@ -4,6 +4,5 @@ public enum TipoCriterio {
     FECHA_DESDE,
     FECHA_HASTA,
     CATEGORIA,
-    UBICACION,
-    FUENTE
+    PROVINCIA
 }

@@ -1,53 +1,51 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
+import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Service
 public class HechosService implements IHechosService {
-    @Autowired
-    private IHechosRepository hechosRepository;
+    private final IHechosRepository hechosRepository;
+    private final IColeccionRepository coleccionRepository;
+    private final IFuentesService fuentesService;
 
-    @Autowired
-    private IColeccionRepository coleccionRepository;
-
-    @Autowired
-    private IFuentesService fuentesService;
+    public HechosService(IHechosRepository hechosRepository, IColeccionRepository coleccionRepository, IFuentesService fuentesService) {
+        this.hechosRepository = hechosRepository;
+        this.coleccionRepository = coleccionRepository;
+        this.fuentesService = fuentesService;
+    }
 
     @Override
     public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
         try {
             Hecho hecho = hechosRepository.findById(idHecho).orElseThrow(IllegalArgumentException::new);
 
-            return MapperDeHechos.hechoOutputDTO(hecho);
+            return MapperDeHechos.hechoToOutputDTO(hecho);
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
         }
     }
 
     @Override
-    public List<HechoOutputDTO> obtenerHechos() {
+    public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia) {
         try {
             return this.hechosRepository
-                .findAll()
+                .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
                 .stream()
-                .map(MapperDeHechos::hechoOutputDTO)
+                .filter(Hecho::getVisible) // Filtrar solo los hechos visibles
+                .map(MapperDeHechos::hechoToOutputDTO)
                 .toList();
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
@@ -55,27 +53,26 @@ public class HechosService implements IHechosService {
     }
 
     @Override
+    @Transactional
     public void eliminarHecho(Long IdHecho) {
-        try {
-            //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-            Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(IllegalArgumentException::new);
-            hecho.setVisible(false);
-            hechosRepository.save(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
-        }
+        //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
+        Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(() -> new HechoNoEcontrado("No se encontro el hecho con id: " + IdHecho));
+        hecho.setVisible(false);
+        hechosRepository.save(hecho);
     }
 
     @Override
+    @Transactional
     public void importarNuevosHechos() {
         try {
             List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
-
-            //TODO: ACA NORMALIZAR LOS HECHOS..
+            System.out.println(hechosNuevos);
+            hechosRepository.saveAll(hechosNuevos);
 
             List<Coleccion> colecciones = coleccionRepository.findAll();
+            System.out.println("HECHOS TRAIDOS: " + hechosNuevos.size());
 
-            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos)); //trabaja varias colecciones por core
+            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
 
             coleccionRepository.saveAll(colecciones);
         } catch (Exception e) {
