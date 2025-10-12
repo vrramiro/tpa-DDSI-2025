@@ -1,7 +1,7 @@
 package ar.utb.ba.dsi.Normalizador.controllers;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.Input.CategoriaInputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

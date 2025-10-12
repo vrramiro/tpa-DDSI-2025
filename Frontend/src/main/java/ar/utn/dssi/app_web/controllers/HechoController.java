@@ -1,8 +1,8 @@
 package ar.utn.dssi.app_web.controllers;
 
-import ar.utn.dssi.app_web.DTO.input.HechoInputDTO;
-import ar.utn.dssi.app_web.DTO.output.HechoOutputDTO;
-import ar.utn.dssi.app_web.exceptions.ValidationException;
+import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

@@ -1,7 +1,7 @@
 package ar.utb.ba.dsi.Normalizador.controllers;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.HechoInputDTO;
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.HechoOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.Input.HechoInputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.HechoOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.IHechosService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

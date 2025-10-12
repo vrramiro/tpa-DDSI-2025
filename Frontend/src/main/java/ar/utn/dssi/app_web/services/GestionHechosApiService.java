@@ -1,6 +1,6 @@
 package ar.utn.dssi.app_web.services;
 
-import ar.utn.dssi.app_web.DTO.output.UbicacionOutputDTO;
+import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

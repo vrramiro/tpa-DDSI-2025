@@ -1,11 +1,11 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.impl;
 
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.input.HechoInputDTONormalizador;
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteEstatica.dto.input.HechoInputDTONormalizador;
+import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteEstatica.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteEstatica.models.mappers.MapperDeHechos;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

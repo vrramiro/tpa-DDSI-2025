@@ -1,7 +1,7 @@
 package ar.utn.dssi.Estadisticas.controllers;
 
 
-import ar.utn.dssi.Estadisticas.models.DTOs.outputs.EstadisticaOutputDTO;
+import ar.utn.dssi.Estadisticas.dto.output.EstadisticaOutputDTO;
 import ar.utn.dssi.Estadisticas.models.entities.TipoArchivo;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import org.springframework.beans.factory.annotation.Autowired;

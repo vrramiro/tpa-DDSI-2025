@@ -1,8 +1,8 @@
 package ar.utn.dssi.Agregador.controller.ADMIN;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;

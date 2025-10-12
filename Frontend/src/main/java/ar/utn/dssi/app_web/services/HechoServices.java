@@ -1,9 +1,9 @@
 package ar.utn.dssi.app_web.services;
 
-import ar.utn.dssi.app_web.DTO.input.HechoInputDTO;
-import ar.utn.dssi.app_web.DTO.output.HechoOutputDTO;
-import ar.utn.dssi.app_web.exceptions.UbicacionInvalida;
-import ar.utn.dssi.app_web.exceptions.ValidationException;
+import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.error.UbicacionInvalida;
+import ar.utn.dssi.app_web.error.ValidationException;
 import org.springframework.stereotype.Service;
 
 @Service

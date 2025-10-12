@@ -1,14 +1,14 @@
 package ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.impl;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTONormalizador;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.UbicacionInputDTO;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTONormalizador;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.UbicacionOutputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.dto.input.HechoInputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.dto.input.UbicacionInputDTO;
+import ar.utn.dssi.FuenteDinamica.dto.output.HechoOutputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.dto.output.UbicacionOutputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;

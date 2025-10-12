@@ -1,16 +1,16 @@
 package ar.utn.dssi.Agregador.services.impl;
 
+import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudProcesadaInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
+import ar.utn.dssi.Agregador.mappers.MapperDeSolicitudesDeEliminacion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.solicitud.EstadoDeSolicitud;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacionFactory;
 import ar.utn.dssi.Agregador.models.entities.spam.DetectorDeSpam;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeSolicitudesDeEliminacion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.models.repositories.ISolicitudDeEliminacionRepository;
 import ar.utn.dssi.Agregador.services.IHechosService;

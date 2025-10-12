@@ -1,6 +1,6 @@
 package ar.utn.dssi.app_web.services;
 
-import ar.utn.dssi.app_web.DTO.ColeccionDTO;
+import ar.utn.dssi.app_web.dto.ColeccionDTO;
 import org.springframework.stereotype.Service;
 import java.util.List;
 

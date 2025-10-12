@@ -1,6 +1,8 @@
 package ar.utn.dssi.Estadisticas.services.impl;
 
-import ar.utn.dssi.Estadisticas.models.DTOs.outputs.EstadisticaOutputDTO;
+import ar.utn.dssi.Estadisticas.dto.output.EstadisticaOutputDTO;
+import ar.utn.dssi.Estadisticas.errores.ErrorAlCalcular;
+import ar.utn.dssi.Estadisticas.mappers.MapperDeEstadisticas;
 import ar.utn.dssi.Estadisticas.models.entities.Estadistica;
 import ar.utn.dssi.Estadisticas.models.entities.TipoArchivo;
 import ar.utn.dssi.Estadisticas.models.entities.TipoEstadistica;
@@ -8,8 +10,6 @@ import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.models.entities.exportador.IExportadorArchivos;
 import ar.utn.dssi.Estadisticas.models.entities.exportador.impl.ExportadorFactory;
 import ar.utn.dssi.Estadisticas.models.entities.generadorDeEstadisticas.IGeneradorDeEstadisticas;
-import ar.utn.dssi.Estadisticas.models.errores.ErrorAlCalcular;
-import ar.utn.dssi.Estadisticas.models.mappers.MapperDeEstadisticas;
 import ar.utn.dssi.Estadisticas.models.repositories.IEstadisticasRepository;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;

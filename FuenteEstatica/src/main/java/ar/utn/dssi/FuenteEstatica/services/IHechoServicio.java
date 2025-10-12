@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteEstatica.services;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;

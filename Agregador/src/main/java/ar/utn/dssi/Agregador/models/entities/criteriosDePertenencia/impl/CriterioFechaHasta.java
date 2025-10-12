@@ -1,9 +1,9 @@
 package ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.impl;
 
+import ar.utn.dssi.Agregador.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeCriterio;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

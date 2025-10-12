@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.controllers;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

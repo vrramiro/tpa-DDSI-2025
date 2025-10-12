@@ -1,6 +1,6 @@
 package ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.UbicacionOutputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.dto.output.UbicacionOutputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import reactor.core.publisher.Mono;

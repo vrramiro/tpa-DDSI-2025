@@ -1,7 +1,7 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEliminacionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

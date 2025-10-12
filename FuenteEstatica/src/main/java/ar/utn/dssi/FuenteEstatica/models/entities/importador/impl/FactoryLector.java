@@ -1,8 +1,8 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 
+import ar.utn.dssi.FuenteEstatica.error.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
-import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.File;

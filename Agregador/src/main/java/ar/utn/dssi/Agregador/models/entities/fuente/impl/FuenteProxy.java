@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteProxyInputDTO;
+import ar.utn.dssi.Agregador.dto.input.fuentes.HechoFuenteProxyInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;

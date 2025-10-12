@@ -1,8 +1,8 @@
 package ar.utn.dssi.Agregador.services;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;

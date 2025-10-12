@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente;
 
-import ar.utn.dssi.Agregador.models.converters.TipoFuenteConverter;
+import ar.utn.dssi.Agregador.converters.TipoFuenteConverter;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

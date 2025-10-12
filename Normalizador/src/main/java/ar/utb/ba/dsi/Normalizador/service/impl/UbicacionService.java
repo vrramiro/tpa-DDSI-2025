@@ -1,10 +1,10 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.HechoNoEcontrado;
-import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;

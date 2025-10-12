@@ -1,13 +1,13 @@
 package ar.utn.dssi.FuenteDinamica.controllers;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.ErrorDTO;
-import ar.utn.dssi.FuenteDinamica.models.errores.ArchivoMultimediaVacio;
-import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
-import ar.utn.dssi.FuenteDinamica.models.errores.DirectorioNoCreado;
-import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteDinamica.models.errores.FallaGuardadoArchivoMultimedia;
-import ar.utn.dssi.FuenteDinamica.models.errores.HechoNoEditable;
-import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
+import ar.utn.dssi.FuenteDinamica.dto.output.ErrorDTO;
+import ar.utn.dssi.FuenteDinamica.error.ArchivoMultimediaVacio;
+import ar.utn.dssi.FuenteDinamica.error.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.error.DirectorioNoCreado;
+import ar.utn.dssi.FuenteDinamica.error.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.error.FallaGuardadoArchivoMultimedia;
+import ar.utn.dssi.FuenteDinamica.error.HechoNoEditable;
+import ar.utn.dssi.FuenteDinamica.error.RepositorioVacio;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

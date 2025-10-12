@@ -1,9 +1,9 @@
 package ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.UbicacionInputDTOGeoref;
+import ar.utb.ba.dsi.Normalizador.dto.Input.UbicacionInputDTOGeoref;
+import ar.utb.ba.dsi.Normalizador.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
-import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;

@@ -1,18 +1,18 @@
 package ar.utn.dssi.FuenteDinamica.services.impl;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
+import ar.utn.dssi.FuenteDinamica.dto.input.HechoInputDTO;
+import ar.utn.dssi.FuenteDinamica.dto.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteDinamica.error.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.error.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.error.HechoNoEditable;
+import ar.utn.dssi.FuenteDinamica.error.RepositorioVacio;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeCategoria;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
-import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteDinamica.models.errores.HechoNoEditable;
-import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeCategoria;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import org.springframework.beans.factory.annotation.Autowired;

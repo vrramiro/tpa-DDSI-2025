@@ -7,10 +7,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.Input.CategoriaInputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
-import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
+import ar.utb.ba.dsi.Normalizador.models.repositories.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.impl.CategoriaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

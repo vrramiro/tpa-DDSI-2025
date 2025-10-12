@@ -1,9 +1,9 @@
 package ar.utn.dssi.FuenteDinamica.services.impl;
 
+import ar.utn.dssi.FuenteDinamica.mappers.MapperContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.almacenadorMultimedia.AlmacenadorMultimedia;
-import ar.utn.dssi.FuenteDinamica.models.mappers.MapperContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
 import ar.utn.dssi.FuenteDinamica.services.IContenidoMultimediaService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package ar.utn.dssi.FuenteEstatica.controllers;
 
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;

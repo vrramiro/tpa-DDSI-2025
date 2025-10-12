@@ -1,6 +1,6 @@
 package ar.utn.dssi.app_web.controllers;
 
-import ar.utn.dssi.app_web.DTO.ColeccionDTO;
+import ar.utn.dssi.app_web.dto.ColeccionDTO;
 import ar.utn.dssi.app_web.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

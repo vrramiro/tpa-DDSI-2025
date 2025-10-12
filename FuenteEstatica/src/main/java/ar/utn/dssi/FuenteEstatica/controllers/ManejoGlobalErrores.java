@@ -1,10 +1,10 @@
 package ar.utn.dssi.FuenteEstatica.controllers;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.ErrorDTO;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorActualizarRepositorio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ErrorGeneralRepositorio;
-import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
+import ar.utn.dssi.FuenteEstatica.dto.output.ErrorDTO;
+import ar.utn.dssi.FuenteEstatica.error.ErrorActualizarRepositorio;
+import ar.utn.dssi.FuenteEstatica.error.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteEstatica.error.RepositorioVacio;
+import ar.utn.dssi.FuenteEstatica.error.ValidacionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

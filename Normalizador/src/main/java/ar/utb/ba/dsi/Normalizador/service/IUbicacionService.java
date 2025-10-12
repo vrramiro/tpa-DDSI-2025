@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.service;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 
 public interface IUbicacionService {

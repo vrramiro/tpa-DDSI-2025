@@ -1,11 +1,11 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.Input.CategoriaInputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
-import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
-import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
+import ar.utb.ba.dsi.Normalizador.models.repositories.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import org.springframework.stereotype.Service;
 import java.util.List;

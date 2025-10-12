@@ -1,7 +1,7 @@
 package ar.utn.dssi.Agregador.controller.ADMIN;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudProcesadaInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEliminacionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

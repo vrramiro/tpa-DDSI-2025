@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities.fuente.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.fuentes.HechoFuenteDinamicaInputDTO;
+import ar.utn.dssi.Agregador.dto.input.fuentes.HechoFuenteDinamicaInputDTO;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.Agregador.models.entities.Hecho;

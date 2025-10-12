@@ -1,6 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.controllers;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.ErrorDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.ErrorDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.DatosFaltantes;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.ErrorGeneralRepositorio;

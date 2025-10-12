@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.controller;
 
+import ar.utn.dssi.Agregador.dto.output.ErrorDTO;
 import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
 import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
 import ar.utn.dssi.Agregador.error.ColeccionTituloDuplicado;
@@ -11,7 +12,6 @@ import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
 import ar.utn.dssi.Agregador.error.SolicitudDescripcionMuyCorta;
 import ar.utn.dssi.Agregador.error.SolicitudNoEncontrada;
 import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ErrorDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

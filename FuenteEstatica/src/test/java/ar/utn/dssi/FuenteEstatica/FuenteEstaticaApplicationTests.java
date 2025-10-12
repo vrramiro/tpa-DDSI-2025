@@ -8,13 +8,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.error.RepositorioVacio;
+import ar.utn.dssi.FuenteEstatica.error.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.impl.FactoryLector;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteEstatica.models.errores.RepositorioVacio;
-import ar.utn.dssi.FuenteEstatica.models.errores.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
 import ar.utn.dssi.FuenteEstatica.services.impl.HechoServicio;
 import org.junit.jupiter.api.BeforeEach;

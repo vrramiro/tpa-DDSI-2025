@@ -1,8 +1,8 @@
 package ar.utn.dssi.FuenteDinamica.models.entities.almacenadorMultimedia;
 
-import ar.utn.dssi.FuenteDinamica.models.errores.ArchivoMultimediaVacio;
-import ar.utn.dssi.FuenteDinamica.models.errores.DirectorioNoCreado;
-import ar.utn.dssi.FuenteDinamica.models.errores.FallaGuardadoArchivoMultimedia;
+import ar.utn.dssi.FuenteDinamica.error.ArchivoMultimediaVacio;
+import ar.utn.dssi.FuenteDinamica.error.DirectorioNoCreado;
+import ar.utn.dssi.FuenteDinamica.error.FallaGuardadoArchivoMultimedia;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

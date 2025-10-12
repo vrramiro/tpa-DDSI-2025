@@ -1,8 +1,8 @@
 package ar.utn.dssi.Agregador.services;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudProcesadaInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
