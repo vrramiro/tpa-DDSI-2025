@@ -6,9 +6,11 @@ import ar.utb.ba.dsi.usuarios.error.UsuarioDatosFaltantes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 
-public class GlobalExceptionHandler {
+@RestControllerAdvice
+public class GeneralExceptionHandler {
   @ExceptionHandler(UsuarioDatosFaltantes.class)
   public ResponseEntity<ErrorDTO> handleUsuarioDatosFaltantes(UsuarioDatosFaltantes ex) {
     return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
