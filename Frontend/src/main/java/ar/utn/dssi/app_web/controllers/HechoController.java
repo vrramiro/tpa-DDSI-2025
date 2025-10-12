@@ -7,6 +7,7 @@ import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,12 +25,14 @@ public class HechoController {
   private final HechoServices hechosService;
 
   @GetMapping("/nuevo")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nuevo Hecho");
     return "hechos/crearHecho";
   }
 
   @PostMapping("/crear")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String crearHecho(@ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
                            BindingResult bindingResult,
                            Model model,
@@ -53,6 +56,7 @@ public class HechoController {
   }
 
   @GetMapping("/mis_hechos")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String listarMisHechos(Model model) {
     //List<HechoDTO> hechos = hechosService.obtenerHechosDeUsuario(idUsuario).get();
     //model.addAttribute("hechos", hechos);
@@ -62,11 +66,13 @@ public class HechoController {
 
   //TODO VER QUE ES ESTO
   @GetMapping("/detalle_hech_admin")
+  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   public String detalleHechoAdmin() {
     return "hechos/detalleHechoAdmin";
   }
 
   @GetMapping("/gestion_hecho")
+  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   public String gestionHecho(Model model) {
     model.addAttribute("titulo", "Gestion de Hechos");
     return "hechos/gestionHechosAdmin";
@@ -80,12 +86,14 @@ public class HechoController {
   }
 
   @GetMapping("/lista_hechos_coleccion")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String hechosCoelccion(Model model) {
     model.addAttribute("titulo", "Hechos de Coleccion");
     return "hechos/listaHechosColeccion";
   }
 
   @GetMapping("/editar")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String mostrarFormularioEdicion(Model model) {
     model.addAttribute("titulo", "Editar Hecho");
     return "hechos/editarHecho";

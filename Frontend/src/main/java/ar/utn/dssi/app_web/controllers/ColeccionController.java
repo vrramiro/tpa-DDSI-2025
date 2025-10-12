@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.controllers;
 import ar.utn.dssi.app_web.dto.ColeccionDTO;
 import ar.utn.dssi.app_web.services.ColeccionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
