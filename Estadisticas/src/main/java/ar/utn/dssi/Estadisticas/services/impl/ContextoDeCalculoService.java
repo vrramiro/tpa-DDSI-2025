@@ -4,7 +4,6 @@ import ar.utn.dssi.Estadisticas.models.adapters.agregador.IAgregadorAdapter;
 import ar.utn.dssi.Estadisticas.models.adapters.normalizador.INormalizadorAdapter;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service

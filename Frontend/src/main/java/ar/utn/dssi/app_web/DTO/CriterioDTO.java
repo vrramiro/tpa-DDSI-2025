@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CriterioDTO {
-    private Long id;
-    private String criterio;
+  private Long id;
+  private String criterio;
 }

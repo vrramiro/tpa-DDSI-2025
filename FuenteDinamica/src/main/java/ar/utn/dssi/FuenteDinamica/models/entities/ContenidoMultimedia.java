@@ -1,23 +1,27 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @Entity
-@Table (name = "contenidoMultimedia")
+@Table(name = "contenidoMultimedia")
 public class ContenidoMultimedia {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "url", nullable = false)
-    private String url;
+  @Column(name = "url", nullable = false)
+  private String url;
 
-    @ManyToOne
-    private Hecho hecho;
+  @ManyToOne
+  private Hecho hecho;
 }

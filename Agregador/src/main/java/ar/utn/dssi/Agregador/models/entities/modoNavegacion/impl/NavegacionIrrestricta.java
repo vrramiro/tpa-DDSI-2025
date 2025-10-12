@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class NavegacionIrrestricta implements IModoNavegacion {
-    @Override
-    public Boolean hechoNavegable(Hecho hecho, Coleccion coleccion) {
-        return true;
-    }
+  @Override
+  public Boolean hechoNavegable(Hecho hecho, Coleccion coleccion) {
+    return true;
+  }
 }

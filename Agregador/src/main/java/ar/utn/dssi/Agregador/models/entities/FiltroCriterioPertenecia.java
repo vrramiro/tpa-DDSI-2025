@@ -1,8 +1,11 @@
 package ar.utn.dssi.Agregador.models.entities;
 
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
-import lombok.*;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.util.List;
 
 @Getter
@@ -15,7 +18,7 @@ public class FiltroCriterioPertenecia { //TODO: NO ESTA RELACIONADO AL FILTRADO,
 
   public Boolean loCumple(Hecho hecho) {
     return this.criteriosDeFiltro
-            .stream()
-            .allMatch(criterio -> criterio.loCumple(hecho));
+        .stream()
+        .allMatch(criterio -> criterio.loCumple(hecho));
   }
 }

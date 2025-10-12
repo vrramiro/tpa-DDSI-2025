@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoriaInputDTO {
-    private Long id;
-    private String categoria;
+  private Long id;
+  private String categoria;
 }

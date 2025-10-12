@@ -11,8 +11,11 @@ import java.util.Optional;
 
 public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
   Optional<Coleccion> findColeccionByHandle(String handle);
+
   List<Coleccion> findColeccionByActualizada(Boolean actualizada);
+
   Optional<Coleccion> findColeccionByTitulo(String titulo);
+
   @Query("SELECT h FROM Coleccion c JOIN c.hechos h " +
       "WHERE c.handle = :handler " +
       "AND (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +
@@ -21,7 +24,7 @@ public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
       "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
       "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad) " +
       "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) "
-      )
+  )
   List<Hecho> filtrarHechosDeColeccion(
       @Param("handler") String handler,
       @Param("fechaReporteDesde") LocalDate fechaReporteDesde,

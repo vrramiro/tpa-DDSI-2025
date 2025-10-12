@@ -6,14 +6,13 @@ import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsens
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
 public class MultiplesMenciones implements IAlgoritmoConsenso {
 
-    @Value("${cantFuentesMultiplesMenciones}")
-    static private Integer cantidadFuentes;
+  @Value("${cantFuentesMultiplesMenciones}")
+  static private Integer cantidadFuentes;
 
     /*
     @Override
@@ -37,8 +36,8 @@ public class MultiplesMenciones implements IAlgoritmoConsenso {
     }
     */
 
-    @Override
-    public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
-        return List.of();
-    }
+  @Override
+  public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+    return List.of();
+  }
 }

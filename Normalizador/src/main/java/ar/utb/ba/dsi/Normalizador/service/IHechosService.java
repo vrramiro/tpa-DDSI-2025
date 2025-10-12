@@ -4,5 +4,5 @@ import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.HechoInputDTO;
 import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.HechoOutputDTO;
 
 public interface IHechosService {
-    public HechoOutputDTO normalizarHecho(HechoInputDTO hecho);
+  public HechoOutputDTO normalizarHecho(HechoInputDTO hecho);
 }

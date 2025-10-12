@@ -1,74 +1,74 @@
 <html th:replace="~{layout/base:: html}">
 <head>
-  <!-- CSS específico de esta vista -->
-  <th:block th:fragment="styles">
-    <link th:href="@{/css/home/explorador.css}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
-  </th:block>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/home/explorador.css}">
+        <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+    </th:block>
 </head>
 
-<div th:fragment="contenido" class="row">
-  <!-- TÍTULO -->
-  <h1>Explorar Hechos</h1>
+<div class="row" th:fragment="contenido">
+    <!-- TÍTULO -->
+    <h1>Explorar Hechos</h1>
 
-  <!-- LAYOUT PRINCIPAL -->
-  <div class="layout">
-    <!-- Filtros -->
-    <aside class="filters">
-      <h2>Filtros</h2>
+    <!-- LAYOUT PRINCIPAL -->
+    <div class="layout">
+        <!-- Filtros -->
+        <aside class="filters">
+            <h2>Filtros</h2>
 
-      <label for="fecha-desde">Fecha desde:</label>
-      <input type="date" id="fecha-desde" class="input">
+            <label for="fecha-desde">Fecha desde:</label>
+            <input class="input" id="fecha-desde" type="date">
 
-      <label for="fecha-hasta">Fecha hasta:</label>
-      <input type="date" id="fecha-hasta" class="input">
+            <label for="fecha-hasta">Fecha hasta:</label>
+            <input class="input" id="fecha-hasta" type="date">
 
-      <label for="origen">Fuentes de origen:</label>
-      <select id="origen" class="input">
-        <option value="">-- Seleccione --</option>
-        <option>Medios</option>
-        <option>Usuarios</option>
-        <option>ONGs</option>
-      </select>
+            <label for="origen">Fuentes de origen:</label>
+            <select class="input" id="origen">
+                <option value="">-- Seleccione --</option>
+                <option>Medios</option>
+                <option>Usuarios</option>
+                <option>ONGs</option>
+            </select>
 
-      <label for="categoria">Categoría:</label>
-      <select id="categoria" class="input">
-        <option value="">-- Seleccione --</option>
-        <option>Protesta</option>
-        <option>Ambiental</option>
-        <option>Social</option>
-        <option>Ayuda Humanitaria</option>
-      </select>
+            <label for="categoria">Categoría:</label>
+            <select class="input" id="categoria">
+                <option value="">-- Seleccione --</option>
+                <option>Protesta</option>
+                <option>Ambiental</option>
+                <option>Social</option>
+                <option>Ayuda Humanitaria</option>
+            </select>
 
-      <label for="ubicacion">Ubicación:</label>
-      <input type="text" id="ubicacion" placeholder="Ej: Buenos Aires" class="input">
+            <label for="ubicacion">Ubicación:</label>
+            <input class="input" id="ubicacion" placeholder="Ej: Buenos Aires" type="text">
 
-      <label for="coleccion">Coleccion:</label>
-      <select id="coleccion" class="input">
-        <option value="">-- Seleccione --</option>
-        <option>Protesta</option>
-        <option>Ambiental</option>
-        <option>Social</option>
-        <option>Ayuda Humanitaria</option>
-      </select>
+            <label for="coleccion">Coleccion:</label>
+            <select class="input" id="coleccion">
+                <option value="">-- Seleccione --</option>
+                <option>Protesta</option>
+                <option>Ambiental</option>
+                <option>Social</option>
+                <option>Ayuda Humanitaria</option>
+            </select>
 
-      <label>
-        Modo curado
-        <input type="checkbox">
-      </label>
+            <label>
+                Modo curado
+                <input type="checkbox">
+            </label>
 
-      <button class="btn btn-primary" id="btn-filtrar">Filtrar</button>
-    </aside>
+            <button class="btn btn-primary" id="btn-filtrar">Filtrar</button>
+        </aside>
 
-    <!-- Contenedor de Mapa -->
-    <main class="mapa">
-      <div id="map"></div>
-    </main>
-  </div>
+        <!-- Contenedor de Mapa -->
+        <main class="mapa">
+            <div id="map"></div>
+        </main>
+    </div>
 
-  <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-    <script th:src="@{/js/home/explorador.js}"></script>
-  </th:block>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/home/explorador.js}"></script>
+    </th:block>
 </div>
 </html>

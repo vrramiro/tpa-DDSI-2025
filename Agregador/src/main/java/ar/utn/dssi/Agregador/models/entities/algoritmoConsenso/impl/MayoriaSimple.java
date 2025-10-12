@@ -4,7 +4,6 @@ import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component
@@ -21,9 +20,9 @@ public class MayoriaSimple implements IAlgoritmoConsenso {
     }
     */
 
-    @Override
-    public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
-        return List.of();
-    }
+  @Override
+  public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+    return List.of();
+  }
 }
 

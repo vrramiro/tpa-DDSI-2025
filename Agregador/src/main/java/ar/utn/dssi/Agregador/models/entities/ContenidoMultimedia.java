@@ -14,18 +14,19 @@ import lombok.Setter;
 @Entity
 @Table(name = "contenidos_multimedia")
 public class ContenidoMultimedia {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "contenido_multimedia_id")
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "contenido_multimedia_id")
+  private Long id;
 
-    @Column(nullable = false, name = "url")
-    private String url;
+  @Column(nullable = false, name = "url")
+  private String url;
 
-    public ContenidoMultimedia() {}
+  public ContenidoMultimedia() {
+  }
 
-    public ContenidoMultimedia(String url) {
-        this.url = url;
-    }
+  public ContenidoMultimedia(String url) {
+    this.url = url;
+  }
 
 }

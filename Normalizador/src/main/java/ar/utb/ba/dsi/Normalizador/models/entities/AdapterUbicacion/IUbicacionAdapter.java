@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 
 @Component
 public interface IUbicacionAdapter {
-    public Mono<Ubicacion> obtenerUbicacionDeAPI(Double latitud, Double longitud);
+  public Mono<Ubicacion> obtenerUbicacionDeAPI(Double latitud, Double longitud);
 }

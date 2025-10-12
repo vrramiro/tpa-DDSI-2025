@@ -1,29 +1,29 @@
 <html th:replace="~{layout/base:: html}">
 <head>
-  <th:block th:fragment="styles">
-    <link th:href="@{/css/solicitudes/solicitudEliminacion.css}" rel="stylesheet">
-  </th:block>
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/solicitudes/solicitudEliminacion.css}">
+    </th:block>
 </head>
-<div th:fragment="contenido" class="row">
-<section class="form-container">
-    <h1>Solicitud de Eliminacion </h1>
+<div class="row" th:fragment="contenido">
+    <section class="form-container">
+        <h1>Solicitud de Eliminacion </h1>
 
-	<h2 for="descripcion">Descripción</h2>
-    <form action="#" method="POST" class="form">
-      <div>
-        <textarea id="descripcion" rows="4" placeholder="Escriba una descripción del hecho"></textarea>
-      </div>
+        <h2 for="descripcion">Descripción</h2>
+        <form action="#" class="form" method="POST">
+            <div>
+                <textarea id="descripcion" placeholder="Escriba una descripción del hecho" rows="4"></textarea>
+            </div>
 
 
-      <div class="submit-container">
-	    <a href="../home/explorador.html" class="btn btn-secondary">Volver</a>
-        <button type="submit">Crear</button>
-      </div>
-    </form>
-</section>
-  <th:block th:fragment="scripts">
-   <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-    <script th:src="@{/js/solicitudes/solicitudEliminacion.js}"></script>
-  </th:block>
+            <div class="submit-container">
+                <a class="btn btn-secondary" href="../home/explorador.html">Volver</a>
+                <button type="submit">Crear</button>
+            </div>
+        </form>
+    </section>
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/solicitudes/solicitudEliminacion.js}"></script>
+    </th:block>
 </div>
 </html>

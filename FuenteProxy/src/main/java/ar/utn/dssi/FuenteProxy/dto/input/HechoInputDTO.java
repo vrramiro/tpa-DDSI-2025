@@ -3,7 +3,6 @@ package ar.utn.dssi.FuenteProxy.dto.input;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Data

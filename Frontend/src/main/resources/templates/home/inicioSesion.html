@@ -2,10 +2,10 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/home/inicioSesion.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/home/inicioSesion.css}">
     </th:block>
 </head>
-<div th:fragment="contenido" class="row">
+<div class="row" th:fragment="contenido">
     <section id="login-page">
         <div class="container" style="max-width: 500px;">
             <div class="card">
@@ -13,16 +13,17 @@
                 <form id="login-form">
                     <div class="form-group">
                         <label for="login-email">Correo Electrónico</label>
-                        <input type="email" id="login-email" class="form-control" placeholder="usuario@ejemplo.com" required>
+                        <input class="form-control" id="login-email" placeholder="usuario@ejemplo.com" required
+                               type="email">
                     </div>
                     <div class="form-group">
                         <label for="login-password">Contraseña</label>
-                        <input type="password" id="login-password" class="form-control" required>
+                        <input class="form-control" id="login-password" required type="password">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%;">Acceder</button>
+                    <button class="btn btn-primary" style="width: 100%;" type="submit">Acceder</button>
                 </form>
                 <p style="text-align: center; margin-top: 1rem;">
-                    ¿No tienes cuenta? <a th:href="@{/registro}" class="btn-link">Regístrate</a>
+                    ¿No tienes cuenta? <a class="btn-link" th:href="@{/registro}">Regístrate</a>
                 </p>
             </div>
         </div>

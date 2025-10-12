@@ -6,6 +6,6 @@ import lombok.Getter;
 @Data
 @Getter
 public class Categoria {
-    private Long id;
-    private String nombre;
+  private Long id;
+  private String nombre;
 }

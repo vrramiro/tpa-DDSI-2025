@@ -10,5 +10,6 @@ import java.util.Set;
 @Repository
 public interface IHechoRepository extends JpaRepository<Hecho, Long> {
   List<Hecho> findByEliminadoFalseAndFechaCargaIsAfter(LocalDateTime fechaCarga);
+
   List<Hecho> findByIdExternoInAndFuenteIdIn(Set<Integer> idsExternos, Set<Long> idsFuentes);
 }

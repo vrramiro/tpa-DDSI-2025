@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class CategoriaInputDTO {
-    private Long id;
-    @JsonProperty("categoria") private String nombreCategoria;
+  private Long id;
+  @JsonProperty("categoria")
+  private String nombreCategoria;
 }

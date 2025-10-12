@@ -2,10 +2,10 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/home/registro.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/home/registro.css}">
     </th:block>
 </head>
-<div th:fragment="contenido" class="row">
+<div class="row" th:fragment="contenido">
     <section id="register-page">
         <div class="container">
             <div class="card">
@@ -14,35 +14,36 @@
                     <!-- Campo: Nombre -->
                     <div class="form-group">
                         <label for="register-name">Nombre Completo (obligatorio)</label>
-                        <input type="text" id="register-name" class="form-control" required>
+                        <input class="form-control" id="register-name" required type="text">
                     </div>
 
                     <!-- Campo: Correo -->
                     <div class="form-group">
                         <label for="register-email">Correo Electrónico (obligatorio)</label>
-                        <input type="email" id="register-email" class="form-control" required>
+                        <input class="form-control" id="register-email" required type="email">
                     </div>
 
                     <!-- Campo: Contraseña -->
                     <div class="form-group">
                         <label for="register-password">Contraseña (obligatorio)</label>
-                        <input type="password" id="register-password" class="form-control" required>
+                        <input class="form-control" id="register-password" required type="password">
                     </div>
 
                     <!-- Campo: Organización (opcional) -->
                     <div class="form-group">
                         <label for="register-org">Organización (opcional)</label>
-                        <input type="text" id="register-org" class="form-control" placeholder="Ej: Periodistas Sin Fronteras">
+                        <input class="form-control" id="register-org" placeholder="Ej: Periodistas Sin Fronteras"
+                               type="text">
                     </div>
 
                     <!-- Botón principal -->
-                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                    <button class="btn btn-primary" type="submit">Crear Cuenta</button>
                 </form>
 
                 <!-- Enlace a Login -->
                 <p class="switch-page">
                     ¿Ya tienes cuenta?
-                    <a th:href="@{/login}" class="btn-link">Inicia sesión</a>
+                    <a class="btn-link" th:href="@{/login}">Inicia sesión</a>
                 </p>
             </div>
         </div>

@@ -3,7 +3,9 @@
    ============================================================ */
 
 /* Ajuste mínimo del layout general */
-body { min-height: 100vh; }
+body {
+    min-height: 100vh;
+}
 
 /* Contenido principal (reemplaza al viejo "grid") */
 main {
@@ -77,14 +79,18 @@ th, td {
     border: 1px solid var(--border-color);
 }
 
-thead { background-color: #f0f0f0; }
+thead {
+    background-color: #f0f0f0;
+}
 
 thead th {
     font-weight: 700;
     color: var(--dark-color);
 }
 
-tbody tr:hover { background-color: var(--light-color); }
+tbody tr:hover {
+    background-color: var(--light-color);
+}
 
 /* ===== Paginación ===== */
 .pagination {
@@ -120,10 +126,14 @@ tbody tr:hover { background-color: var(--light-color); }
     cursor: default;
 }
 
-.page-link-ellipsis { border: none; }
+.page-link-ellipsis {
+    border: none;
+}
 
 /* Botón de volver al final de la página */
-.footer-actions { margin-top: var(--space-3); }
+.footer-actions {
+    margin-top: var(--space-3);
+}
 
 /* ===== Botones adicionales y overrides ===== */
 .action-buttons {
@@ -139,10 +149,14 @@ tbody tr:hover { background-color: var(--light-color); }
 }
 
 /* Mantener botones ancla sin subrayado cuando son .btn-primary */
-.btn-primary { text-decoration: none; }
+.btn-primary {
+    text-decoration: none;
+}
 
 /* Override: en base.css .btn-secondary tiene color de texto oscuro */
-.btn-secondary { color: #fff; }
+.btn-secondary {
+    color: #fff;
+}
 
 /* Botones específicos de acción */
 .btn-edit {

@@ -9,6 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CategoriaInputDTONormalizador {
-    @JsonProperty("id") private Long idCategoria;
-    @JsonProperty("categoria") private String nombre;
+  @JsonProperty("id")
+  private Long idCategoria;
+  @JsonProperty("categoria")
+  private String nombre;
 }

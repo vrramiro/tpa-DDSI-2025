@@ -1,13 +1,11 @@
 package ar.utn.dssi.FuenteProxy.dto.output;
 
 
-
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Data

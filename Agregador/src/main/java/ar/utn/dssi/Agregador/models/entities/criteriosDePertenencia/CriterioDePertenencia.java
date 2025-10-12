@@ -19,17 +19,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public abstract class CriterioDePertenencia {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    public abstract Boolean loCumple(Hecho unHecho);
+  public abstract Boolean loCumple(Hecho unHecho);
 
-    public abstract TipoCriterio getTipoCriterio();
+  public abstract TipoCriterio getTipoCriterio();
 
-    public abstract Boolean mismoValor(String valor);
+  public abstract Boolean mismoValor(String valor);
 
-    public abstract String getValor();
+  public abstract String getValor();
 
-    public abstract boolean setValor(String valor);
+  public abstract boolean setValor(String valor);
 }

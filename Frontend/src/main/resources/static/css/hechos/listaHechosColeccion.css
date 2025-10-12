@@ -4,18 +4,22 @@
 
 /* ===== Botones: altura uniforme y centrado ===== */
 .btn {
-    height: 3rem;              /* igualar alturas */
-    display: flex;             /* centrar contenido */
+    height: 3rem; /* igualar alturas */
+    display: flex; /* centrar contenido */
     align-items: center;
     justify-content: center;
 }
 
 /* Enlaces con clase btn sin subrayado */
 .btn-primary,
-.btn-outline { text-decoration: none; }
+.btn-outline {
+    text-decoration: none;
+}
 
 /* En base.css, .btn-secondary tiene texto oscuro; acá lo forzamos a blanco */
-.btn-secondary { color: #fff; }
+.btn-secondary {
+    color: #fff;
+}
 
 /* ============================================================
    TÍTULOS
@@ -77,7 +81,7 @@ main {
 
 .hecho-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 12px rgba(0,0,0,.12);
+    box-shadow: 0 8px 12px rgba(0, 0, 0, .12);
 }
 
 .hecho-card-content {
@@ -138,20 +142,35 @@ main {
     cursor: default;
 }
 
-.page-link-ellipsis { border: none; }
+.page-link-ellipsis {
+    border: none;
+}
 
 /* ============================================================
    RESPONSIVE (solo ajustes nuevos)
    ============================================================ */
 @media (max-width: 992px) {
-    .main-header { padding-inline: 4%; }
-    .main-nav ul { justify-content: flex-end; }
+    .main-header {
+        padding-inline: 4%;
+    }
+
+    .main-nav ul {
+        justify-content: flex-end;
+    }
 }
 
 @media (max-width: 768px) {
-    .main-header { padding-inline: 3%; }
-    .main-nav ul { gap: .5rem; }
-    .hecho-card-actions .btn { width: 100%; }
+    .main-header {
+        padding-inline: 3%;
+    }
+
+    .main-nav ul {
+        gap: .5rem;
+    }
+
+    .hecho-card-actions .btn {
+        width: 100%;
+    }
 }
 
 /* Breakpoint extra respecto de base.css */

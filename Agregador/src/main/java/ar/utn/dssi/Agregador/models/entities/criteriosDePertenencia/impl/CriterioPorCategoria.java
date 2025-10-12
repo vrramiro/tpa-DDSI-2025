@@ -6,7 +6,6 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,38 +19,38 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CriterioPorCategoria extends CriterioDePertenencia {
-    @Column(name = "categoria")
-    private String categoria;
+  @Column(name = "categoria")
+  private String categoria;
 
-    @Override
-    public Boolean loCumple(Hecho hecho) {
-        return this.categoria.equals(hecho.getCategoria().getNombre());
+  @Override
+  public Boolean loCumple(Hecho hecho) {
+    return this.categoria.equals(hecho.getCategoria().getNombre());
+  }
+
+  @Override
+  public TipoCriterio getTipoCriterio() {
+    return TipoCriterio.CATEGORIA;
+  }
+
+  @Override
+  public Boolean mismoValor(String valor) {
+    return this.categoria.equals(valor);
+  }
+
+  @Override
+  public String getValor() {
+    return this.categoria;
+  }
+
+  @Override
+  public boolean setValor(String valor) {
+    boolean seActualizo = false;
+
+    if (!mismoValor(valor)) {
+      this.categoria = valor;
+      seActualizo = true;
     }
 
-    @Override
-    public TipoCriterio getTipoCriterio() {
-        return TipoCriterio.CATEGORIA;
-    }
-
-    @Override
-    public Boolean mismoValor(String valor) {
-      return this.categoria.equals(valor);
-    }
-
-    @Override
-    public String getValor() {
-        return this.categoria;
-    }
-
-    @Override
-    public boolean setValor(String valor) {
-      boolean seActualizo = false;
-
-      if(!mismoValor(valor)) {
-        this.categoria = valor;
-        seActualizo = true;
-      }
-
-      return seActualizo;
-    }
+    return seActualizo;
+  }
 }

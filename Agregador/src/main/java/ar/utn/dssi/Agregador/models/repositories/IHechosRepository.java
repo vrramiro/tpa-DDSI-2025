@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,19 +14,19 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   List<Hecho> findByIdEnFuenteAndFuente(Long idOrigen, Fuente fuente);
 
   @Query("SELECT h FROM Hecho h " +
-          "WHERE (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +
-          "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
-          "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
-          "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
-          "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad)" +
-          "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia)")
+      "WHERE (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +
+      "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
+      "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
+      "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
+      "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad)" +
+      "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia)")
   List<Hecho> filtrarHechos(
-          @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
-          @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
-          @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,
-          @Param("fechaAcontecimientoHasta") LocalDateTime fechaAcontecimientoHasta,
-          @Param("ciudad") String ciudad,
-          @Param("provincia") String provincia
+      @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
+      @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
+      @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,
+      @Param("fechaAcontecimientoHasta") LocalDateTime fechaAcontecimientoHasta,
+      @Param("ciudad") String ciudad,
+      @Param("provincia") String provincia
   );
 
 

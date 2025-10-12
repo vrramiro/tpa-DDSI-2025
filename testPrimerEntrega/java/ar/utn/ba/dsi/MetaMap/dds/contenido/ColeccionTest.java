@@ -51,7 +51,7 @@ class ColeccionTest {
     coleccion.addCriterioDePertenencia(new CriterioPorFecha(
             LocalDate.of(2000, 1, 1),
             LocalDate.of(2010, 1, 1)
-            )
+        )
     );
 
     coleccion.cargarHechos();
@@ -61,8 +61,8 @@ class ColeccionTest {
   @Test
   public void testCargarHechosConCriterioFechaYCategoria() {
     coleccion.addCriterioDePertenencia(new CriterioPorFecha(
-        LocalDate.of(2000, 1, 1),
-        LocalDate.of(2010, 1, 1)
+            LocalDate.of(2000, 1, 1),
+            LocalDate.of(2010, 1, 1)
         )
     );
 

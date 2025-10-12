@@ -1,19 +1,18 @@
 package ar.utn.dssi.FuenteProxy.service.impl;
 
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
-import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
 import ar.utn.dssi.FuenteProxy.error.FechaUltimaComunicacionFutura;
 import ar.utn.dssi.FuenteProxy.error.HechoNoEcontrado;
 import ar.utn.dssi.FuenteProxy.mappers.MapperDeHechos;
+import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.Fuente;
+import ar.utn.dssi.FuenteProxy.models.entities.fuentes.TipoFuente;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
 import ar.utn.dssi.FuenteProxy.service.INormalizacionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -34,11 +33,11 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaUltimaComunicacion) {
-    if(fechaUltimaComunicacion == null) {
+    if (fechaUltimaComunicacion == null) {
       throw new IllegalArgumentException("Error al cargar la fecha de ultima comunicacion");
     }
 
-    if(fechaUltimaComunicacion.isAfter(LocalDateTime.now())) {
+    if (fechaUltimaComunicacion.isAfter(LocalDateTime.now())) {
       throw new FechaUltimaComunicacionFutura("La fecha de ultima comunicacion no puede ser futura");
     }
 
@@ -49,11 +48,11 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechosInstanciasMetamapa() {
-    try{
+    try {
       List<Fuente> fuentes = fuenteRepository.findFuentesByTipoFuente(TipoFuente.METAMAPA);
-      List<Hecho> hechosMetamapa = fuentes.parallelStream().flatMap( fuente -> fuente.importarHechos().block().stream()).toList();
+      List<Hecho> hechosMetamapa = fuentes.parallelStream().flatMap(fuente -> fuente.importarHechos().block().stream()).toList();
       return hechosMetamapa.stream().map(MapperDeHechos::hechoOutputDTO).toList();
-    } catch (Exception e){
+    } catch (Exception e) {
       throw new RuntimeException("Error al obtener hechos de instancias Metamapa: " + e.getMessage());
     }
   }
@@ -62,7 +61,7 @@ public class HechosService implements IHechosService {
   public void importarHechos() {
     List<Hecho> hechosNuevos = this.hechosNuevos();
 
-    if(!hechosNuevos.isEmpty()) {
+    if (!hechosNuevos.isEmpty()) {
       List<Hecho> hechosAGuardar = hechosNuevos
           .parallelStream()
           .map(hecho -> {

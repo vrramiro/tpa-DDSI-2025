@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class EstadisticasScheduler {
-    @Autowired
-    private IEstadisticasService estadisticasService;
+  @Autowired
+  private IEstadisticasService estadisticasService;
 
-    @Scheduled(cron = "${cron.estadisticas}")
-    public void calcularEsetadisticas() {
-        estadisticasService.calcularEstadisticas();
-    }
+  @Scheduled(cron = "${cron.estadisticas}")
+  public void calcularEsetadisticas() {
+    estadisticasService.calcularEstadisticas();
+  }
 }

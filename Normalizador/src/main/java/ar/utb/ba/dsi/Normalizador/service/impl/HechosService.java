@@ -15,36 +15,36 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class HechosService implements IHechosService {
-    private final IUbicacionService ubicacionService;
-    private final ICategoriaService categoriaService;
+  private final IUbicacionService ubicacionService;
+  private final ICategoriaService categoriaService;
 
-    public HechosService(IUbicacionService ubicacionService, ICategoriaService categoriaService) {
-        this.ubicacionService = ubicacionService;
-        this.categoriaService = categoriaService;
-    }
+  public HechosService(IUbicacionService ubicacionService, ICategoriaService categoriaService) {
+    this.ubicacionService = ubicacionService;
+    this.categoriaService = categoriaService;
+  }
 
-    @Override
-    public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {
-        Hecho hecho = new Hecho();
+  @Override
+  public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {
+    Hecho hecho = new Hecho();
 
-        // Normalizo ubicacion
-        Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hechoInput.getLatitud(), hechoInput.getLongitud());
-        hecho.setUbicacion(ubicacionHecho);
+    // Normalizo ubicacion
+    Ubicacion ubicacionHecho = ubicacionService.obtenerUbicacion(hechoInput.getLatitud(), hechoInput.getLongitud());
+    hecho.setUbicacion(ubicacionHecho);
 
-        //Normalizo Categoria
-        String categoriaInput = hechoInput.getCategoria();
-        Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
+    //Normalizo Categoria
+    String categoriaInput = hechoInput.getCategoria();
+    Categoria categoriaHecho = categoriaService.normalizarCategoria(categoriaInput);
 
-        hecho.setCategoria(categoriaHecho);
+    hecho.setCategoria(categoriaHecho);
 
-        //Normalizo fechas
-        hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
+    //Normalizo fechas
+    hecho.setFechaAcontecimiento(MapperDeFecha.fromString(hechoInput.getFechaAcontecimiento()));
 
-        // Sanitizo titulo y descripcion
-        hecho.setTitulo(hechoInput.getTitulo());
-        hecho.setDescripcion(hechoInput.getDescripcion());
-        Sanitizador.sanitizar(hecho);
+    // Sanitizo titulo y descripcion
+    hecho.setTitulo(hechoInput.getTitulo());
+    hecho.setDescripcion(hechoInput.getDescripcion());
+    Sanitizador.sanitizar(hecho);
 
-        return MapperDeHechos.hechoToOutput(hecho);
-    }
+    return MapperDeHechos.hechoToOutput(hecho);
+  }
 }

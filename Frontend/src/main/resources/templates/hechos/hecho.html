@@ -3,7 +3,7 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/hechos/hecho.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/hechos/hecho.css}">
     </th:block>
 </head>
 
@@ -18,26 +18,27 @@
                 <h1 class="hecho-titulo">Protesta en Plaza Mayor</h1>
             </div>
 
-            <img class="hecho-imagen" src="https://picsum.photos/800/400?random=1" alt="Imagen del hecho">
-			
-			<div class="hecho-meta-info">
-              <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez</p>
-  	 		  <span class="hecho-categoria">Protesta</span>
-			</div>
-			
-			<p class="hecho-descripcion">
-                Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.
+            <img alt="Imagen del hecho" class="hecho-imagen" src="https://picsum.photos/800/400?random=1">
+
+            <div class="hecho-meta-info">
+                <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez</p>
+                <span class="hecho-categoria">Protesta</span>
+            </div>
+
+            <p class="hecho-descripcion">
+                Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y
+                se extendió durante varias horas de forma pacífica.
             </p>
-			
-			<p class="hecho-autor"><strong>Estado:</strong> ACEPTADO/PENDIENTE/RECHAZADO</p>
-            
-			<div class="hecho-footer">
+
+            <p class="hecho-autor"><strong>Estado:</strong> ACEPTADO/PENDIENTE/RECHAZADO</p>
+
+            <div class="hecho-footer">
                 <div class="hecho-botones">
-                    <a href=# class="btn btn-volver">Volver</a>
-                    <a th:href="@{/solicitudes/nueva}" class="btn btn-danger">Solicitud de eliminación</a>
-					<button class="btn btn-danger">Rechazar</button>
-					<button class="btn btn-primary">Aceptar</button>
-                    <a th:href="@{/explorador}" class="btn btn-primary">Ver en mapa</a>
+                    <a class="btn btn-volver" href=#>Volver</a>
+                    <a class="btn btn-danger" th:href="@{/solicitudes/nueva}">Solicitud de eliminación</a>
+                    <button class="btn btn-danger">Rechazar</button>
+                    <button class="btn btn-primary">Aceptar</button>
+                    <a class="btn btn-primary" th:href="@{/explorador}">Ver en mapa</a>
                 </div>
             </div>
         </div>

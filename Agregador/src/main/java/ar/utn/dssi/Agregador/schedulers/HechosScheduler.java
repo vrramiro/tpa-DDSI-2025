@@ -11,7 +11,7 @@ public class HechosScheduler {
   private IHechosService hechosService;
 
   @Scheduled(cron = "${cron.hechos}")
-  public void actualizarHechos(){
+  public void actualizarHechos() {
     hechosService.importarNuevosHechos();
   }
 }

@@ -30,7 +30,9 @@ h1 {
     transition: transform .2s;
 }
 
-.card:hover { transform: translateY(-5px); }
+.card:hover {
+    transform: translateY(-5px);
+}
 
 .card-header {
     font-weight: 700;
@@ -63,8 +65,8 @@ h1 {
 
 /* Paginación */
 .grid .pagination {
-    grid-column: 1 / -1;    /* ocupar todo el ancho del grid */
-    justify-self: center;   /* centrar el nav en el grid */
+    grid-column: 1 / -1; /* ocupar todo el ancho del grid */
+    justify-self: center; /* centrar el nav en el grid */
     width: 100%;
 }
 

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,21 +20,21 @@ public class HechosControllerPUBLIC {
 
   @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(
-          @RequestParam(name = "fechaReporteDesde", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaReporteDesde,
-          @RequestParam(name = "fechaReporteHasta", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaReporteHasta,
-          @RequestParam(name = "fechaAcontecimientoDesde", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoDesde,
-          @RequestParam(name = "fechaAcontecimientoHasta", required = false)
-          @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoHasta,
-          @RequestParam(name = "ciudad", required = false) String ciudad,
-          @RequestParam(name = "provincia", required = false) String provincia
-  ){
+      @RequestParam(name = "fechaReporteDesde", required = false)
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaReporteDesde,
+      @RequestParam(name = "fechaReporteHasta", required = false)
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaReporteHasta,
+      @RequestParam(name = "fechaAcontecimientoDesde", required = false)
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoDesde,
+      @RequestParam(name = "fechaAcontecimientoHasta", required = false)
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoHasta,
+      @RequestParam(name = "ciudad", required = false) String ciudad,
+      @RequestParam(name = "provincia", required = false) String provincia
+  ) {
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
-            fechaReporteDesde, fechaReporteHasta,
-            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-            provincia, ciudad
+        fechaReporteDesde, fechaReporteHasta,
+        fechaAcontecimientoDesde, fechaAcontecimientoHasta,
+        provincia, ciudad
     );
 
     if (hechos.isEmpty()) {

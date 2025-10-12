@@ -20,7 +20,7 @@ public class Sanitizador {
 
     // Elimina acentos
     normalizado = Normalizer.normalize(normalizado, Normalizer.Form.NFD)
-            .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
 
     // Eliminar caracteres que no sean letras, números o espacios
     normalizado = normalizado.replaceAll("[^a-z0-9\\s]", "");

@@ -2,9 +2,14 @@ package ar.utn.dssi.FuenteDinamica.services.impl;
 
 import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
-import ar.utn.dssi.FuenteDinamica.models.entities.*;
+import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
+import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
+import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
-import ar.utn.dssi.FuenteDinamica.models.errores.*;
+import ar.utn.dssi.FuenteDinamica.models.errores.DatosFaltantes;
+import ar.utn.dssi.FuenteDinamica.models.errores.ErrorGeneralRepositorio;
+import ar.utn.dssi.FuenteDinamica.models.errores.HechoNoEditable;
+import ar.utn.dssi.FuenteDinamica.models.errores.RepositorioVacio;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeCategoria;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteDinamica.models.mappers.MapperDeUbicacion;
@@ -14,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -25,18 +28,17 @@ import java.util.List;
 public class HechosService implements IHechosService {
 
   private final INormalizadorAdapter normalizadorAdapter;
+  @Autowired
+  private IHechoRepository hechoRepository;
+  @Autowired
+  private ContenidoMultimediaService contenidoMultimediaService;
 
   public HechosService(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
     this.normalizadorAdapter = normalizadorAdapter;
   }
 
-  @Autowired
-  private IHechoRepository hechoRepository;
-
-  @Autowired
-  private ContenidoMultimediaService contenidoMultimediaService;
-
   /*/////////////////////// OPERACIONES CRUD ///////////////////////*/
+
   /// /////// CREATE //////////
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
@@ -48,7 +50,7 @@ public class HechosService implements IHechosService {
     hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
     List<ContenidoMultimedia> contenidoMultimedia = this.contenidoMultimediaService
-            .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
+        .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
 
     hechoNormalizado.setMultimedia(contenidoMultimedia);
 
@@ -76,10 +78,11 @@ public class HechosService implements IHechosService {
   }
 
   /// /////// UPDATE //////////
-  @Override @Transactional
+  @Override
+  @Transactional
   public void editarHecho(HechoInputDTO hechoNuevo, Long idHecho) {
     Hecho hechoExistente = this.hechoRepository.findById(idHecho)
-            .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+        .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
     validarEdicion(hechoExistente);
 
@@ -87,7 +90,7 @@ public class HechosService implements IHechosService {
 
     try {
       this.hechoRepository.save(hechoExistente);
-    }catch (Exception e) {
+    } catch (Exception e) {
       throw new ErrorGeneralRepositorio("Error al actualizar el hecho con id: " + idHecho);
     }
   }
@@ -97,7 +100,7 @@ public class HechosService implements IHechosService {
   public void actualizarVisibilidad(Long idHecho, Boolean visibilidad) {
     try {
       Hecho hecho = this.hechoRepository.findById(idHecho)
-              .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
+          .orElseThrow(() -> new RuntimeException("Hecho no encontrado con id: " + idHecho));
 
       hecho.setVisible(visibilidad);
 
@@ -137,7 +140,7 @@ public class HechosService implements IHechosService {
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento());
 
     List<ContenidoMultimedia> contenidoMultimedia =
-            this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
+        this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
     hechoExistente.setMultimedia(contenidoMultimedia);
 
     actualizarUbicacion(hechoExistente, hechoNuevo);
@@ -147,15 +150,15 @@ public class HechosService implements IHechosService {
 
   private void actualizarUbicacion(Hecho hechoExistente, HechoInputDTO hechoNuevo) {
     if (hechoExistente.getUbicacion().getLatitud() != hechoNuevo.getLatitud() ||
-            hechoExistente.getUbicacion().getLongitud() != hechoNuevo.getLongitud()) {
+        hechoExistente.getUbicacion().getLongitud() != hechoNuevo.getLongitud()) {
 
       Ubicacion ubicacion = normalizadorAdapter
-              .obtenerUbicacionNormalizada(
-                      MapperDeUbicacion.ubicacionFromLatitudYLongitud(
-                              hechoNuevo.getLatitud(),
-                              hechoNuevo.getLongitud()
-                      ))
-              .block();
+          .obtenerUbicacionNormalizada(
+              MapperDeUbicacion.ubicacionFromLatitudYLongitud(
+                  hechoNuevo.getLatitud(),
+                  hechoNuevo.getLongitud()
+              ))
+          .block();
 
       hechoExistente.setUbicacion(ubicacion);
     }

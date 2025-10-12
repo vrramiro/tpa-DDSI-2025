@@ -11,11 +11,15 @@
 
     --font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
     --border-radius: 8px;
-    --box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, .1);
 }
 
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 html {
     font-size: clamp(15px, 0.6vw + 12px, 18px);
@@ -23,41 +27,41 @@ html {
 
 
 body {
-  font-family: var(--font-family);
-  color: var(--text-color);
-  background-color: var(--light-color);
-  line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    font-family: var(--font-family);
+    color: var(--text-color);
+    background-color: var(--light-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 /* MAIN */
 main {
-  flex: 1;
-  padding: 2rem 0 3rem;
+    flex: 1;
+    padding: 2rem 0 3rem;
 }
 
 h1 {
-  text-align: center;
-  margin-bottom: 2rem;
-  color: var(--dark-color);
-  font-size: clamp(1.5rem, 2vw, 2rem);
-  font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--dark-color);
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    font-weight: 700;
 }
 
 /* ===== HEADER ===== */
 .main-header {
-  background-color: var(--background-color);
-  min-height: 60px;
-  padding: .5rem 5%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: var(--box-shadow);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+    background-color: var(--background-color);
+    min-height: 60px;
+    padding: .5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .logo {
@@ -70,7 +74,7 @@ h1 {
 .main-nav ul {
     list-style: none;
     display: flex;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
     gap: clamp(.5rem, 2vw, 1rem);
 }
 
@@ -81,18 +85,21 @@ h1 {
     padding: .5rem;
     border-radius: var(--border-radius);
     transition: background-color .3s;
-    white-space: nowrap; 
+    white-space: nowrap;
 }
 
-.main-nav a:hover { background: var(--light-color); color: var(--primary-color); }
+.main-nav a:hover {
+    background: var(--light-color);
+    color: var(--primary-color);
+}
 
 .menu-toggle {
-  display: none;
-  font-size: 1.8rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--primary-color);
+    display: none;
+    font-size: 1.8rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
 }
 
 
@@ -108,83 +115,96 @@ h1 {
     text-align: center;
     transition: background-color .3s, transform .2s;
 }
-.btn:hover { transform: translateY(-2px); }
 
-.btn-primary   { background-color: var(--primary-color); color: #fff; }
-.btn-secondary { background-color: var(--light-color); color: #fff; }
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: var(--light-color);
+    color: #fff;
+}
 
 
 /* GRID */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  width: 90%;
-  max-width: 1200px;
-  margin: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
 }
 
 /* CARDS */
 .card {
-  background: var(--background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  padding: 2rem 1rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: transform .2s, box-shadow .2s, background .3s;
-  cursor: pointer;
-  text-decoration: none;
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: transform .2s, box-shadow .2s, background .3s;
+    cursor: pointer;
+    text-decoration: none;
 }
+
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 8px 16px rgba(0,0,0,.15);
-  background: var(--light-color);
+    transform: translateY(-6px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, .15);
+    background: var(--light-color);
 }
+
 .card-header {
-  margin-bottom: 1rem;
+    margin-bottom: 1rem;
 }
+
 .card-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--secondary-color);
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
 }
 
 .upload-box {
-  background: var(--background-color);
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  padding: 2rem;
-  margin: 0; 
-  width: 100%;
-  box-shadow: var(--box-shadow);
-  text-align: center;
-  grid-column: 1 / -1;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    margin: 0;
+    width: 100%;
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    grid-column: 1 / -1;
 }
 
 .upload-box label {
-  display: block;
-  font-weight: 600;
-  text-align: left;
-  margin-bottom: 1rem;
-  color: var(--dark-color);
-  font-size: 1.3rem;
+    display: block;
+    font-weight: 600;
+    text-align: left;
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+    font-size: 1.3rem;
 }
 
 /* Input de archivos estilizado */
 .upload-box input[type="file"] {
-  display: block;
-  margin: 0 auto 1.5rem;
-  padding: 0.6rem;
-  width: 100%;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  background: var(--light-color);
-  font-size: 0.95rem;
-  cursor: pointer;
+    display: block;
+    margin: 0 auto 1.5rem;
+    padding: 0.6rem;
+    width: 100%;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--light-color);
+    font-size: 0.95rem;
+    cursor: pointer;
 }
 
 /* ===== FOOTER ===== */
@@ -195,6 +215,7 @@ h1 {
     padding: clamp(1rem, 3vw, 2rem) 5%;
     margin-top: 2rem;
 }
+
 .main-footer a {
     color: var(--light-color);
     margin: 0 .5rem;

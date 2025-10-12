@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class MetaMapaFrontApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MetaMapaFrontApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(MetaMapaFrontApplication.class, args);
+  }
 
 }

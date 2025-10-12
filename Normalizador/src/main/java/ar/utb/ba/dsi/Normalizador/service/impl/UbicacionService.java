@@ -11,33 +11,33 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UbicacionService implements IUbicacionService {
-    private final IUbicacionAdapter adapter;
+  private final IUbicacionAdapter adapter;
 
-    public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
-        this.adapter = adapter;
+  public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
+    this.adapter = adapter;
+  }
+
+  @Override
+  public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
+    Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
+
+    if (ubicacion == null) {
+      throw new HechoNoEcontrado("La ubicacion es nula.");
     }
 
-    @Override
-    public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
-      Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
-
-      if(ubicacion == null) {
-          throw new HechoNoEcontrado("La ubicacion es nula.");
-      }
-
-      if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
-        System.out.println("La ciudad y la provincia son nulas");
-      }
-
-      return ubicacion;
+    if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
+      System.out.println("La ciudad y la provincia son nulas");
     }
 
-    @Override
-    public UbicacionOutputDTO obtenerUbicacionOutPut(Double latitud, Double longitud) {
-        try {
-            return MapperDeUbicacion.ubicacionOutputDTO(this.obtenerUbicacion(latitud, longitud));
-        } catch (Exception e) {
-            throw new RuntimeException("Error mapeando a DTO la ubicacion", e);
-        }
+    return ubicacion;
+  }
+
+  @Override
+  public UbicacionOutputDTO obtenerUbicacionOutPut(Double latitud, Double longitud) {
+    try {
+      return MapperDeUbicacion.ubicacionOutputDTO(this.obtenerUbicacion(latitud, longitud));
+    } catch (Exception e) {
+      throw new RuntimeException("Error mapeando a DTO la ubicacion", e);
     }
+  }
 }

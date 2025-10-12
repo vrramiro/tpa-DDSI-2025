@@ -8,44 +8,43 @@ import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoriaService implements ICategoriaService {
-    private final ICategoriaRepository categoriaRepository;
+  private final ICategoriaRepository categoriaRepository;
 
-    public CategoriaService(ICategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
+  public CategoriaService(ICategoriaRepository categoriaRepository) {
+    this.categoriaRepository = categoriaRepository;
+  }
+
+  @Override
+  public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {
+    String categoriaNombre = categoria.getCategoriaExterna();
+    return MapperDeCategorias.categoriaToOutputDTO(this.normalizarCategoria(categoriaNombre));
+  }
+
+  @Override
+  public Categoria normalizarCategoria(String categoriaInput) {
+
+    Categoria categoriaNormalizada = categoriaRepository.findCategoriaByNombre(categoriaInput);
+
+    if (categoriaNormalizada == null) {
+      categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
     }
 
-    @Override
-    public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {
-        String categoriaNombre = categoria.getCategoriaExterna();
-        return MapperDeCategorias.categoriaToOutputDTO(this.normalizarCategoria(categoriaNombre));
+    if (categoriaNormalizada == null) {
+      System.out.println("Categoria no encontrada");
+      throw new CategoriaNoEcontrada("Categoría no encontrada: " + categoriaInput);
     }
 
-    @Override
-    public Categoria normalizarCategoria(String categoriaInput) {
-
-        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByNombre(categoriaInput);
-
-        if (categoriaNormalizada == null) {
-            categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
-        }
-
-        if (categoriaNormalizada == null) {
-            System.out.println("Categoria no encontrada");
-            throw new CategoriaNoEcontrada("Categoría no encontrada: " + categoriaInput);
-        }
-
-        return categoriaNormalizada;
-    }
+    return categoriaNormalizada;
+  }
 
 
-    @Override
-    public List<CategoriaOutputDTO> obtenerCategorias() {
-        return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
-    }
+  @Override
+  public List<CategoriaOutputDTO> obtenerCategorias() {
+    return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
+  }
 }

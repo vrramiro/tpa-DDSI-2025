@@ -7,7 +7,6 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,53 +16,53 @@ import java.util.UUID;
 @Component
 public class AlmacenadorMultimedia {
 
-    @Value("${directorioDeGuardado}")
-    private String directorioDeGuardado;
+  @Value("${directorioDeGuardado}")
+  private String directorioDeGuardado;
 
-    private Path rutaAbsoluta;
+  private Path rutaAbsoluta;
 
-    @PostConstruct
-    public void init() {
-        this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
-        try {
-            Files.createDirectories(this.rutaAbsoluta);
-        } catch (Exception e) {
-            throw new DirectorioNoCreado("No se pudo crear un directorio "+ directorioDeGuardado + " para guardar archivos multimedia.");
-        }
+  @PostConstruct
+  public void init() {
+    this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
+    try {
+      Files.createDirectories(this.rutaAbsoluta);
+    } catch (Exception e) {
+      throw new DirectorioNoCreado("No se pudo crear un directorio " + directorioDeGuardado + " para guardar archivos multimedia.");
+    }
+  }
+
+  public String guardarArchivo(MultipartFile archivo) {
+    String nombreArchivoOriginal = archivo.getOriginalFilename();
+    String extensionArchivo = "";
+    int posicionPunto = nombreArchivoOriginal.lastIndexOf(".");
+
+    if (posicionPunto > 0) {
+      extensionArchivo = nombreArchivoOriginal.substring(posicionPunto);
     }
 
-    public String guardarArchivo(MultipartFile archivo) {
-        String nombreArchivoOriginal = archivo.getOriginalFilename();
-        String extensionArchivo = "";
-        int posicionPunto = nombreArchivoOriginal.lastIndexOf(".");
+    String nombreArchivoGenerado = UUID.randomUUID() + extensionArchivo;
 
-        if( posicionPunto > 0){
-            extensionArchivo  = nombreArchivoOriginal.substring(posicionPunto);
-        }
+    try {
+      if (archivo.isEmpty()) {
+        throw new ArchivoMultimediaVacio("No se puede guardar el archivo " + nombreArchivoOriginal + " porque esta vacio.");
+      }
 
-        String nombreArchivoGenerado  = UUID.randomUUID() + extensionArchivo;
+      Path rutaDeArchivo = this.rutaAbsoluta.resolve(nombreArchivoGenerado);
+      Files.copy(archivo.getInputStream(), rutaDeArchivo);
 
-        try {
-            if (archivo.isEmpty()) {
-                throw new ArchivoMultimediaVacio("No se puede guardar el archivo "+nombreArchivoOriginal+" porque esta vacio.");
-            }
+      return rutaDeArchivo.toString();
 
-            Path rutaDeArchivo = this.rutaAbsoluta.resolve(nombreArchivoGenerado);
-            Files.copy(archivo.getInputStream(),rutaDeArchivo);
-
-            return rutaDeArchivo.toString();
-
-        } catch (IOException e) {
-            throw new FallaGuardadoArchivoMultimedia("No se pudo guardar el archivo: " +nombreArchivoOriginal);
-        }
+    } catch (IOException e) {
+      throw new FallaGuardadoArchivoMultimedia("No se pudo guardar el archivo: " + nombreArchivoOriginal);
     }
+  }
 
-    public void eliminarArchivo(String urlArchivo) {
-        try {
-            Files.deleteIfExists(Path.of(urlArchivo)); // Devuelve true si el archivo existía y fue borrado
-        } catch (IOException e) {
-            System.err.println("Error al eliminar el archivo " + urlArchivo + ": " + e.getMessage());
-        }
+  public void eliminarArchivo(String urlArchivo) {
+    try {
+      Files.deleteIfExists(Path.of(urlArchivo)); // Devuelve true si el archivo existía y fue borrado
+    } catch (IOException e) {
+      System.err.println("Error al eliminar el archivo " + urlArchivo + ": " + e.getMessage());
     }
+  }
 
 }

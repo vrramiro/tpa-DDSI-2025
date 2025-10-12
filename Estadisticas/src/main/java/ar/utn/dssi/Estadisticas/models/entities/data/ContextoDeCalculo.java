@@ -3,7 +3,6 @@ package ar.utn.dssi.Estadisticas.models.entities.data;
 import ar.utn.dssi.Estadisticas.models.entities.SolicitudDeEliminacion;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.List;
 
 @Getter

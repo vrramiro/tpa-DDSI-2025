@@ -12,11 +12,11 @@ public class TipoFuenteConverter implements AttributeConverter<ITipoFuente, Stri
   @Override
   public String convertToDatabaseColumn(ITipoFuente tipo) {
 
-    if(tipo instanceof FuenteDinamica) {
+    if (tipo instanceof FuenteDinamica) {
       return "DINAMICA";
-    } else if(tipo instanceof FuenteEstatica) {
+    } else if (tipo instanceof FuenteEstatica) {
       return "ESTATICA";
-    } else if(tipo instanceof FuenteProxy) {
+    } else if (tipo instanceof FuenteProxy) {
       return "PROXY";
     }
 

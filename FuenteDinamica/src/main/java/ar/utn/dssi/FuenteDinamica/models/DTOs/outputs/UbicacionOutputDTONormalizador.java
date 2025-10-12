@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UbicacionOutputDTONormalizador {
-    private Double latitud;
-    private Double longitud;
+  private Double latitud;
+  private Double longitud;
 }

@@ -2,16 +2,17 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/home/landing.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/home/landing.css}">
     </th:block>
 </head>
 
-<div th:fragment="contenido" class="row">
+<div class="row" th:fragment="contenido">
     <div class="class-bienvenida">
         <h1>Bienvenido a MetaMapa</h1>
-        <p>Una plataforma abierta y colaborativa para documentar, visualizar y analizar hechos geolocalizados de manera transparente y verificable.</p>
+        <p>Una plataforma abierta y colaborativa para documentar, visualizar y analizar hechos geolocalizados de manera
+            transparente y verificable.</p>
         <div>
-            <a th:href="@{/explorador}" class="btn btn-primary">
+            <a class="btn btn-primary" th:href="@{/explorador}">
                 <button class="btn btn-primary">Explorar Mapa</button>
             </a>
         </div>
@@ -19,7 +20,9 @@
 
     <div class="container-quienesSomos">
         <h2>¿Qué es MetaMapa?</h2>
-        <p>Nuestra misión es proporcionar una herramienta accesible para que periodistas, investigadores, activistas y ciudadanos puedan registrar y consultar eventos importantes, creando un archivo histórico geográfico confiable.</p>
+        <p>Nuestra misión es proporcionar una herramienta accesible para que periodistas, investigadores, activistas y
+            ciudadanos puedan registrar y consultar eventos importantes, creando un archivo histórico geográfico
+            confiable.</p>
     </div>
 
     <div class="container-colecciones">
@@ -49,11 +52,13 @@
             </div>
             <div class="card feature-card">
                 <h3>Protestas Sociales Argentina</h3>
-                <p>Los gremios y sindicatos Argentinos, liderados por Hugo Moyano piden por subsidios para inmigrantes limitrofes</p>
+                <p>Los gremios y sindicatos Argentinos, liderados por Hugo Moyano piden por subsidios para inmigrantes
+                    limitrofes</p>
             </div>
             <div class="card feature-card">
                 <h3>Ayuda Humanitaria La Matanza</h3>
-                <p>Puntos de distribución de alimentos y polenta en los al rededores de los principales puntos de votacion.</p>
+                <p>Puntos de distribución de alimentos y polenta en los al rededores de los principales puntos de
+                    votacion.</p>
             </div>
         </div>
     </div>

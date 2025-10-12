@@ -5,10 +5,8 @@ import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.ITipoProxy;
 import ar.utn.dssi.Agregador.models.entities.fuente.impl.FuenteProxy;
 import ar.utn.dssi.Agregador.models.repositories.IFuenteRepository;
-
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 

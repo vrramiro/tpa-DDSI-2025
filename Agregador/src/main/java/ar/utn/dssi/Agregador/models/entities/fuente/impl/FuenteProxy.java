@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -31,9 +30,9 @@ public class FuenteProxy implements ITipoProxy {
     }
 
     return getHechos(fuente.getBaseUrl(), fechaDesde)
-            .map(this::hechoFromInputDTOProxy)
-            .collectList()
-            .block();
+        .map(this::hechoFromInputDTOProxy)
+        .collectList()
+        .block();
   }
 
   @Override
@@ -43,21 +42,21 @@ public class FuenteProxy implements ITipoProxy {
 
   private Flux<HechoFuenteProxyInputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {
     WebClient webClient = WebClient.builder()
-            .baseUrl(baseUrl+ "/hechos")
-            .build();
+        .baseUrl(baseUrl + "/hechos")
+        .build();
 
     return webClient.get()
-            .uri(uriBuilder -> uriBuilder
-                    .path("/nuevos")
-                    .queryParam("fechaDesde", fechaDesde)
-                    .build())
-            .retrieve()
-            .bodyToFlux(HechoFuenteProxyInputDTO.class)
-            .timeout(Duration.ofMillis(timeoutMs))
-            .onErrorResume(e -> {
-              e.printStackTrace();
-              return Flux.empty();
-            });
+        .uri(uriBuilder -> uriBuilder
+            .path("/nuevos")
+            .queryParam("fechaDesde", fechaDesde)
+            .build())
+        .retrieve()
+        .bodyToFlux(HechoFuenteProxyInputDTO.class)
+        .timeout(Duration.ofMillis(timeoutMs))
+        .onErrorResume(e -> {
+          e.printStackTrace();
+          return Flux.empty();
+        });
   }
 
   @Override

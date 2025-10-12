@@ -1,137 +1,144 @@
 <html th:replace="~{layout/base:: html}">
 <head>
-  <!-- CSS específico de esta vista -->
-  <th:block th:fragment="styles">
-    <link th:href="@{/css/hechos/misHechos.css}" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
-  </th:block>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/hechos/misHechos.css}">
+        <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+    </th:block>
 </head>
 
-<div th:fragment="contenido" class="row">
-  <h1>Mis Hechos</h1>
+<div class="row" th:fragment="contenido">
+    <h1>Mis Hechos</h1>
 
-  <div class="grid">
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Protesta en Plaza Mayor</span>
-        <span class="card-date">01/08/2025</span>
-      </div>
-      <img class="card-img" src="https://picsum.photos/400/200?random=1" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Protesta</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Incendio en Chascomús</span>
-        <span class="card-date">15/07/2025</span>
-      </div>
-      <img class="card-img" src="https://picsum.photos/400/200?random=2" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales importantes. Afortunadamente no hubo heridos graves.</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Ambiental</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Entrega de ayuda humanitaria</span>
-        <span class="card-date">10/06/2025</span>
-      </div>
-      <img class="card-img" src="https://picsum.photos/400/200?random=3" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Organizaciones no gubernamentales distribuyeron alimentos y agua potable en las zonas más afectadas por las recientes inundaciones en el litoral.</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Ayuda Humanitaria</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Marcha estudiantil</span>
-        <span class="card-date">20/05/2025</span>
-      </div>
-      <img class="card-img" src="https://picsum.photos/400/200?random=4" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Estudiantes de varias universidades nacionales y provinciales reclamaron mayor presupuesto para la educación pública y la ciencia.</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Social</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Ladron de quesos Atrapado</span>
-        <span class="card-date">01/05/2025</span>
-      </div>
-      <img class="card-img" th:src="@{/img/img.png}" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Luego de una intensa persecucion en el supermercado chino, se logro atrapar al ladron de quesos roquefort. Notifica en desarrollo</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Ambiental</span>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-title">Huelga de transporte</span>
-        <span class="card-date">28/04/2025</span>
-      </div>
-      <img class="card-img" th:src="@{/img/img_1.png}" alt="hecho">
-      <div class="card-details">
-        <p class="card-description">Liderados por el piquetero Ramiro De La Vega, un paro total de transporte público afectó a millones de personas en la ciudad y el área metropolitana, en reclamo de mejoras salariales.</p>
-      </div>
-      <div class="card-footer">
-        <span class="footer-tag">Protesta</span>
-      </div>
-    </div>
-
-  </div>
-
-  <div class="modal-overlay" id="eventModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="modal-title"></h2>
-        <span id="modal-date"></span>
-      </div>
-      <div class="modal-body">
-        <img id="modal-image" src="" alt="Imagen del hecho">
-        <button class="carousel-arrow left">&#10094;</button>
-        <button class="carousel-arrow right">&#10095;</button>
-        <p id="modal-description"></p>
-      </div>
-      <div class="modal-footer">
-        <span id="modal-category"></span>
-        <div class="modal-actions">
-          <button class="btn btn-danger">Eliminar</button>
-          <a th:href="@{/hechos/editar}" class="btn btn-primary">Modificar</a>
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Protesta en Plaza Mayor</span>
+                <span class="card-date">01/08/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" src="https://picsum.photos/400/200?random=1">
+            <div class="card-details">
+                <p class="card-description">Más de 2000 personas marcharon reclamando derechos laborales en la capital.
+                    La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Protesta</span>
+            </div>
         </div>
-      </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Incendio en Chascomús</span>
+                <span class="card-date">15/07/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" src="https://picsum.photos/400/200?random=2">
+            <div class="card-details">
+                <p class="card-description">Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales
+                    importantes. Afortunadamente no hubo heridos graves.</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Ambiental</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Entrega de ayuda humanitaria</span>
+                <span class="card-date">10/06/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" src="https://picsum.photos/400/200?random=3">
+            <div class="card-details">
+                <p class="card-description">Organizaciones no gubernamentales distribuyeron alimentos y agua potable en
+                    las zonas más afectadas por las recientes inundaciones en el litoral.</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Ayuda Humanitaria</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Marcha estudiantil</span>
+                <span class="card-date">20/05/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" src="https://picsum.photos/400/200?random=4">
+            <div class="card-details">
+                <p class="card-description">Estudiantes de varias universidades nacionales y provinciales reclamaron
+                    mayor presupuesto para la educación pública y la ciencia.</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Social</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Ladron de quesos Atrapado</span>
+                <span class="card-date">01/05/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" th:src="@{/img/img.png}">
+            <div class="card-details">
+                <p class="card-description">Luego de una intensa persecucion en el supermercado chino, se logro atrapar
+                    al ladron de quesos roquefort. Notifica en desarrollo</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Ambiental</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Huelga de transporte</span>
+                <span class="card-date">28/04/2025</span>
+            </div>
+            <img alt="hecho" class="card-img" th:src="@{/img/img_1.png}">
+            <div class="card-details">
+                <p class="card-description">Liderados por el piquetero Ramiro De La Vega, un paro total de transporte
+                    público afectó a millones de personas en la ciudad y el área metropolitana, en reclamo de mejoras
+                    salariales.</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag">Protesta</span>
+            </div>
+        </div>
+
     </div>
-  </div>
 
-	<nav class="pagination" aria-label="Paginación">
-		<a href="#" class="page-link">&laquo;</a>
-		<a href="#" class="page-link active">1</a>
-		<a href="#" class="page-link">2</a>
-		<a href="#" class="page-link">3</a>
-		<a href="#" class="page-link">4</a>
-		<span class="page-link-ellipsis">...</span>
-		<a href="#" class="page-link">&raquo;</a>
-	</nav>
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <span id="modal-date"></span>
+            </div>
+            <div class="modal-body">
+                <img alt="Imagen del hecho" id="modal-image" src="">
+                <button class="carousel-arrow left">&#10094;</button>
+                <button class="carousel-arrow right">&#10095;</button>
+                <p id="modal-description"></p>
+            </div>
+            <div class="modal-footer">
+                <span id="modal-category"></span>
+                <div class="modal-actions">
+                    <button class="btn btn-danger">Eliminar</button>
+                    <a class="btn btn-primary" th:href="@{/hechos/editar}">Modificar</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-    <script th:src="@{/js/hechos/misHechos.js}"></script>
-  </th:block>
+    <nav aria-label="Paginación" class="pagination">
+        <a class="page-link" href="#">&laquo;</a>
+        <a class="page-link active" href="#">1</a>
+        <a class="page-link" href="#">2</a>
+        <a class="page-link" href="#">3</a>
+        <a class="page-link" href="#">4</a>
+        <span class="page-link-ellipsis">...</span>
+        <a class="page-link" href="#">&raquo;</a>
+    </nav>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/hechos/misHechos.js}"></script>
+    </th:block>
 </div>
 </html>

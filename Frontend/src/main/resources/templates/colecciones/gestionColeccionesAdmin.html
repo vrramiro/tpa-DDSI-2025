@@ -2,89 +2,89 @@
 
 <head>
     <th:block th:fragment="styles">
-        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/css/colecciones/gestionColecciones.css}">
     </th:block>
 </head>
 
-<div th:fragment="contenido" class="row">
+<div class="row" th:fragment="contenido">
 
     <main class="content-container">
-		<h2>Colecciones:</h2>
+        <h2>Colecciones:</h2>
         <div class="collection-header">
-			<div class="filter-controls">
-              <label for="status-filter">Filtrar colecciones:</label>
-              <select id="status-filter" name="status">
-                <option value="todos">Todos los estados</option>
-                <option value="aprobado">Aprobado</option>
-                <option value="pendiente">Pendiente</option>
-                <option value="rechazado">Rechazado</option>
-              </select>
+            <div class="filter-controls">
+                <label for="status-filter">Filtrar colecciones:</label>
+                <select id="status-filter" name="status">
+                    <option value="todos">Todos los estados</option>
+                    <option value="aprobado">Aprobado</option>
+                    <option value="pendiente">Pendiente</option>
+                    <option value="rechazado">Rechazado</option>
+                </select>
             </div>
-			<a th:href="@{/colecciones/crear_coleccion}" class="btn btn-primary">Crear colección</a>
+            <a class="btn btn-primary" th:href="@{/colecciones/crear_coleccion}">Crear colección</a>
         </div>
 
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
-                        <th>Título</th>
-                        <th>Autor</th>
-                        <th>Fecha de carga</th>
-                        <th>Fecha de modificación</th>
-                        <th>Estado</th>
-                        <th>Gestionar</th>
-                    </tr>
+                <tr>
+                    <th>Título</th>
+                    <th>Autor</th>
+                    <th>Fecha de carga</th>
+                    <th>Fecha de modificación</th>
+                    <th>Estado</th>
+                    <th>Gestionar</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Nombre de Colección 1</td>
-                        <td>Autor Ejemplo 1</td>
-                        <td>2024-08-15</td>
-                        <td>2024-09-01</td>
-                        <td>Aprobado</td>
-                        <td class="action-buttons">
-                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
-                            <button class="btn btn-delete">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Nombre de Colección 2</td>
-                        <td>Autor Ejemplo 2</td>
-                        <td>2024-07-20</td>
-                        <td>2024-08-25</td>
-                        <td>Pendiente</td>
-                        <td class="action-buttons">
-                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
-                            <button class="btn btn-delete">Eliminar</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Nombre de Colección 3</td>
-                        <td>Autor Ejemplo 3</td>
-                        <td>2024-06-01</td>
-                        <td>2024-07-10</td>
-                        <td>Rechazado</td>
-                        <td class="action-buttons">
-                            <a th:href="@{/colecciones/modificar}" class="btn btn-edit">Modificar</a>
-                            <button class="btn btn-delete">Eliminar</button>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>Nombre de Colección 1</td>
+                    <td>Autor Ejemplo 1</td>
+                    <td>2024-08-15</td>
+                    <td>2024-09-01</td>
+                    <td>Aprobado</td>
+                    <td class="action-buttons">
+                        <a class="btn btn-edit" th:href="@{/colecciones/modificar}">Modificar</a>
+                        <button class="btn btn-delete">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nombre de Colección 2</td>
+                    <td>Autor Ejemplo 2</td>
+                    <td>2024-07-20</td>
+                    <td>2024-08-25</td>
+                    <td>Pendiente</td>
+                    <td class="action-buttons">
+                        <a class="btn btn-edit" th:href="@{/colecciones/modificar}">Modificar</a>
+                        <button class="btn btn-delete">Eliminar</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Nombre de Colección 3</td>
+                    <td>Autor Ejemplo 3</td>
+                    <td>2024-06-01</td>
+                    <td>2024-07-10</td>
+                    <td>Rechazado</td>
+                    <td class="action-buttons">
+                        <a class="btn btn-edit" th:href="@{/colecciones/modificar}">Modificar</a>
+                        <button class="btn btn-delete">Eliminar</button>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
-		
-		<nav class="pagination" aria-label="Paginación">
-			<a href="#" class="page-link">&laquo;</a>
-			<a href="#" class="page-link active">1</a>
-			<a href="#" class="page-link">2</a>
-			<a href="#" class="page-link">3</a>
-			<a href="#" class="page-link">4</a>
-			<span class="page-link-ellipsis">...</span>
-			<a href="#" class="page-link">&raquo;</a>
-		</nav>
-		
+
+        <nav aria-label="Paginación" class="pagination">
+            <a class="page-link" href="#">&laquo;</a>
+            <a class="page-link active" href="#">1</a>
+            <a class="page-link" href="#">2</a>
+            <a class="page-link" href="#">3</a>
+            <a class="page-link" href="#">4</a>
+            <span class="page-link-ellipsis">...</span>
+            <a class="page-link" href="#">&raquo;</a>
+        </nav>
+
         <div class="footer-actions">
-            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
+            <a class="btn btn-primary" th:href="@{/panel_gestion}">Volver</a>
         </div>
     </main>
 

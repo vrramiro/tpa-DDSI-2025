@@ -23,16 +23,16 @@ public class NormalizacionService implements INormalizacionService {
           .obtenerHechoNormalizado(original)
           .block();
 
-      if(normalizado == null) {
+      if (normalizado == null) {
         log.info("El normalizador no pudo normalizar el hecho con clave: {}", original.combinacionIdExternoFuenteId());
         return null;
       }
 
-      if(normalizado.getUbicacion() == null) {
+      if (normalizado.getUbicacion() == null) {
         throw new HechoNormalizadoNoObtenido("El normalizador no pudo obtener la ubicacion del hecho con clave: " + original.combinacionIdExternoFuenteId());
       }
 
-      if(normalizado.getCategoria().getNombre() == null) {
+      if (normalizado.getCategoria().getNombre() == null) {
         log.info("No se normalizo categoria del hecho: {}", original.combinacionIdExternoFuenteId());
         log.info("Titulo del hecho sin categoria: {}", original.getTitulo());
         throw new HechoNormalizadoNoObtenido("El normalizador no pudo obtener la categoria del hecho con clave: " + original.combinacionIdExternoFuenteId());

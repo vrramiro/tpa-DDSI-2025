@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ConsensoDTO {
-    private Long id;
-    private String consenso;
+  private Long id;
+  private String consenso;
 }

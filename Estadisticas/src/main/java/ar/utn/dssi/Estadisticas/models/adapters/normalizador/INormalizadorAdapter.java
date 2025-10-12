@@ -2,7 +2,6 @@ package ar.utn.dssi.Estadisticas.models.adapters.normalizador;
 
 import ar.utn.dssi.Estadisticas.models.entities.data.Categoria;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 
 @Component

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CategoriaOutputDTO {
-    private Long id;
-    private String categoria;
+  private Long id;
+  private String categoria;
 }

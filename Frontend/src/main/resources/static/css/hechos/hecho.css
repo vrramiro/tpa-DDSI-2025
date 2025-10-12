@@ -7,17 +7,21 @@
 /* ===== Ajustes de botones ===== */
 /* Extra: altura uniforme y centrado perfecto dentro del botón */
 .btn {
-    height: 3rem;              /* igualar alturas */
-    display: flex;             /* centrar contenido */
+    height: 3rem; /* igualar alturas */
+    display: flex; /* centrar contenido */
     align-items: center;
     justify-content: center;
 }
 
 /* Override útil cuando .btn se usa en <a> */
-.btn-primary { text-decoration: none; }
+.btn-primary {
+    text-decoration: none;
+}
 
 /* En base.css, .btn-secondary usa texto oscuro; acá lo forzamos a blanco */
-.btn-secondary { color: #fff; }
+.btn-secondary {
+    color: #fff;
+}
 
 /* ============================================================
    TITULOS
@@ -145,18 +149,36 @@ h1 {
    ============================================================ */
 /* Tweaks de padding/gap del header en puntos que base.css no cubre */
 @media (max-width: 992px) {
-    .main-header { padding-inline: 4%; }
-    .main-nav ul { justify-content: flex-end; }
+    .main-header {
+        padding-inline: 4%;
+    }
+
+    .main-nav ul {
+        justify-content: flex-end;
+    }
 }
 
 @media (max-width: 768px) {
-    .main-header { padding-inline: 3%; }
-    .main-nav ul { gap: .5rem; }
-    .btn { width: 100%; }
+    .main-header {
+        padding-inline: 3%;
+    }
+
+    .main-nav ul {
+        gap: .5rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
 }
 
 /* Breakpoint extra no presente en base.css */
 @media (max-width: 480px) {
-    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
-    .main-nav a { padding: .4rem .5rem; }
+    .logo {
+        font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+    }
+
+    .main-nav a {
+        padding: .4rem .5rem;
+    }
 }

@@ -13,10 +13,8 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 @Entity
 @Table(name = "fuente")
@@ -40,6 +38,7 @@ public class Fuente {
   @OneToMany(mappedBy = "fuente", fetch = FetchType.LAZY)
   private List<Hecho> hechos;
 
-  @Setter @Column(name = "ultima_actualizacion")
+  @Setter
+  @Column(name = "ultima_actualizacion")
   private LocalDateTime ultimaActualizacion;
 }

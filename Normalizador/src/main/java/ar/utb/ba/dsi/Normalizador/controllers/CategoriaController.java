@@ -5,25 +5,28 @@ import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaController {
-    @Autowired
-    private ICategoriaService categoriaService;
+  @Autowired
+  private ICategoriaService categoriaService;
 
-    @PostMapping("/normalizar")
-    public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {
-        CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoriaOutPut(categoria);
-        return ResponseEntity.ok(categoriaOutputDTO);
-    }
+  @PostMapping("/normalizar")
+  public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {
+    CategoriaOutputDTO categoriaOutputDTO = categoriaService.normalizarCategoriaOutPut(categoria);
+    return ResponseEntity.ok(categoriaOutputDTO);
+  }
 
-    @GetMapping("/categorias")
-    public ResponseEntity<List<CategoriaOutputDTO>> listarCategorias(){
-        List<CategoriaOutputDTO> categorias = categoriaService.obtenerCategorias();
-        return ResponseEntity.ok(categorias);
-    }
+  @GetMapping("/categorias")
+  public ResponseEntity<List<CategoriaOutputDTO>> listarCategorias() {
+    List<CategoriaOutputDTO> categorias = categoriaService.obtenerCategorias();
+    return ResponseEntity.ok(categorias);
+  }
 }

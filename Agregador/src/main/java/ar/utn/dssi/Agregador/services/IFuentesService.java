@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface IFuentesService {
   List<Hecho> hechosNuevos();
+
   List<Hecho> hechosMetamapa();
+
   Fuente obtenerFuentePorId(Long idFuente);
+
   List<Fuente> obtenerFuentesPorTiposDeFuente(List<String> tiposDeFuente);
 }

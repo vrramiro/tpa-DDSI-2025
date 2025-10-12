@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FuenteProxyApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FuenteProxyApplication.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(FuenteProxyApplication.class, args);
+  }
 
 }

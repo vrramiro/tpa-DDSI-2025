@@ -2,7 +2,6 @@ package ar.utn.dssi.Agregador.models.mappers;
 
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ContenidoMultimediaOuputDTO;
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-
 import ar.utn.dssi.Agregador.models.DTOs.outputDTO.UbicacionOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 

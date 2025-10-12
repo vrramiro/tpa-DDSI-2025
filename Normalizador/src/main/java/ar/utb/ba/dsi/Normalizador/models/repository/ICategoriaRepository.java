@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ICategoriaRepository extends JpaRepository<Categoria, Long> {
-    @Query("SELECT c FROM Categoria c WHERE :categoriaExterna MEMBER OF c.categoriasExternas")
-    public Categoria findCategoriaByCategoriaExterna(String categoriaExterna);
+  @Query("SELECT c FROM Categoria c WHERE :categoriaExterna MEMBER OF c.categoriasExternas")
+  public Categoria findCategoriaByCategoriaExterna(String categoriaExterna);
 
-    Categoria findCategoriaByNombre(String nombre);
+  Categoria findCategoriaByNombre(String nombre);
 }

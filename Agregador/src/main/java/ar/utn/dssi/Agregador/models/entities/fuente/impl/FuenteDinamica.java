@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 public class FuenteDinamica implements ITipoFuente {
 
   @Value("${timeout-ms}")
-  private Integer timeoutMs=15000;
+  private Integer timeoutMs = 15000;
 
   @Override
   public List<Hecho> hechosNuevos(Fuente fuente) {
@@ -30,9 +29,9 @@ public class FuenteDinamica implements ITipoFuente {
 
 
     return getHechos(fuente.getBaseUrl(), ultimoEnvioFuente)
-            .map(hecho -> this.hechoFromInputDTODinamica(hecho, fuente))
-            .collectList()
-            .block();
+        .map(hecho -> this.hechoFromInputDTODinamica(hecho, fuente))
+        .collectList()
+        .block();
   }
 
   @Override
@@ -42,20 +41,20 @@ public class FuenteDinamica implements ITipoFuente {
 
   private Flux<HechoFuenteDinamicaInputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {
     WebClient webClient = WebClient.builder()
-            .baseUrl(baseUrl+ "/hechos")
-            .build();
+        .baseUrl(baseUrl + "/hechos")
+        .build();
 
     return webClient.get()
-            .uri(uriBuilder -> uriBuilder
-                    .queryParam("fechaDesde", fechaDesde)
-                    .build())
-            .retrieve()
-            .bodyToFlux(HechoFuenteDinamicaInputDTO.class)
-            .timeout(Duration.ofMillis(timeoutMs))
-            .onErrorResume(e -> {
-              e.printStackTrace();
-              return Flux.empty();
-            });
+        .uri(uriBuilder -> uriBuilder
+            .queryParam("fechaDesde", fechaDesde)
+            .build())
+        .retrieve()
+        .bodyToFlux(HechoFuenteDinamicaInputDTO.class)
+        .timeout(Duration.ofMillis(timeoutMs))
+        .onErrorResume(e -> {
+          e.printStackTrace();
+          return Flux.empty();
+        });
   }
 
 
@@ -69,19 +68,19 @@ public class FuenteDinamica implements ITipoFuente {
     hecho.setDescripcionSanitizado(input.getDescripcionSanitizada());
 
     // Categoria
-      Categoria categoria = new Categoria();
-      categoria.setId(input.getCategoria().getIdCategoria());
-      categoria.setNombre(input.getCategoria().getNombre());
-      hecho.setCategoria(categoria);
+    Categoria categoria = new Categoria();
+    categoria.setId(input.getCategoria().getIdCategoria());
+    categoria.setNombre(input.getCategoria().getNombre());
+    hecho.setCategoria(categoria);
 
     // Ubicacion
-      Ubicacion ubicacion = new Ubicacion();
-      ubicacion.setLatitud(input.getUbicacion().getLatitud());
-      ubicacion.setLongitud(input.getUbicacion().getLongitud());
-      ubicacion.setPais(input.getUbicacion().getPais());
-      ubicacion.setCiudad(input.getUbicacion().getCiudad());
-      ubicacion.setProvincia(input.getUbicacion().getProvincia());
-      hecho.setUbicacion(ubicacion);
+    Ubicacion ubicacion = new Ubicacion();
+    ubicacion.setLatitud(input.getUbicacion().getLatitud());
+    ubicacion.setLongitud(input.getUbicacion().getLongitud());
+    ubicacion.setPais(input.getUbicacion().getPais());
+    ubicacion.setCiudad(input.getUbicacion().getCiudad());
+    ubicacion.setProvincia(input.getUbicacion().getProvincia());
+    hecho.setUbicacion(ubicacion);
 
     hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
     hecho.setFechaCarga(input.getFechaCarga());
@@ -90,9 +89,9 @@ public class FuenteDinamica implements ITipoFuente {
     // Contenido Multimedia
     if (input.getContenidoMultimedia() != null) {
       hecho.setContenidoMultimedia(
-              input.getContenidoMultimedia().stream()
-                      .map(ContenidoMultimedia::new)
-                      .collect(Collectors.toList())
+          input.getContenidoMultimedia().stream()
+              .map(ContenidoMultimedia::new)
+              .collect(Collectors.toList())
       );
     }
 

@@ -14,7 +14,8 @@ public class FuenteServiceOutputDTO {
   private String titulo;
   private String descripcion;
   private Categoria categoria;
-  private Ubicacion ubicacion;  private LocalDateTime fechaAcontecimiento;
+  private Ubicacion ubicacion;
+  private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
   private List<MultipartFile> contenidoMultimedia;
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 @Data
 @Getter
 public class UbicacionOutputDTOGeoref {
-    private Double latitud;
-    private Double longitud;
+  private Double latitud;
+  private Double longitud;
 
 }

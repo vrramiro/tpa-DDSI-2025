@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface IHechosService {
   List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaUltimaComunicacion);
+
   List<HechoOutputDTO> obtenerHechosInstanciasMetamapa();
+
   void importarHechos();
+
   void eliminarHecho(Long idHecho);
 }

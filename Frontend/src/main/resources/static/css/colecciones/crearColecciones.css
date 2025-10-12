@@ -4,29 +4,42 @@
 
 /* ===== Botones en NAV y hovers ===== */
 /* Cambia globalmente el secundario (base usa --light-color) */
-.btn-secondary { background-color: var(--secondary-color); color: #fff; }
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
 
 /* Quita subrayado en variantes usadas como <a> */
 a.btn-secondary,
-.btn-outline { text-decoration: none; }
+.btn-outline {
+    text-decoration: none;
+}
 
 /* Estados/variantes solo dentro del navbar */
 .main-nav .btn-secondary {
     background-color: var(--light-color);
     color: var(--text-color);
 }
+
 .main-nav .btn-primary {
     background-color: var(--primary-color);
     color: var(--text-color); /* override al blanco del base */
 }
+
 .main-nav .btn:hover {
     transform: translateY(-2px); /* coincide con .btn:hover del base, pero aquí aplica al nav */
     color: var(--primary-color);
 }
 
 /* Hovers específicos dentro de acciones del formulario */
-.form-actions .btn-secondary:hover { background-color: #757575; }
-.form-actions .btn-primary:hover   { background-color: var(--light-color); color: var(--primary-color); }
+.form-actions .btn-secondary:hover {
+    background-color: #757575;
+}
+
+.form-actions .btn-primary:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+}
 
 /* ============================================================
    CONTENEDOR DE MODIFICACIÓN + FORMULARIO
@@ -39,6 +52,7 @@ a.btn-secondary,
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
 }
+
 .container-modificacion h2 {
     color: var(--dark-color);
     margin-bottom: var(--space-2);
@@ -46,10 +60,22 @@ a.btn-secondary,
     font-size: clamp(1.8rem, 2vw + 1rem, 3rem);
 }
 
-.coleccion-form { display: flex; flex-direction: column; gap: var(--space-2); }
+.coleccion-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
 
-.form-group { display: flex; flex-direction: column; gap: .3rem; }
-.form-group label { font-weight: 600; color: var(--text-color); }
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+}
 
 .form-group input,
 .form-group textarea,
@@ -62,6 +88,7 @@ a.btn-secondary,
     color: var(--text-color);
     transition: border-color .3s;
 }
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
@@ -75,7 +102,11 @@ a.btn-secondary,
     border-radius: var(--border-radius);
     padding: var(--space-2);
 }
-.criterios legend { font-weight: bold; color: var(--dark-color); }
+
+.criterios legend {
+    font-weight: bold;
+    color: var(--dark-color);
+}
 
 .form-grid {
     display: grid;
@@ -91,7 +122,10 @@ a.btn-secondary,
     justify-content: space-between;
     margin-top: var(--space-3);
 }
-.form-actions .btn { min-width: 140px; }
+
+.form-actions .btn {
+    min-width: 140px;
+}
 
 /* Multiselect custom */
 .custom-multiselect {
@@ -104,6 +138,7 @@ a.btn-secondary,
     max-height: 150px;
     overflow-y: auto;
 }
+
 .custom-multiselect label {
     display: block;
     font-weight: normal;
@@ -118,51 +153,91 @@ a.btn-secondary,
     display: none;
     position: fixed;
     z-index: 2000;
-    left: 0; top: 0;
-    width: 100%; height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    align-items: center; justify-content: center;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    align-items: center;
+    justify-content: center;
 }
-.modal:target { display: flex; }
+
+.modal:target {
+    display: flex;
+}
 
 .modal-content {
     background: #fff;
     padding: 2rem;
     border-radius: 8px;
-    width: 90%; max-width: 400px;
+    width: 90%;
+    max-width: 400px;
     position: relative;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
+
 .modal-close {
     position: absolute;
-    top: 10px; right: 15px;
-    font-size: 24px; font-weight: bold;
-    color: #333; text-decoration: none;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
 }
 
 /* ============================================================
    TÍTULOS
    ============================================================ */
-h1 { margin: 2rem 0 1rem; color: var(--dark-color); }
+h1 {
+    margin: 2rem 0 1rem;
+    color: var(--dark-color);
+}
 
 /* ============================================================
    RESPONSIVE: TWEAKS NO CUBIERTOS POR base.css
    ============================================================ */
 /* Tablet horizontal */
 @media (max-width: 992px) {
-    .main-header { padding-inline: 4%; }
-    .class-bienvenida { padding-inline: 4%; }
-    .main-nav ul { justify-content: flex-end; }
+    .main-header {
+        padding-inline: 4%;
+    }
+
+    .class-bienvenida {
+        padding-inline: 4%;
+    }
+
+    .main-nav ul {
+        justify-content: flex-end;
+    }
 }
+
 /* Tablet vertical / móvil mediano */
 @media (max-width: 768px) {
-    .main-header { padding-inline: 3%; }
-    .main-nav ul { gap: .5rem; }
-    .btn { width: 100%; }
-    .class-bienvenida { padding-inline: 3%; }
+    .main-header {
+        padding-inline: 3%;
+    }
+
+    .main-nav ul {
+        gap: .5rem;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    .class-bienvenida {
+        padding-inline: 3%;
+    }
 }
+
 /* Móvil pequeño */
 @media (max-width: 480px) {
-    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
-    .main-nav a { padding: .4rem .5rem; }
+    .logo {
+        font-size: clamp(1.1rem, 4.5vw, 1.3rem);
+    }
+
+    .main-nav a {
+        padding: .4rem .5rem;
+    }
 }

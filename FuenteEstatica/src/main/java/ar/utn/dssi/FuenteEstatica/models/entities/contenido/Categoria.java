@@ -12,6 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @Embeddable
 public class Categoria {
-    private Long idCategoria;
-    private String categoria;
+  private Long idCategoria;
+  private String categoria;
 }

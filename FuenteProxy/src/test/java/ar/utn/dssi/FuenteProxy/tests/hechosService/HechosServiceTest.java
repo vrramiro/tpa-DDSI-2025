@@ -9,11 +9,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteProxy.error.HechoNoEcontrado;
 import ar.utn.dssi.FuenteProxy.models.entities.Categoria;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
-import ar.utn.dssi.FuenteProxy.error.HechoNoEcontrado;
 import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.impl.HechosService;

@@ -5,5 +5,6 @@ import lombok.Data;
 
 @Data
 public class SolicitudProcesadaInputDTO {
-  @JsonProperty("estado") private String estado; // "APROBADA" o "RECHAZADA"
+  @JsonProperty("estado")
+  private String estado; // "APROBADA" o "RECHAZADA"
 }

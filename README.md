@@ -1,27 +1,37 @@
-
 ## ENUNCIADO
+
 ### Entrega 1
-https://docs.google.com/document/d/1ctxGwWrnM0XmPii38KWod9mTzphzNxxPRg9HkpXyNBg/edit?tab=t.0  
+
+https://docs.google.com/document/d/1ctxGwWrnM0XmPii38KWod9mTzphzNxxPRg9HkpXyNBg/edit?tab=t.0
+
 ### Entrega 2
+
 https://docs.google.com/document/d/1f7a_fd9na5_3E6EzfIyAGn0FSMXAA7OURMPiPkvz7c0/edit?tab=t.0
+
 ### Entrega 3
+
 https://docs.google.com/document/d/1dESN18hVwo6pg2UhyZoV4vHDD08FsRlzNQH97gd630s/edit?tab=t.0#heading=h.4gc697nwzco3
+
 ### Entrega 4
+
 https://docs.google.com/document/d/1Y-FelsGkQ5HopDlsP_2-ykUh7lzJQgWdi_4kcVMp4I4/edit?tab=t.0#heading=h.4gc697nwzco3
 https://docs.google.com/document/d/1PRoT0LJKgUpo-exubC7eX_kCefvZggb43fOqR5s1Tsw/edit?tab=t.0#heading=h.o4ngku363s3c
 
 ## MEMORIA TECNICA Y JUSTIFICACIONES DE DISEÑO
+
 https://docs.google.com/document/d/16u011LlpH063zOflb_Yh9cTvy7jmLuur/edit?usp=sharing&ouid=110234860859130530096&rtpof=true&sd=true
 
 # java-base-project
 
-Esta es una plantilla de proyecto diseñada para: 
+Esta es una plantilla de proyecto diseñada para:
 
-* Java 17. :warning: Si bien el proyecto no lo limita explícitamente, el comando `mvn verify` no funcionará con versiones más antiguas de Java. 
-* JUnit 5. :warning: La versión 5 de JUnit es la más nueva del framework y presenta algunas diferencias respecto a la versión "clásica" (JUnit 4). Para mayores detalles, ver: 
-  *  [Apunte de herramientas](https://docs.google.com/document/d/1VYBey56M0UU6C0689hAClAvF9ILE6E7nKIuOqrRJnWQ/edit#heading=h.dnwhvummp994)
-  *  [Entrada de Blog (en inglés)](https://www.baeldung.com/junit-5-migration) 
-  *  [Entrada de Blog (en español)](https://www.paradigmadigital.com/dev/nos-espera-junit-5/)
+* Java 17. :warning: Si bien el proyecto no lo limita explícitamente, el comando `mvn verify` no funcionará con
+  versiones más antiguas de Java.
+* JUnit 5. :warning: La versión 5 de JUnit es la más nueva del framework y presenta algunas diferencias respecto a la
+  versión "clásica" (JUnit 4). Para mayores detalles, ver:
+    * [Apunte de herramientas](https://docs.google.com/document/d/1VYBey56M0UU6C0689hAClAvF9ILE6E7nKIuOqrRJnWQ/edit#heading=h.dnwhvummp994)
+    * [Entrada de Blog (en inglés)](https://www.baeldung.com/junit-5-migration)
+    * [Entrada de Blog (en español)](https://www.paradigmadigital.com/dev/nos-espera-junit-5/)
 * Maven 3.8.1 o superior
 
 ## Ejecutar tests
@@ -38,14 +48,15 @@ mvn clean verify
 
 Este comando hará lo siguiente:
 
- 1. Ejecutará los tests
- 2. Validará las convenciones de formato mediante checkstyle
- 3. Detectará la presencia de (ciertos) code smells
- 4. Validará la cobertura del proyecto
+1. Ejecutará los tests
+2. Validará las convenciones de formato mediante checkstyle
+3. Detectará la presencia de (ciertos) code smells
+4. Validará la cobertura del proyecto
 
 ## Entrega del proyecto
 
-Para entregar el proyecto, crear un tag llamado `entrega-final`. Es importante que antes de realizarlo se corra la validación
+Para entregar el proyecto, crear un tag llamado `entrega-final`. Es importante que antes de realizarlo se corra la
+validación
 explicada en el punto anterior. Se recomienda hacerlo de la siguiente forma:
 
 ```
@@ -57,11 +68,13 @@ mvn clean verify && git tag entrega-final && git push origin HEAD --tags
 ### Usar el SDK de Java 17
 
 1. En **File/Project Structure...**, ir a **Project Settings | Project**
-2. En **Project SDK** seleccionar la versión 17 y en **Project language level** seleccionar `17 - Sealed types, always-strict floating-point semantics`
+2. En **Project SDK** seleccionar la versión 17 y en **Project language level** seleccionar
+   `17 - Sealed types, always-strict floating-point semantics`
 
 ![image](https://user-images.githubusercontent.com/39303639/228126065-221b9851-fb96-4f7f-a8e1-010732dc7ef6.png)
 
 ### Usar fin de linea unix
+
 1. En **File/Settings...**, ir a **Editor | Code Style**.
 2. En la lista **Line separator**, seleccionar `Unix and OS X (\n)`.
 
@@ -77,7 +90,8 @@ mvn clean verify && git tag entrega-final && git push origin HEAD --tags
 ### Ordenar los imports
 
 1. En **File/Settings...**, ir a **Editor | Code Style | Java | Imports**.
-2. Cambiar **Class count to use import with '*'** y **Names count to use static import with '*'** a un número muy alto (ej: 99).
+2. Cambiar **Class count to use import with '*'** y **Names count to use static import with '*'** a un número muy alto (
+   ej: 99).
 3. En **Import Layout**, dejarlo como se muestra a continuación:
     - `import static all other imports`
     - `<blank line>`
