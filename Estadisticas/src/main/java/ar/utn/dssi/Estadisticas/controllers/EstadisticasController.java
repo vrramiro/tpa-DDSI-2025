@@ -4,7 +4,7 @@ package ar.utn.dssi.Estadisticas.controllers;
 import ar.utn.dssi.Estadisticas.dto.output.EstadisticaOutputDTO;
 import ar.utn.dssi.Estadisticas.models.entities.TipoArchivo;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,9 +13,9 @@ import java.io.File;
 
 @RestController
 @RequestMapping("/estadisticas")
+@RequiredArgsConstructor
 public class EstadisticasController {
-  @Autowired
-  private IEstadisticasService estadisticasService;
+  private final IEstadisticasService estadisticasService;
 
   @GetMapping("/coleccion/{idColeccion}/provincia")
   public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(Long idColeccion) {

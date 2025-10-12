@@ -13,19 +13,18 @@ import ar.utn.dssi.Estadisticas.models.entities.generadorDeEstadisticas.IGenerad
 import ar.utn.dssi.Estadisticas.models.repositories.IEstadisticasRepository;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EstadisticasService implements IEstadisticasService {
-  @Autowired
-  private IEstadisticasRepository estadisticasRepository;
-  private IContextoDeCalculoService contextoDeCalculoService;
-  private IGeneradorDeEstadisticas generadorDeEstadisticas;
-
+  private final IEstadisticasRepository estadisticasRepository;
+  private final IContextoDeCalculoService contextoDeCalculoService;
+  private final IGeneradorDeEstadisticas generadorDeEstadisticas;
 
   @Override
   public void calcularEstadisticas() {

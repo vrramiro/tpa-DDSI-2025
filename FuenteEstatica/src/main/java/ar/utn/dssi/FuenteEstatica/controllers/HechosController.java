@@ -3,7 +3,7 @@ package ar.utn.dssi.FuenteEstatica.controllers;
 
 import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +20,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hechos")
-
+@RequiredArgsConstructor
 public class HechosController {
-  @Autowired
-  private IHechoServicio hechoServicio;
+
+  private final IHechoServicio hechoServicio;
 
   @PostMapping("/importar")
   public ResponseEntity<Void> importarArchivo(@RequestParam("archivo") MultipartFile archivo) {

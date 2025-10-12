@@ -2,7 +2,7 @@ package ar.utn.dssi.FuenteProxy.controller;
 
 import ar.utn.dssi.FuenteProxy.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,9 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hechos")
+@RequiredArgsConstructor
 public class HechosController {
-  @Autowired
-  public IHechosService hechosService;
+
+  public final IHechosService hechosService;
 
   @GetMapping("/nuevos")
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@RequestParam LocalDateTime fechaUltimaComunicacion) {

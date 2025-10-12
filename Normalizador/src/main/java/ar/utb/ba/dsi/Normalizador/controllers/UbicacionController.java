@@ -2,7 +2,7 @@ package ar.utb.ba.dsi.Normalizador.controllers;
 
 import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/ubicacion")
+@RequiredArgsConstructor
 public class UbicacionController {
-  @Autowired
-  private IUbicacionService ubicacionService;
+
+  private final IUbicacionService ubicacionService;
 
   @GetMapping("/normalizar")
   public ResponseEntity<UbicacionOutputDTO> obtenerUbicacion(@RequestParam Double latitud, @RequestParam Double longitud) {

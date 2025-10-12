@@ -1,14 +1,14 @@
 package ar.utn.dssi.Estadisticas.schedulers;
 
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class EstadisticasScheduler {
-  @Autowired
-  private IEstadisticasService estadisticasService;
+  private final IEstadisticasService estadisticasService;
 
   @Scheduled(cron = "${cron.estadisticas}")
   public void calcularEsetadisticas() {

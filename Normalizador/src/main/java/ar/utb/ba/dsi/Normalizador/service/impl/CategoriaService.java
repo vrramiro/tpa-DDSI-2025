@@ -7,17 +7,16 @@ import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
 import ar.utb.ba.dsi.Normalizador.models.repositories.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaService implements ICategoriaService {
-  private final ICategoriaRepository categoriaRepository;
 
-  public CategoriaService(ICategoriaRepository categoriaRepository) {
-    this.categoriaRepository = categoriaRepository;
-  }
+  private final ICategoriaRepository categoriaRepository;
 
   @Override
   public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {

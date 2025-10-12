@@ -4,17 +4,16 @@ import ar.utn.dssi.FuenteProxy.error.HechoNormalizadoNoObtenido;
 import ar.utn.dssi.FuenteProxy.models.entities.Hecho;
 import ar.utn.dssi.FuenteProxy.models.entities.normalizador.INormalizadorAdapter;
 import ar.utn.dssi.FuenteProxy.service.INormalizacionService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class NormalizacionService implements INormalizacionService {
-  private final INormalizadorAdapter normalizadorAdapter;
 
-  public NormalizacionService(INormalizadorAdapter normalizadorAdapter) {
-    this.normalizadorAdapter = normalizadorAdapter;
-  }
+  private final INormalizadorAdapter normalizadorAdapter;
 
   @Override
   public Hecho normalizar(Hecho original) {

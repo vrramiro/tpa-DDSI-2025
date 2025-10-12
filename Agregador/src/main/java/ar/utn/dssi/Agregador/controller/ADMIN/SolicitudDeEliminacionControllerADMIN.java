@@ -3,7 +3,7 @@ package ar.utn.dssi.Agregador.controller.ADMIN;
 import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
 import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEliminacionService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +17,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/admin/solicitudes")
+@RequiredArgsConstructor
 public class SolicitudDeEliminacionControllerADMIN {
-  @Autowired
-  private SolicitudDeEliminacionService solicitudesService;
+  private final SolicitudDeEliminacionService solicitudesService;
 
   @GetMapping
   public ResponseEntity<List<SolicitudDeEliminacionOutputDTO>> obtenerSolicitudes(@RequestParam(name = "estado", required = false) String estado,

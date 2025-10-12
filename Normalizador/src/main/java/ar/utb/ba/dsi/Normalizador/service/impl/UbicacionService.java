@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UbicacionService implements IUbicacionService {
+  
   private final IUbicacionAdapter adapter;
 
   public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {

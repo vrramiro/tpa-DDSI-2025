@@ -3,7 +3,7 @@ package ar.utb.ba.dsi.Normalizador.controllers;
 import ar.utb.ba.dsi.Normalizador.dto.Input.CategoriaInputDTO;
 import ar.utb.ba.dsi.Normalizador.dto.output.CategoriaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,9 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/categoria")
+@RequiredArgsConstructor
 public class CategoriaController {
-  @Autowired
-  private ICategoriaService categoriaService;
+
+  private final ICategoriaService categoriaService;
 
   @PostMapping("/normalizar")
   public ResponseEntity<CategoriaOutputDTO> normalizarCategoria(@RequestBody CategoriaInputDTO categoria) {

@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/hechos")
 @RequiredArgsConstructor
 public class HechoController {
-
   private static final Logger log = LoggerFactory.getLogger(HechoController.class);
   private final HechoServices hechosService;
 

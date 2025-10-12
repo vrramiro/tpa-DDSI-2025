@@ -10,9 +10,8 @@ import ar.utn.dssi.FuenteEstatica.models.entities.importador.impl.FactoryLector;
 import ar.utn.dssi.FuenteEstatica.models.entities.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
 import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.io.File;
@@ -22,19 +21,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class HechoServicio implements IHechoServicio {
 
   private final INormalizadorAdapter normalizadorAdapter;
-  @Autowired
-  private IHechosRepositorio hechoRepositorio;
-  @Autowired
-  private FactoryLector factoryLector;
+  private final IHechosRepositorio hechoRepositorio;
+  private final FactoryLector factoryLector;
   @Value("${cantidadMinimaDeHechos}")
   private Integer cantidadMinimaDeHechos;
 
-  public HechoServicio(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
-    this.normalizadorAdapter = normalizadorAdapter;
-  }
 
   @Override
   public void importarArchivo(File archivo) {

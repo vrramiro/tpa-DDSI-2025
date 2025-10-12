@@ -3,19 +3,15 @@ package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 import ar.utn.dssi.FuenteEstatica.error.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.io.File;
 
 @Component
+@RequiredArgsConstructor
 public class FactoryLector {
 
   private final HechoFactory hechoFactory;
-
-  @Autowired
-  public FactoryLector(HechoFactory hechoFactory) {
-    this.hechoFactory = hechoFactory;
-  }
 
   private static String obtenerExtension(String nombreArchivo) {
     int punto = nombreArchivo.lastIndexOf('.');

@@ -15,8 +15,7 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -25,21 +24,13 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class HechosService implements IHechosService {
 
   private final INormalizadorAdapter normalizadorAdapter;
-  @Autowired
-  private IHechoRepository hechoRepository;
-  @Autowired
-  private ContenidoMultimediaService contenidoMultimediaService;
+  private final IHechoRepository hechoRepository;
+  private final ContenidoMultimediaService contenidoMultimediaService;
 
-  public HechosService(@Qualifier("normalizadorAdapter") INormalizadorAdapter normalizadorAdapter) {
-    this.normalizadorAdapter = normalizadorAdapter;
-  }
-
-  /*/////////////////////// OPERACIONES CRUD ///////////////////////*/
-
-  /// /////// CREATE //////////
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
     validarHechoInput(hechoInputDTO);
@@ -59,7 +50,6 @@ public class HechosService implements IHechosService {
     this.hechoRepository.save(hechoNormalizado);
   }
 
-  /// /////// READ //////////
   //Obtener todos los hechos
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde) {
@@ -77,7 +67,6 @@ public class HechosService implements IHechosService {
     }
   }
 
-  /// /////// UPDATE //////////
   @Override
   @Transactional
   public void editarHecho(HechoInputDTO hechoNuevo, Long idHecho) {
@@ -95,7 +84,6 @@ public class HechosService implements IHechosService {
     }
   }
 
-  /// /////// DELETE //////////
   @Override
   public void actualizarVisibilidad(Long idHecho, Boolean visibilidad) {
     try {
@@ -111,9 +99,6 @@ public class HechosService implements IHechosService {
     }
   }
 
-  /*/////////////////////// FUNCIONES PRIVADAS ///////////////////////*/
-
-  //Funcion para la validacion de hechos input
   private void validarHechoInput(HechoInputDTO hechoInputDTO) {
     if (hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().isBlank()) {
       throw new DatosFaltantes("El título es obligatorio.");
@@ -131,7 +116,6 @@ public class HechosService implements IHechosService {
       throw new DatosFaltantes("Debe proporcionar tanto latitud como longitud para la ubicación.");
     }
   }
-
 
   private void actualizarCamposHecho(Hecho hechoExistente, HechoInputDTO hechoNuevo) {
     hechoExistente.setTitulo(hechoNuevo.getTitulo());

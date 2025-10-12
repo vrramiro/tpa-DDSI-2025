@@ -3,7 +3,7 @@ package ar.utn.dssi.FuenteDinamica.controllers;
 import ar.utn.dssi.FuenteDinamica.dto.input.HechoInputDTO;
 import ar.utn.dssi.FuenteDinamica.dto.output.HechoOutputDTO;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,10 +20,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/hechos")
-
+@RequiredArgsConstructor
 public class HechosController {
-  @Autowired
-  private IHechosService hechosService;
+
+  private final IHechosService hechosService;
 
   @PostMapping
   public ResponseEntity<Void> crearHecho(@RequestBody HechoInputDTO hecho) {

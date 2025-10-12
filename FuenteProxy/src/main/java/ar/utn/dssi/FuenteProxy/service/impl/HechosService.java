@@ -11,6 +11,7 @@ import ar.utn.dssi.FuenteProxy.models.repositories.IFuenteRepository;
 import ar.utn.dssi.FuenteProxy.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteProxy.service.IHechosService;
 import ar.utn.dssi.FuenteProxy.service.INormalizacionService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -20,16 +21,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class HechosService implements IHechosService {
+
   private final IHechoRepository hechoRepository;
   private final IFuenteRepository fuenteRepository;
   private final INormalizacionService normalizacionService;
-
-  public HechosService(IHechoRepository hechoRepository, IFuenteRepository fuenteService, INormalizacionService normalizacionService) {
-    this.hechoRepository = hechoRepository;
-    this.fuenteRepository = fuenteService;
-    this.normalizacionService = normalizacionService;
-  }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaUltimaComunicacion) {

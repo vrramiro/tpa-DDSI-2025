@@ -6,20 +6,18 @@ import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.almacenadorMultimedia.AlmacenadorMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.repositories.IMultimediaRepository;
 import ar.utn.dssi.FuenteDinamica.services.IContenidoMultimediaService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ContenidoMultimediaService implements IContenidoMultimediaService {
 
-  @Autowired
-  private IMultimediaRepository multimediaRepository;
-
-  @Autowired
-  private AlmacenadorMultimedia almacenadorMultimedia;
+  private final IMultimediaRepository multimediaRepository;
+  private final AlmacenadorMultimedia almacenadorMultimedia;
 
   @Override
   public List<ContenidoMultimedia> crear(List<MultipartFile> archivos, Hecho hecho) {

@@ -3,6 +3,7 @@ package ar.utb.ba.dsi.Normalizador.controllers;
 import ar.utb.ba.dsi.Normalizador.dto.Input.HechoInputDTO;
 import ar.utb.ba.dsi.Normalizador.dto.output.HechoOutputDTO;
 import ar.utb.ba.dsi.Normalizador.service.IHechosService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,12 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/hecho")
+@RequiredArgsConstructor
 public class HechosController {
-  private final IHechosService normalizadorService;
 
-  public HechosController(IHechosService normalizadorService) {
-    this.normalizadorService = normalizadorService;
-  }
+  private final IHechosService normalizadorService;
 
   @PostMapping("/normalizar")
   public ResponseEntity<HechoOutputDTO> normalizarHecho(@RequestBody HechoInputDTO hecho) {

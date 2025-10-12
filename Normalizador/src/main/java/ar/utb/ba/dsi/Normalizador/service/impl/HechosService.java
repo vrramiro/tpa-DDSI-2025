@@ -11,17 +11,15 @@ import ar.utb.ba.dsi.Normalizador.models.entities.sanitizador.Sanitizador;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import ar.utb.ba.dsi.Normalizador.service.IHechosService;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class HechosService implements IHechosService {
+
   private final IUbicacionService ubicacionService;
   private final ICategoriaService categoriaService;
-
-  public HechosService(IUbicacionService ubicacionService, ICategoriaService categoriaService) {
-    this.ubicacionService = ubicacionService;
-    this.categoriaService = categoriaService;
-  }
 
   @Override
   public HechoOutputDTO normalizarHecho(HechoInputDTO hechoInput) {

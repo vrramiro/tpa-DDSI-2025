@@ -4,16 +4,14 @@ import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class HechoServices {
 
   private final GestionHechosApiService gestionHechosApiService;
-
-  public HechoServices(GestionHechosApiService gestionHechosApiService) {
-    this.gestionHechosApiService = gestionHechosApiService;
-  }
 
   public HechoOutputDTO crearHecho(HechoInputDTO hechoInputDTO) {
     validarDatosBasicos(hechoInputDTO);
