@@ -1,0 +1,156 @@
+/* =============================
+   ESTILOS ESPECÍFICOS DE LOGIN
+   ============================= */
+
+/* Aseguramos que body y main ocupen toda la altura */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+}
+
+main {
+    flex: 1; /* Ocupa todo el espacio disponible entre header y footer */
+}
+
+/* Imágenes y medios siempre fluidos */
+img, svg, video, canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Menos movimiento si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Contenedor centralizado */
+.container {
+    width: min(92%, var(--container-max));
+    margin-inline: auto;
+}
+
+/* Contenedor de la tarjeta de login */
+#login-page .card {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 2rem;
+    margin-top: 2rem;
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+}
+
+/* Título */
+#login-page h2 {
+    margin-bottom: 1.5rem;
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Agrupación de campos */
+#login-page .form-group {
+    margin-bottom: 1.5rem;
+}
+
+#login-page .form-group label {
+    display: block;
+    margin-bottom: .5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Inputs */
+#login-page .form-control {
+    width: 100%;
+    padding: .75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color .3s, box-shadow .3s;
+}
+
+#login-page .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.25);
+}
+
+/* Botón de acceso */
+#login-page button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: .75rem;
+    background: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color .3s;
+}
+
+#login-page button[type="submit"]:hover {
+    background: #17a085;
+}
+
+/* Enlace de registro */
+#login-page p {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: .95rem;
+}
+
+#login-page .btn-link {
+    color: var(--primary-color);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal:target {
+    display: flex;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+}

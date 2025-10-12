@@ -1,0 +1,168 @@
+/* ============================================================
+   OVERRIDES Y ESPECÍFICOS RESPECTO A base.css
+   ============================================================ */
+
+/* ===== Botones en NAV y hovers ===== */
+/* Cambia globalmente el secundario (base usa --light-color) */
+.btn-secondary { background-color: var(--secondary-color); color: #fff; }
+
+/* Quita subrayado en variantes usadas como <a> */
+a.btn-secondary,
+.btn-outline { text-decoration: none; }
+
+/* Estados/variantes solo dentro del navbar */
+.main-nav .btn-secondary {
+    background-color: var(--light-color);
+    color: var(--text-color);
+}
+.main-nav .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--text-color); /* override al blanco del base */
+}
+.main-nav .btn:hover {
+    transform: translateY(-2px); /* coincide con .btn:hover del base, pero aquí aplica al nav */
+    color: var(--primary-color);
+}
+
+/* Hovers específicos dentro de acciones del formulario */
+.form-actions .btn-secondary:hover { background-color: #757575; }
+.form-actions .btn-primary:hover   { background-color: var(--light-color); color: var(--primary-color); }
+
+/* ============================================================
+   CONTENEDOR DE MODIFICACIÓN + FORMULARIO
+   ============================================================ */
+.container-modificacion {
+    width: min(92%, var(--container-max));
+    margin: 2rem auto;
+    background: var(--background-color);
+    padding: var(--space-3);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.container-modificacion h2 {
+    color: var(--dark-color);
+    margin-bottom: var(--space-2);
+    text-align: center;
+    font-size: clamp(1.8rem, 2vw + 1rem, 3rem);
+}
+
+.coleccion-form { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.form-group { display: flex; flex-direction: column; gap: .3rem; }
+.form-group label { font-weight: 600; color: var(--text-color); }
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: .6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background: #fff;
+    color: var(--text-color);
+    transition: border-color .3s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* FIELDSET + GRID */
+.criterios {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--space-2);
+}
+.criterios legend { font-weight: bold; color: var(--dark-color); }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-2);
+}
+
+/* ACCIONES DEL FORM */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: space-between;
+    margin-top: var(--space-3);
+}
+.form-actions .btn { min-width: 140px; }
+
+/* Multiselect custom */
+.custom-multiselect {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: .5rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    max-height: 150px;
+    overflow-y: auto;
+}
+.custom-multiselect label {
+    display: block;
+    font-weight: normal;
+    cursor: pointer;
+    margin-bottom: .3rem;
+}
+
+/* ============================================================
+   MODAL (accesible con :target)
+   ============================================================ */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+}
+.modal:target { display: flex; }
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%; max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.modal-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px; font-weight: bold;
+    color: #333; text-decoration: none;
+}
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+h1 { margin: 2rem 0 1rem; color: var(--dark-color); }
+
+/* ============================================================
+   RESPONSIVE: TWEAKS NO CUBIERTOS POR base.css
+   ============================================================ */
+/* Tablet horizontal */
+@media (max-width: 992px) {
+    .main-header { padding-inline: 4%; }
+    .class-bienvenida { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
+}
+/* Tablet vertical / móvil mediano */
+@media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .btn { width: 100%; }
+    .class-bienvenida { padding-inline: 3%; }
+}
+/* Móvil pequeño */
+@media (max-width: 480px) {
+    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
+    .main-nav a { padding: .4rem .5rem; }
+}

@@ -1,0 +1,37 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/home/panelGestionAdmin.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+    <h1>Moderar contenido:</h1>
+    <div class="grid">
+
+	  <a th:href="@{/solicitudes/gestion}" class="card">
+        <div class="card-header"><span class="card-title">Gestionar solicitudes de eliminación</span></div>
+      </a>
+
+      <a th:href="@{/hechos/gestion_hecho}" class="card">
+        <div class="card-header"><span class="card-title">Gestionar hechos pendientes</span></div>
+	  </a>
+	  
+	  <a th:href="@{/colecciones/gestion_colecciones}" class="card">
+        <div class="card-header"><span class="card-title">Gestionar colecciones</span></div>
+      </a>
+	  
+	  <div class="upload-box">
+		<label>Subir hechos</label>
+		<input type="file" id="multimedia">
+		<button type="submit" class="btn btn-primary">Subir</button>
+	  </div>
+    </div>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/home/panelGestion.js}"></script>
+    </th:block>
+</div>
+</html>

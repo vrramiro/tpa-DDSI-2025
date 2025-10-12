@@ -1,0 +1,32 @@
+<html th:replace="~{layout/base:: html}">
+
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/errores/errores.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="error-container">
+    <div class="error-content">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">Página no encontrada</h2>
+        <p class="error-message">
+            Lo sentimos, la página que intentás visitar no existe o ha sido movida.
+        </p>
+
+        <div class="error-actions">
+            <a th:href="@{ / }" class="btn btn-primary">
+                <i class="fas fa-home me-1"></i> Ir al inicio
+            </a>
+            <a th:href="@{/explorador}" class="btn btn-outline-primary">
+                <i class="fas fa-compass me-1"></i> Explorar mapa
+            </a>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/errores/errores.js}"></script>
+</th:block>
+
+</html>

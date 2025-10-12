@@ -33,7 +33,7 @@
 		<module>FuenteProxy</module>
 		<module>Estadisticas</module>
 		<module>Normalizador</module>
-
+		<module>Frontend</module>
 	</modules>
 
 

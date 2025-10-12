@@ -1,0 +1,77 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+  <!-- CSS específico de esta vista -->
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/hechos/detalleHecho.css}" rel="stylesheet">
+  </th:block>
+</head>
+
+<div th:fragment="contenido">
+  <main class="container-detalle">
+    <h2>Detalle del hecho</h2>
+
+    <form class="detalle-form">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" placeholder="Título">
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fecha-acontecimiento">Fecha de acontecimiento</label>
+          <input type="date" id="fecha-acontecimiento">
+        </div>
+        <div class="form-group">
+          <label for="fecha-subida">Fecha de subida</label>
+          <input type="date" id="fecha-subida">
+        </div>
+        <div class="form-group">
+          <label for="fecha-edicion">Fecha de edición</label>
+          <input type="date" id="fecha-edicion">
+        </div>
+        <div class="form-group">
+          <label for="fecha-gestion">Fecha de gestión</label>
+          <input type="date" id="fecha-gestion">
+        </div>
+        <div class="form-group">
+          <label for="fecha-eliminacion">Fecha de eliminación</label>
+          <input type="date" id="fecha-eliminacion">
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="gestionado">Gestionado por</label>
+          <input type="text" id="gestionado" placeholder="Nombre">
+        </div>
+        <div class="form-group">
+          <label for="autor">Autor</label>
+          <input type="text" id="autor" placeholder="Nombre del autor">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" rows="4" placeholder="Texto..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="multimedia">Multimedia</label>
+        <textarea id="multimedia" rows="3" placeholder="URLs o descripción de archivos multimedia..."></textarea>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary">Volver</button>
+        <button type="submit" class="btn btn-primary">Aceptar</button>
+        <button type="button" class="btn btn-outline">Rechazar</button>
+        <button type="button" class="btn btn-primary">Aceptar con sugerencia</button>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:fragment="scripts">
+    <script th:src="@{/js/hechos/detalleHecho.js}"></script>
+  </th:block>
+
+</div>
+</html>

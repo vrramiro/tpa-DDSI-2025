@@ -1,0 +1,129 @@
+/* ============================================================
+   EXTRAS Y OVERRIDES RESPECTO A base.css
+   ============================================================ */
+
+/* Medios fluidos (no está en base.css) */
+img, svg, video, canvas {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Menos movimiento si el usuario lo prefiere (no está en base.css) */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Contenedor general (no está en base.css) */
+.container {
+  width: min(92%, var(--container-max));
+  margin-inline: auto;
+}
+
+/* ============================================================
+   CONTENEDOR DETALLE + FORMULARIO (no están en base.css)
+   ============================================================ */
+.container-detalle {
+  width: min(97%, var(--container-max));
+  margin: 2rem auto;
+  background: var(--background-color);
+  padding: var(--space-3);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+.container-detalle h2 {
+  color: var(--dark-color);
+  margin-bottom: var(--space-2);
+  text-align: center;
+  font-size: 2rem;
+}
+
+.detalle-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.form-group input,
+.form-group textarea {
+  padding: .8rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background: #fff;
+  color: var(--text-color);
+  transition: border-color .3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+/* GRID de campos */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-2);
+}
+
+/* ACCIONES del form */
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+.form-actions .btn {
+  flex: 1 1 auto;
+  min-width: 160px;
+}
+
+/* ============================================================
+   OVERRIDES DE BOTONES (cambian valores respecto a base.css)
+   ============================================================ */
+
+/* En tu hoja: .btn-secondary usa texto blanco (en base.css es dark) */
+.btn-secondary { color: #fff; }
+
+/* Colores específicos dentro de acciones del form */
+.form-actions .btn-primary {
+  background-color: #4caf50; /* verde aceptar */
+  color: #fff;
+}
+
+.form-actions .btn-secondary {
+  background-color: #9e9e9e; /* gris volver */
+  color: #fff;
+}
+
+.form-actions .btn-outline {
+  border-color: #f44336;
+  color: #f44336; /* rojo rechazar */
+}
+
+/* ============================================================
+   RESPONSIVE específico del form (no está en base.css)
+   ============================================================ */
+@media (max-width: 768px) {
+  .form-actions { flex-direction: column; }
+}
+

@@ -1,0 +1,36 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/home/inicioSesion.css}" rel="stylesheet">
+    </th:block>
+</head>
+<div th:fragment="contenido" class="row">
+    <section id="login-page">
+        <div class="container" style="max-width: 500px;">
+            <div class="card">
+                <h2>Iniciar Sesión</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="login-email">Correo Electrónico</label>
+                        <input type="email" id="login-email" class="form-control" placeholder="usuario@ejemplo.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Acceder</button>
+                </form>
+                <p style="text-align: center; margin-top: 1rem;">
+                    ¿No tienes cuenta? <a th:href="@{/registro}" class="btn-link">Regístrate</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/home/inicioSesion.js}"></script>
+    </th:block>
+</div>
+</html>

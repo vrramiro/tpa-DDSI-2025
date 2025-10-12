@@ -1,0 +1,95 @@
+<html th:replace="~{layout/base::html}">
+
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/gestionHechos.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido">
+
+    <main class="content-container">
+
+        <div class="hechos-header">
+            <h2>Hechos subidos y pendientes:</h2>
+			<div class="filter-controls">
+            <label for="status-filter">Filtrar hechos:</label>
+            <select id="status-filter" name="status">
+                <option value="todos">Todos los estados</option>
+                <option value="aprobado">Aprobado</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="rechazado">Rechazado</option>
+				<option value="rechazado">Spam</option>
+				<option value="rechazado">Eliminado</option>
+            </select>
+			</div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor</th>
+                        <th>Fecha de carga</th>
+                        <th>Fecha de modificación</th>
+                        <th>Estado</th>
+                        <th>Gestionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Nombre de Colección 1</td>
+                        <td>Autor Ejemplo 1</td>
+                        <td>2024-08-15</td>
+                        <td>2024-09-01</td>
+                        <td>Aprobado</td>
+                        <td class="action-buttons">
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de Colección 2</td>
+                        <td>Autor Ejemplo 2</td>
+                        <td>2024-07-20</td>
+                        <td>2024-08-25</td>
+                        <td>Pendiente</td>
+                        <td class="action-buttons">
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre de Colección 3</td>
+                        <td>Autor Ejemplo 3</td>
+                        <td>2024-06-01</td>
+                        <td>2024-07-10</td>
+                        <td>Rechazado</td>
+                        <td class="action-buttons">
+                            <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+		
+		<nav class="pagination" aria-label="Paginación">
+			<a href="#" class="page-link">&laquo;</a>
+			<a href="#" class="page-link active">1</a>
+			<a href="#" class="page-link">2</a>
+			<a href="#" class="page-link">3</a>
+			<a href="#" class="page-link">4</a>
+			<span class="page-link-ellipsis">...</span>
+			<a href="#" class="page-link">&raquo;</a>
+		</nav>
+		
+        <div class="footer-actions">
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
+        </div>
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/hechos/gestionHecho.js}"></script>
+    </th:block>
+</div>
+</html>

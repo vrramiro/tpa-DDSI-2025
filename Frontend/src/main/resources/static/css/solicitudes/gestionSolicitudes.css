@@ -1,0 +1,163 @@
+/* ===== ESTILOS ESPECÍFICOS DE GESTIÓN ===== */
+
+/* Main layout */
+main {
+    flex: 1;
+    padding-bottom: 2rem;
+}
+
+/* Contenedor principal de contenido */
+.content-container {
+    width: 90%;
+    max-width: var(--container-max);
+    margin: 2rem auto;
+    background-color: var(--background-color);
+    padding: var(--space-4);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+h1, h2 {
+    color: var(--dark-color);
+    margin: 0;
+}
+
+/* ===== FILTROS Y CONTROLES ===== */
+.filter-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: 0;
+}
+
+.filter-controls label {
+    font-weight: 600;
+    margin-right: var(--space-2);
+    align-items: center;
+}
+
+.filter-controls select {
+    padding: var(--space-1);
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+    background-color: var(--background-color);
+    font-size: 0.9rem;
+    align-items: center;
+}
+
+/* Cabecera de sección */
+.solicitud-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+    gap: var(--space-2);
+}
+
+/* ===== BOTONES DE ACCIÓN ===== */
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    align-items: stretch;
+}
+
+.action-buttons .btn {
+    padding: var(--space-1);
+    font-size: 0.9rem;
+}
+
+.btn-edit {
+    text-decoration: none;
+    background-color: var(--accent-color);
+    color: var(--dark-color);
+}
+
+.btn-delete {
+    background-color: var(--danger-color);
+    color: #fff;
+}
+
+/* ===== TABLAS ===== */
+.table-container {
+    overflow-x: auto;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: var(--space-2);
+    border: 1px solid var(--border-color);
+}
+
+thead {
+    background-color: #f0f0f0;
+}
+
+thead th {
+    font-weight: 700;
+    color: var(--dark-color);
+}
+
+tbody tr:hover {
+    background-color: var(--light-color);
+}
+
+/* ===== PAGINACIÓN ===== */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-link, .page-link-ellipsis {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link-ellipsis {
+    border: none;
+}
+
+/* Footer actions */
+.footer-actions {
+    margin-top: var(--space-3);
+}
+
+/* ===== SOBREESCRITURAS ESPECÍFICAS ===== */
+.btn-secondary {
+    color: #fff; /* Cambia el color de texto del botón secundario */
+}
+
+.btn-primary {
+    text-decoration: none; /* Asegura que los enlaces con clase btn-primary no tengan subrayado */
+}

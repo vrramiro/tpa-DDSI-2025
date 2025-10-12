@@ -1,0 +1,56 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/home/registro.css}" rel="stylesheet">
+    </th:block>
+</head>
+<div th:fragment="contenido" class="row">
+    <section id="register-page">
+        <div class="container">
+            <div class="card">
+                <h2>Registro de Contribuyente</h2>
+                <form id="register-form">
+                    <!-- Campo: Nombre -->
+                    <div class="form-group">
+                        <label for="register-name">Nombre Completo (obligatorio)</label>
+                        <input type="text" id="register-name" class="form-control" required>
+                    </div>
+
+                    <!-- Campo: Correo -->
+                    <div class="form-group">
+                        <label for="register-email">Correo Electrónico (obligatorio)</label>
+                        <input type="email" id="register-email" class="form-control" required>
+                    </div>
+
+                    <!-- Campo: Contraseña -->
+                    <div class="form-group">
+                        <label for="register-password">Contraseña (obligatorio)</label>
+                        <input type="password" id="register-password" class="form-control" required>
+                    </div>
+
+                    <!-- Campo: Organización (opcional) -->
+                    <div class="form-group">
+                        <label for="register-org">Organización (opcional)</label>
+                        <input type="text" id="register-org" class="form-control" placeholder="Ej: Periodistas Sin Fronteras">
+                    </div>
+
+                    <!-- Botón principal -->
+                    <button type="submit" class="btn btn-primary">Crear Cuenta</button>
+                </form>
+
+                <!-- Enlace a Login -->
+                <p class="switch-page">
+                    ¿Ya tienes cuenta?
+                    <a th:href="@{/login}" class="btn-link">Inicia sesión</a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/home/registro.js}"></script>
+    </th:block>
+</div>
+</html>

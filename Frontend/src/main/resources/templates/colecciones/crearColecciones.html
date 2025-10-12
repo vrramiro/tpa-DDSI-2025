@@ -1,0 +1,87 @@
+<html th:replace="~{layout/base:: html}">
+
+<head>
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/colecciones/crearColecciones.css}" rel="stylesheet">
+  </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+
+  <main class="container-modificacion">
+    <h2>Crear colección</h2>
+
+    <form class="coleccion-form">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" placeholder="Texto">
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <input type="text" id="descripcion" placeholder="Texto">
+      </div>
+
+      <div class="form-group">
+        <label for="consenso">Consenso</label>
+        <select id="consenso">
+          <option value="">Seleccione...</option>
+          <option value="alto">Absoluta</option>
+          <option value="medio">Mayoria simple</option>
+          <option value="bajo">Multiples menciones</option>
+        </select>
+      </div>
+
+      <fieldset class="criterios">
+        <legend>Criterios de pertenencia</legend>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="fecha-desde">Fecha acontecimiento desde</label>
+            <input type="date" id="fecha-desde">
+          </div>
+          <div class="form-group">
+            <label for="fecha-hasta">Fecha acontecimiento hasta</label>
+            <input type="date" id="fecha-hasta">
+          </div>
+        </div>
+		
+		 <div class="form-group">
+        <label for="consenso">Consenso</label>
+        <select id="consenso">
+          <option value="">Seleccione...</option>
+          <option value="alto">Absoluta</option>
+          <option value="medio">Mayoria simple</option>
+          <option value="bajo">Multiples menciones</option>
+        </select>
+      </div>
+	  
+	  <div class="form-group">
+        <label for="provincia">Provincia</label>
+        <input type="text" id="provincia" placeholder="Texto">
+      </div>
+
+  </fieldset>
+
+    <label>Fuentes</label>
+  <div class="custom-multiselect">
+    <label><input type="checkbox" name="fuentes[]" value="medios"> Medios de comunicación</label>
+    <label><input type="checkbox" name="fuentes[]" value="ongs"> ONGs</label>
+    <label><input type="checkbox" name="fuentes[]" value="ciudadanos"> Ciudadanos</label>
+  </div>
+
+      <div class="form-actions">
+        <a href=# class="btn btn-secondary">Volver</a>
+        
+
+        <button type="submit" class="btn btn-primary">Crear</button>
+      </div>
+    </form>
+  </main>
+
+  <th:block th:fragment="scripts">
+    <script th:src="@{/js/colecciones/crearColecciones.js}"></script>
+  </th:block>
+
+</div>
+</html>
