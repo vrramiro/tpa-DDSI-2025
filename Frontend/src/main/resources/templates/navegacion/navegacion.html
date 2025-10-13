@@ -1,0 +1,45 @@
+<!-- templates/_fragments/pagination.html -->
+<nav th:fragment="pager(current, totalPages, size, baseUrl, filtro, sort, isFirst, isLast)"
+     class="pagination"
+     aria-label="Paginación"
+     th:if="${totalPages > 1}"
+     th:with="
+       last=${totalPages - 1},
+       filtroVal=${filtro != null ? filtro : ''},
+       sortVal=${sort != null ? sort : 'titulo,asc'}">
+
+    <!-- Primera -->
+    <span class="page-link disabled" th:if="${isFirst}">&laquo;</span>
+    <a class="page-link" th:if="${!isFirst}"
+       th:href="@{${baseUrl}(page=${0}, size=${size}, filtro=${filtroVal}, sort=${sortVal})}">&laquo;</a>
+
+    <!-- Anterior -->
+    <span class="page-link disabled" th:if="${isFirst}">Anterior</span>
+    <a class="page-link" th:if="${!isFirst}"
+       th:href="@{${baseUrl}(page=${current - 1}, size=${size}, filtro=${filtroVal}, sort=${sortVal})}">Anterior</a>
+
+    <!-- Elipsis izquierda -->
+    <span class="page-link-ellipsis" th:if="${current > 2}">…</span>
+
+    <!-- Números (ventana centrada) -->
+    <a th:each="i : ${#numbers.sequence(T(java.lang.Math).max(0, current - 2), T(java.lang.Math).min(last, current + 2))}"
+       class="page-link"
+       th:text="${i + 1}"
+       th:classappend="${i == current} ? ' active' : ''"
+       th:href="@{${baseUrl}(page=${i}, size=${size}, filtro=${filtroVal}, sort=${sortVal})}">
+    </a>
+
+    <!-- Elipsis derecha -->
+    <span class="page-link-ellipsis" th:if="${current < last - 2}">…</span>
+
+    <!-- Siguiente -->
+    <span class="page-link disabled" th:if="${isLast}">Siguiente</span>
+    <a class="page-link" th:if="${!isLast}"
+       th:href="@{${baseUrl}(page=${current + 1}, size=${size}, filtro=${filtroVal}, sort=${sortVal})}">Siguiente</a>
+
+    <!-- Última -->
+    <span class="page-link disabled" th:if="${isLast}">&raquo;</span>
+    <a class="page-link" th:if="${!isLast}"
+       th:href="@{${baseUrl}(page=${last}, size=${size}, filtro=${filtroVal}, sort=${sortVal})}">&raquo;</a>
+</nav>
+

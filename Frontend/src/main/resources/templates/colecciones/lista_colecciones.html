@@ -1,53 +1,62 @@
-<html th:replace="~{layout/base:: html}">
+<html th:replace="~{layout/base::html}">
 <head>
     <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/colecciones/coleccionesSistema.css}">
+        <link th:href="@{/css/colecciones/coleccionesSistema.css}" rel="stylesheet">
     </th:block>
 </head>
 
-<div class="row" th:fragment="contenido">
+<div th:fragment="contenido" class="row">
+
+    <span id="flash-data"
+          hidden
+          th:attr="data-mensaje=${mensaje}, data-tipo=${tipoMensaje}"></span>
+
     <h1>Colecciones disponibles:</h1>
-    <div class="grid">
 
-        <div class="card">
-            <div class="card-header"><span class="card-title">Protestas Sociales</span></div>
-            <div class="card-details"><p class="card-description">Colección de hechos relacionados con manifestaciones,
-                huelgas y movimientos sociales.</p></div>
-            <div class="card-footer"><a class="btn btn-outline" th:href="@{/hechos/lista_hechos_coleccion}">Ver
-                Coleccion</a></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><span class="card-title">Eventos Ambientales</span></div>
-            <div class="card-details"><p class="card-description">Sucesos que impactan al medio ambiente: incendios,
-                inundaciones y acciones de conservación.</p></div>
-            <div class="card-footer"><a class="btn btn-outline" th:href="@{/hechos/lista_hechos_coleccion}">Ver
-                Coleccion</a></div>
-        </div>
-
-        <div class="card">
-            <div class="card-header"><span class="card-title">Ayuda Humanitaria</span></div>
-            <div class="card-details"><p class="card-description">Colección sobre distribución de recursos, campañas de
-                ayuda y asistencia comunitaria.</p></div>
-            <div class="card-footer"><a class="btn btn-outline" th:href="@{/hechos/lista_hechos_coleccion}">Ver
-                Coleccion</a></div>
+    <!-- Estado vacío (solo si no hay colecciones ni recién creada) -->
+    <div th:if="${(colecciones == null or #lists.isEmpty(colecciones)) and coleccionCreada == null}"
+         class="grid empty-grid">
+        <div class="card empty-card">
+            <div class="card-header">🗂️ Sin colecciones disponibles</div>
+            <div class="card-details">
+                <p class="muted">No encontramos colecciones para mostrar en este momento.</p>
+            </div>
         </div>
     </div>
 
+    <!-- Grid -->
+    <div class="grid"
+         th:unless="${#lists.isEmpty(colecciones) and coleccionCreada == null}">
 
-    <nav aria-label="Paginación" class="pagination">
-        <a class="page-link" href="#">&laquo;</a>
-        <a class="page-link active" href="#">1</a>
-        <a class="page-link" href="#">2</a>
-        <a class="page-link" href="#">3</a>
-        <a class="page-link" href="#">4</a>
-        <span class="page-link-ellipsis">...</span>
-        <a class="page-link" href="#">&raquo;</a>
-    </nav>
+        <th:block th:if="${coleccionCreada}">
+            <div class="highlight-first"
+                 th:id="'row-col-' + ${coleccionCreada.id}">
+                <div th:insert="~{colecciones/fragments/coleccion-card :: card(coleccion=${coleccionCreada})}"></div>
+            </div>
+        </th:block>
+
+        <th:block th:each="col : ${colecciones}">
+            <th:block th:if="${coleccionCreada == null or col.id != coleccionCreada.id}">
+                <div th:replace="~{colecciones/fragments/coleccion-card :: card(coleccion=${col})}"></div>
+            </th:block>
+        </th:block>
+    </div>
+
+    <!-- Paginación -->
+    <div th:replace="~{navegacion/navegacion :: pager(
+      ${page},
+      ${totalPages},
+      ${size},
+      ${baseUrl},
+      ${filtro},
+      ${sort},
+      ${isFirst},
+      ${isLast}
+    )}"></div>
 
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-        <script th:src="@{/js/colecciones/coleccionesSistema.js}"></script>
+        <script th:src="@{/js/colecciones/notificacion.js}"></script>
     </th:block>
 </div>
 </html>

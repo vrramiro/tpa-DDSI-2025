@@ -1,89 +1,74 @@
 <html th:replace="~{layout/base:: html}">
 <head>
     <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/solicitudes/gestionSolicitudes.css}">
+        <link th:href="@{/css/solicitudes/gestionSolicitudes.css}" rel="stylesheet">
     </th:block>
 </head>
-<div class="row" th:fragment="contenido">
+
+<div th:fragment="contenido" class="row">
     <section class="content-container">
         <div class="solicitud-header">
-            <h2>Solicitudes de Eliminacion:</h2>
+            <h2>Solicitudes de Eliminación</h2>
+
             <div class="filter-controls">
-                <label for="status-filter">Filtrar hechos:</label>
-                <select id="status-filter" name="status">
-                    <option value="todos">Todos los estados</option>
-                    <option value="aprobado">Aprobado</option>
-                    <option value="pendiente">Pendiente</option>
-                    <option value="rechazado">Rechazado</option>
-                </select>
+                <form th:action="@{/solicitudes/gestion}" method="get">
+                    <label for="status-filter">Filtrar por estado:</label>
+                    <select id="status-filter" name="estado" onchange="this.form.submit()">
+                        <option value="" th:selected="${param.estado == null}">Todos</option>
+                        <option value="ACEPTADA" th:selected="${param.estado == 'ACEPTADA'}">Aprobadas</option>
+                        <option value="PENDIENTE" th:selected="${param.estado == 'PENDIENTE'}">Pendientes</option>
+                        <option value="RECHAZADA" th:selected="${param.estado == 'RECHAZADA'}">Rechazadas</option>
+                    </select>
+                </form>
             </div>
         </div>
 
-        <div class="table-container">
-            <table>
+        <!-- Mensajes -->
+        <div th:if="${mensaje}" class="alert alert-success mt-2" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+
+        <div class="table-container mt-3">
+            <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Autor</th>
-                    <th>Fecha de carga</th>
-                    <th>Fecha de Evaluacion</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Evaluación</th>
                     <th>Gestionado por</th>
                     <th>Estado</th>
-                    <th>Gestionar</th>
+                    <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Autor Ejemplo 1</td>
-                    <td>2024-08-15</td>
-                    <td>2024-09-01</td>
-                    <td>Admin 1</td>
-                    <td>Aprobado</td>
+                <tr th:each="solicitud : ${solicitudes}">
+                    <td th:text="${solicitud.autor}">Juan Pérez</td>
+                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/09/2025</td>
+                    <td th:text="${solicitud.fechaDeEvaluacion != null ? #temporals.format(solicitud.fechaDeEvaluacion, 'dd/MM/yyyy') : '-'}">-</td>
+                    <td th:text="${solicitud.gestionadoPor != null ? solicitud.gestionadoPor : '-'}">-</td>
+                    <td>
+              <span th:classappend="${solicitud.estadoDeSolicitud == 'ACEPTADA'} ? 'badge bg-success'
+                      : (solicitud.estadoDeSolicitud == 'RECHAZADA' ? 'badge bg-danger' : 'badge bg-warning')"
+                    th:text="${solicitud.estadoDeSolicitud}">PENDIENTE</span>
+                    </td>
                     <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/solicitudes/panel}">Ver Mas</a>
+                        <a th:href="@{/solicitudes/panel/{id}(id=${solicitud.idSolicitud})}"
+                           class="btn btn-sm btn-primary">Ver más</a>
                     </td>
                 </tr>
-                <tr>
-                    <td>Autor Ejemplo 2</td>
-                    <td>2024-07-20</td>
-                    <td>2024-08-25</td>
-                    <td>Pendiente</td>
-                    <td>Pendiente</td>
-                    <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/solicitudes/panel}">Ver Mas</a>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Autor Ejemplo 3</td>
-                    <td>2024-06-01</td>
-                    <td>2024-07-10</td>
-                    <td>Admin 2</td>
-                    <td>Rechazado</td>
-                    <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/solicitudes/panel}">Ver Mas</a>
-                    </td>
+                <tr th:if="${#lists.isEmpty(solicitudes)}">
+                    <td colspan="6" class="text-center">No hay solicitudes para mostrar</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <nav aria-label="Paginación" class="pagination">
-            <a class="page-link" href="#">&laquo;</a>
-            <a class="page-link active" href="#">1</a>
-            <a class="page-link" href="#">2</a>
-            <a class="page-link" href="#">3</a>
-            <a class="page-link" href="#">4</a>
-            <span class="page-link-ellipsis">...</span>
-            <a class="page-link" href="#">&raquo;</a>
-        </nav>
-
-        <div class="footer-actions">
-            <a class="btn btn-primary" th:href="@{/panel_gestion}">Volver</a>
+        <div class="footer-actions mt-4">
+            <a th:href="@{/solicitudes/nueva}" class="btn btn-primary">Nueva Solicitud</a>
         </div>
     </section>
 
     <th:block th:fragment="scripts">
-        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-        <script th:src="@{/js/solicitudes/panelSolicitudAdmin.js}"></script>
+        <script th:src="@{/js/solicitudes/gestionSolicitudes.js}"></script>
     </th:block>
 </div>
 </html>

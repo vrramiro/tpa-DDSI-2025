@@ -4,22 +4,17 @@
 
 /* ===== Botones: altura uniforme y centrado ===== */
 .btn {
-    height: 3rem; /* igualar alturas */
-    display: flex; /* centrar contenido */
+    height: 3rem;
+    display: flex;
     align-items: center;
     justify-content: center;
 }
 
 /* Enlaces con clase btn sin subrayado */
 .btn-primary,
-.btn-outline {
-    text-decoration: none;
-}
+.btn-outline { text-decoration: none; }
 
-/* En base.css, .btn-secondary tiene texto oscuro; acá lo forzamos a blanco */
-.btn-secondary {
-    color: #fff;
-}
+.btn-secondary { color: #fff; }
 
 /* ============================================================
    TÍTULOS
@@ -30,7 +25,7 @@ h1 {
 }
 
 /* ============================================================
-   LISTA DE HECHOS EN COLECCIÓN (nuevo)
+   LISTA DE HECHOS EN COLECCIÓN
    ============================================================ */
 main {
     width: 90%;
@@ -60,12 +55,16 @@ main {
     width: auto;
 }
 
+/* ===== Contenedor de cards ===== */
+.grid,
 .hechos-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: var(--space-3); /* Espaciado vertical entre cards */
+    padding: 0.5rem 0;   /* Un poco de aire arriba/abajo */
 }
 
+/* ===== Cada card individual ===== */
 .hecho-card {
     background-color: var(--background-color);
     border-radius: var(--border-radius);
@@ -75,13 +74,13 @@ main {
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: var(--space-2);
+    gap: var(--space-4);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .hecho-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, .12);
+    box-shadow: 0 8px 12px rgba(0,0,0,.12);
 }
 
 .hecho-card-content {
@@ -107,7 +106,7 @@ main {
 }
 
 /* ============================================================
-   PAGINACIÓN (nuevo)
+   PAGINACIÓN
    ============================================================ */
 .pagination {
     display: flex;
@@ -142,38 +141,28 @@ main {
     cursor: default;
 }
 
-.page-link-ellipsis {
-    border: none;
+.page-link-ellipsis { border: none; }
+
+.pagination .page-link.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
 }
 
 /* ============================================================
-   RESPONSIVE (solo ajustes nuevos)
+   RESPONSIVE
    ============================================================ */
 @media (max-width: 992px) {
-    .main-header {
-        padding-inline: 4%;
-    }
-
-    .main-nav ul {
-        justify-content: flex-end;
-    }
+    .main-header { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
 }
 
 @media (max-width: 768px) {
-    .main-header {
-        padding-inline: 3%;
-    }
-
-    .main-nav ul {
-        gap: .5rem;
-    }
-
-    .hecho-card-actions .btn {
-        width: 100%;
-    }
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .hecho-card-actions .btn { width: 100%; }
 }
 
-/* Breakpoint extra respecto de base.css */
 @media (max-width: 576px) {
     .hecho-card {
         flex-direction: column;

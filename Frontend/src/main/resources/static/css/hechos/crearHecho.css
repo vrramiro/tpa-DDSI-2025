@@ -34,6 +34,7 @@
     border-radius: var(--border-radius);
     margin-bottom: 1rem;
     font-size: 1rem;
+    font-family: inherit;
     background: #fff;
 }
 
@@ -85,7 +86,7 @@
     user-select: none;
 }
 
-.anonimo-option input[type="checkbox"] {
+.anonimo-option input[type="checkbox"]{
     width: 22px;
     height: 22px;
     cursor: pointer;
@@ -94,23 +95,87 @@
     top: 4px;
 }
 
-@media (max-width: 768px) {
-    .form-container {
-        padding: var(--space-3);
-    }
+/* MODAL */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
 
-    #map.map-placeholder {
-        height: 240px;
-    }
+.modal-content {
+    background: var(--background-color);
+    padding: var(--space-4);
+    border-radius: var(--border-radius);
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--box-shadow);
+}
+
+.modal-success {
+    border-left: 4px solid #28a745;
+}
+
+.modal-error {
+    border-left: 4px solid #dc3545;
+}
+
+.modal-header h3 {
+    margin: 0 0 var(--space-2) 0;
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+}
+
+.modal-body p {
+    margin: 0 0 var(--space-3) 0;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.modal-footer {
+    text-align: right;
+}
+
+.error-mensaje {
+    color: #D8000C;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-top: 5px;
+    display: block;
+}
+
+.input-error {
+    border-color: #D8000C;
+    border-width: 2px;
+}
+
+.input-error::placeholder {
+    color: #D8000C;
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 0.9em;
+    font-family: inherit;
+}
+
+.error-mensaje-label {
+    color: #D8000C;
+    font-weight: bold;
+    margin-left: 10px;
+    font-size: 0.9em;
+}
+@media (max-width: 768px) {
+    .form-container { padding: var(--space-3); }
+    #map.map-placeholder { height: 240px; }
 }
 
 @media (max-width: 480px) {
-    .form-container {
-        padding: var(--space-2);
-    }
-
-    #map.map-placeholder {
-        height: 220px;
-    }
+    .form-container { padding: var(--space-2); }
+    #map.map-placeholder { height: 220px; }
 }
 

@@ -1,58 +1,68 @@
 <html th:replace="~{layout/base:: html}">
 <head>
-    <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/solicitudes/panelSolicitudAdmin.css}">
-    </th:block>
+  <th:block th:fragment="styles">
+    <link th:href="@{/css/solicitudes/panelSolicitudAdmin.css}" rel="stylesheet">
+  </th:block>
 </head>
 
-<div class="row" th:fragment="contenido">
-    <div class="container">
-        <h1>Detalle de Solicitud</h1>
+<div th:fragment="contenido" class="row">
+  <div class="container">
+    <h1>Detalle de Solicitud</h1>
 
-        <div class="grid-detalle">
-            <!-- Solicitud -->
-            <section class="card">
-                <h2>Solicitud</h2>
-                <p><strong>Fecha de creación:</strong> 01/09/2025</p>
-                <p><strong>Fecha de evaluación:</strong> 05/09/2025</p>
-                <p><strong>Autor:</strong> Juan Pérez</p>
-                <p><strong>Gestionado por:</strong> Ramiro Verga</p>
+    <!-- Mensajes de éxito o error -->
+    <div th:if="${mensaje}" class="alert alert-success mt-2" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
 
-                <h3>Descripción</h3>
-                <div class="textarea">La informacion prevista es erronea, el incendio fue causado durente los destejos
-                    del UUD, no UPD.
-                </div>
+    <div class="grid-detalle">
+      <!-- Solicitud -->
+      <section class="card">
+        <h2>Solicitud</h2>
+        <p><strong>Fecha de creación:</strong> <span th:text="${solicitud.fechaDeCreacion}">01/09/2025</span></p>
+        <p><strong>Fecha de evaluación:</strong> <span th:text="${solicitud.fechaDeEvaluacion}">05/09/2025</span></p>
+        <p><strong>Autor:</strong> <span th:text="${solicitud.autor}">Juan Pérez</span></p>
+        <p><strong>Gestionado por:</strong> <span th:text="${solicitud.gestionadoPor}">Ramiro Verga</span></p>
 
-                <div class="actions">
-                    <button class="btn btn-primary">Aceptar</button>
-                    <button class="btn btn-danger">Rechazar</button>
-                    <a class="btn btn-secondary" th:href="@{/solicitudes/gestion}">Volver</a>
-                </div>
-            </section>
-
-            <!-- Hecho -->
-            <section class="card">
-                <h2>Hecho: "Incendio en Chascomús"</h2>
-                <p><strong>Fecha del acontecimiento:</strong> 15/07/2025</p>
-                <p><strong>Autor:</strong> Juan Pérez</p>
-                <p><strong>Gestionado por:</strong> Nicolas Tuma Ma</p>
-
-                <h3>Descripción</h3>
-                <div class="textarea">Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales
-                    importantes.
-                </div>
-
-                <h3>Multimedia</h3>
-                <img alt="hecho" class="card-img" src="https://picsum.photos/400/200?random=2">
-
-            </section>
+        <h3>Descripción</h3>
+        <div class="textarea" th:text="${solicitud.descripcion}">
+          La informacion prevista es erronea, el incendio fue causado durante los festejos del UUD, no UPD.
         </div>
+
+        <div class="actions mt-3">
+          <form th:action="@{/solicitudes/actualizar/{id}(id=${solicitud.idSolicitud})}" method="post" style="display:inline;">
+            <input type="hidden" name="estado" value="ACEPTADA" />
+            <button type="submit" class="btn btn-success">Aceptar</button>
+          </form>
+
+          <form th:action="@{/solicitudes/actualizar/{id}(id=${solicitud.idSolicitud})}" method="post" style="display:inline;">
+            <input type="hidden" name="estado" value="RECHAZADA" />
+            <button type="submit" class="btn btn-danger">Rechazar</button>
+          </form>
+
+          <a th:href="@{/solicitudes/gestion}" class="btn btn-secondary">Volver</a>
+        </div>
+      </section>
+
+      <!-- Hecho -->
+      <section class="card">
+        <h2 th:text="'Hecho: ' + ${hecho.titulo}">Hecho: "Incendio en Chascomús"</h2>
+        <p><strong>Fecha del acontecimiento:</strong> <span th:text="${hecho.fechaAcontecimiento}">15/07/2025</span></p>
+        <p><strong>Autor:</strong> <span th:text="${hecho.autor}">Juan Pérez</span></p>
+        <p><strong>Gestionado por:</strong> <span th:text="${hecho.gestionadoPor}">Nicolás Tuma Ma</span></p>
+
+        <h3>Descripción</h3>
+        <div class="textarea" th:text="${hecho.descripcion}">
+          Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales importantes.
+        </div>
+
+        <h3>Multimedia</h3>
+        <img class="card-img" th:src="${hecho.imagenUrl}" alt="hecho" src="https://picsum.photos/400/200?random=2">
+      </section>
     </div>
+  </div>
 
-    <th:block th:fragment="scripts">
-        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-        <script th:src="@{/js/solicitudes/gestionSolicitudes.js}"></script>
-    </th:block>
-
+  <th:block th:fragment="scripts">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+    <script th:src="@{/js/solicitudes/gestionSolicitudes.js}"></script>
+  </th:block>
 </div>
 </html>
