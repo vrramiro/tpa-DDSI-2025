@@ -13,6 +13,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HechosService implements IHechosService {
@@ -27,12 +28,16 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long idHecho) {
+  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde,
+                                            LocalDateTime fechaReporteHasta,
+                                            LocalDateTime fechaAcontecimientoDesde,
+                                            LocalDateTime fechaAcontecimientoHasta,
+                                            String ciudad,
+                                            String provincia) {
     try {
       return this.hechosRepository
-          .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, idHecho)
+          .findHechosByVisibleTrueAndFiltrados(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
           .stream()
-          .filter(Hecho::getVisible) // Filtrar solo los hechos visibles
           .map(MapperDeHechos::hechoToOutputDTO)
           .toList();
     } catch (Exception e) {
@@ -41,10 +46,26 @@ public class HechosService implements IHechosService {
   }
 
   @Override
+  public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
+    Hecho hecho = intentarObtenerHecho(idHecho);
+    return MapperDeHechos.hechoToOutputDTO(hecho);
+  }
+
+  private Hecho intentarObtenerHecho(Long idHecho) {
+    Optional<Hecho> hechoOp = this.hechosRepository.findHechoByIdAndVisible(idHecho, true);
+    
+    if (hechoOp.isEmpty()) {
+      throw new HechoNoEcontrado("No se encontró hecho con id: " + idHecho);
+    }
+
+    return hechoOp.get();
+  }
+
+  @Override
   @Transactional
-  public void eliminarHecho(Long IdHecho) {
+  public void eliminarHecho(Long idHecho) {
     //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-    Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(() -> new HechoNoEcontrado("No se encontro el hecho con id: " + IdHecho));
+    Hecho hecho = this.hechosRepository.findById(idHecho).orElseThrow(() -> new HechoNoEcontrado("No se encontro el hecho con id: " + idHecho));
     hecho.setVisible(false);
     hechosRepository.save(hecho);
   }

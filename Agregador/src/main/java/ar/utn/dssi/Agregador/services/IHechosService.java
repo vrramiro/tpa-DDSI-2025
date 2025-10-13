@@ -5,14 +5,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IHechosService {
-  //CRUD.
-  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long idHecho);
+  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde,
+                                     LocalDateTime fechaReporteHasta,
+                                     LocalDateTime fechaAcontecimientoDesde,
+                                     LocalDateTime fechaAcontecimientoHasta,
+                                     String ciudad,
+                                     String provincia);
 
+  HechoOutputDTO obtenerHechoPorId(Long idHecho);
 
-  void eliminarHecho(Long IDHecho);
+  void eliminarHecho(Long idHecho);
 
-  //AUX
   void importarNuevosHechos();
-
-
 }
