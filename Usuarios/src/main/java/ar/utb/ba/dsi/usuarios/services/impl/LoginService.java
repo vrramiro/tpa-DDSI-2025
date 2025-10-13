@@ -85,17 +85,15 @@ public class LoginService implements ILoginService {
     String nombreUsuario = credenciales.getNombreUsuario().trim();
     String contrasenia = credenciales.getContrasenia().trim();
 
-    if (nombreUsuario == null || nombreUsuario.isEmpty())
+    if (nombreUsuario.isEmpty())
       throw new UsuarioDatosFaltantes("El nombre de usuario es obligatorio");
 
-    if (contrasenia == null || contrasenia.isEmpty())
+    if (contrasenia.isEmpty())
       throw new UsuarioDatosFaltantes("La contrasenia es obligatoria");
   }
 
   private Usuario intentarRecuperarUsuario(String nombreUsuario) {
-    Usuario usuario = usuariosRepository.findUsuarioByNombreUsuario(nombreUsuario).orElseThrow(() -> new UsuarioNoEncontrado(nombreUsuario));
-
-    return usuario;
+    return usuariosRepository.findUsuarioByNombreUsuario(nombreUsuario).orElseThrow(() -> new UsuarioNoEncontrado(nombreUsuario));
   }
 
   public String generarAccessToken(Usuario usuario) {
