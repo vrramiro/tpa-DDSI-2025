@@ -1,7 +1,9 @@
 package ar.utb.ba.dsi.usuarios.services.impl;
 
 import ar.utb.ba.dsi.usuarios.dto.input.CredencialesDTO;
+import ar.utb.ba.dsi.usuarios.dto.input.RefreshRequest;
 import ar.utb.ba.dsi.usuarios.dto.output.AuthResponseDTO;
+import ar.utb.ba.dsi.usuarios.dto.output.RefreshResponse;
 import ar.utb.ba.dsi.usuarios.dto.output.UserRolesDTO;
 import ar.utb.ba.dsi.usuarios.error.UsuarioContraseniaIncorrecta;
 import ar.utb.ba.dsi.usuarios.error.UsuarioDatosFaltantes;
@@ -10,14 +12,14 @@ import ar.utb.ba.dsi.usuarios.models.entities.Usuario;
 import ar.utb.ba.dsi.usuarios.models.repositories.IUsuarioRepository;
 import ar.utb.ba.dsi.usuarios.services.ILoginService;
 import ar.utb.ba.dsi.usuarios.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
 public class LoginService implements ILoginService {
-  
+
   private final IUsuarioRepository usuariosRepository;
   private final BCryptPasswordEncoder passwordEncoder;
 
@@ -56,9 +58,27 @@ public class LoginService implements ILoginService {
     Usuario usuario = usuarioOpt.get();
 
     return UserRolesDTO.builder()
-            .username(usuario.getNombreUsuario())
-            .rol(usuario.getRol())
-            .build();
+        .username(usuario.getNombreUsuario())
+        .rol(usuario.getRol())
+        .build();
+  }
+
+  @Override
+  public RefreshResponse refrescarAccessToken(RefreshRequest request) {
+    Claims claims = JwtUtil.extraerClaims(request.getRefreshToken());
+
+    if (!"refresh".equals(claims.get("type", String.class))) {
+      throw new IllegalArgumentException("El token proporcionado no es un token de refresco.");
+    }
+
+    String username = claims.getSubject();
+
+    Usuario usuario = usuariosRepository.findUsuarioByNombreUsuario(username)
+        .orElseThrow(() -> new UsuarioNoEncontrado(username));
+
+    String newAccessToken = JwtUtil.generarAccessToken(usuario);
+
+    return new RefreshResponse(newAccessToken, request.getRefreshToken());
   }
 
   private void validacionBasica(CredencialesDTO credenciales) {
