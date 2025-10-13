@@ -4,8 +4,8 @@ import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
-import ar.utn.dssi.app_web.exceptions.UbicacionInvalida;
-import ar.utn.dssi.app_web.exceptions.ValidationException;
+import ar.utn.dssi.app_web.error.UbicacionInvalida;
+import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
 import ar.utn.dssi.app_web.services.CategoriaService;
 import ar.utn.dssi.app_web.services.HechoServices;
@@ -45,7 +45,7 @@ public class HechoController {
 
     try {
       boolean exitoso = hechosService.crearHecho(hechoInputDTO);
-      if(exitoso) {
+      if (exitoso) {
         model.addAttribute("mensaje", "El hecho fue subido correctamente, está siendo procesado.");
         model.addAttribute("tipoMensaje", "success");
         model.addAttribute("urlRedireccion", "/explorador");
@@ -55,20 +55,17 @@ public class HechoController {
       }
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       return "hechos/crearHecho";
-    }
-    catch (UbicacionInvalida e) {
+    } catch (UbicacionInvalida e) {
       bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       bindingResult.rejectValue("longitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "hechos/crearHecho";
-    }
-    catch (ValidationException e) {
+    } catch (ValidationException e) {
       convertirValidationExceptionABindingResult(e, bindingResult);
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       return "hechos/crearHecho";
-    }
-    catch (Exception e) {
+    } catch (Exception e) {
       log.error("Error al crear hecho", e);
       model.addAttribute("mensaje", "Error inesperado al crear el hecho: " + e.getMessage());
       model.addAttribute("tipoMensaje", "error");
@@ -135,11 +132,11 @@ public class HechoController {
   }
 
   @PostMapping("/{id}/editar")
-  public String editarHecho (@PathVariable Long id,
-                             @ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
-                             BindingResult bindingResult,
-                             Model model,
-                             RedirectAttributes redirectAttributes) {
+  public String editarHecho(@PathVariable Long id,
+                            @ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
+                            BindingResult bindingResult,
+                            Model model,
+                            RedirectAttributes redirectAttributes) {
     try {
       boolean exitoso = hechosService.editarHecho(id, hechoInputDTO);
       if (exitoso) {
@@ -193,7 +190,7 @@ public class HechoController {
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page,size,filtro,sort);
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtro, sort);
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -211,16 +208,52 @@ public class HechoController {
     return "hechos/misHechos";
   }
 
+  @GetMapping("/gestion_hecho")
+  public String gestionHecho(@RequestParam(defaultValue = "0") int page,
+                             @RequestParam(defaultValue = "10") int size,
+                             @RequestParam(required = false) String estado,
+                             @RequestParam(required = false, defaultValue = "fechaCarga,desc") String sort,
+                             Model model) {
 
+    EstadoHecho estadoEnum = null;
+    if (estado != null && !estado.trim().isEmpty()) {
+      try {
+        estadoEnum = EstadoHecho.valueOf(estado.toUpperCase());
+      } catch (IllegalArgumentException e) {
+        estadoEnum = null;
+      }
+    }
 
+    String filtroEstado = Optional.ofNullable(estadoEnum)
+            .map(Enum::name)
+            .orElse(null);
 
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado, sort);
 
+    model.addAttribute("hechos", pageResponseDTO.getContent());
+    model.addAttribute("page", page);
+    model.addAttribute("size", size);
+    model.addAttribute("sort", sort);
+    model.addAttribute("estado", estado == null ? "" : estado);
+    model.addAttribute("totalPages", pageResponseDTO.getTotalPages());
+    model.addAttribute("totalElements", pageResponseDTO.getTotalElements());
+    model.addAttribute("isFirst", pageResponseDTO.getFirst());
+    model.addAttribute("isLast", pageResponseDTO.getLast());
+    model.addAttribute("titulo", "Gestión de Hechos");
+    model.addAttribute("baseUrl", "/hechos/gestion_hecho");
 
+    return "hechos/gestionHechosAdmin";
+  }
 
+  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
+    if(e.hasFieldErrors()) {
+      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
+    }
+  }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
-  /***********************************************************************************************************************/
+/***********************************************************************************************************************/
 
 
   //TODO VER QUE ES ESTO
@@ -229,24 +262,11 @@ public class HechoController {
     return "hechos/detalleHechoAdmin";
   }
 
-  @GetMapping("/gestion_hecho")
-  public String gestionHecho(Model model) {
-    model.addAttribute("titulo", "Gestion de Hechos");
-    return "hechos/gestionHechosAdmin";
-  }
-
-
+  //TODO VERLO CON SANTI
   @GetMapping("/lista_hechos_coleccion")
   public String hechosCoelccion(Model model) {
     model.addAttribute("titulo", "Hechos de Coleccion");
     return "hechos/listaHechosColeccion";
-  }
-
-
-  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
-    if(e.hasFieldErrors()) {
-      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
-    }
   }
 }
 

@@ -138,6 +138,11 @@ tbody tr:hover { background-color: var(--light-color); }
     font-size: 0.9rem;
 }
 
+.btn-filtro {
+    padding: var(--space-1);
+    font-size: 0.9rem;
+}
+
 /* Mantener botones ancla sin subrayado cuando son .btn-primary */
 .btn-primary { text-decoration: none; }
 

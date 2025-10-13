@@ -26,8 +26,8 @@ import java.util.Optional;
 public class GestionHechosApiService {
 
   private static final Logger log = LoggerFactory.getLogger(GestionHechosApiService.class);
-  private final WebClient webClient; // se usa para usuarios nada mas
-  private final WebApiCallerService webApiCallerService;
+  private final WebClient webClient;
+  private final WebApiCallerService webApiCallerService; // se usa para usuarios nada mas
   private final String normalizadorSeriviceUrl;
   private final String fuenteDinamicaSeriviceUrl;
   private final String agregadorSeriviceUrl;
@@ -326,7 +326,7 @@ public class GestionHechosApiService {
 
 /**********************************************************************************************************************/
 /*************************************************LO DE ABAJO ES EXTRA*************************************************/
-  /**********************************************************************************************************************/
+/**********************************************************************************************************************/
 
   private void validarUbicacion(UbicacionOutputDTO ubicacion) {
     if (esVacioONulo(ubicacion.getPais())) {
