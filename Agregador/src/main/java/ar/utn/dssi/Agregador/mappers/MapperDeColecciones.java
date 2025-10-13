@@ -2,19 +2,34 @@ package ar.utn.dssi.Agregador.mappers;
 
 import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.dto.output.CriterioDePertenenciaOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
+import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MapperDeColecciones {
   public static ColeccionOutputDTO coleccionOutputDTOFromColeccion(Coleccion coleccion) {
-    var coleccionDto = new ColeccionOutputDTO();
+    ColeccionOutputDTO coleccionDto = new ColeccionOutputDTO();
 
+    coleccionDto.setHandle(coleccion.getHandle());
     coleccionDto.setTitulo(coleccion.getTitulo());
     coleccionDto.setDescripcion(coleccion.getDescripcion());
-    coleccionDto.setHechos(coleccion.getHechos());
+
+    List<CriterioDePertenenciaOutputDTO> criterios = coleccion.getCriterios().stream()
+        .map(MapperDeCriterio::criterioDePertenenciaOutputDTOFromCriterio)
+        .collect(Collectors.toList());
+    coleccionDto.setCriterios(criterios);
+
+    Set<TipoFuente> fuentes = coleccion.getFuentes().stream()
+        .map(fuente -> fuente.getTipoFuente().getTipoFuente())
+        .collect(Collectors.toSet());
+    coleccionDto.setFuentes(fuentes);
+
+    coleccion.setConsenso(coleccion.getConsenso());
 
     return coleccionDto;
   }
