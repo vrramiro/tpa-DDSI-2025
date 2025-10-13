@@ -6,9 +6,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 import java.security.Key;
 import java.util.Date;
 
+@Component
 public class JwtUtil {
   @Getter
   private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);

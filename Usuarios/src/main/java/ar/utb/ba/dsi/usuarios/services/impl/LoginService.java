@@ -82,15 +82,15 @@ public class LoginService implements ILoginService {
   }
 
   private void validacionBasica(CredencialesDTO credenciales) {
-    String nombreUsuario = credenciales.getNombreUsuario().trim();
-    String contrasenia = credenciales.getContrasenia().trim();
-
-    if (nombreUsuario.isEmpty())
+    if (credenciales.getNombreUsuario() == null || credenciales.getNombreUsuario().trim().isEmpty()) {
       throw new UsuarioDatosFaltantes("El nombre de usuario es obligatorio");
+    }
 
-    if (contrasenia.isEmpty())
+    if (credenciales.getContrasenia() == null || credenciales.getContrasenia().trim().isEmpty()) {
       throw new UsuarioDatosFaltantes("La contrasenia es obligatoria");
+    }
   }
+
 
   private Usuario intentarRecuperarUsuario(String nombreUsuario) {
     return usuariosRepository.findUsuarioByNombreUsuario(nombreUsuario).orElseThrow(() -> new UsuarioNoEncontrado(nombreUsuario));

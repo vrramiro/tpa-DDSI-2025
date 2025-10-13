@@ -5,8 +5,8 @@ import lombok.Data;
 
 @Data
 public class CredencialesDTO {
-  @JsonProperty("nombre_usuario")
+  @JsonProperty("username")
   private String nombreUsuario;
-  @JsonProperty("contrasenia")
+  @JsonProperty("password")
   private String contrasenia;
 }
