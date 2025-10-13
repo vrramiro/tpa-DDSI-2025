@@ -1,6 +1,7 @@
 package ar.utb.ba.dsi.usuarios.utils;
 
 import ar.utb.ba.dsi.usuarios.models.entities.Usuario;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -18,8 +19,9 @@ public class JwtUtil {
   public static String generarAccessToken(Usuario usuario) {
 
     return Jwts.builder()
-        .setSubject(usuario.getNombre())
-        .setIssuer("gestion-alumnos-server")
+        .setSubject(usuario.getNombreUsuario())
+        .claim("rol", usuario.getRol().toString())
+        .setIssuer("gestion-usuarios-server")
         .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_VALIDITY))
         .signWith(key)
         .compact();
@@ -28,8 +30,8 @@ public class JwtUtil {
   public static String generarRefreshToken(Usuario usuario) {
 
     return Jwts.builder()
-        .setSubject(usuario.getNombre())
-        .setIssuer("gestion-alumnos-server")
+        .setSubject(usuario.getNombreUsuario())
+        .setIssuer("gestion-usuarios-server")
         .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_VALIDITY))
         .claim("type", "refresh") // diferenciamos refresh del access
         .signWith(key)
@@ -37,13 +39,29 @@ public class JwtUtil {
   }
 
   public static String validarToken(String token) {
-
     return Jwts.parserBuilder()
         .setSigningKey(key)
         .build()
         .parseClaimsJws(token)
         .getBody()
         .getSubject();
+  }
+
+  public static String extraerClaim(String token, String claim) {
+    return Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .get(claim, String.class);
+  }
+
+  public static Claims extraerClaims(String token) {
+    return Jwts.parserBuilder()
+        .setSigningKey(key)
+        .build()
+        .parseClaimsJws(token)
+        .getBody();
   }
 }
 
