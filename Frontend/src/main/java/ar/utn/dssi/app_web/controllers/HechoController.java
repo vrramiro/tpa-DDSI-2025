@@ -12,6 +12,7 @@ import ar.utn.dssi.app_web.services.HechoServices;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -30,6 +31,7 @@ public class HechoController {
   private final CategoriaService categoriaService;
 
   @GetMapping("/nuevo")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nuevo Hecho");
     model.addAttribute("hecho", new HechoInputDTO());
@@ -38,6 +40,7 @@ public class HechoController {
   }
 
   @PostMapping("/crear")
+  @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String crearHecho(@ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
                            BindingResult bindingResult,
                            Model model,

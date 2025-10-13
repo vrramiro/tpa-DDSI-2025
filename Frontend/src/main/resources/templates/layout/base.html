@@ -15,14 +15,22 @@
     <nav class="main-nav" id="main-nav">
         <ul>
             <li><a class="btn btn-secondary" th:href="@{/estadisticas}">Estadisticas</a></li>
-            <li><a class="btn btn-secondary" th:href="@{/colecciones}">Colecciones</a></li>
             <li><a class="btn btn-secondary" th:href="@{/explorador}">Explorar</a></li>
-            <li><a class="btn btn-secondary" th:href="@{/hechos/nuevo}">Crear hecho</a></li>
-            <li><a class="btn btn-secondary" th:href="@{/panel_gestion}">Gestionar</a></li>
-            <li><a class="btn btn-secondary" th:href="@{/hechos/mis_hechos}">Mis hechos</a></li>
-            <li>
+            <li><a class="btn btn-secondary" th:href="@{/colecciones}">Colecciones</a></li>
+            <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/nuevo}">Crear hecho</a></li>
+            <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/mis_hechos}">Mis hechos</a></li>
+            <li sec:authorize="hasRole('ADMINISTRADOR')"><a class="btn btn-secondary" th:href="@{/panel_gestion}">Gestionar</a></li>
+
+            <li sec:authorize="!isAuthenticated()">
                 <a class="btn btn-primary" th:href="@{/login}">Iniciar Sesión</a>
             </li>
+
+            <li sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button class="btn btn-danger" type="submit">Cerrar Sesión</button>
+                </form>
+            </li>
+
         </ul>
     </nav>
 </header>

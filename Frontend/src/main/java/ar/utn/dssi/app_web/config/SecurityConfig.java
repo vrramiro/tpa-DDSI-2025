@@ -7,14 +7,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-//@EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = false)
 @Configuration
-public class SecurityConfig {/*
-
+public class SecurityConfig {
+    //Indico que voy a utilizar un autenticacion manager personalizado
     @Bean
     public AuthenticationManager authManager(HttpSecurity http, CustomAuthProvider provider) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -48,10 +46,10 @@ public class SecurityConfig {/*
                         )
                         // Usuario autenticado pero sin permisos → redirigir a página de error
                         .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendRedirect("/")
+                                response.sendRedirect("/")  //TODO: AGREGAR PAGINA ERROR
                         )
                 );
 
         return http.build();
-    }*/
+    }
 }

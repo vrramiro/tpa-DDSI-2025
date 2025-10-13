@@ -1,5 +1,6 @@
 package ar.utn.dssi.app_web.services;
 
+
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
@@ -24,7 +25,6 @@ import java.util.Optional;
 
 @Service
 public class GestionHechosApiService {
-
   private static final Logger log = LoggerFactory.getLogger(GestionHechosApiService.class);
   private final WebClient webClient;
   private final WebApiCallerService webApiCallerService; // se usa para usuarios nada mas
