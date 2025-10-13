@@ -27,21 +27,10 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
-    try {
-      Hecho hecho = hechosRepository.findById(idHecho).orElseThrow(IllegalArgumentException::new);
-
-      return MapperDeHechos.hechoToOutputDTO(hecho);
-    } catch (Exception e) {
-      throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
-    }
-  }
-
-  @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia) {
+  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long idHecho) {
     try {
       return this.hechosRepository
-          .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
+          .filtrarHechos(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia, idHecho)
           .stream()
           .filter(Hecho::getVisible) // Filtrar solo los hechos visibles
           .map(MapperDeHechos::hechoToOutputDTO)

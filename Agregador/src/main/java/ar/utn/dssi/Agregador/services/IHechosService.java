@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface IHechosService {
   //CRUD.
-  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia);
+  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde, LocalDateTime fechaReporteHasta, LocalDateTime fechaAcontecimientoDesde, LocalDateTime fechaAcontecimientoHasta, String ciudad, String provincia, Long idHecho);
 
-  HechoOutputDTO obtenerHechoPorId(Long idHecho);
 
   void eliminarHecho(Long IDHecho);
 

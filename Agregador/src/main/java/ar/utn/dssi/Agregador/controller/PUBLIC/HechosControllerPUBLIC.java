@@ -29,12 +29,13 @@ public class HechosControllerPUBLIC {
       @RequestParam(name = "fechaAcontecimientoHasta", required = false)
       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaAcontecimientoHasta,
       @RequestParam(name = "ciudad", required = false) String ciudad,
-      @RequestParam(name = "provincia", required = false) String provincia
+      @RequestParam(name = "provincia", required = false) String provincia,
+      @RequestParam(name = "hechoId", required = false) Long idHecho
   ) {
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
         fechaReporteDesde, fechaReporteHasta,
         fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-        provincia, ciudad
+        provincia, ciudad, idHecho
     );
 
     if (hechos.isEmpty()) {
