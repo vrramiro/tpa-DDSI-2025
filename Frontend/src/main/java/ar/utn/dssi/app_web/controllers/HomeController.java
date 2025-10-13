@@ -54,5 +54,11 @@ public class HomeController {
     model.addAttribute("titulo", "Error 403");
     return "errores/403";
   }
+
+  @GetMapping("/privacidad")
+  public String privacidad(Model model) {
+    model.addAttribute("titulo", "Política de Privacidad");
+    return "home/politicasPrivacidad";
+  }
 }
 

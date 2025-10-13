@@ -22,7 +22,7 @@
                     </div>
                     <button class="btn btn-primary" style="width: 100%;" type="submit">Acceder</button>
                 </form>
-                <p style="text-align: center; margin-top: 1rem;">
+                <p style="text-align: center; margin-top: 1rem;", sec:authorize="!isAuthenticated()">
                     ¿No tienes cuenta? <a class="btn-link" th:href="@{/registro}">Regístrate</a>
                 </p>
 
