@@ -21,12 +21,14 @@ public class HechoServices implements IHechoService {
     this.gestionHechosApiService = gestionHechosApiService;
   }
 
+  @Override
   public Boolean crearHecho(HechoInputDTO hechoInputDTO) {
     validarDatosBasicos(hechoInputDTO);
     validarUbicacion(hechoInputDTO);
     return gestionHechosApiService.crearHecho(hechoInputDTO);
   }
 
+  @Override
   public Optional<HechoOutputDTO> obtenerHechoPorId(Long id) {
     try {
       HechoOutputDTO hecho = gestionHechosApiService.obtenerHechoPorId(id);
@@ -36,10 +38,12 @@ public class HechoServices implements IHechoService {
     }
   }
 
+  @Override
   public void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado) {
     gestionHechosApiService.cambiarEstadoHecho(id, nuevoEstado);
   }
 
+  @Override
   public Boolean editarHecho(Long id, HechoInputDTO hechoInputDTO) {
     validarDatosBasicos(hechoInputDTO);
     validarUbicacion(hechoInputDTO);
@@ -92,6 +96,7 @@ public class HechoServices implements IHechoService {
     }
   }
 
+  @Override //TODO REVISAR
   public PageResponseDTO<HechoOutputDTO> listarHechos(int page, int size, String filtro, String sort) {
     // Validaciones
     int safePage = Math.max(0, page);
@@ -107,7 +112,7 @@ public class HechoServices implements IHechoService {
     return api;
   }
 
-  @Override
+  @Override //TODO
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
     return null;
   }

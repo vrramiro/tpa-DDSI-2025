@@ -19,7 +19,7 @@ import java.util.List;
 public class AgregadorAdapter implements IAgregadorAdapter {
   private final WebClient webClient;
 
-  public AgregadorAdapter(@Value("${base-url}") String baseUrl) {
+  public AgregadorAdapter(@Value("${agregador.base-url}") String baseUrl) {
     this.webClient = WebClient.builder().baseUrl(baseUrl).build();
   }
 

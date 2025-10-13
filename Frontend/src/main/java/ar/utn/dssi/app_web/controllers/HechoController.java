@@ -9,6 +9,7 @@ import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
 import ar.utn.dssi.app_web.services.CategoriaService;
 import ar.utn.dssi.app_web.services.HechoServices;
+import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class HechoController {
 
   private static final Logger log = LoggerFactory.getLogger(HechoController.class);
-  private final HechoServices hechosService;
+  private final IHechoService hechosService;
   private final CategoriaService categoriaService;
 
   @GetMapping("/nuevo")

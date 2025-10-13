@@ -1,5 +1,6 @@
 package ar.utn.dssi.app_web.dto.input;
 
+import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class HechoInputDTO {
   private String titulo;
   private String descripcion;
-  private CategoriaInputDTO categoria;
+  private CategoriaDTO categoria;
   private Double latitud;
   private Double longitud;
   private LocalDate fechaAcontecimiento;

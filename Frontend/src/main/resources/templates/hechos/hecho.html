@@ -13,11 +13,12 @@
         <div class="hecho-card">
             <div class="hecho-meta">
                 <a th:if="${hecho.estado.name() != 'RECHAZADO'}"
+                <!-- TODO FALTA AGREGAR: and hecho.autor.username == #authentication.name}"-->
                    th:href="@{/hechos/{id}/editar(id=${hecho.id})}"
                    class="btn btn-editar">Editar</a>
 
                 <span class="hecho-fecha"
-                      th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/08/2025</span>
+                      th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}"></span>
             </div>
             <div class="hecho-header">
                 <h1 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h1>
@@ -29,15 +30,36 @@
                  alt="Imagen del hecho">
 
             <div class="hecho-meta-info">
-                <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez</p>
+                <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez
+                <!--<span th:text="${hecho.autor.nombre}"></span>-->
+                </p>
+                <div sec:authorize="hasRole('ADMINISTRADOR')">
+                    <p class="hecho-gestionado">
+                        <strong>Gestionado por:</strong>
+                        <span th:text="${hecho.gestionadoPor != null ? hecho.gestionadoPor : 'No asignado'}">
+                            Admin X
+                        </span>
+                    </p>
+                    <p class="hecho-fecha-carga">
+                        <strong>Fecha de carga:</strong>
+                        <span th:text="${#temporals.format(hecho.fechaCarga, 'dd/MM/yyyy HH:mm')}">
+                            01/08/2025 15:00
+                        </span>
+                    </p>
+                    <p th:if="${hecho.fechaActualizacion != null}" class="hecho-fecha-actualizacion">
+                        <strong>Última actualización:</strong>
+                        <span th:text="${#temporals.format(hecho.fechaActualizacion, 'dd/MM/yyyy HH:mm')}">
+                            03/08/2025 10:30
+                        </span>
+                    </p>
+                </div>
+
                 <span class="hecho-categoria" th:text="${hecho.categoria}">Categoría</span>
             </div>
 
-            <p class="hecho-descripcion" th:text="${hecho.descripcion}">
-                Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.
-            </p>
+            <p class="hecho-descripcion" th:text="${hecho.descripcion}"></p>
 
-            <p class="hecho-estado">
+            <p class="hecho-estado" sec:authorize="hasRole('ADMINISTRADOR')">
                 <strong>Estado:</strong>
                 <span th:class="'badge badge-' + ${hecho.estado.name().toLowerCase()}"
                       th:text="${hecho.estado}">PENDIENTE</span>

@@ -153,7 +153,7 @@ public class ColeccionController {
 
   @GetMapping("{id}/modificar")
   public String mostrarFormularioModificar(@PathVariable Long id, Model model) {
-    ColeccionResponseDTO coleccion = coleccionService.obtenerColeccion(id);
+    Optional<ColeccionResponseDTO> coleccion = coleccionService.obtenerColeccion(id);
 
     model.addAttribute("tiposDeConsenso", TipoConsenso.values());
     model.addAttribute("tiposDeFuentes", TipoFuente.values());

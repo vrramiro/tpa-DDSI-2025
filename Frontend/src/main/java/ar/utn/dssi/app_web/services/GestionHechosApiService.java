@@ -1,6 +1,5 @@
 package ar.utn.dssi.app_web.services;
 
-
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
@@ -12,55 +11,48 @@ import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
 import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
 @Service
 public class GestionHechosApiService {
-  private static final Logger log = LoggerFactory.getLogger(GestionHechosApiService.class);
-  private final WebClient webClient;
-  private final WebApiCallerService webApiCallerService; // se usa para usuarios nada mas
-  private final String normalizadorSeriviceUrl;
-  private final String fuenteDinamicaSeriviceUrl;
-  private final String agregadorSeriviceUrl;
 
-  @Autowired
+  private static final Logger log = LoggerFactory.getLogger(GestionHechosApiService.class);
+
+  private final WebApiCallerService webApiCallerService;
+  private final String normalizadorServiceUrl;
+  private final String fuenteDinamicaServiceUrl;
+  private final String agregadorServiceUrl;
+
   public GestionHechosApiService(
           WebApiCallerService webApiCallerService,
-          @Value("${normalizador.service.url}")String normalizadorSeriviceUrl,
-          @Value("${fuenteDinamica.service.url}")String fuenteDinamicaSeriviceUrl,
-          @Value("${agregador.service.url}")String agregadorSeriviceUrl) {
-    this.webClient = WebClient.builder().build();
+          @Value("${normalizador.service.url}") String normalizadorServiceUrl,
+          @Value("${fuenteDinamica.service.url}") String fuenteDinamicaServiceUrl,
+          @Value("${agregador.service.url}") String agregadorServiceUrl
+  ) {
     this.webApiCallerService = webApiCallerService;
-    this.normalizadorSeriviceUrl = normalizadorSeriviceUrl;
-    this.fuenteDinamicaSeriviceUrl = fuenteDinamicaSeriviceUrl;
-    this.agregadorSeriviceUrl = agregadorSeriviceUrl;
+    this.normalizadorServiceUrl = normalizadorServiceUrl;
+    this.fuenteDinamicaServiceUrl = fuenteDinamicaServiceUrl;
+    this.agregadorServiceUrl = agregadorServiceUrl;
   }
 
-  public UbicacionOutputDTO obtenerUbicacion (Double latitud, Double longitud) {
+  /** =========================================
+   *  UBICACIÓN
+   *  ========================================= */
+  public UbicacionOutputDTO obtenerUbicacion(Double latitud, Double longitud) {
     String url = UriComponentsBuilder
-            .fromUriString(normalizadorSeriviceUrl)
+            .fromUriString(normalizadorServiceUrl)
             .path("/ubicacion/normalizar")
             .queryParam("latitud", latitud)
             .queryParam("longitud", longitud)
             .toUriString();
 
     try {
-      UbicacionOutputDTO response = webClient
-              .get()
-              .uri(url)
-              .retrieve()
-              .bodyToMono(UbicacionOutputDTO.class)
-              .block();
-
+      UbicacionOutputDTO response = webApiCallerService.get(url, UbicacionOutputDTO.class);
       validarUbicacion(response);
       return response;
     } catch (WebClientException e) {
@@ -71,13 +63,17 @@ public class GestionHechosApiService {
     }
   }
 
+  /** =========================================
+   *  CREAR HECHO
+   *  ========================================= */
   public Boolean crearHecho(HechoInputDTO hechoInputDTO) {
     String url = UriComponentsBuilder
-            .fromUriString(fuenteDinamicaSeriviceUrl)
+            .fromUriString(fuenteDinamicaServiceUrl)
             .path("/hechos")
             .toUriString();
 
     try {
+      // Clon sin archivos porque me rompen los archivos
       HechoInputDTO dtoSinArchivos = new HechoInputDTO();
       dtoSinArchivos.setTitulo(hechoInputDTO.getTitulo());
       dtoSinArchivos.setDescripcion(hechoInputDTO.getDescripcion());
@@ -86,53 +82,26 @@ public class GestionHechosApiService {
       dtoSinArchivos.setLongitud(hechoInputDTO.getLongitud());
       dtoSinArchivos.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
 
-      // Log para ver qué se está enviando
-      log.info("=== Datos a enviar ===");
-      log.info("Titulo: {}", dtoSinArchivos.getTitulo());
-      log.info("Descripcion: {}", dtoSinArchivos.getDescripcion());
-      log.info("Categoria: {}", dtoSinArchivos.getCategoria());
-      log.info("Latitud: {}", dtoSinArchivos.getLatitud());
-      log.info("Longitud: {}", dtoSinArchivos.getLongitud());
-      log.info("Fecha: {}", dtoSinArchivos.getFechaAcontecimiento());
-
-      webClient
-              .post()
-              .uri(url)
-              .contentType(MediaType.APPLICATION_JSON)
-              .bodyValue(dtoSinArchivos)
-              .retrieve()
-              .onStatus(
-                      status -> status.is4xxClientError(),
-                      response -> response.bodyToMono(String.class)
-                              .flatMap(errorBody -> {
-                                log.error("Error 4xx del backend: {}", errorBody);
-                                return Mono.error(new RuntimeException("Error del backend: " + errorBody));
-                              })
-              )
-              .bodyToMono(Void.class)
-              .block();
+      webApiCallerService.post(url, dtoSinArchivos, Void.class);
       return true;
     } catch (Exception e) {
-      log.error("Error completo al crear hecho: ", e);
+      log.error("Error al crear hecho: {}", e.getMessage(), e);
       return false;
     }
   }
 
+  /** =========================================
+   *  OBTENER HECHO POR ID
+   *  ========================================= */
   public HechoOutputDTO obtenerHechoPorId(Long id) {
     String url = UriComponentsBuilder
-            .fromUriString(agregadorSeriviceUrl)
+            .fromUriString(agregadorServiceUrl)
             .path("/hecho")
             .queryParam("id", id)
             .toUriString();
 
     try {
-      HechoOutputDTO response = webClient
-              .get()
-              .uri(url)
-              .retrieve()
-              .bodyToMono(HechoOutputDTO.class)
-              .block();
-
+      HechoOutputDTO response = webApiCallerService.get(url, HechoOutputDTO.class);
       if (response == null) {
         throw new NotFoundException("Hecho", id.toString());
       }
@@ -143,9 +112,12 @@ public class GestionHechosApiService {
     }
   }
 
+  /** =========================================
+   *  CAMBIAR ESTADO HECHO
+   *  ========================================= */
   public void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado) {
     String url = UriComponentsBuilder
-            .fromUriString(agregadorSeriviceUrl)
+            .fromUriString(agregadorServiceUrl)
             .path("/hecho/{id}/estado")
             .buildAndExpand(id)
             .toUriString();
@@ -153,28 +125,23 @@ public class GestionHechosApiService {
     try {
       EstadoHechoOutputDTO estado = new EstadoHechoOutputDTO();
       estado.setEstado(nuevoEstado);
-
-      webClient
-              .put()
-              .uri(url)
-              .bodyValue(estado)
-              .retrieve()
-              .bodyToMono(Void.class)
-              .block();
+      webApiCallerService.put(url, estado, Void.class);
     } catch (Exception e) {
       throw new RuntimeException("Error al cambiar el estado del hecho", e);
     }
   }
 
+  /** =========================================
+   *  EDITAR HECHO
+   *  ========================================= */
   public Boolean editarHecho(Long id, HechoInputDTO hechoInputDTO) {
     String url = UriComponentsBuilder
-            .fromUriString(fuenteDinamicaSeriviceUrl)
+            .fromUriString(fuenteDinamicaServiceUrl)
             .path("/hechos/{id}")
             .buildAndExpand(id)
             .toUriString();
 
     try {
-      // Crear un dto sin los archivos multimedia
       HechoInputDTO dtoSinArchivos = new HechoInputDTO();
       dtoSinArchivos.setTitulo(hechoInputDTO.getTitulo());
       dtoSinArchivos.setDescripcion(hechoInputDTO.getDescripcion());
@@ -182,16 +149,8 @@ public class GestionHechosApiService {
       dtoSinArchivos.setLatitud(hechoInputDTO.getLatitud());
       dtoSinArchivos.setLongitud(hechoInputDTO.getLongitud());
       dtoSinArchivos.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
-      // NO seteamos contenidoMultimedia
 
-      webClient
-              .put()
-              .uri(url)
-              .contentType(MediaType.APPLICATION_JSON)
-              .bodyValue(dtoSinArchivos)
-              .retrieve()
-              .bodyToMono(Void.class)
-              .block();
+      webApiCallerService.put(url, dtoSinArchivos, Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al editar hecho {}: {}", id, e.getMessage());
@@ -199,9 +158,13 @@ public class GestionHechosApiService {
     }
   }
 
+  /** =========================================
+   *  BUSCAR HECHOS PAGINADOS
+   *  ========================================= */
+  @SuppressWarnings("unchecked")
   public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(int page, int size, String filtro, String sort) {
     String url = UriComponentsBuilder
-            .fromUriString(agregadorSeriviceUrl)
+            .fromUriString(agregadorServiceUrl)
             .path("/hechos")
             .queryParam("page", page)
             .queryParam("size", size)
@@ -209,125 +172,13 @@ public class GestionHechosApiService {
             .queryParamIfPresent("sort", Optional.ofNullable(sort))
             .toUriString();
 
-    PageResponseDTO<HechoOutputDTO> response = webClient
-            .get()
-            .uri(url)
-            .retrieve()
-            .bodyToMono(PageResponseDTO.class)
-            .block();
-
-    return response;
+    return (PageResponseDTO<HechoOutputDTO>)
+            webApiCallerService.get(url, PageResponseDTO.class);
   }
 
-/*
-    public Boolean crearHecho(HechoInputDTO hechoInputDTO) {
-        String url = UriComponentsBuilder
-                .fromUriString(fuenteDinamicaSeriviceUrl)
-                .path("/hecho")
-                .toUriString();
-
-        try {
-            webApiCallerService.post(url, hechoInputDTO, Void.class);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public UbicacionOutputDTO obtenerUbicacion (Double latitud, Double longitud) {
-        String url = UriComponentsBuilder
-                .fromUriString(normalizadorSeriviceUrl)
-                .path("/ubicacion/normalizar")
-                .queryParam("latitud", latitud)
-                .queryParam("longitud", longitud)
-                .toUriString();
-
-        try {
-            UbicacionOutputDTO response = webApiCallerService.get(url, UbicacionOutputDTO.class);
-            validarUbicacion(response);
-            return response;
-        } catch (WebClientException e) {  // Más específico
-            throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
-        } catch (Exception e) {
-            log.error("Error inesperado al obtener ubicación", e);
-            throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
-        }
-    }
-
-    public HechoOutputDTO obtenerHechoPorId(Long id) {
-        String url = UriComponentsBuilder
-                .fromUriString(agregadorSeriviceUrl)
-                .path("/hecho")
-                .queryParam("id", id)
-                .toUriString();
-
-        try {
-            HechoOutputDTO response = webApiCallerService.get(url, HechoOutputDTO.class);
-            if (response == null) {
-                throw new NotFoundException("Hecho", id.toString());
-            }
-            return response;
-
-        } catch (Exception e) {
-            log.error("Error al obtener hecho con id {}: {}", id, e.getMessage());
-            throw new NotFoundException("Hecho", id.toString());
-        }
-    }
-
-    public void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado) {
-        String url = UriComponentsBuilder
-                .fromUriString(agregadorSeriviceUrl)
-                .path("/hecho/{id}/estado")
-                .buildAndExpand(id)
-                .toUriString();
-
-        try {
-            EstadoHechoOutputDTO estado = new EstadoHechoOutputDTO();
-            estado.setEstado(nuevoEstado);
-            webApiCallerService.put(url, estado, Void.class);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al cambiar el estado del hecho", e);
-        }
-    }
-
-    public Boolean editarHecho(Long id, HechoInputDTO hechoInputDTO) {
-        String url = UriComponentsBuilder
-                .fromUriString(fuenteDinamicaSeriviceUrl)
-                .path("/hechos/{id}")
-                .buildAndExpand(id)
-                .toUriString();
-
-        try {
-            webApiCallerService.put(url, hechoInputDTO, Void.class);
-            return true;
-        } catch (Exception e) {
-            log.error("Error al editar hecho {}: {}", id, e.getMessage());
-            return false;
-        }
-    }
-
-    public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(int page, int size, String filtro, String sort) {
-
-        String url = UriComponentsBuilder
-                .fromUriString(agregadorSeriviceUrl)
-                .path("/hechos")
-                .queryParam("page", page)
-                .queryParam("size", size)
-                .queryParamIfPresent("filtro", Optional.ofNullable(filtro).filter(s -> !s.isBlank()))
-                .queryParamIfPresent("sort", Optional.ofNullable(sort))
-                .toUriString();
-
-        @SuppressWarnings("unchecked") //SOLO PARA QUE NO JODA EL COMPILADOR
-        PageResponseDTO<HechoOutputDTO> response =
-                (PageResponseDTO<HechoOutputDTO>) webApiCallerService.get(url, PageResponseDTO.class);
-
-        return response;
-    }
-
-/**********************************************************************************************************************/
-/*************************************************LO DE ABAJO ES EXTRA*************************************************/
-/**********************************************************************************************************************/
-
+  /** =========================================
+   *  AUXILIARES
+   *  ========================================= */
   private void validarUbicacion(UbicacionOutputDTO ubicacion) {
     if (esVacioONulo(ubicacion.getPais())) {
       throw new NotFoundException("País no encontrado");

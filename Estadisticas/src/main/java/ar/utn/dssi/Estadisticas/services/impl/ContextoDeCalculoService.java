@@ -5,19 +5,23 @@ import ar.utn.dssi.Estadisticas.models.entities.adapters.normalizador.INormaliza
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ContextoDeCalculoService implements IContextoDeCalculoService {
+  @Autowired
   private final IAgregadorAdapter agregadorAdapter;
+
+  @Autowired
   private final INormalizadorAdapter normalizadorAdapter;
 
   @Override
   public ContextoDeCalculo obtenerContextoDeCalculo() {
     ContextoDeCalculo contextoDeCalculo = new ContextoDeCalculo();
 
-    contextoDeCalculo.setCategorias(normalizadorAdapter.obtenerCategorias());
+    contextoDeCalculo.setCategorias(normalizadorAdapter.obtenerCategorias().block());
     contextoDeCalculo.setHechos(agregadorAdapter.obtenerHechos());
     contextoDeCalculo.setColecciones(agregadorAdapter.obtenerColecciones());
 

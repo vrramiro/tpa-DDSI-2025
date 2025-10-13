@@ -1,7 +1,6 @@
 package ar.utn.dssi.app_web.providers;
 
 import ar.utn.dssi.app_web.dto.AuthResponseDTO;
-import ar.utn.dssi.app_web.dto.RolDTO;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
