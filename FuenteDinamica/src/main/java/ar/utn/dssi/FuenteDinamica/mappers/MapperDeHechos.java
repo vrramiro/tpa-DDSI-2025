@@ -50,7 +50,7 @@ public class MapperDeHechos {
     hecho.setDescripcion(hechoInputDTO.getDescripcion());
     hecho.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoInputDTO.getCategoria()));
 
-    hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+    hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento().atStartOfDay());
 
     Ubicacion ubicacion = new Ubicacion();
     ubicacion.setLatitud(hechoInputDTO.getLatitud());

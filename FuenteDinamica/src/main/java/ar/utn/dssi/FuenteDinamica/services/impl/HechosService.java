@@ -109,7 +109,7 @@ public class HechosService implements IHechosService {
     if (hechoInputDTO.getFechaAcontecimiento() == null) {
       throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
     }
-    if (hechoInputDTO.getFechaAcontecimiento().isAfter(LocalDateTime.now())) {
+    if (hechoInputDTO.getFechaAcontecimiento().atStartOfDay().isAfter(LocalDateTime.now())) {
       throw new DatosFaltantes("La fecha de acontecimiento no puede ser futura.");
     }
     if (hechoInputDTO.getLatitud() == null || hechoInputDTO.getLongitud() == null) {
@@ -121,7 +121,7 @@ public class HechosService implements IHechosService {
     hechoExistente.setTitulo(hechoNuevo.getTitulo());
     hechoExistente.setDescripcion(hechoNuevo.getDescripcion());
     hechoExistente.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoNuevo.getCategoria()));
-    hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento());
+    hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento().atStartOfDay());
 
     List<ContenidoMultimedia> contenidoMultimedia =
         this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
