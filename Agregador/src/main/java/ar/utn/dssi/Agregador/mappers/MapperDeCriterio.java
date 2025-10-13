@@ -1,6 +1,7 @@
 package ar.utn.dssi.Agregador.mappers;
 
 import ar.utn.dssi.Agregador.dto.input.CriterioDePertenenciaInputDTO;
+import ar.utn.dssi.Agregador.dto.output.CriterioDePertenenciaOutputDTO;
 import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
@@ -16,6 +17,14 @@ public class MapperDeCriterio {
       throw new DatosDeColeccionFaltantes("El valor del criterio no puede ser nulo o vacío");
 
     return CriterioDePertenenciaFactory.crearCriterio(input.getId(), input.getTipo(), input.getValor());
+  }
+
+  public static CriterioDePertenenciaOutputDTO criterioDePertenenciaOutputDTOFromCriterio(CriterioDePertenencia criterio) {
+    CriterioDePertenenciaOutputDTO criterioDto = new CriterioDePertenenciaOutputDTO();
+    criterioDto.setId(criterio.getId());
+    criterioDto.setTipoCriterio(criterio.getTipoCriterio());
+    criterioDto.setValor(criterio.getValor());
+    return criterioDto;
   }
 
   public static LocalDate parsearFecha(String fecha) {
