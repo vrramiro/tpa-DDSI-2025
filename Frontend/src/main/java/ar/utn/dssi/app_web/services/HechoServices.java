@@ -45,10 +45,6 @@ public class HechoServices {
     return gestionHechosApiService.editarHecho(id, hechoInputDTO);
   }
 
-/**********************************************************************************************************************/
-/*************************************************LO DE ABAJO ES EXTRA*************************************************/
-  /**********************************************************************************************************************/
-
 
   private void validarDatosBasicos(HechoInputDTO hechoInputDTO) {
     ValidationException validationException = new ValidationException("Errores de validación");
