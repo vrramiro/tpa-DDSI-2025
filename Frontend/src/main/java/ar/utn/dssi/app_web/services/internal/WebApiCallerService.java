@@ -1,6 +1,5 @@
 package ar.utn.dssi.app_web.services.internal;
 
-
 import ar.utn.dssi.app_web.dto.AuthResponseDTO;
 import ar.utn.dssi.app_web.dto.RefreshTokenDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
@@ -29,7 +28,6 @@ public class WebApiCallerService {
 
   /**
    * Ejecuta una llamada al API con manejo automático de refresh token
-   *
    * @param apiCall función que ejecuta la llamada al API
    * @return resultado de la llamada al API
    */
@@ -56,7 +54,7 @@ public class WebApiCallerService {
           throw new RuntimeException("Error al refrescar token y reintentar: " + refreshError.getMessage(), refreshError);
         }
       }
-      if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+      if(e.getStatusCode() == HttpStatus.NOT_FOUND){
         throw new NotFoundException(e.getMessage());
       }
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
@@ -70,13 +68,13 @@ public class WebApiCallerService {
    */
   public <T> T get(String url, Class<T> responseType) {
     return executeWithTokenRetry(accessToken ->
-        webClient
-            .get()
-            .uri(url)
-            .header("Authorization", "Bearer " + accessToken)
-            .retrieve()
-            .bodyToMono(responseType)
-            .block()
+            webClient
+                    .get()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .bodyToMono(responseType)
+                    .block()
     );
   }
 
@@ -85,14 +83,14 @@ public class WebApiCallerService {
    */
   public <T> java.util.List<T> getList(String url, Class<T> responseType) {
     return executeWithTokenRetry(accessToken ->
-        webClient
-            .get()
-            .uri(url)
-            .header("Authorization", "Bearer " + accessToken)
-            .retrieve()
-            .bodyToFlux(responseType)
-            .collectList()
-            .block()
+            webClient
+                    .get()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .retrieve()
+                    .bodyToFlux(responseType)
+                    .collectList()
+                    .block()
     );
   }
 
@@ -102,12 +100,12 @@ public class WebApiCallerService {
   public <T> T getWithAuth(String url, String accessToken, Class<T> responseType) {
     try {
       return webClient
-          .get()
-          .uri(url)
-          .header("Authorization", "Bearer " + accessToken)
-          .retrieve()
-          .bodyToMono(responseType)
-          .block();
+              .get()
+              .uri(url)
+              .header("Authorization", "Bearer " + accessToken)
+              .retrieve()
+              .bodyToMono(responseType)
+              .block();
     } catch (Exception e) {
       throw new RuntimeException("Error en llamada al API: " + e.getMessage(), e);
     }
@@ -118,14 +116,14 @@ public class WebApiCallerService {
    */
   public <T> T post(String url, Object body, Class<T> responseType) {
     return executeWithTokenRetry(accessToken ->
-        webClient
-            .post()
-            .uri(url)
-            .header("Authorization", "Bearer " + accessToken)
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(responseType)
-            .block()
+            webClient
+                    .post()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(responseType)
+                    .block()
     );
   }
 
@@ -134,14 +132,14 @@ public class WebApiCallerService {
    */
   public <T> T put(String url, Object body, Class<T> responseType) {
     return executeWithTokenRetry(accessToken ->
-        webClient
-            .put()
-            .uri(url)
-            .header("Authorization", "Bearer " + accessToken)
-            .bodyValue(body)
-            .retrieve()
-            .bodyToMono(responseType)
-            .block()
+            webClient
+                    .put()
+                    .uri(url)
+                    .header("Authorization", "Bearer " + accessToken)
+                    .bodyValue(body)
+                    .retrieve()
+                    .bodyToMono(responseType)
+                    .block()
     );
   }
 
@@ -151,12 +149,12 @@ public class WebApiCallerService {
   public void delete(String url) {
     executeWithTokenRetry(accessToken -> {
       webClient
-          .delete()
-          .uri(url)
-          .header("Authorization", "Bearer " + accessToken)
-          .retrieve()
-          .bodyToMono(Void.class)
-          .block();
+              .delete()
+              .uri(url)
+              .header("Authorization", "Bearer " + accessToken)
+              .retrieve()
+              .bodyToMono(Void.class)
+              .block();
       return null;
     });
   }
@@ -167,16 +165,16 @@ public class WebApiCallerService {
   private AuthResponseDTO refreshToken(String refreshToken) {
     try {
       RefreshTokenDTO refreshRequest = RefreshTokenDTO.builder()
-          .refreshToken(refreshToken)
-          .build();
+              .refreshToken(refreshToken)
+              .build();
 
       AuthResponseDTO response = webClient
-          .post()
-          .uri(authServiceUrl + "/auth/refresh")
-          .bodyValue(refreshRequest)
-          .retrieve()
-          .bodyToMono(AuthResponseDTO.class)
-          .block();
+              .post()
+              .uri(authServiceUrl + "/auth/refresh")
+              .bodyValue(refreshRequest)
+              .retrieve()
+              .bodyToMono(AuthResponseDTO.class)
+              .block();
 
       // Actualizar tokens en sesión
       updateTokensInSession(response.getAccessToken(), response.getRefreshToken());

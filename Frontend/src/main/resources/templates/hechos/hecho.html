@@ -3,7 +3,7 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/hechos/hecho.css}">
+        <link th:href="@{/css/hechos/hecho.css}" rel="stylesheet">
     </th:block>
 </head>
 
@@ -12,33 +12,56 @@
     <main class="hecho-container">
         <div class="hecho-card">
             <div class="hecho-meta">
-                <span class="hecho-fecha">01/08/2025</span>
+                <a th:if="${hecho.estado.name() != 'RECHAZADO'}"
+                   th:href="@{/hechos/{id}/editar(id=${hecho.id})}"
+                   class="btn btn-editar">Editar</a>
+
+                <span class="hecho-fecha"
+                      th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/08/2025</span>
             </div>
             <div class="hecho-header">
-                <h1 class="hecho-titulo">Protesta en Plaza Mayor</h1>
+                <h1 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h1>
             </div>
 
-            <img alt="Imagen del hecho" class="hecho-imagen" src="https://picsum.photos/800/400?random=1">
+            <img th:if="${!hecho.contenidoMultimedia.isEmpty()}"
+                 class="hecho-imagen"
+                 th:src="${hecho.contenidoMultimedia[0].url}"
+                 alt="Imagen del hecho">
 
             <div class="hecho-meta-info">
                 <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez</p>
-                <span class="hecho-categoria">Protesta</span>
+                <span class="hecho-categoria" th:text="${hecho.categoria}">Categoría</span>
             </div>
 
-            <p class="hecho-descripcion">
-                Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y
-                se extendió durante varias horas de forma pacífica.
+            <p class="hecho-descripcion" th:text="${hecho.descripcion}">
+                Más de 2000 personas marcharon reclamando derechos laborales en la capital. La convocatoria fue masiva y se extendió durante varias horas de forma pacífica.
             </p>
 
-            <p class="hecho-autor"><strong>Estado:</strong> ACEPTADO/PENDIENTE/RECHAZADO</p>
+            <p class="hecho-estado">
+                <strong>Estado:</strong>
+                <span th:class="'badge badge-' + ${hecho.estado.name().toLowerCase()}"
+                      th:text="${hecho.estado}">PENDIENTE</span>
+            </p>
 
             <div class="hecho-footer">
                 <div class="hecho-botones">
-                    <a class="btn btn-volver" href=#>Volver</a>
-                    <a class="btn btn-danger" th:href="@{/solicitudes/nueva}">Solicitud de eliminación</a>
-                    <button class="btn btn-danger">Rechazar</button>
-                    <button class="btn btn-primary">Aceptar</button>
-                    <a class="btn btn-primary" th:href="@{/explorador}">Ver en mapa</a>
+                    <a href="#" onclick="history.back()" class="btn btn-volver">Volver</a>
+
+                    <a th:href="@{/solicitudes/nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
+
+                    <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
+                          th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}"
+                          method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger">Rechazar</button>
+                    </form>
+
+                    <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
+                          th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}"
+                          method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-primary">Aceptar</button>
+                    </form>
+
+                    <a th:href="@{/explorador(lat=${hecho.ubicacion.latitud},lng=${hecho.ubicacion.longitud})}" class="btn btn-primary">Ver en mapa</a>
                 </div>
             </div>
         </div>

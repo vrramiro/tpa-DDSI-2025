@@ -3,7 +3,7 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/hechos/gestionHechos.css}">
+        <link th:href="@{/css/hechos/gestionHechos.css}" rel="stylesheet">
     </th:block>
 </head>
 
@@ -20,7 +20,6 @@
                     <option value="aprobado">Aprobado</option>
                     <option value="pendiente">Pendiente</option>
                     <option value="rechazado">Rechazado</option>
-                    <option value="rechazado">Spam</option>
                     <option value="rechazado">Eliminado</option>
                 </select>
             </div>
@@ -46,7 +45,7 @@
                     <td>2024-09-01</td>
                     <td>Aprobado</td>
                     <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/hechos/hecho_unico}">Ver Mas</a>
+                        <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                     </td>
                 </tr>
                 <tr>
@@ -56,7 +55,7 @@
                     <td>2024-08-25</td>
                     <td>Pendiente</td>
                     <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/hechos/hecho_unico}">Ver Mas</a>
+                        <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                     </td>
                 </tr>
                 <tr>
@@ -66,25 +65,27 @@
                     <td>2024-07-10</td>
                     <td>Rechazado</td>
                     <td class="action-buttons">
-                        <a class="btn btn-edit" th:href="@{/hechos/hecho_unico}">Ver Mas</a>
+                        <a th:href="@{/hechos/hecho_unico}" class="btn btn-edit">Ver Mas</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <nav aria-label="Paginación" class="pagination">
-            <a class="page-link" href="#">&laquo;</a>
-            <a class="page-link active" href="#">1</a>
-            <a class="page-link" href="#">2</a>
-            <a class="page-link" href="#">3</a>
-            <a class="page-link" href="#">4</a>
-            <span class="page-link-ellipsis">...</span>
-            <a class="page-link" href="#">&raquo;</a>
-        </nav>
+        <!-- Paginación -->
+        <div th:replace="~{navegacion/navegacion :: pager(
+      ${page},
+      ${totalPages},
+      ${size},
+      ${baseUrl},
+      ${filtro},
+      ${sort},
+      ${isFirst},
+      ${isLast}
+  )}"></div>
 
         <div class="footer-actions">
-            <a class="btn btn-primary" th:href="@{/panel_gestion}">Volver</a>
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
         </div>
     </main>
 

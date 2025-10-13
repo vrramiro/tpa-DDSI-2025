@@ -2,7 +2,7 @@
 <head>
     <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link rel="stylesheet" th:href="@{/css/hechos/detalleHecho.css}">
+        <link th:href="@{/css/hechos/detalleHecho.css}" rel="stylesheet">
     </th:block>
 </head>
 
@@ -13,59 +13,58 @@
         <form class="detalle-form">
             <div class="form-group">
                 <label for="titulo">Título</label>
-                <input id="titulo" placeholder="Título" type="text">
+                <input type="text" id="titulo" placeholder="Título">
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label for="fecha-acontecimiento">Fecha de acontecimiento</label>
-                    <input id="fecha-acontecimiento" type="date">
+                    <input type="date" id="fecha-acontecimiento">
                 </div>
                 <div class="form-group">
                     <label for="fecha-subida">Fecha de subida</label>
-                    <input id="fecha-subida" type="date">
+                    <input type="date" id="fecha-subida">
                 </div>
                 <div class="form-group">
                     <label for="fecha-edicion">Fecha de edición</label>
-                    <input id="fecha-edicion" type="date">
+                    <input type="date" id="fecha-edicion">
                 </div>
                 <div class="form-group">
                     <label for="fecha-gestion">Fecha de gestión</label>
-                    <input id="fecha-gestion" type="date">
+                    <input type="date" id="fecha-gestion">
                 </div>
                 <div class="form-group">
                     <label for="fecha-eliminacion">Fecha de eliminación</label>
-                    <input id="fecha-eliminacion" type="date">
+                    <input type="date" id="fecha-eliminacion">
                 </div>
             </div>
 
             <div class="form-grid">
                 <div class="form-group">
                     <label for="gestionado">Gestionado por</label>
-                    <input id="gestionado" placeholder="Nombre" type="text">
+                    <input type="text" id="gestionado" placeholder="Nombre">
                 </div>
                 <div class="form-group">
                     <label for="autor">Autor</label>
-                    <input id="autor" placeholder="Nombre del autor" type="text">
+                    <input type="text" id="autor" placeholder="Nombre del autor">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" placeholder="Texto..." rows="4"></textarea>
+                <textarea id="descripcion" rows="4" placeholder="Texto..."></textarea>
             </div>
 
             <div class="form-group">
                 <label for="multimedia">Multimedia</label>
-                <textarea id="multimedia" placeholder="URLs o descripción de archivos multimedia..."
-                          rows="3"></textarea>
+                <textarea id="multimedia" rows="3" placeholder="URLs o descripción de archivos multimedia..."></textarea>
             </div>
 
             <div class="form-actions">
-                <button class="btn btn-secondary" type="button">Volver</button>
-                <button class="btn btn-primary" type="submit">Aceptar</button>
-                <button class="btn btn-outline" type="button">Rechazar</button>
-                <button class="btn btn-primary" type="button">Aceptar con sugerencia</button>
+                <button type="button" class="btn btn-secondary">Volver</button>
+                <button type="submit" class="btn btn-primary">Aceptar</button>
+                <button type="button" class="btn btn-outline">Rechazar</button>
+                <button type="button" class="btn btn-primary">Aceptar con sugerencia</button>
             </div>
         </form>
     </main>

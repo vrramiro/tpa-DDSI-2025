@@ -55,10 +55,9 @@ h1 {
     display: flex;
     flex-direction: column;
 }
-
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
 }
 
 /* Cabecera de tarjeta */
@@ -117,7 +116,7 @@ h1 {
     transition: all 0.3s ease;
 }
 
-/* Tag en pie de tarjeta */
+
 .footer-tag {
     display: inline-block;
     background: var(--secondary-color);
@@ -128,9 +127,6 @@ h1 {
     font-weight: 500;
 }
 
-/* ============================================================
-   MODAL
-   ============================================================ */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -155,7 +151,7 @@ h1 {
     max-width: 600px;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     position: relative;
     margin: auto;
 }
@@ -166,15 +162,15 @@ h1 {
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 1rem;
+    padding-right: 50px;
+    padding-right: 1rem;
 }
-
 #modal-title {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--dark-color);
     margin: 0;
 }
-
 #modal-date {
     background: var(--light-color);
     padding: 0.3rem 0.8rem;
@@ -182,20 +178,21 @@ h1 {
     font-weight: 600;
     font-size: 0.9rem;
     white-space: nowrap;
-    margin-left: 1rem;
+    margin-left: auto;
 }
 
 /* Cuerpo modal */
 .modal-body {
     position: relative;
 }
-
 .modal-actions .btn,
 .modal-actions .btn-danger,
 .modal-actions .btn-primary {
     text-decoration: none;
 }
-
+.modal-actions .btn {
+    white-space: nowrap;
+}
 #modal-image {
     width: 100%;
     max-height: 300px;
@@ -218,27 +215,22 @@ h1 {
     opacity: 0.7;
     transition: opacity 0.3s;
 }
-
 .carousel-arrow:hover {
     opacity: 1;
 }
-
 .carousel-arrow.left {
     left: 10px;
 }
-
 .carousel-arrow.right {
     right: 10px;
 }
 
-/* Descripción modal */
 #modal-description {
     margin: 1rem 0;
     line-height: 1.6;
     color: var(--text-color);
 }
 
-/* Pie modal */
 .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -247,7 +239,6 @@ h1 {
     flex-wrap: wrap;
     gap: 1rem;
 }
-
 #modal-category {
     display: inline-block;
     background: var(--secondary-color);
@@ -257,12 +248,41 @@ h1 {
     font-size: 0.9rem;
     font-weight: 500;
 }
-
 .modal-actions {
     display: flex;
     gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 10;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: rotate(90deg);
+}
+
+/* Transición suave de imágenes */
+#modal-image {
+    transition: opacity 0.3s ease;
+}
 /* ============================================================
    PAGINACIÓN
    ============================================================ */
@@ -300,4 +320,26 @@ h1 {
 
 .page-link-ellipsis {
     border: none;
+}
+
+@media (max-width: 600px) {
+    .modal-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .modal-actions .btn {
+        flex: 1;
+        text-align: center;
+    }
+    .modal-header {
+        flex-direction: column;
+        padding-right: 50px;
+    }
+
+    #modal-date {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
 }
