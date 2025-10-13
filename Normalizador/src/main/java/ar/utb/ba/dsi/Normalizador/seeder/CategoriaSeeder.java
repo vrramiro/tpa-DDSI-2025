@@ -16,7 +16,7 @@ public class CategoriaSeeder implements CommandLineRunner {
   private final ICategoriaRepository categoriaRepository;
 
   @Override
-  public void run(String... args) throws Exception {
+  public void run(String... args) {
     if (categoriaRepository.count() == 0) {
       List<Categoria> categorias = new ArrayList<>();
 
