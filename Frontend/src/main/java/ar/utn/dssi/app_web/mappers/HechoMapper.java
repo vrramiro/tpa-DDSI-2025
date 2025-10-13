@@ -1,6 +1,5 @@
 package ar.utn.dssi.app_web.mappers;
 
-import ar.utn.dssi.app_web.dto.input.CategoriaInputDTO;
 import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import org.springframework.stereotype.Component;

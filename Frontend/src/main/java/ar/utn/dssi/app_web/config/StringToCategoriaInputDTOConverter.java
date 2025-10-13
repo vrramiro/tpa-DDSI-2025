@@ -1,6 +1,5 @@
 package ar.utn.dssi.app_web.config;
 
-import ar.utn.dssi.app_web.dto.input.CategoriaInputDTO;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

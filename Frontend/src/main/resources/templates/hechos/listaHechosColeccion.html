@@ -1,68 +1,128 @@
-
 <html th:replace="~{layout/base::html}">
 <head>
-    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/hechos/listaHechosColeccion.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/crearColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css">
     </th:block>
 </head>
 
-<div th:fragment="contenido">
+<div th:fragment="contenido" class="row">
+    <main class="container-modificacion">
+        <h2>Modificar colección</h2>
 
-    <div class="main-actions">
-        <h1>Eventos Ambientales</h1>
-        <a th:href="@{/explorador}" class="btn btn-primary">Ver en mapa</a>
-    </div>
+        <form id="coleccionForm" class="coleccion-form"
+              th:action="@{/colecciones/{id}/actualizar(id=${coleccion.id})}" th:object="${coleccion}" method="post" novalidate>
 
-    <div class="hechos-list">
-        <article class="hecho-card">
-            <div class="hecho-card-content">
-                <h2 class="hecho-title">Incendio Forestal en las Sierras</h2>
-                <p class="hecho-meta">Publicado: 05/09/2025 | Categoría: Incendios</p>
-                <p class="hecho-description">Un voraz incendio consumió más de 500 hectáreas de bosque nativo en la región serrana, afectando la flora y fauna local. Equipos de bomberos de varias localidades trabajan para controlarlo.</p>
+            <!-- Título -->
+            <div class="form-group">
+                <label for="titulo">Título</label>
+                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Texto" required>
             </div>
-            <div class="hecho-card-actions">
-                <a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
-            </div>
-        </article>
 
-        <article class="hecho-card">
-            <div class="hecho-card-content">
-                <h2 class="hecho-title">Campaña de Reforestación Comunitaria</h2>
-                <p class="hecho-meta">Publicado: 02/09/2025 | Categoría: Acciones de Conservación</p>
-                <p class="hecho-description">Voluntarios y organizaciones locales se unieron para plantar más de mil árboles autóctonos en la ribera del río, en un esfuerzo por recuperar el ecosistema dañado por la contaminación.</p>
+            <!-- Descripción -->
+            <div class="form-group">
+                <label for="descripcion">Descripción</label>
+                <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Texto">
             </div>
-            <div class="hecho-card-actions">
-                <a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
-            </div>
-        </article>
 
-        <article class="hecho-card">
-            <div class="hecho-card-content">
-                <h2 class="hecho-title">Derrame de Petróleo en la Costa</h2>
-                <p class="hecho-meta">Publicado: 28/08/2025 | Categoría: Contaminación</p>
-                <p class="hecho-description">Se ha detectado una mancha de crudo de gran extensión a pocos kilómetros de la costa, amenazando el ecosistema marino y las playas de la región. Se activó el plan de contingencia.</p>
+            <!-- Consenso -->
+            <div class="form-group">
+                <label for="consenso">Consenso</label>
+                <select id="consenso" th:field="*{consenso.tipo}" class="form-control">
+                    <option value="">Seleccione...</option>
+                    <option th:each="tipo : ${tiposDeConsenso}"
+                            th:value="${tipo}"
+                            th:text="${#strings.capitalize(#strings.replace(tipo.name(),'_',' ').toLowerCase())}">
+                    </option>
+                </select>
             </div>
-            <div class="hecho-card-actions">
-                <a th:href="@{/hechos/hecho_unico}" class="btn btn-outline">Ver más</a>
-            </div>
-        </article>
-    </div>
 
-    <nav class="pagination" aria-label="Paginación">
-        <a href="#" class="page-link">&laquo;</a>
-        <a href="#" class="page-link active">1</a>
-        <a href="#" class="page-link">2</a>
-        <a href="#" class="page-link">3</a>
-        <a href="#" class="page-link">4</a>
-        <span class="page-link-ellipsis">...</span>
-        <a href="#" class="page-link">&raquo;</a>
-    </nav>
+            <!-- Categoría -->
+            <div class="form-group">
+                <label for="categoria">Categoría</label>
+                <select id="categoria" th:field="*{categoria.nombreCategoria}" class="form-control">
+                    <option value=""></option>
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.nombreCategoria}"
+                            th:text="${#strings.capitalize(cat.nombreCategoria.toLowerCase())}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Criterios de pertenencia -->
+            <fieldset class="criterios">
+                <legend>Criterios de pertenencia</legend>
+
+                <div class="form-grid">
+                    <!-- FECHA_DESDE -->
+                    <div class="form-group">
+                        <label for="fechaDesde">Fecha acontecimiento desde</label>
+                        <input type="date" id="fechaDesde" th:field="*{criterios[0].valor}">
+                        <input type="hidden" th:field="*{criterios[0].tipo}" value="FECHA_DESDE">
+                    </div>
+
+                    <!-- FECHA_HASTA -->
+                    <div class="form-group">
+                        <label for="fechaHasta">Fecha acontecimiento hasta</label>
+                        <input type="date" id="fechaHasta" th:field="*{criterios[1].valor}">
+                        <input type="hidden" th:field="*{criterios[1].tipo}" value="FECHA_HASTA">
+                    </div>
+                </div>
+
+                <!-- PROVINCIA -->
+                <div class="form-group">
+                    <label for="provincia">Provincia</label>
+                    <select id="provincia" class="form-control" th:field="*{criterios[2].valor}">
+                        <option value=""></option>
+                        <option value="Buenos Aires">Buenos Aires</option>
+                        <option value="Catamarca">Catamarca</option>
+                        <option value="Chaco">Chaco</option>
+                        <option value="Chubut">Chubut</option>
+                        <option value="Córdoba">Córdoba</option>
+                        <option value="Corrientes">Corrientes</option>
+                        <option value="Entre Ríos">Entre Ríos</option>
+                        <option value="Formosa">Formosa</option>
+                        <option value="Jujuy">Jujuy</option>
+                        <option value="La Pampa">La Pampa</option>
+                        <option value="La Rioja">La Rioja</option>
+                        <option value="Mendoza">Mendoza</option>
+                        <option value="Misiones">Misiones</option>
+                        <option value="Neuquén">Neuquén</option>
+                        <option value="Río Negro">Río Negro</option>
+                        <option value="Salta">Salta</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="San Luis">San Luis</option>
+                        <option value="Santa Cruz">Santa Cruz</option>
+                        <option value="Santa Fe">Santa Fe</option>
+                        <option value="Santiago del Estero">Santiago del Estero</option>
+                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                        <option value="Tucumán">Tucumán</option>
+                    </select>
+                    <input type="hidden" th:field="*{criterios[2].tipo}" value="PROVINCIA">
+                </div>
+            </fieldset>
+
+            <!-- Fuentes -->
+            <div class="form-group">
+                <label>Fuentes</label>
+                <div class="custom-multiselect" th:each="fuenteEnum : ${tiposDeFuentes}">
+                    <label>
+                        <input type="checkbox" th:field="*{fuentes}" th:value="${fuenteEnum}">
+                        <span th:text="${#strings.capitalize(fuenteEnum.name().toLowerCase())}"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a th:href="@{/colecciones}" class="btn btn-secondary">Volver</a>
+                <button type="submit" class="btn btn-primary">Actualizar</button>
+            </div>
+        </form>
+    </main>
 
     <th:block th:fragment="scripts">
-        <script th:src="@{/js/hechos/listaHechosColeccion.js}"></script>
+        <script th:src="@{/js/colecciones/crearColecciones.js}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     </th:block>
-
 </div>
-
 </html>

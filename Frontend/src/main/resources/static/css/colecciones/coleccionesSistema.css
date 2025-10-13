@@ -30,9 +30,7 @@ h1 {
     transition: transform .2s;
 }
 
-.card:hover {
-    transform: translateY(-5px);
-}
+.card:hover { transform: translateY(-5px); }
 
 .card-header {
     font-weight: 700;
@@ -65,8 +63,8 @@ h1 {
 
 /* Paginación */
 .grid .pagination {
-    grid-column: 1 / -1; /* ocupar todo el ancho del grid */
-    justify-self: center; /* centrar el nav en el grid */
+    grid-column: 1 / -1;    /* ocupar todo el ancho del grid */
+    justify-self: center;   /* centrar el nav en el grid */
     width: 100%;
 }
 
@@ -106,3 +104,128 @@ h1 {
 .page-link-ellipsis {
     border: none;
 }
+
+.pagination .page-link.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* Estado vacío: reutiliza tu grid y card */
+.empty-grid {
+    /* ya es display:grid por .grid */
+    grid-template-columns: 1fr;  /* una sola columna centrada */
+    min-height: 40vh;            /* altura cómoda para centrar */
+    place-items: center;         /* centra horizontal y vertical */
+}
+
+.empty-card {
+    max-width: 520px;            /* ancho agradable */
+    width: min(90%, 520px);
+    text-align: center;
+}
+
+/* Texto atenuado coherente con tu paleta */
+.muted {
+    color: var(--secondary-color);
+}
+
+/* estado seleccionado: resalta el “card” del label */
+.custom-multiselect label:has(input[type="checkbox"]:checked) {
+    background: color-mix(in srgb, var(--primary-color) 12%, #fff);
+    border-color: color-mix(in srgb, var(--primary-color) 45%, var(--border-color));
+    box-shadow: 0 1px 0 0 color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* efecto de “tap” sutil */
+.custom-multiselect label:active { transform: scale(.998); }
+
+/* === Mensaje de éxito flotante === */
+.flash-created {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    animation: slideIn 0.4s ease-out;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #28a745;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    font-size: 0.95rem;
+    min-width: 280px;
+    max-width: 420px;
+}
+
+.flash-message i {
+    font-size: 1.2rem;
+}
+
+.flash-message .btn-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.flash-message .btn-close:hover {
+    opacity: 1;
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+.toast-notify {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 260px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+.toast-notify.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.toast-notify.success { border-left: 5px solid #28a745; color: #155724; }
+.toast-notify.error { border-left: 5px solid #dc3545; color: #721c24; }
+.toast-notify.info { border-left: 5px solid #0dcaf0; color: #055160; }
+.toast-notify .close-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: auto;
+    opacity: .6;
+}
+.toast-notify .close-btn:hover { opacity: 1; }
+
+

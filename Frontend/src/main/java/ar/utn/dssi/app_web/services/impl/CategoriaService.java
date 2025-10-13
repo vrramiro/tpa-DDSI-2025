@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
-import ar.utn.dssi.app_web.dto.output.CategoriaOutputDTO;
+import ar.utn.dssi.app_web.dto.CategoriaDTO;
+import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CategoriaService {
+public class CategoriaService implements ICategoriaService {
 
     private static final Logger log = LoggerFactory.getLogger(CategoriaService.class);
     private final WebClient webClient;
@@ -24,18 +25,18 @@ public class CategoriaService {
         this.apiBaseUrl = apiBaseUrl;
     }
 
-    public List<CategoriaOutputDTO> obtenerCategorias() {
+    public List<CategoriaDTO> obtenerCategorias() {
         String url = UriComponentsBuilder
                 .fromUriString(apiBaseUrl)
                 .path("/categoria/categorias")
                 .toUriString();
 
         try {
-            List<CategoriaOutputDTO> categorias = webClient
+            List<CategoriaDTO> categorias = webClient
                     .get()
                     .uri(url)
                     .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<List<CategoriaOutputDTO>>() {})
+                    .bodyToMono(new ParameterizedTypeReference<List<CategoriaDTO>>() {})
                     .block();
 
             return categorias != null ? categorias : new ArrayList<>();

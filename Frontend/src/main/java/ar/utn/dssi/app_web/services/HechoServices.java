@@ -7,12 +7,13 @@ import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
+import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-public class HechoServices {
+public class HechoServices implements IHechoService {
 
   private final GestionHechosApiService gestionHechosApiService;
 
@@ -104,5 +105,10 @@ public class HechoServices {
     // api.setNumber(api.getNumber() - 1);
 
     return api;
+  }
+
+  @Override
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
+    return null;
   }
 }
