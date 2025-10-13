@@ -47,7 +47,7 @@
                 <div class="hecho-botones">
                     <a href="#" onclick="history.back()" class="btn btn-volver">Volver</a>
 
-                    <a th:href="@{/solicitudes/nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
+                    <a th:href="@{/solicitudes//nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
 
                     <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
                           th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}"

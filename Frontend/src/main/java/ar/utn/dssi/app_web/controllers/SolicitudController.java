@@ -1,5 +1,6 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
 import ar.utn.dssi.app_web.error.ValidationException;
@@ -7,6 +8,7 @@ import ar.utn.dssi.app_web.services.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -66,6 +68,14 @@ public class SolicitudController {
       redirectAttributes.addFlashAttribute("error", "Error al actualizar el estado");
     }
     return "redirect:/solicitudes/panel?id=" + solicitudId;
+  }
+
+
+  @GetMapping("/crearSolicitud")
+  public String mostrarFormularioCrear(Model model) {
+    model.addAttribute("titulo", "Crear Nueva Solicitud");
+    model.addAttribute("solicitud", new SolicitudDTO());
+    return "solicitudes/solicitudEliminacion";
   }
 
   @GetMapping("/nueva")
