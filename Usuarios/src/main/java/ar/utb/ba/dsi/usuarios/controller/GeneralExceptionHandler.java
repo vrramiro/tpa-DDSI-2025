@@ -3,6 +3,7 @@ package ar.utb.ba.dsi.usuarios.controller;
 import ar.utb.ba.dsi.usuarios.dto.output.ErrorDTO;
 import ar.utb.ba.dsi.usuarios.error.UsuarioContraseniaIncorrecta;
 import ar.utb.ba.dsi.usuarios.error.UsuarioDatosFaltantes;
+import ar.utb.ba.dsi.usuarios.error.UsuarioDuplicadoExcepcion;
 import ar.utb.ba.dsi.usuarios.error.UsuarioNoEncontrado;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,11 @@ public class GeneralExceptionHandler {
   @ExceptionHandler(UsuarioDatosFaltantes.class)
   public ResponseEntity<ErrorDTO> handleUsuarioDatosFaltantes(UsuarioDatosFaltantes ex) {
     return handleException(ex.getMessage(), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(UsuarioDuplicadoExcepcion.class)
+  public ResponseEntity<ErrorDTO> handleUsuarioDuplicado(UsuarioDuplicadoExcepcion ex) {
+    return handleException(ex.getMessage(), HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(UsuarioNoEncontrado.class)
