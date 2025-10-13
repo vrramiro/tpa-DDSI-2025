@@ -28,4 +28,10 @@ public class Categoria {
   @Column(nullable = false)
   private String nombre;
 
+  @ElementCollection
+  @CollectionTable(
+      name = "categorias_externas",
+      joinColumns = @JoinColumn(name = "categoria_id")
+  )
+  private List<String> categoriasExternas;
 }
