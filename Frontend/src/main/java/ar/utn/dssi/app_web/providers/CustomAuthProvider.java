@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.providers;
 import ar.utn.dssi.app_web.dto.AuthResponseDTO;
 import ar.utn.dssi.app_web.dto.RolDTO;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -26,6 +27,11 @@ public class CustomAuthProvider implements AuthenticationProvider {
 
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    // --- LÍNEAS DE DEPURACIÓN ---
+    System.out.println("Intentando autenticar usuario: " + authentication.getName());
+    System.out.println("Credenciales recibidas: " + authentication.getCredentials());
+    // ----------------------------
+
       String username = authentication.getName();
       String password = authentication.getCredentials().toString();
 
@@ -36,6 +42,13 @@ public class CustomAuthProvider implements AuthenticationProvider {
           throw new BadCredentialsException("Usuario o contraseña inválidos");
         }
 
+        String accessToken = authResponse.getAccessToken();
+        String rolUsuario = obtenerRolDesdeToken(accessToken);
+
+        if (rolUsuario == null) {
+          throw new BadCredentialsException("No se pudo obtener el rol desde el token.");
+        }
+
         //Aca guardo informacion en la sesion HTTP
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
@@ -43,7 +56,8 @@ public class CustomAuthProvider implements AuthenticationProvider {
         request.getSession().setAttribute("refreshToken", authResponse.getRefreshToken());
         request.getSession().setAttribute("username", username);
 
-        RolDTO rolUsuario = usuariosApiService.obtenerRoles(authResponse.getAccessToken());
+
+        System.out.println("Credenciales recibidas desde auth: " + rolUsuario);
 
         request.getSession().setAttribute("rol", rolUsuario);
 
@@ -60,4 +74,19 @@ public class CustomAuthProvider implements AuthenticationProvider {
   public boolean supports(Class<?> authentication) {
     return authentication.equals(UsernamePasswordAuthenticationToken.class);
   }
+
+  private String obtenerRolDesdeToken(String token) {
+    try {
+      String[] chunks = token.split("\\.");
+      Base64.Decoder decoder = Base64.getUrlDecoder();
+      String payload = new String(decoder.decode(chunks[1]));
+      Map<String, Object> claims = new ObjectMapper().readValue(payload, Map.class);
+      return (String) claims.get("rol");
+
+    } catch (Exception e) {
+      System.err.println("Error al decodificar el token JWT: " + e.getMessage());
+      return null;
+    }
+  }
+
 }

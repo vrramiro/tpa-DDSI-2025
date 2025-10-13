@@ -15,7 +15,7 @@ public class SolicitudDeEliminacionOutputDTO {
   private boolean esSpam;
   @JsonProperty("fecha_creacion")
   private LocalDateTime fechaDeCreacion;
-  @JsonProperty("fecha_evaliacion")
+  @JsonProperty("fecha_evaluacion")
   private LocalDateTime fechaDeEvaluacion;
   @JsonProperty("descripcion")
   private String descripcion;

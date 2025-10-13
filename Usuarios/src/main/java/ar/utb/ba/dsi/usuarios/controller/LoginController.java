@@ -27,6 +27,7 @@ public class LoginController {
 
   @PostMapping
   public ResponseEntity<AuthResponseDTO> auth(@RequestBody CredencialesDTO credenciales) {
+    log.info("Me llego:" + credenciales.getContrasenia(), credenciales.getNombreUsuario());
     AuthResponseDTO authResponseDTO = loginService.autenticarUsuario(credenciales);
     log.info("El usuario {} está logueado. El token generado es {}", credenciales.getNombreUsuario(), authResponseDTO.getAccessToken());
     return ResponseEntity.ok(authResponseDTO);
