@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -34,6 +35,7 @@ public class GestionHechosApiService {
   private final String agregadorServiceUrl;
   private final String fuenteEstaticaServiceUrl;
 
+
   public GestionHechosApiService(
           WebApiCallerService webApiCallerService,
           @Value("${normalizador.service.url}") String normalizadorServiceUrl,
@@ -48,9 +50,6 @@ public class GestionHechosApiService {
     this.fuenteEstaticaServiceUrl = fuenteEstaticaServiceUrl;
   }
 
-  /** =========================================
-   *  UBICACIÓN
-   *  ========================================= */
   public UbicacionOutputDTO obtenerUbicacion(Double latitud, Double longitud) {
     String url = UriComponentsBuilder
             .fromUriString(normalizadorServiceUrl)
@@ -83,9 +82,6 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  CREAR HECHO
-   *  ========================================= */
   public Boolean crearHecho(HechoRequest hechoRequest) {
     String url = UriComponentsBuilder
             .fromUriString(fuenteDinamicaServiceUrl)
@@ -110,9 +106,6 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  CREAR HECHO ESTATICA
-   *  ========================================= */
   public Boolean crearHechoEstatica(MultipartFile archivo) {
     System.out.println("entre a controlador importar gestion hechos api service");
 
@@ -130,9 +123,6 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  OBTENER HECHO POR ID
-   *  ========================================= */
   public List<HechoOutputDTO> obtenerHechos(
           LocalDate fechaReporteDesde,
           LocalDate fechaReporteHasta,
@@ -159,6 +149,9 @@ public class GestionHechosApiService {
     }
     if (provincia != null && !provincia.isEmpty()) {
       builder.queryParam("provincia", provincia);
+    }
+    if (idCategoria != null) {
+        builder.queryParam("idCategoria", idCategoria);
     }
 
     String url = builder.build().toUriString();
@@ -190,9 +183,6 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  CAMBIAR ESTADO HECHO
-   *  ========================================= */
   public void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
@@ -209,9 +199,6 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  EDITAR HECHO
-   *  ========================================= */
   public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
     String url = UriComponentsBuilder
             .fromUriString(fuenteDinamicaServiceUrl)
@@ -236,27 +223,18 @@ public class GestionHechosApiService {
     }
   }
 
-  /** =========================================
-   *  BUSCAR HECHOS PAGINADOS
-   *  ========================================= */
   //TODO VER SI HACE FALTA CUANDO ESTE LISTO EL BACK
-  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(int page, int size, String filtro, String sort) {
+  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos")
             .queryParam("page", page)
-            .queryParam("size", size)
-            .queryParamIfPresent("filtro", Optional.ofNullable(filtro).filter(s -> !s.isBlank()))
-            .queryParamIfPresent("sort", Optional.ofNullable(sort))
             .toUriString();
 
     return (PageResponseDTO<HechoOutputDTO>)
             webApiCallerService.get(url, PageResponseDTO.class);
   }
 
-  /** =========================================
-   *  AUXILIARES
-   *  ========================================= */
   private void validarUbicacion(UbicacionOutputDTO ubicacion) {
     if (esVacioONulo(ubicacion.getPais())) {
       throw new NotFoundException("País no encontrado");
@@ -283,6 +261,4 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error al verificar la ubicación: " + e.getMessage(), e);
     }
   }
-
-
 }

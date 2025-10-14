@@ -27,11 +27,6 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId) {
-    return null;
-  }
-
-  @Override
   public Boolean crearHecho(HechoRequest hechoRequest) {
     validarDatosBasicos(hechoRequest);
     validarUbicacion(hechoRequest);
@@ -44,11 +39,6 @@ public class HechoServices implements IHechoService {
 
     return gestionHechosApiService.crearHechoEstatica(archivo);
     }
-
-  @Override
-  public void registrarSugerencia(Long id, String sugerencia) {
-
-  }
 
   @Override
   public Optional<HechoOutputDTO> obtenerHechoPorId(Long id) {
@@ -114,31 +104,20 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public PageResponseDTO<HechoOutputDTO> listarHechos(int page, int size, String filtro, String sort) {
-    // Validaciones
-    int safePage = Math.max(0, page);
-    int safeSize = size <= 0 ? 12 : Math.min(size, 100);
-
-    // Llamada a la API
-    PageResponseDTO<HechoOutputDTO> api =
-            gestionHechosApiService.buscarProximosHechosAPaginar(safePage, safeSize, filtro, sort);
-
-    // Si la API externa usa paginación 1-based pero tu frontend usa 0-based:
-    // api.setNumber(api.getNumber() - 1);
-
-    return api;
+  public PageResponseDTO<HechoOutputDTO> listarHechos(Integer page) {
+    return gestionHechosApiService.buscarProximosHechosAPaginar(page);
   }
 
   @Override //TODO
-  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId) {
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle) {
     return null;
   }
 
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia) {
-      return gestionHechosApiService.obtenerHechos(fechaReporteDesde, fechaReporteHasta,
-                             null,null,
-                                                    idCategoria, provincia);
+    return gestionHechosApiService.obtenerHechos(fechaReporteDesde, fechaReporteHasta,
+            null,null,
+            idCategoria, provincia);
   }
 
   @Override //Ya se que esta mal no se donde ponerlo son las 3am

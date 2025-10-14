@@ -75,10 +75,10 @@ public class ColeccionController {
 
   }
 
-  @GetMapping("/{id}/hechos")
-  public String listarHechosDeColeccion(@PathVariable("id") Long coleccionId, Model model) {
+  @GetMapping("/{handle}/hechos")
+  public String listarHechosDeColeccion(@PathVariable("handle") String handle, Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageHechos = hechosService.listarHechosDeColeccion(coleccionId);
+    PageResponseDTO<HechoOutputDTO> pageHechos = hechosService.listarHechosDeColeccion(handle);
 
     model.addAttribute("pageHechos", pageHechos);
     model.addAttribute("hechos", pageHechos.getContent());
@@ -88,8 +88,7 @@ public class ColeccionController {
     model.addAttribute("totalElements", pageHechos.getTotalElements());
     model.addAttribute("titulo", "Hechos de la Colección");
 
-    model.addAttribute("baseUrl", "/colecciones/" + coleccionId + "/hechos");
-
+    model.addAttribute("baseUrl", "/colecciones/" + handle + "/hechos");
 
     return "hechos/listaHechosColeccion";
   }

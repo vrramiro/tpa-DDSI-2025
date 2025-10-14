@@ -24,17 +24,20 @@ public class GestionSolicitudesApiService {
         String url = agregadorServiceUrl + "/admin/solicitudes";
         List<SolicitudDTO> solicitudesArray = List.of(webApiCallerService.get(url, SolicitudDTO[].class));
         System.out.println(solicitudesArray);
-        if (solicitudesArray == null) {
-            return Collections.emptyList();
-        }
 
         return (solicitudesArray);
     }
 
     public List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado) {
         String url = agregadorServiceUrl + "/admin/solicitudes" + (estado != null && !estado.isBlank() ? "?estado=" + estado : "");
-        return Arrays.asList(webApiCallerService.get(url, SolicitudDTO[].class));
+        SolicitudDTO[] solicitudesArray = webApiCallerService.get(url, SolicitudDTO[].class);
+
+        if (solicitudesArray == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(solicitudesArray);
     }
+
 
     public SolicitudDTO obtenerSolicitudPorId(Long solicitudId) {
         String url = agregadorServiceUrl + "/admin/solicitudes/" + solicitudId;

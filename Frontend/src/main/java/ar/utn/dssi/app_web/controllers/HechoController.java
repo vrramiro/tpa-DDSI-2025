@@ -107,7 +107,7 @@ public class HechoController {
     }
     return "redirect:/hechos/" + id;
   }
-
+/*
   @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/{id}/sugerir")
   public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
@@ -136,7 +136,7 @@ public class HechoController {
     }
     return "redirect:/hechos/" + id;
   }
-
+*/
 
   @PostMapping("/{id}/rechazar")
   public String rechazarHecho(@PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -228,7 +228,7 @@ public class HechoController {
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos();
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -264,7 +264,7 @@ public class HechoController {
             .map(Enum::name)
             .orElse(null);
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos();
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -288,7 +288,7 @@ public class HechoController {
   @GetMapping("/explorador")
   public String mapa(Model model) {
     model.addAttribute("titulo", "Explorador");
-    model.addAttribute("categoria", categoriaService.obtenerCategorias());
+    model.addAttribute("categorias", categoriaService.obtenerCategorias());
     model.addAttribute("provincias", hechosService.obtenerProvincias());
     return "home/explorador";
   }
@@ -300,7 +300,6 @@ public class HechoController {
           @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
           @RequestParam(required = false) Long idCategoria,
           @RequestParam(required = false) String provincia,
-          @RequestParam(required = false) String ciudad,
           @RequestParam(required = false) Long idColeccion
 
   ) {
