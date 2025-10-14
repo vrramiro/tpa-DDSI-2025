@@ -5,12 +5,20 @@ import ar.utn.dssi.app_web.dto.Users.RefreshTokenDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.io.IOException;
 
 /**
  * Servicio genérico para hacer llamadas HTTP con manejo automático de tokens
@@ -220,4 +228,33 @@ public class WebApiCallerService {
   public interface ApiCall<T> {
     T execute(String accessToken) throws Exception;
   }
+
+  public <T> T postMultipart(String url, MultipartFile file, String filePartName, Class<T> responseClass) {
+    return executeWithTokenRetry(accessToken -> { // Se recibe el accessToken
+      try {
+        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        ByteArrayResource fileResource = new ByteArrayResource(file.getBytes()) {
+          @Override
+          public String getFilename() {
+            return file.getOriginalFilename();
+          }
+        };
+
+        body.add(filePartName, fileResource);
+
+        return webClient.post()
+                .uri(url)
+                .header("Authorization", "Bearer " + accessToken)
+                .bodyValue(body)
+                .retrieve()
+                .bodyToMono(responseClass)
+                .block();
+
+      } catch (IOException e) {
+        throw new RuntimeException("Error al leer los bytes del archivo.", e);
+      }
+    });
+  }
+
 }

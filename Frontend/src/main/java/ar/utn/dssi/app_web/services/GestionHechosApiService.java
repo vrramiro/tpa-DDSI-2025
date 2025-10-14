@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,17 +28,20 @@ public class GestionHechosApiService {
   private final String normalizadorServiceUrl;
   private final String fuenteDinamicaServiceUrl;
   private final String agregadorServiceUrl;
+  private final String fuenteEstaticaServiceUrl;
 
   public GestionHechosApiService(
           WebApiCallerService webApiCallerService,
           @Value("${normalizador.service.url}") String normalizadorServiceUrl,
           @Value("${fuenteDinamica.service.url}") String fuenteDinamicaServiceUrl,
-          @Value("${agregador.service.url}") String agregadorServiceUrl
+          @Value("${agregador.service.url}") String agregadorServiceUrl,
+          @Value("${fuenteEstatica.service.url}") String fuenteEstaticaServiceUrl
   ) {
     this.webApiCallerService = webApiCallerService;
     this.normalizadorServiceUrl = normalizadorServiceUrl;
     this.fuenteDinamicaServiceUrl = fuenteDinamicaServiceUrl;
     this.agregadorServiceUrl = agregadorServiceUrl;
+    this.fuenteEstaticaServiceUrl = fuenteEstaticaServiceUrl;
   }
 
   /** =========================================
@@ -83,6 +87,26 @@ public class GestionHechosApiService {
       dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
 
       webApiCallerService.post(url, dtoSinArchivos, Void.class);
+      return true;
+    } catch (Exception e) {
+      log.error("Error al crear hecho: {}", e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /** =========================================
+   *  CREAR HECHO ESTATICA
+   *  ========================================= */
+  public Boolean crearHechoEstatica(MultipartFile archivo) {
+    System.out.println("entre a controlador importar gestion hechos api service");
+
+    String url = UriComponentsBuilder
+            .fromUriString(fuenteEstaticaServiceUrl)
+            .path("/hechos/importar")
+            .toUriString();
+
+    try {
+      webApiCallerService.postMultipart(url, archivo, "archivo", Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al crear hecho: {}", e.getMessage(), e);
@@ -205,4 +229,6 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error al verificar la ubicación: " + e.getMessage(), e);
     }
   }
+
+
 }

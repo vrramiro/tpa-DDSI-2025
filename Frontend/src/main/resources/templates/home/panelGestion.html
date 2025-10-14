@@ -22,10 +22,23 @@
             <div class="card-header"><span class="card-title">Gestionar colecciones</span></div>
         </a>
 
+        <!-- ========== SECCIÓN PARA SUBIR HECHOS ESTÁTICOS ========== -->
         <div class="upload-box">
-            <label>Subir hechos</label>
-            <input id="multimedia" type="file">
-            <button class="btn btn-primary" type="submit">Subir</button>
+            <form th:action="@{/panelGestion/estatica/importar}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <label for="archivo">Subir hechos (archivo .csv o .xlsx)</label>
+                <input id="archivo" name="archivo" type="file" required accept=".csv,.xlsx">
+                <button class="btn btn-primary" type="submit">Subir</button>
+            </form>
+
+            <!-- Mensajes de feedback -->
+            <div th:if="${mensaje}"
+                 th:classappend="${tipoMensaje == 'success'} ? 'alert-success' : 'alert-error'"
+                 style="margin-top: 1rem;">
+                <p th:text="${mensaje}"></p>
+            </div>
         </div>
     </div>
 
