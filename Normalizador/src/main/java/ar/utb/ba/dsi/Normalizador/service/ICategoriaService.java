@@ -11,4 +11,6 @@ public interface ICategoriaService {
   public Categoria normalizarCategoria(String categoriaInput);
 
   public List<CategoriaOutputDTO> obtenerCategorias();
+
+  public CategoriaOutputDTO obtenerCategoriaPorId(Long idCategoria);
 }
