@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
 import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
@@ -8,9 +9,13 @@ import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Optional;
 
 @Service
 public class GestionColeccionApiService {
@@ -19,11 +24,16 @@ public class GestionColeccionApiService {
 
     private final WebApiCallerService webApiCallerService;
     private final String agregadorServiceUrl; // URL del servicio de agregador
+    private final WebClient webClient;
 
     public GestionColeccionApiService(WebApiCallerService webApiCallerService,
-                                      @Value("${agregador.service.url}") String agregadorSeriviceUrl) {
+                                      @Value("${agregador.service.url}") String agregadorServiceUrl,
+                                      WebClient.Builder builder) {
         this.webApiCallerService = webApiCallerService;
-        this.agregadorServiceUrl = agregadorSeriviceUrl;
+        this.agregadorServiceUrl = agregadorServiceUrl;
+        this.webClient = builder
+                .baseUrl(agregadorServiceUrl)
+                .build();
     }
 
     public ColeccionResponseDTO obtenerColeccion(long id) {
@@ -93,5 +103,12 @@ public class GestionColeccionApiService {
         }
     }
 
+    public PageResponseDTO<ColeccionResponseDTO> obtenerColeccionesPaginadas() {
+        return webClient.get()
+                .uri("/admin/colecciones") // sin params
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
+                .block();
+    }
 }
 

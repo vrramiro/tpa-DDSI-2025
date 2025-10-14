@@ -3,16 +3,17 @@ package ar.utn.dssi.Agregador.services;
 import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public interface IColeccionService {
-  //CRUD
   ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
 
-  List<ColeccionOutputDTO> obtenerColecciones();
+  Page<ColeccionOutputDTO> obtenerColecciones(Pageable pageable);
 
   ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO coleccionInputDTO);
 

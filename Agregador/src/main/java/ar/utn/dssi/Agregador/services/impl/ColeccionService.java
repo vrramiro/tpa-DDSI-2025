@@ -28,6 +28,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
@@ -66,13 +68,10 @@ public class ColeccionService implements IColeccionService {
 
   @Override
   @Transactional
-  public List<ColeccionOutputDTO> obtenerColecciones() {
-    List<Coleccion> colecciones = this.obtenerColeccionesActualizadas();
+  public Page<ColeccionOutputDTO> obtenerColecciones(Pageable pageable) {
+    Page<Coleccion> colecciones = this.obtenerColeccionesActualizadas(pageable);
 
-    return colecciones
-        .stream()
-        .map(MapperDeColecciones::coleccionOutputDTOFromColeccion)
-        .toList();
+    return colecciones.map(MapperDeColecciones::coleccionOutputDTOFromColeccion);
   }
 
   @Override
@@ -154,8 +153,8 @@ public class ColeccionService implements IColeccionService {
     return coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
   }
 
-  private List<Coleccion> obtenerColeccionesActualizadas() {
-    return coleccionRepository.findColeccionByActualizada(true);
+  private Page<Coleccion> obtenerColeccionesActualizadas(Pageable pageable) {
+    return coleccionRepository.findColeccionByActualizada(pageable, true);
   }
 
   private boolean validarCambioCriterios(Coleccion coleccion, ColeccionInputDTO input) {

@@ -1,0 +1,42 @@
+<html th:replace="~{layout/base::html}">
+
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/sugerirHecho.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido">
+    <main class="main-container">
+        <div class="content-card">
+            <h1>Gestión del Hecho</h1>
+            <p>Podés escribir una sugerencia o aceptar directamente el hecho.</p>
+
+            <!-- Formulario de sugerencia -->
+            <form th:action="@{/hechos/{id}/sugerir(id=${hecho.id})}" method="post" class="form-sugerencia">
+                <label for="sugerencia"><strong>Escribí tu sugerencia (opcional):</strong></label>
+                <textarea
+                        id="sugerencia"
+                        name="sugerencia"
+                        placeholder="Escribí aquí tu sugerencia si querés proponer un cambio..."
+                ></textarea>
+
+                <div class="acciones">
+                    <button type="submit" class="btn btn-primario">Enviar sugerencia</button>
+
+                    <!-- Botón de aceptar directo -->
+                    <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-aceptar">Aceptar sin sugerencia</button>
+                    </form>
+
+                    <a href="javascript:history.back()" class="btn btn-volver">Volver</a>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/hechos/sugerirHecho.js}"></script>
+    </th:block>
+</div>
+</html>

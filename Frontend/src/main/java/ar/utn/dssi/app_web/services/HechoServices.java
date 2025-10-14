@@ -119,4 +119,7 @@ public class HechoServices implements IHechoService {
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
     return null;
   }
+
+  public void registrarSugerencia(long id, String sugerencia) {
+  };
 }

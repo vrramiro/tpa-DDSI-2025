@@ -1,15 +1,15 @@
 package ar.utn.dssi.Agregador.services;
 
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IHechosService {
-  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde,
-                                     LocalDateTime fechaReporteHasta,
-                                     LocalDateTime fechaAcontecimientoDesde,
-                                     LocalDateTime fechaAcontecimientoHasta,
-                                     String ciudad,
+  List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+                                     LocalDate fechaReporteHasta,
+                                     LocalDate fechaAcontecimientoDesde,
+                                     LocalDate fechaAcontecimientoHasta,
+                                     Long idCategoria,
                                      String provincia);
 
   HechoOutputDTO obtenerHechoPorId(Long idHecho);

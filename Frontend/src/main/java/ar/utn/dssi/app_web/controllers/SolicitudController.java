@@ -23,6 +23,7 @@ public class SolicitudController {
   private final SolicitudService solicitudService;
   private static final Logger log = LoggerFactory.getLogger(SolicitudController.class);
 
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/gestion")
   public String gestionSolicitudes(
           @RequestParam(name = "estado", required = false, defaultValue = "Todos") String estado,
@@ -41,6 +42,7 @@ public class SolicitudController {
     return "solicitudes/gestionSolicitudesAdmin";
   }
 
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/panel")
   public String panelSolicitudes( @RequestParam(name = "id") Long solicitudId,
                                   Model model) {
@@ -67,7 +69,6 @@ public class SolicitudController {
     }
     return "redirect:/solicitudes/panel?id=" + solicitudId;
   }
-
 
   @GetMapping("/crearSolicitud")
   public String mostrarFormularioCrear(Model model) {
@@ -98,7 +99,6 @@ public class SolicitudController {
     }
   }
 
-  //todo: abstraer
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
     if(e.hasFieldErrors()) {
       e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));

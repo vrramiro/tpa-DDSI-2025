@@ -18,6 +18,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import java.util.Map;
+
 
 import java.util.Optional;
 
@@ -104,6 +106,36 @@ public class HechoController {
     }
     return "redirect:/hechos/" + id;
   }
+
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+  @GetMapping("/{id}/sugerir")
+  public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
+    HechoOutputDTO hecho = hechosService.obtenerHechoPorId(id);
+    model.addAttribute("hecho", hecho);
+    return "hechos/sugerirHecho";
+  }
+
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+  @PostMapping("/{id}/sugerir")
+  public String enviarSugerencia(@PathVariable Long id,
+                                 @RequestParam(required = false) String sugerencia,
+                                 RedirectAttributes redirectAttributes) {
+    try {
+      if (sugerencia != null && !sugerencia.isBlank()) {
+        hechosService.registrarSugerencia(id, sugerencia);
+        redirectAttributes.addFlashAttribute("mensaje", "Sugerencia enviada correctamente");
+      } else {
+        hechosService.cambiarEstadoHecho(id, EstadoHecho.ACEPTADO);
+        redirectAttributes.addFlashAttribute("mensaje", "Hecho aceptado sin sugerencia");
+      }
+      redirectAttributes.addFlashAttribute("tipo", "success");
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("mensaje", "Error al procesar la acción");
+      redirectAttributes.addFlashAttribute("tipo", "error");
+    }
+    return "redirect:/hechos/" + id;
+  }
+
 
   @PostMapping("/{id}/rechazar")
   public String rechazarHecho(@PathVariable Long id, RedirectAttributes redirectAttributes) {
@@ -252,27 +284,21 @@ public class HechoController {
   }
 
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
-    if(e.hasFieldErrors()) {
+    if (e.hasFieldErrors()) {
       e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
     }
   }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
-/***********************************************************************************************************************/
+  /***********************************************************************************************************************/
 
-
-  //TODO VER QUE ES ESTO
-  @GetMapping("/detalle_hech_admin")
-  public String detalleHechoAdmin() {
-    return "hechos/detalleHechoAdmin";
-  }
 
   //TODO VERLO CON SANTI
-  @GetMapping("/lista_hechos_coleccion")
+  /*@GetMapping("/lista_hechos_coleccion")
   public String hechosCoelccion(Model model) {
     model.addAttribute("titulo", "Hechos de Coleccion");
     return "hechos/listaHechosColeccion";
-  }
+  }*/
 }
 
