@@ -31,20 +31,18 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Autor</th>
+                    <th>ID Solicitud</th>
                     <th>Fecha de Creación</th>
                     <th>Fecha de Evaluación</th>
-                    <th>Gestionado por</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="solicitud : ${solicitudes}">
-                    <td th:text="${solicitud.autor}">Juan Pérez</td>
-                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/09/2025</td>
+                    <td th:text="${solicitud.idSolicitud}">1</td>
+                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/09/2025 14:30</td>
                     <td th:text="${solicitud.fechaDeEvaluacion != null ? #temporals.format(solicitud.fechaDeEvaluacion, 'dd/MM/yyyy') : '-'}">-</td>
-                    <td th:text="${solicitud.gestionadoPor != null ? solicitud.gestionadoPor : '-'}">-</td>
                     <td>
               <span th:classappend="${solicitud.estadoDeSolicitud == 'ACEPTADA'} ? 'badge bg-success'
                       : (solicitud.estadoDeSolicitud == 'RECHAZADA' ? 'badge bg-danger' : 'badge bg-warning')"

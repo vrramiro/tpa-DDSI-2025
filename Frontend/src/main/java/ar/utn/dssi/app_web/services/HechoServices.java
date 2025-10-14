@@ -27,6 +27,11 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId) {
+    return null;
+  }
+
+  @Override
   public Boolean crearHecho(HechoRequest hechoRequest) {
     validarDatosBasicos(hechoRequest);
     validarUbicacion(hechoRequest);
@@ -39,6 +44,11 @@ public class HechoServices implements IHechoService {
 
     return gestionHechosApiService.crearHechoEstatica(archivo);
     }
+
+  @Override
+  public void registrarSugerencia(Long id, String sugerencia) {
+
+  }
 
   @Override
   public Optional<HechoOutputDTO> obtenerHechoPorId(Long id) {

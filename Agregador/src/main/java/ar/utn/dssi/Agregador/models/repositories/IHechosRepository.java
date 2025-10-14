@@ -16,7 +16,6 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
       "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
       "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
       "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
-      "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad) " +
       "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) " +
       "AND h.visible = true")
   List<Hecho> findHechosByVisibleTrueAndFiltrados(
