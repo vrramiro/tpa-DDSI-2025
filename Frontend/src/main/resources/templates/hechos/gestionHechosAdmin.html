@@ -1,0 +1,97 @@
+<html th:replace="~{layout/base::html}">
+
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/gestionHechos.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido">
+
+    <main class="content-container">
+
+        <div class="hechos-header">
+            <h2>Hechos subidos y pendientes:</h2>
+            <div class="filter-controls">
+                <label for="status-filter">Filtrar hechos:</label>
+                <select id="status-filter" name="status" onchange="filtrarPorEstado(this.value)">
+                    <option value="" th:selected="${estado == null or estado == ''}">Todos los estados</option>
+                    <option value="ACEPTADO" th:selected="${estado == 'ACEPTADO'}">Aprobado</option>
+                    <option value="PENDIENTE" th:selected="${estado == 'PENDIENTE'}">Pendiente</option>
+                    <option value="RECHAZADO" th:selected="${estado == 'RECHAZADO'}">Rechazado</option>
+                </select>
+
+                <button th:if="${estado != null and estado != ''}"
+                        onclick="limpiarFiltro()"
+                        class="btn btn-secondary btn-filtro">
+                    Limpiar filtro
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Categoría</th>
+                    <th>Fecha de carga</th>
+                    <th>Fecha de acontecimiento</th>
+                    <th>Estado</th>
+                    <th>Gestionar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Si no hay hechos -->
+                <tr th:if="${#lists.isEmpty(hechos)}">
+                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                        No se encontraron hechos con el filtro seleccionado
+                    </td>
+                </tr>
+
+                <!-- Lista de hechos -->
+                <tr th:each="hecho : ${hechos}">
+                    <td th:text="${hecho.titulo}">Título del hecho</td>
+                    <td th:text="${hecho.categoria}">Categoría</td>
+                    <td th:text="${#temporals.format(hecho.fechaCarga, 'dd/MM/yyyy')}">01/01/2024</td>
+                    <td th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2024</td>
+                    <td>
+                        <span class="estado-badge"
+                              th:classappend="${hecho.estado.name() == 'ACEPTADO'} ? 'estado-aceptado' :
+                                            (${hecho.estado.name() == 'PENDIENTE'} ? 'estado-pendiente' : 'estado-rechazado')"
+                              th:text="${hecho.estado.name() == 'ACEPTADO'} ? 'Aprobado' :
+                                       (${hecho.estado.name() == 'PENDIENTE'} ? 'Pendiente' : 'Rechazado')">
+                            Estado
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-edit">Ver Más</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Paginación -->
+        <div th:replace="~{navegacion/navegacion :: pager(
+            ${page},
+            ${totalPages},
+            ${size},
+            ${baseUrl},
+            ${estado},
+            ${sort},
+            ${isFirst},
+            ${isLast}
+        )}"></div>
+
+        <div class="footer-actions">
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
+        </div>
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/hechos/gestionHechos.js}"></script>
+    </th:block>
+</div>
+</html>

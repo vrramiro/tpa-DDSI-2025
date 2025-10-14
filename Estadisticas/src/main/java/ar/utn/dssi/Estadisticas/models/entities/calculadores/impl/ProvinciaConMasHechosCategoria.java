@@ -6,7 +6,6 @@ import ar.utn.dssi.Estadisticas.models.entities.calculadores.ICalculadorDeEstadi
 import ar.utn.dssi.Estadisticas.models.entities.data.Categoria;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.models.entities.data.Hecho;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,29 +22,29 @@ public class ProvinciaConMasHechosCategoria implements ICalculadorDeEstadisticas
 
     for (Categoria categoria : categorias) {
       List<Hecho> hechosDeCategoria = hechos.stream()
-              .filter(hecho -> hecho.getCategoria().equals(categoria.getNombre()))
-              .toList();
+          .filter(hecho -> hecho.getCategoria().equals(categoria.getNombre()))
+          .toList();
 
       Map<String, Long> hechosPorProvincia = hechosDeCategoria.stream()
-              .map(Hecho::getProvincia)
-              .collect(Collectors.groupingBy(
-                      provincia -> provincia,
-                      Collectors.counting()
-              ));
+          .map(Hecho::getProvincia)
+          .collect(Collectors.groupingBy(
+              provincia -> provincia,
+              Collectors.counting()
+          ));
 
-        Map.Entry<String, Long> maxProvincia = hechosPorProvincia.entrySet()
-                .stream().max(Map.Entry.comparingByValue()).orElse(null);
+      Map.Entry<String, Long> maxProvincia = hechosPorProvincia.entrySet()
+          .stream().max(Map.Entry.comparingByValue()).orElse(null);
 
-        if (maxProvincia != null) {
+      if (maxProvincia != null) {
 
         Estadistica estadistica = Estadistica.builder()
-                .categoriaId(categoria.getId())
-                .nombreCategoria(categoria.getNombre())
-                .tipo(TipoEstadistica.CATEGORIA_PROVINCIA_HECHOS)
-                .valor(maxProvincia.getValue())
-                .clave(maxProvincia.getKey())
-                .fechaDeCalculo(LocalDateTime.now())
-                .build();
+            .categoriaId(categoria.getId())
+            .nombreCategoria(categoria.getNombre())
+            .tipo(TipoEstadistica.CATEGORIA_PROVINCIA_HECHOS)
+            .valor(maxProvincia.getValue())
+            .clave(maxProvincia.getKey())
+            .fechaDeCalculo(LocalDateTime.now())
+            .build();
 
         estadisticas.add(estadistica);
       }

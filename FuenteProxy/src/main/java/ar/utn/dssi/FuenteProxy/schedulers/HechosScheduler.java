@@ -8,12 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class HechosScheduler {
 
-    @Autowired
-    private IHechosService hechosService;
+  @Autowired
+  private IHechosService hechosService;
 
-    @Scheduled(cron = "${cron.hechosImportar}")
-    public void importarHechos (){
-        hechosService.importarHechos();
-    }
+  @Scheduled(cron = "${cron.hechosImportar}")
+  public void importarHechos() {
+    hechosService.importarHechos();
+  }
 }
 

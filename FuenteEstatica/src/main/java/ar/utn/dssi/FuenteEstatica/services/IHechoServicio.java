@@ -1,12 +1,12 @@
 package ar.utn.dssi.FuenteEstatica.services;
 
-import ar.utn.dssi.FuenteEstatica.models.DTOs.output.HechoOutputDTO;
-import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
-
-import java.util.List;
+import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
 import java.io.File;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public interface IHechoServicio {
-    void importarArchivo(File archivo);
-    List<HechoOutputDTO> obtenerHechos();
+  void importarArchivo(File archivo);
+
+  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde);
 }

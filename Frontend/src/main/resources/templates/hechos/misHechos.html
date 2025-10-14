@@ -1,0 +1,80 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/misHechos.css}" rel="stylesheet">
+        <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+    <h1>Mis Hechos</h1>
+
+    <div class="grid">
+        <div class="card"
+             th:each="hecho : ${hechos}"
+             th:data-id="${hecho.id}">
+            <div class="card-header">
+                <span class="card-title" th:text="${hecho.titulo}">Título del hecho</span>
+                <span class="card-date" th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/08/2025</span>
+            </div>
+            <img class="card-img"
+                 th:src="${!#lists.isEmpty(hecho.contenidoMultimedia) ? hecho.contenidoMultimedia[0].url : 'https://picsum.photos/400/200?random=1'}"
+                 th:alt="${hecho.titulo}">
+            <div class="card-details">
+                <p class="card-description" th:text="${hecho.descripcion}">Descripción del hecho</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag" th:text="${hecho.categoria}">Categoría</span>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(hechos)}" class="alert alert-info">
+        <p>No se encontraron hechos para mostrar.</p>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="eventModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar modal">&times;</button>
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+                <span id="modal-date"></span>
+            </div>
+            <div class="modal-body">
+                <img id="modal-image" src="" alt="Imagen del hecho">
+                <button class="carousel-arrow left" aria-label="Imagen anterior">&#10094;</button>
+                <button class="carousel-arrow right" aria-label="Imagen siguiente">&#10095;</button>
+                <p id="modal-description"></p>
+            </div>
+            <div class="modal-footer">
+                <span id="modal-category"></span>
+                <div class="modal-actions">
+
+                    <a id="modal-ver-mas" href="#" class="btn btn-primary">Ver más</a>
+                    <a id="modal-editar" href="#" class="btn btn-primary">Modificar</a>
+                    <button class="btn btn-danger" onclick="eliminarHecho()">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <div th:replace="~{navegacion/navegacion :: pager(
+      ${page},
+      ${totalPages},
+      ${size},
+      ${baseUrl},
+      ${filtro},
+      ${sort},
+      ${isFirst},
+      ${isLast}
+  )}"></div>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/hechos/misHechos.js}"></script>
+    </th:block>
+</div>
+</html>

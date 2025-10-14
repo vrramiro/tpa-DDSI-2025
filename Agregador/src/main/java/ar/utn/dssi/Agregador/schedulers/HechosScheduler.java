@@ -1,17 +1,17 @@
 package ar.utn.dssi.Agregador.schedulers;
 
 import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class HechosScheduler {
-  @Autowired
-  private IHechosService hechosService;
+  private final IHechosService hechosService;
 
   @Scheduled(cron = "${cron.hechos}")
-  public void actualizarHechos(){
+  public void actualizarHechos() {
     hechosService.importarNuevosHechos();
   }
 }

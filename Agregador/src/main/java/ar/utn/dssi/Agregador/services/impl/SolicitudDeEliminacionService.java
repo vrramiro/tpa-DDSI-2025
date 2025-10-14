@@ -1,111 +1,94 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.SolicitudDeEliminacionOutputDTO;
-import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
-import ar.utn.dssi.Agregador.models.entities.spam.DetectorDeSpam;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
+import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
+import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
+import ar.utn.dssi.Agregador.mappers.MapperDeSolicitudesDeEliminacion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.solicitud.EstadoDeSolicitud;
 import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacion;
+import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEliminacionFactory;
+import ar.utn.dssi.Agregador.models.entities.spam.DetectorDeSpam;
+import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
+import ar.utn.dssi.Agregador.models.repositories.ISolicitudDeEliminacionRepository;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionService {
-
-  @Autowired
-  private SolicitudDeEliminacionRepository solicitudDeEliminacionRepository;
-
-  @Autowired
-  private IHechosService hechosService;
-
-  @Autowired
-  private IHechosRepository hechosRepository;
-
-  @Value("${caracteresMinimosSolicitud}")
-  private Integer caracteresMinimos;
+  private final ISolicitudDeEliminacionRepository solicitudDeEliminacionRepository;
+  private final IHechosService hechosService;
+  private final IHechosRepository hechosRepository;
+  private final SolicitudDeEliminacionFactory solicitudDeEliminacionFactory;
 
   //CREAR SOLICITUDES DE ELIMINACION
   @Override
-  public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion){
-    var solicitud = new SolicitudDeEliminacion();
-
-    solicitud.setIdHecho(solicitudDeEliminacion.getIdHecho());
-    solicitud.setFechaDeCreacion(LocalDateTime.now());
-    setDescripcion(solicitudDeEliminacion.getDescripcion(), solicitud);
+  public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion) {
+    Hecho hecho = hechosRepository.findById(solicitudDeEliminacion.getIdHecho())
+        .orElseThrow(() -> new HechoNoEcontrado("No se encontró el hecho con ID: " + solicitudDeEliminacion.getIdHecho()));
+    SolicitudDeEliminacion solicitud = solicitudDeEliminacionFactory.crear(hecho, solicitudDeEliminacion.getDescripcion());
 
     if (DetectorDeSpam.esSpam(solicitud.getDescripcion())) {
       solicitud.setEsSpam(true);
-      solicitud.setFechaDeEvaluacion(LocalDateTime.now());
-      solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
+      solicitud.rechazar();
+      log.info("Solicitud marcada como SPAM y rechazada automáticamente");
     } else {
       solicitud.setEsSpam(false);
       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.PENDIENTE);
+      log.info("Solicitud creada y en estado PENDIENTE");
     }
 
-    solicitudDeEliminacionRepository.save(solicitud);
+    this.solicitudDeEliminacionRepository.save(solicitud);
 
-    return this.SolicitudEliminacionOutputDTO(solicitud);
-  }
-
-  //ACEPTAR O RECHAZAR SOLICITUDES DE ELIMINACION
-  @Override
-  public void aceptarSolicitud(Long idSolicitud){
-    SolicitudDeEliminacion solicitud= solicitudDeEliminacionRepository.findById(idSolicitud);
-    solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.ACEPTADA);
-    solicitud.setFechaDeEvaluacion(LocalDateTime.now());
-    hechosService.eliminarHecho(solicitud.getIdHecho());
-
-    solicitudDeEliminacionRepository.update(solicitud);
+    return MapperDeSolicitudesDeEliminacion.outpuDTOFromSolicitudDeEliminacion(solicitud);
   }
 
   @Override
-  public void rechazarSolicitud(Long idSolicitud){
-       SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud);
-       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.RECHAZADA);
-       solicitud.setFechaDeEvaluacion(LocalDateTime.now());
+  @Transactional
+  public void procesarSolicitud(Long idSolicitud, SolicitudProcesadaInputDTO solicitudProcesada) {
+    SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(idSolicitud)
+        .orElseThrow(() -> new NoSuchElementException("No se encontró la solicitud con ID: " + idSolicitud));
 
-       solicitudDeEliminacionRepository.update(solicitud);
-     }
-
-  @Override
-  public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes() {
-    return this.solicitudDeEliminacionRepository
-            .findAll()
-            .stream()
-            .map(this::SolicitudEliminacionOutputDTO)
-            .toList();
-  }
-
-  public void setDescripcion(String descripcion, SolicitudDeEliminacion solicitudDeEliminacion) {
-       if (descripcion == null || descripcion.length() < caracteresMinimos) {
-         throw new IllegalArgumentException("La descripción debe tener minimo " + caracteresMinimos);
-       }
-       solicitudDeEliminacion.setDescripcion(descripcion);
-     }
-
-     //TODO: FUNCION QUE HACE LA SOLICITUD DE ELIMINACION EN UN OUTPUT
-  private SolicitudDeEliminacionOutputDTO SolicitudEliminacionOutputDTO(SolicitudDeEliminacion solicitud) {
-    var dtoSolicitudEliminacion = new SolicitudDeEliminacionOutputDTO();
-
-    try {
-
-      dtoSolicitudEliminacion.setDescripcion(solicitud.getDescripcion());
-      dtoSolicitudEliminacion.setEstadoDeSolicitud(solicitud.getEstadoDeSolicitud());
-      dtoSolicitudEliminacion.setFechaDeCreacion(solicitud.getFechaDeEvaluacion());
-      dtoSolicitudEliminacion.setFechaDeEvaluacion(solicitud.getFechaDeEvaluacion());
-      dtoSolicitudEliminacion.setEsSpam(solicitud.isEsSpam());
-
-    } catch(Exception e) {
-      throw new RuntimeException("Error al obtener el dto de solicitud de eliminacion: " + e.getMessage(), e);
+    if (!solicitud.getEstadoDeSolicitud().equals(EstadoDeSolicitud.PENDIENTE)) {
+      throw new SolicitudYaProcesada("Solicitud " + solicitud.getIdSolicitud().toString() + " ya procesada como " + solicitud.getEstadoDeSolicitud());
     }
 
-    return dtoSolicitudEliminacion;
+    EstadoDeSolicitud estado = MapperDeSolicitudesDeEliminacion.estadoDeSolicitudFromString(solicitudProcesada.getEstado());
+
+    if (estado == EstadoDeSolicitud.ACEPTADA) {
+      solicitud.aceptar();
+      hechosService.eliminarHecho(solicitud.getHecho().getId());
+    } else {
+      solicitud.rechazar();
+    }
+
+    this.solicitudDeEliminacionRepository.save(solicitud);
+
+    log.info("Solicitud {}{}{}", solicitud.getIdSolicitud().toString(), " procesada como ", solicitud.getEstadoDeSolicitud().toString());
   }
 
+  @Override
+  //No valido nada sobre los parametros porque si mete true y aceptada no le va a traer nada y eso no esta mal, solo es boludo
+  public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado, Boolean spam) {
+    EstadoDeSolicitud estadoDeSolicitud = null;
+
+    if (tipoEstado != null)
+      estadoDeSolicitud = MapperDeSolicitudesDeEliminacion.estadoDeSolicitudFromString(tipoEstado);
+
+    List<SolicitudDeEliminacion> solicitudes = this.solicitudDeEliminacionRepository.findByFiltro(estadoDeSolicitud, spam);
+
+    return solicitudes.stream()
+        .map(MapperDeSolicitudesDeEliminacion::outpuDTOFromSolicitudDeEliminacion)
+        .toList();
+  }
 }

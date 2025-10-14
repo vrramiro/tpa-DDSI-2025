@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SolicitudDeEliminacion {
-    private Long id;
-    private Boolean esSpam;
+  private Long id;
+  private Boolean esSpam;
 }

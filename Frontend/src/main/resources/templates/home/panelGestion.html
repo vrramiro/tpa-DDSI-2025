@@ -1,0 +1,50 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/home/panelGestionAdmin.css}">
+    </th:block>
+</head>
+
+<div class="row" th:fragment="contenido">
+    <h1>Moderar contenido:</h1>
+    <div class="grid">
+
+        <a class="card" th:href="@{/solicitudes/gestion}">
+            <div class="card-header"><span class="card-title">Gestionar solicitudes de eliminación</span></div>
+        </a>
+
+        <a class="card" th:href="@{/hechos/gestion_hecho}">
+            <div class="card-header"><span class="card-title">Gestionar hechos pendientes</span></div>
+        </a>
+
+        <a class="card" th:href="@{/colecciones/gestion_colecciones}">
+            <div class="card-header"><span class="card-title">Gestionar colecciones</span></div>
+        </a>
+
+        <!-- ========== SECCIÓN PARA SUBIR HECHOS ESTÁTICOS ========== -->
+        <div class="upload-box">
+            <form th:action="@{/panelGestion/estatica/importar}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <label for="archivo">Subir hechos (archivo .csv o .xlsx)</label>
+                <input id="archivo" name="archivo" type="file" required accept=".csv,.xlsx">
+                <button class="btn btn-primary" type="submit">Subir</button>
+            </form>
+
+            <!-- Mensajes de feedback -->
+            <div th:if="${mensaje}"
+                 th:classappend="${tipoMensaje == 'success'} ? 'alert-success' : 'alert-error'"
+                 style="margin-top: 1rem;">
+                <p th:text="${mensaje}"></p>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/home/panelGestion.js}"></script>
+    </th:block>
+</div>
+</html>

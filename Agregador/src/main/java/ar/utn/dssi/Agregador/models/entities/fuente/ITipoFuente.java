@@ -7,4 +7,6 @@ import java.util.List;
 @Component
 public interface ITipoFuente {
   List<Hecho> hechosNuevos(Fuente fuente);
+
+  TipoFuente getTipoFuente();
 }

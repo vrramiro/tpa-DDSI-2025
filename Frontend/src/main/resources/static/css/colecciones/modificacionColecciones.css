@@ -1,0 +1,101 @@
+/* =========================================
+   OVERRIDES Y ESPECÍFICOS (modificacionColeccion)
+   ========================================= */
+
+/* Nav en botones (si se usan <a>) */
+a.btn-secondary { text-decoration: none; }
+
+/* Hover específicos dentro del form (distintos a base) */
+.form-actions .btn-secondary:hover { background-color: #757575; }
+.form-actions .btn-primary:hover   { background-color: var(--light-color); color: var(--primary-color); }
+
+/* Contenedor de modificación */
+.container-modificacion {
+    width: min(92%, var(--container-max));
+    margin: 2rem auto; background: var(--background-color);
+    padding: var(--space-3); border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.container-modificacion h2 {
+    color: var(--dark-color);
+    margin-bottom: var(--space-2);
+    text-align: center;
+    font-size: clamp(1.8rem, 2vw + 1rem, 3rem);
+}
+
+/* Formulario */
+.coleccion-form { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.form-group { display: flex; flex-direction: column; gap: .3rem; }
+.form-group label { font-weight: 600; color: var(--text-color); }
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: .6rem; border: 1px solid var(--border-color);
+    border-radius: var(--border-radius); font-size: 1rem;
+    background: #fff; color: var(--text-color);
+    transition: border-color .3s;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none; border-color: var(--primary-color);
+}
+
+/* Fieldset y grilla */
+.criterios { border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: var(--space-2); }
+.criterios legend { font-weight: bold; color: var(--dark-color); }
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-2);
+}
+
+/* Acciones del formulario */
+.form-actions {
+    display: flex; flex-wrap: wrap; gap: var(--space-2);
+    justify-content: space-between; margin-top: var(--space-3);
+}
+.form-actions .btn { min-width: 140px; }
+
+/* Multiselect */
+.form-group select[multiple] {
+    height: auto; min-height: 3rem; padding: .5rem;
+}
+.form-group select[multiple] option { padding: .3rem .5rem; }
+
+.custom-multiselect {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: .5rem; background: #fff;
+    display: flex; flex-direction: column;
+    max-height: 150px; overflow-y: auto;
+}
+.custom-multiselect label {
+    display: block; font-weight: normal; cursor: pointer;
+    margin-bottom: .3rem;
+}
+
+/* Modal accesible con :target */
+.modal {
+    display: none; position: fixed; z-index: 2000;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+}
+.modal:target { display: flex; }
+.modal-content {
+    background: #fff; padding: 2rem; border-radius: 8px;
+    width: 90%; max-width: 400px; position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.modal-close {
+    position: absolute; top: 10px; right: 15px;
+    font-size: 24px; font-weight: bold; color: #333;
+    text-decoration: none;
+}
+
+/* Responsive extra del form */
+@media (max-width: 768px) {
+    .form-actions { flex-direction: column; align-items: center; }
+}

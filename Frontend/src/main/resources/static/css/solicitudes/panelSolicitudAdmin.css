@@ -1,0 +1,66 @@
+/* ============================================================
+   ESTILOS ESPECÍFICOS DE DETALLE
+   ============================================================ */
+
+/* ===== CONTENIDO ===== */
+.container {
+    width: min(92%, var(--container-max));
+    margin-inline: auto;
+    margin-block: var(--space-3);
+    flex: 1;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: var(--space-3);
+    color: var(--dark-color);
+}
+
+.grid-detalle {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-3);
+}
+
+/* ===== TARJETAS ===== */
+.card {
+    background: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--space-3);
+}
+
+.card h2 {
+    color: var(--primary-color);
+    margin-bottom: var(--space-2);
+}
+
+.card h3 {
+    margin-top: var(--space-2);
+    margin-bottom: var(--space-1);
+    color: var(--secondary-color);
+    font-size: 1rem;
+}
+
+.actions .btn,
+.actions .btn-primary,
+.actions .btn-danger {
+    text-decoration: none;
+}
+
+/* ===== CAJA DE TEXTO SIMULADA ===== */
+.textarea {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background-color: #f9f9f9;
+    padding: var(--space-2);
+    min-height: 80px;
+    margin-bottom: var(--space-2);
+}
+
+/* ===== ACCIONES ===== */
+.actions {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+}

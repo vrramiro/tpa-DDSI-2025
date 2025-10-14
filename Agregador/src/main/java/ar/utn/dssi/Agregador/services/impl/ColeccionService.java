@@ -1,275 +1,223 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
+import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.dto.input.CriterioDePertenenciaInputDTO;
+import ar.utn.dssi.Agregador.dto.input.FuenteInputDTO;
+import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
+import ar.utn.dssi.Agregador.error.ColeccionAguardandoActualizacion;
+import ar.utn.dssi.Agregador.error.ColeccionNoEncontrada;
+import ar.utn.dssi.Agregador.error.ColeccionTituloDuplicado;
+import ar.utn.dssi.Agregador.error.CriterioPorFechasIncorrecto;
+import ar.utn.dssi.Agregador.error.DatosDeColeccionFaltantes;
+import ar.utn.dssi.Agregador.event.ColeccionDesactualizadaEvent;
+import ar.utn.dssi.Agregador.mappers.MapperDeColecciones;
+import ar.utn.dssi.Agregador.mappers.MapperDeCriterio;
+import ar.utn.dssi.Agregador.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
-import ar.utn.dssi.Agregador.models.entities.Filtro;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenenciaFactory;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
 import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
-import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
-import ar.utn.dssi.Agregador.services.IFiltrosService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
-import ar.utn.dssi.Agregador.services.IHechosService;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-import reactor.core.publisher.Flux;
-
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ColeccionService implements IColeccionService {
-    private final IColeccionRepository coleccionRepository;
-    private final IHechosRepository hechosRepositorio;
-    private final IHechosService hechosService;
-    private final IFuentesService fuentesService;
-    private final IFiltrosService filtrosService;
-    private final ModoNavegacionFactory modoNavegacionFactory;
+  private final IColeccionRepository coleccionRepository;
+  private final IFuentesService fuentesService;
+  private final ModoNavegacionFactory modoNavegacionFactory;
 
-    public ColeccionService(IColeccionRepository coleccionRepository, IHechosRepository hechosRepositorio,
-                            IHechosService hechosService, FuentesService fuentesService, IFiltrosService filtrosService,
-                            ModoNavegacionFactory modoNavegacionFactory) {
-        this.coleccionRepository = coleccionRepository;
-        this.hechosRepositorio = hechosRepositorio;
-        this.hechosService = hechosService;
-        this.fuentesService = fuentesService;
-        this.filtrosService = filtrosService;
-        this.modoNavegacionFactory = modoNavegacionFactory;
+  private final ApplicationEventPublisher publicador;
+
+  @Override
+  @Transactional
+  public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
+
+    validarDatosBasicos(input);
+    validarCriterios(input);
+    validarDuplicadoPorTitulo(input.getTitulo());
+
+    Coleccion coleccion = MapperDeColecciones.coleccionFromColeccionInputDTO(input);
+    coleccion.setFuentes(fuentesNuevas(input));
+
+    coleccion = coleccionRepository.save(coleccion);
+
+    publicador.publishEvent(new ColeccionDesactualizadaEvent(coleccion.getHandle()));
+
+    return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
+  }
+
+  @Override
+  @Transactional
+  public Page<ColeccionOutputDTO> obtenerColecciones(Pageable pageable) {
+    Page<Coleccion> colecciones = this.obtenerColeccionesActualizadas(pageable);
+
+    return colecciones.map(MapperDeColecciones::coleccionOutputDTOFromColeccion);
+  }
+
+  @Override
+  @Transactional
+  public ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO input) {
+    validarDatosBasicos(input);
+    validarCriterios(input);
+
+    Coleccion coleccion = obtenerColeccionSiExiste(handle);
+
+    if (!coleccion.getActualizada())
+      throw new ColeccionAguardandoActualizacion("La coleccion ya fue modificada, aguarde a que se actualice.");
+
+    if (!coleccion.getTitulo().equals(input.getTitulo()))
+      validarDuplicadoPorTitulo(input.getTitulo());
+
+    if (!validarCambioCriterios(coleccion, input) && !validarCambioFuentes(coleccion, input)) {
+      coleccion.setTitulo(input.getTitulo());
+      coleccion.setDescripcion(input.getDescripcion());
+      intentarGuardarColeccion(coleccion);
+      return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
     }
 
-    //CACHE PARA LA ACTUALIZACION DE COLECCIONES
-    private final Map<String, Coleccion> coleccionCache = new ConcurrentHashMap<>();  //ConcurrentHashMap permite que varios hilos modifiquen la colección al mismo tiempo, y busco por handle
+    Coleccion coleccionEditada = MapperDeColecciones.coleccionFromColeccionInputDTO(input);
 
-    /*/////////////////////// OPERACIONES CRUD EN COLECCIONES ///////////////////////*/
+    // Para que el ORM actualice el registro con el save y se haga la actualizacion gracias a las cascadas y orphanRemoval
+    coleccionEditada.setHandle(handle);
+    coleccionEditada.setFuentes(fuentesNuevas(input));
 
-    //CREATE
-    @Override
-    public ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO) {
-        var coleccion = new Coleccion();
+    // Los hechos se pierden al editar la coleccion, dado que deben ser recalculados
+    intentarGuardarColeccion(coleccionEditada);
 
-        coleccion.setTitulo(coleccionInputDTO.getTitulo());
-        coleccion.setDescripcion(coleccionInputDTO.getDescripcion());
-        coleccion.setHandle(coleccionInputDTO.getHandle());
-        coleccion.setCriterios(coleccionInputDTO.getCriteriosDePertenecias());
-        coleccion.setActualizada(Boolean.TRUE);
-        coleccionRepository.save(coleccion);
-        return this.coleccionOutputDTO(coleccion);
+    if (!coleccion.getActualizada()) publicador.publishEvent(new ColeccionDesactualizadaEvent(coleccion.getHandle()));
+
+    return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
+  }
+
+  @Override
+  public void eliminarColeccion(String handle) {
+    Coleccion coleccion = obtenerColeccionSiExiste(handle);
+
+    coleccionRepository.delete(coleccion);
+  }
+
+  @Override
+  public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad) {
+    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
+
+    if (!coleccion.getActualizada())
+      throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navergación.");
+
+    IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
+
+    return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
+        .stream()
+        .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
+        .map(MapperDeHechos::hechoToOutputDTO)
+        .toList();
+  }
+
+  private void validarDatosBasicos(ColeccionInputDTO input) {
+    if (input.getTitulo() == null || input.getTitulo().isEmpty())
+      throw new DatosDeColeccionFaltantes("El titulo es obligatorio.");
+
+    if (input.getDescripcion() == null || input.getDescripcion().isEmpty())
+      throw new DatosDeColeccionFaltantes("La descripcion es obligatoria.");
+
+    if (input.getCriteriosDePertenecias() == null || input.getCriteriosDePertenecias().isEmpty())
+      throw new DatosDeColeccionFaltantes("Debe tener al menos un criterio de pertenencia.");
+
+    if (input.getFuentes() == null || input.getFuentes().isEmpty())
+      throw new DatosDeColeccionFaltantes("Debe tener al menos una fuente.");
+
+    if (input.getConsenso() == null)
+      throw new DatosDeColeccionFaltantes("El algoritmo de consenso es obligatorio.");
+  }
+
+  private Coleccion obtenerColeccionSiExiste(String handle) {
+    return coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
+  }
+
+  private Page<Coleccion> obtenerColeccionesActualizadas(Pageable pageable) {
+    return coleccionRepository.findColeccionByActualizada(pageable, true);
+  }
+
+  private boolean validarCambioCriterios(Coleccion coleccion, ColeccionInputDTO input) {
+    Map<TipoCriterio, String> datosCriteriosNuevos = input.getCriteriosDePertenecias().stream()
+        .collect(Collectors
+            .toMap(CriterioDePertenenciaInputDTO::getTipo,
+                CriterioDePertenenciaInputDTO::getValor));
+
+    Map<TipoCriterio, String> datosCriteriosActuales = coleccion.getCriterios().stream()
+        .collect(Collectors
+            .toMap(CriterioDePertenencia::getTipoCriterio,
+                CriterioDePertenencia::getValor));
+
+    return !datosCriteriosNuevos.equals(datosCriteriosActuales);
+  }
+
+  private boolean validarCambioFuentes(Coleccion coleccion, ColeccionInputDTO input) {
+    Set<TipoFuente> tiposDeFuentesInput = input.getFuentes().stream()
+        .map(FuenteInputDTO::getTipoFuente)
+        .collect(Collectors.toSet());
+
+    Set<TipoFuente> tiposDeFuentesActuales = coleccion.getFuentes().stream()
+        .map(f -> f.getTipoFuente().getTipoFuente())
+        .collect(Collectors.toSet());
+
+    return !tiposDeFuentesInput.equals(tiposDeFuentesActuales);
+  }
+
+  private void validarDuplicadoPorTitulo(String titulo) {
+    Optional<Coleccion> coleccionDuplicada = coleccionRepository.findColeccionByTitulo(titulo);
+    if (coleccionDuplicada.isPresent())
+      throw new ColeccionTituloDuplicado(titulo);
+  }
+
+  private void validarCriterios(ColeccionInputDTO input) {
+    Map<TipoCriterio, String> criterios = input.getCriteriosDePertenecias().stream()
+        .collect(Collectors.toMap(CriterioDePertenenciaInputDTO::getTipo, CriterioDePertenenciaInputDTO::getValor));
+
+    if (criterios.size() != input.getCriteriosDePertenecias().size())
+      throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo.");
+
+    LocalDate fechaDesde = criterios.containsKey(TipoCriterio.FECHA_DESDE) ? MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE)) : null;
+
+    if (fechaDesde != null && fechaDesde.isAfter(LocalDate.now()))
+      throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+  }
+
+  private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
+    List<String> tiposDeFuentes = input.getFuentes().stream()
+        .map(f -> f.getTipoFuente().toString())
+        .collect(Collectors.toList());
+
+    //tiene que ser string xq para persistir se usa un converter que pasa el ITipoFuente a string
+    return fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentes);
+  }
+
+  private void intentarGuardarColeccion(Coleccion coleccion) {
+    try {
+      coleccionRepository.save(coleccion);
+    } catch (Exception e) {
+      log.error("Error al guardar la coleccion: {}", e.getMessage());
+      throw e;
     }
-
-    //OBTENER TODAS LAS COLECCIONES
-    @Override
-    public List<ColeccionOutputDTO> obtenerColecciones() {
-        List<Coleccion> colecciones = coleccionRepository.findAll();
-
-        return colecciones
-                .stream()
-                .map(this::verificarActualizada)
-                .map(this::coleccionOutputDTO)
-                .toList();
-    }
-
-    //UPDATE
-    @Override
-    public  ColeccionOutputDTO actualizarColeccion(String handle, ColeccionInputDTO coleccionInputDTO) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        //TODO: MANEJO ERRORES
-
-        coleccion.setTitulo(coleccionInputDTO.getTitulo());
-        coleccion.setDescripcion(coleccionInputDTO.getDescripcion());
-        coleccion.setCriterios(coleccionInputDTO.getCriteriosDePertenecias());
-
-        coleccionRepository.update(coleccion);
-        this.agregarACache(coleccion);  //Se van a actualizar los hechos asincronincamente
-
-        return this.coleccionOutputDTO(coleccion);
-    }
-
-    //DELETE
-    @Override
-    public void eliminarColeccion(String handle) {
-        try {
-            Coleccion coleccion = coleccionRepository.findByHandle(handle);
-            if (coleccion != null) {
-                coleccionRepository.delete(coleccion);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar la coleccion: " + e.getMessage(), e);
-        }
-    }
-
-    //NAVEGACION EN LAS COLECCIONES - READ
-    @Override
-    public List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle) {
-        try {
-            Filtro filtro = filtrosService.crearFiltro(filtroInputDTO);
-            Coleccion coleccion = this.verificarActualizada(coleccionRepository.findByHandle(handle));
-            IModoNavegacion modo = modoNavegacionFactory.crearDesdeEnum(modoNavegacion);
-
-            List<HechoOutputDTO> hechosColeccion = coleccion.getHechos()
-                    .stream()
-                    .filter(hecho -> filtro.loCumple(hecho) && modo.hechoNavegable(hecho, coleccion))
-                    .map(MapperDeHechos::hechoOutputDTO)
-                    .toList();
-
-            return hechosColeccion;
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
-        }
-    }
-
-    /*/////////////////////// OPERACIONES SOBRE COLECCIONES ///////////////////////*/
-
-    //CREO LA COLECCION OUTPUT
-    private ColeccionOutputDTO coleccionOutputDTO(Coleccion coleccion) {
-        var coleccionDto = new ColeccionOutputDTO();
-
-        coleccionDto.setTitulo(coleccion.getTitulo());
-        coleccionDto.setDescripcion(coleccion.getDescripcion());
-        coleccionDto.setHechos(coleccion.getHechos());
-
-        return coleccionDto;
-    }
-
-    //OBTENER HECHOS DE COLECCION
-    @Override
-    public List<HechoOutputDTO> hechosDeColeccion(String handle) {
-        var coleccion = coleccionRepository.findByHandle(handle); //TODO: LUEGO DE OBTENER, VERIFICAR SI ESTA ACTUALIZADA
-        var hechosColeccion = coleccion.getHechos();
-
-        return hechosColeccion.stream().map(MapperDeHechos::hechoOutputDTO).toList();
-    }
-
-    // GUARDAR UN HECHO EN LA COLECCION
-    private void guardarEnColeccion(Coleccion coleccion, Hecho hecho) {
-        boolean cumpleCriterios = coleccion
-                .getCriterios()
-                .stream()
-                .allMatch(criterio -> criterio.loCumple(hecho));
-
-        if (cumpleCriterios) {
-            coleccion.getHechos().add(hecho);
-            coleccionRepository.update(coleccion);
-        }
-    }
-
-    //AGREGADO DE FUENTE A LA COLECCION
-    @Override
-    public void agregarFuente(Long idFuente, String handle){
-        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
-        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
-
-        CriterioDePertenencia criterio = CriterioDePertenenciaFactory.crearCriterio(TipoCriterio.FUENTE, fuenteAAgregar.getId().toString());
-        this.agregarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
-        coleccionRepository.save(coleccionAModificar);
-    }
-
-    //ELIMINADO DE FUENTE A LA COLECCION
-    @Override
-    public void eliminarFuente(Long idFuente, String handle) {
-        Fuente fuenteAAgregar = fuentesService.obtenerFuentePorId(idFuente);
-        Coleccion coleccionAModificar = coleccionRepository.findByHandle(handle);
-
-        CriterioDePertenencia criterio = CriterioDePertenenciaFactory.crearCriterio(TipoCriterio.FUENTE, fuenteAAgregar.getId().toString());
-        this.eliminarCriterioDePertenencia(criterio,coleccionAModificar.getHandle());
-
-        coleccionRepository.save(coleccionAModificar);
-    }
-
-    //AGREGACION DE UN CRITERIO DE PERTENENCIA
-    @Override
-    public void agregarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.getCriterios().add(nuevoCriterio);
-        this.agregarACache(coleccion);
-    }
-
-    //ELIMINACION DE UN CRITERIO DE PERTENENCIA
-    @Override
-    public void eliminarCriterioDePertenencia(CriterioDePertenencia criterio, String handle) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.eliminarCriterio(criterio);
-        this.agregarACache(coleccion);
-    }
-
-    //ACTUALIZAR ALGORITMO DE CONSENSO EN LA COLECCION
-    @Override
-    public void actualizarAlgoritmo(String handle, TipoConsenso algoritmoConsenso) {
-        Coleccion coleccion = coleccionRepository.findByHandle(handle);
-        coleccion.setConsenso(algoritmoConsenso);
-        coleccionRepository.update(coleccion);
-    }
-
-    //REFRESCO DE LOS HECHOS EN UNA COLECCION
-    private Mono<Void> refrescarHechosEnColeccion(Coleccion coleccion) {
-        return Flux.fromIterable(hechosRepositorio.findAll())
-                .flatMap(hecho -> Mono.fromRunnable(() -> this.guardarEnColeccion(coleccion, hecho)))
-                .then(Mono.fromRunnable(() -> {
-                    coleccion.setActualizada(Boolean.TRUE);
-                    this.eliminarDeCache(coleccion.getHandle());
-                }));
-    }
-
-    private Coleccion verificarActualizada(Coleccion coleccion){
-        if (coleccion.getActualizada() == Boolean.TRUE) {
-            return coleccion;
-        } else if (coleccion.getActualizada() == Boolean.FALSE && coleccionCache.containsKey(coleccion.getHandle())) {
-            this.refrescarHechosEnColeccion(coleccion)
-                    .then(Mono.fromRunnable(() -> coleccionRepository.update(coleccion)))
-                        .subscribe();;
-            return coleccion;
-        } else {
-            throw new IllegalStateException("No se puede actualizar el coleccion, se desconoce su estado actual");
-        }
-    }
-
-    /*/////////////////////// CRONS EN COLECCIONES ///////////////////////*/
-
-    //PROCESO DE REFRESCO DE COLECCIONES Y HECHOS USADO POR SCHEDULER
-    @Override
-    public Mono<Void> refrescarColecciones(Hecho hecho){    //TODO: SOLO RESTA SABER CUANDO LIMPIO LA CACHE Y MARCO LOS HECHOS COMO ACTUALIZADOS... Nose si es depues de que se ejecute esta funcion porque se invoca la cantidad de veces necesarias dependiendo los hechos
-        return Flux
-                .fromIterable(coleccionRepository.findAll())
-                .flatMap(coleccion -> {
-                    this.guardarEnColeccion(coleccion, hecho);
-                    return Mono.empty();
-                })
-                .then();
-
-    }
-
-    /*/////////////////////// OPERACIONES CRUD EN CACHE ///////////////////////*/
-    private void agregarACache(Coleccion coleccion) {
-        String handle = coleccion.getHandle();
-        coleccionCache.put(handle, coleccion); //EL PUT SI YA EXISTE PISA
-    }
-
-    private Coleccion obtenerDeCache(String handle) {
-        return coleccionCache.get(handle);
-    }
-
-    private void eliminarDeCache(String handle) {
-        coleccionCache.remove(handle);
-    }
-
-    private void limpiarCache() {
-        // marcar todas las colecciones como actualizadas
-        coleccionCache.values().forEach(c -> c.setActualizada(Boolean.TRUE));
-        coleccionCache.clear();
-    }
-
+  }
 }
 

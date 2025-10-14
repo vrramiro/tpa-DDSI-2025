@@ -1,39 +1,51 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.ProvinciaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
+import ar.utb.ba.dsi.Normalizador.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.NoEncontrado;
-import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeUbicacion;
+import ar.utb.ba.dsi.Normalizador.models.entities.errores.HechoNoEcontrado;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class UbicacionService implements IUbicacionService {
-    private final IUbicacionAdapter adapter;
 
-    public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
-        this.adapter = adapter;
+  private final IUbicacionAdapter adapter;
+
+  public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
+    this.adapter = adapter;
+  }
+
+  @Override
+  public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
+    Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
+
+    if (ubicacion == null) {
+      throw new HechoNoEcontrado("La ubicacion es nula.");
     }
 
-    @Override
-    public Ubicacion obtenerUbicacion(Double latitud, Double longitud) {
-            Ubicacion ubicacion = adapter.obtenerUbicacionDeAPI(latitud, longitud).block();
-
-            if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
-                throw new NoEncontrado("Ubicacion no encontrada en Argentina");
-            }
-
-            return ubicacion;
+    if (ubicacion.getCiudad() == null && ubicacion.getProvincia() == null) {
+      System.out.println("La ciudad y la provincia son nulas");
     }
 
-    @Override
-    public UbicacionOutputDTO obtenerUbicacionOutPut(Double latitud, Double longitud) {
-        try {
-            return MapperDeUbicacion.ubicacionOutputDTO(this.obtenerUbicacion(latitud, longitud));
-        } catch (Exception e) {
-            throw new RuntimeException("Error mapeando a DTO la ubicacion", e);
-        }
+    return ubicacion;
+  }
+
+  public List<ProvinciaOutputDTO> obtenerProvincias() {
+    List<String> provincias = adapter.obtenerProvinciasDeAPI().block();
+    return provincias.stream().map(MapperDeUbicacion::provinciaOutputDTO).toList();
+  }
+
+  @Override
+  public UbicacionOutputDTO obtenerUbicacionOutPut(Double latitud, Double longitud) {
+    try {
+      return MapperDeUbicacion.ubicacionOutputDTO(this.obtenerUbicacion(latitud, longitud));
+    } catch (Exception e) {
+      throw new RuntimeException("Error mapeando a DTO la ubicacion", e);
     }
+  }
 }

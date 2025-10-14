@@ -1,16 +1,16 @@
 package ar.utn.dssi.FuenteDinamica.services;
 
-import ar.utn.dssi.FuenteDinamica.models.DTOs.inputs.HechoInputDTO;
-import ar.utn.dssi.FuenteDinamica.models.DTOs.outputs.HechoOutputDTO;
-
+import ar.utn.dssi.FuenteDinamica.dto.input.HechoInputDTO;
+import ar.utn.dssi.FuenteDinamica.dto.output.HechoOutputDTO;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IHechosService {
-  List<HechoOutputDTO> obtenerHechos();
-  List<HechoOutputDTO> obtenerHechosNuevos();
-  HechoOutputDTO obtenerHechoPorId(Long idHecho);
-  HechoOutputDTO crear(HechoInputDTO hecho);
+  List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde);
+
+  void crear(HechoInputDTO hecho);
+
   void editarHecho(HechoInputDTO hecho, Long idHecho);
-  void eliminarHecho(Long idHecho);
-  List<HechoOutputDTO> obtenerHechosEditados();
+
+  void actualizarVisibilidad(Long idHecho, Boolean visibilidad);
 }

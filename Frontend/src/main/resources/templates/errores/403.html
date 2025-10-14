@@ -1,0 +1,32 @@
+<html th:replace="~{layout/base:: html}">
+
+<head>
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/errores/errores.css}">
+    </th:block>
+</head>
+
+<div class="error-container" th:fragment="contenido">
+    <div class="error-content">
+        <h1 class="error-code">403</h1>
+        <h2 class="error-title">Acceso denegado</h2>
+        <p class="error-message">
+            Lo sentimos, no tienes permiso para acceder a esta página.
+        </p>
+
+        <div class="error-actions">
+            <a class="btn btn-primary" th:href="@{ / }">
+                <i class="fas fa-home me-1"></i> Ir al inicio
+            </a>
+            <a class="btn btn-outline-primary" th:href="@{/explorador}">
+                <i class="fas fa-compass me-1"></i> Explorar mapa
+            </a>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/errores/errores.js}"></script>
+</th:block>
+
+</html>

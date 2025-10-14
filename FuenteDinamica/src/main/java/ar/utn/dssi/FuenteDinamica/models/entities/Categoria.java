@@ -1,19 +1,19 @@
 package ar.utn.dssi.FuenteDinamica.models.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-
-@Entity
-@Table(name = "Categoria")
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Embeddable
 public class Categoria {
-
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long idCategoria;
-
-  private String nombre;
+  Long idCategoria;
+  String nombre;
 }

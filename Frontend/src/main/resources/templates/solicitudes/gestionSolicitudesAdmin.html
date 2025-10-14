@@ -1,0 +1,72 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/solicitudes/gestionSolicitudes.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+    <section class="content-container">
+        <div class="solicitud-header">
+            <h2>Solicitudes de Eliminación</h2>
+
+            <div class="filter-controls">
+                <form th:action="@{/solicitudes/gestion}" method="get">
+                    <label for="status-filter">Filtrar por estado:</label>
+                    <select id="status-filter" name="estado" onchange="this.form.submit()">
+                        <option value="" th:selected="${param.estado == null}">Todos</option>
+                        <option value="ACEPTADA" th:selected="${param.estado == 'ACEPTADA'}">Aprobadas</option>
+                        <option value="PENDIENTE" th:selected="${param.estado == 'PENDIENTE'}">Pendientes</option>
+                        <option value="RECHAZADA" th:selected="${param.estado == 'RECHAZADA'}">Rechazadas</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <!-- Mensajes -->
+        <div th:if="${mensaje}" class="alert alert-success mt-2" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
+
+        <div class="table-container mt-3">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID Solicitud</th>
+                    <th>Fecha de Creación</th>
+                    <th>Fecha de Evaluación</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="solicitud : ${solicitudes}">
+                    <td th:text="${solicitud.idSolicitud}">1</td>
+                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/09/2025 14:30</td>
+                    <td th:text="${solicitud.fechaDeEvaluacion != null ? #temporals.format(solicitud.fechaDeEvaluacion, 'dd/MM/yyyy') : '-'}">-</td>
+                    <td>
+              <span th:classappend="${solicitud.estadoDeSolicitud == 'ACEPTADA'} ? 'badge bg-success'
+                      : (solicitud.estadoDeSolicitud == 'RECHAZADA' ? 'badge bg-danger' : 'badge bg-warning')"
+                    th:text="${solicitud.estadoDeSolicitud}">PENDIENTE</span>
+                    </td>
+                    <td class="action-buttons">
+                        <a th:href="@{/solicitudes/panel/{id}(id=${solicitud.idSolicitud})}"
+                           class="btn btn-sm btn-primary">Ver más</a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(solicitudes)}">
+                    <td colspan="6" class="text-center">No hay solicitudes para mostrar</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer-actions mt-4">
+            <a th:href="@{/solicitudes/nueva}" class="btn btn-primary">Nueva Solicitud</a>
+        </div>
+    </section>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/solicitudes/gestionSolicitudes.js}"></script>
+    </th:block>
+</div>
+</html>

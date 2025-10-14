@@ -1,0 +1,53 @@
+<html th:replace="~{layout/base:: html}">
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/solicitudes/solicitudEliminacion.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+    <section class="form-container">
+        <h1>Solicitud de Eliminación</h1>
+
+        <!-- Mensajes -->
+        <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <!-- Formulario -->
+        <form th:action="@{/solicitudes/crear}" th:object="${solicitud}" method="post" class="form">
+
+            <div class="form-group mb-3">
+                <label for="autor"><strong>Autor</strong></label>
+                <input id="autor" type="text" th:field="*{autor}" class="form-control"
+                       placeholder="Tu nombre completo" required>
+                <div class="text-danger" th:if="${#fields.hasErrors('autor')}" th:errors="*{autor}"></div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="hechoId"><strong>ID del Hecho</strong></label>
+                <input id="hechoId" type="number" th:field="*{hecho.idHecho}" class="form-control"
+                       placeholder="Ejemplo: 12" required>
+                <small class="form-text text-muted">Número identificador del hecho a eliminar.</small>
+                <div class="text-danger" th:if="${#fields.hasErrors('hecho.idHecho')}" th:errors="*{hecho.idHecho}"></div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="descripcion"><strong>Descripción</strong></label>
+                <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control"
+                          placeholder="Escriba una descripción del hecho o motivo de eliminación" required></textarea>
+                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+            </div>
+
+            <div class="submit-container mt-3">
+                <a th:href="@{/solicitudes/gestion}" class="btn btn-secondary">Volver</a>
+                <button type="submit" class="btn btn-primary">Crear</button>
+            </div>
+        </form>
+    </section>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:src="@{/js/solicitudes/solicitudEliminacion.js}"></script>
+    </th:block>
+</div>
+</html>

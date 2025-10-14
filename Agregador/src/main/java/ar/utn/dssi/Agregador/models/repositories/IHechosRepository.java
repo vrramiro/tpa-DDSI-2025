@@ -1,13 +1,31 @@
 package ar.utn.dssi.Agregador.models.repositories;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
-  List<Hecho> findByIdEnFuenteAndFuente(Long idOrigen, Fuente fuente);
+  @Query("SELECT h FROM Hecho h " +
+      "WHERE (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +
+      "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
+      "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
+      "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
+      "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) " +
+      "AND h.visible = true")
+  List<Hecho> findHechosByVisibleTrueAndFiltrados(
+      @Param("fechaReporteDesde") LocalDate fechaReporteDesde,
+      @Param("fechaReporteHasta") LocalDate fechaReporteHasta,
+      @Param("fechaAcontecimientoDesde") LocalDate fechaAcontecimientoDesde,
+      @Param("fechaAcontecimientoHasta") LocalDate fechaAcontecimientoHasta,
+      @Param("idCategoria") Long idCategoria,
+      @Param("provincia") String provincia
+  );
+
+  Optional<Hecho> findHechoByIdAndVisible(Long idHecho, boolean visible);
 }

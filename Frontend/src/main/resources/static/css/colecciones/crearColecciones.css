@@ -1,0 +1,306 @@
+/* ============================================================
+   OVERRIDES Y ESPECÍFICOS RESPECTO A base.css
+   ============================================================ */
+
+/* ===== Botones en NAV y hovers ===== */
+.btn-secondary { background-color: var(--secondary-color); color: #fff; }
+
+a.btn-secondary,
+.btn-outline { text-decoration: none; }
+
+.main-nav .btn-secondary {
+    background-color: var(--light-color);
+    color: var(--text-color);
+}
+.main-nav .btn-primary {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+.main-nav .btn:hover {
+    transform: translateY(-2px);
+    color: var(--primary-color);
+}
+
+/* Hovers específicos dentro de acciones del formulario */
+.form-actions .btn-secondary:hover { background-color: #757575; }
+.form-actions .btn-primary:hover   { background-color: var(--light-color); color: var(--primary-color); }
+
+/* ============================================================
+   CONTENEDOR DE MODIFICACIÓN + FORMULARIO
+   ============================================================ */
+.container-modificacion {
+    width: min(92%, var(--container-max));
+    margin: 2rem auto;
+    background: var(--background-color);
+    padding: var(--space-3);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.container-modificacion h2 {
+    color: var(--dark-color);
+    margin-bottom: var(--space-2);
+    text-align: center;
+    font-size: clamp(1.8rem, 2vw + 1rem, 3rem);
+    letter-spacing: .2px;
+}
+
+.coleccion-form { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.form-group { display: flex; flex-direction: column; gap: .35rem; }
+.form-group label {
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+/* Campos */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: .65rem .75rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background: #fff;
+    color: var(--text-color);
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* FIELDSET + GRID */
+.criterios {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--space-2);
+}
+.criterios legend {
+    font-weight: 700;
+    color: var(--dark-color);
+    letter-spacing: .2px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-2);
+}
+
+/* ============================================================
+   ACCIONES DEL FORM
+   ============================================================ */
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    justify-content: space-between;
+    margin-top: var(--space-3);
+}
+.form-actions .btn { min-width: 140px; }
+
+/* ============================================================
+   FUENTES (multiselect mejorado)
+   ============================================================ */
+
+/* contenedor */
+.custom-multiselect {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: .5rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;                /* ← menos aire entre opciones */
+    max-height: 180px;         /* un poco más alto sin ser enorme */
+    overflow-y: auto;
+}
+
+/* cada opción como “item” clickeable y legible */
+.custom-multiselect label {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    padding: .55rem .7rem;
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) - 2px);
+    background: #fff;
+    font-weight: 600;          /* ← mejora lectura del texto */
+    color: var(--dark-color);
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color .15s ease, border-color .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+
+/* hover/focus accesible */
+.custom-multiselect label:hover {
+    background: color-mix(in srgb, var(--primary-color) 8%, #fff);
+    border-color: color-mix(in srgb, var(--primary-color) 35%, var(--border-color));
+}
+.custom-multiselect label:focus-within {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* checkbox nativo con color de marca (cuando el navegador lo soporta) */
+.custom-multiselect input[type="checkbox"] {
+    accent-color: var(--primary-color);
+    width: 1.05rem; height: 1.05rem;
+    flex: 0 0 auto;
+}
+
+/* ============================================================
+   MODAL (accesible con :target)
+   ============================================================ */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    align-items: center; justify-content: center;
+}
+.modal:target { display: flex; }
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%; max-width: 400px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.modal-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px; font-weight: bold;
+    color: #333; text-decoration: none;
+}
+
+.ts-control {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: .65rem .75rem;
+    background: #fff;
+    color: var(--text-color);
+    font-size: 1rem;
+    line-height: 1.2;
+    min-height: 2.5rem;
+    box-shadow: none;
+}
+.ts-control:focus, .ts-control.focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+.ts-dropdown {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+.ts-dropdown .option {
+    padding: .45rem .7rem;
+}
+.ts-dropdown .option.active {
+    background: color-mix(in srgb, var(--primary-color) 15%, #fff);
+}
+.no-results {
+    padding: .5rem .7rem; color: #777;
+}
+/* === Uniformar fuente del selector con los demás campos === */
+.ts-control,
+.ts-dropdown,
+.ts-control input {
+    font-family: inherit;        /* Usa la misma fuente del formulario */
+    font-size: 1rem;             /* Igual que los otros inputs */
+    color: var(--text-color);    /* Color coherente con tu tema */
+    font-weight: 400;
+    letter-spacing: 0.2px;
+}
+
+.highlight-first .card {
+    outline: 2px solid rgba(16,185,129,.6);
+    box-shadow: 0 0 0 4px rgba(16,185,129,.15);
+    animation: pulseHighlight 1.8s ease-in-out 2;
+    border-radius: var(--border-radius, 12px);
+}
+@keyframes pulseHighlight {
+    0% { box-shadow: 0 0 0 0 rgba(16,185,129,.35); }
+    50% { box-shadow: 0 0 0 8px rgba(16,185,129,.12); }
+    100% { box-shadow: 0 0 0 0 rgba(16,185,129,.0); }
+}
+
+/* ===== Bloque flash creado ===== */
+.flash-created {
+    background: color-mix(in srgb, var(--primary-color) 7%, var(--background-color));
+    border-radius: var(--border-radius);
+    padding: var(--space-2);
+    margin-bottom: var(--space-2);
+    box-shadow: var(--box-shadow);
+}
+
+.flash-created .alert {
+    margin: 0 0 var(--space-2) 0;
+}
+
+.flash-created .btn-close {
+    background: transparent;
+    border: 0;
+    font-size: 1.1rem;
+    opacity: .6;
+    cursor: pointer;
+}
+.flash-created .btn-close:hover { opacity: 1; }
+
+/* ===== Debug visual ===== */
+.flash-created-debug {
+    margin-top: .5rem;
+}
+.flash-created-debug summary {
+    cursor: pointer;
+    user-select: none;
+    font-weight: 600;
+}
+.debug-dl {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: .25rem .75rem;
+    margin-top: .5rem;
+}
+.debug-dl dt {
+    font-weight: 700;
+    color: var(--dark-color);
+}
+.debug-dl dd {
+    margin: 0;
+    color: var(--text-color);
+}
+.debug-list { margin: 0; padding-left: 1rem; }
+.debug-list li { margin: .1rem 0; }
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+h1 { margin: 2rem 0 1rem; color: var(--dark-color); }
+
+/* ============================================================
+   RESPONSIVE: TWEAKS NO CUBIERTOS POR base.css
+   ============================================================ */
+@media (max-width: 992px) {
+    .main-header { padding-inline: 4%; }
+    .class-bienvenida { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
+}
+@media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .btn { width: 100%; }
+    .class-bienvenida { padding-inline: 3%; }
+}
+@media (max-width: 480px) {
+    .logo { font-size: clamp(1.1rem, 4.5vw, 1.3rem); }
+    .main-nav a { padding: .4rem .5rem; }
+}

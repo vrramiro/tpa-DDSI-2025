@@ -1,39 +1,24 @@
 package ar.utn.dssi.Agregador.services;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.AlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
-import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
-import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
+import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
+import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Mono;
-
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public interface IColeccionService {
-    //CRUD
-    ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
-    List<ColeccionOutputDTO> obtenerColecciones();
-    ColeccionOutputDTO actualizarColeccion (String handle, ColeccionInputDTO coleccionInputDTO);
-    void eliminarColeccion(String handle);
+  ColeccionOutputDTO crearColeccion(ColeccionInputDTO coleccionInputDTO);
 
-    List<HechoOutputDTO> navegacionColeccion(FiltroInputDTO filtroInputDTO, ModoNavegacion modoNavegacion, String handle);
+  Page<ColeccionOutputDTO> obtenerColecciones(Pageable pageable);
 
-    List<HechoOutputDTO> hechosDeColeccion(String handle);
+  ColeccionOutputDTO editarColeccion(String handle, ColeccionInputDTO coleccionInputDTO);
 
-    void agregarFuente(Long idFuente,String handle);
-    void eliminarFuente(Long idFuente, String handle);
+  void eliminarColeccion(String handle);
 
-    Mono<Void> refrescarColecciones(Hecho hecho);
+  List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad);
 
-    void agregarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle);
-    void eliminarCriterioDePertenencia(CriterioDePertenencia nuevoCriterio, String handle);
-
-    void actualizarAlgoritmo(String handle, TipoConsenso algoritmoConsenso);
 }

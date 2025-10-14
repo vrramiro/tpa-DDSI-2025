@@ -1,85 +1,98 @@
 package ar.utn.dssi.Agregador.services.impl;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.HechoInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.Categoria;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
+import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import ar.utn.dssi.Agregador.models.entities.Ubicacion;
-import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
-import ar.utn.dssi.Agregador.models.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
-
+import java.util.Optional;
 
 @Service
 public class HechosService implements IHechosService {
-    @Autowired
-    private IHechosRepository hechosRepository;
+  private final IHechosRepository hechosRepository;
+  private final IColeccionRepository coleccionRepository;
+  private final IFuentesService fuentesService;
 
-    @Autowired
-    private IColeccionRepository coleccionRepository;
+  public HechosService(IHechosRepository hechosRepository, IColeccionRepository coleccionRepository, IFuentesService fuentesService) {
+    this.hechosRepository = hechosRepository;
+    this.coleccionRepository = coleccionRepository;
+    this.fuentesService = fuentesService;
+  }
 
-    @Autowired
-    private IFuentesService fuentesService;
+  @Override
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+                                            LocalDate fechaReporteHasta,
+                                            LocalDate fechaAcontecimientoDesde,
+                                            LocalDate fechaAcontecimientoHasta,
+                                            Long idCategoria,
+                                            String provincia) {
+    try {
+      List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
+          fechaReporteDesde,
+          fechaReporteHasta,
+          fechaAcontecimientoDesde,
+          fechaAcontecimientoHasta,
+          idCategoria,
+          provincia
+      );
 
-    @Override
-    public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
-        try {
-            Hecho hecho = hechosRepository.findById(idHecho).orElseThrow(IllegalArgumentException::new);
+      return hechos.stream()
+          .map(MapperDeHechos::hechoToOutputDTO)
+          .toList();
+    } catch (Exception e) {
+      throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
+    }
+  }
 
-            return MapperDeHechos.hechoOutputDTO(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener el hecho por id: " + e.getMessage(), e);
-        }
+  @Override
+  public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
+    Hecho hecho = intentarObtenerHecho(idHecho);
+    return MapperDeHechos.hechoToOutputDTO(hecho);
+  }
+
+  private Hecho intentarObtenerHecho(Long idHecho) {
+    Optional<Hecho> hechoOp = this.hechosRepository.findHechoByIdAndVisible(idHecho, true);
+
+    if (hechoOp.isEmpty()) {
+      throw new HechoNoEcontrado("No se encontró hecho con id: " + idHecho);
     }
 
-    @Override
-    public List<HechoOutputDTO> obtenerHechos() {
-        try {
-            return this.hechosRepository
-                .findAll()
-                .stream()
-                .map(MapperDeHechos::hechoOutputDTO)
-                .toList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
-        }
+    return hechoOp.get();
+  }
+
+  @Override
+  @Transactional
+  public void eliminarHecho(Long idHecho) {
+    //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
+    Hecho hecho = this.hechosRepository.findById(idHecho).orElseThrow(() -> new HechoNoEcontrado("No se encontro el hecho con id: " + idHecho));
+    hecho.setVisible(false);
+    hechosRepository.save(hecho);
+  }
+
+  @Override
+  @Transactional
+  public void importarNuevosHechos() {
+    try {
+      List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
+      System.out.println(hechosNuevos);
+      hechosRepository.saveAll(hechosNuevos);
+
+      List<Coleccion> colecciones = coleccionRepository.findAll();
+      System.out.println("HECHOS TRAIDOS: " + hechosNuevos.size());
+
+      colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
+
+      coleccionRepository.saveAll(colecciones);
+    } catch (Exception e) {
+      throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
     }
-
-    @Override
-    public void eliminarHecho(Long IdHecho) {
-        try {
-            //TODO revisar gestion de eliminacion en fuente si es estatica o dinamica => ver que fuente es y mandarle que lo elimine
-            Hecho hecho = this.hechosRepository.findById(IdHecho).orElseThrow(IllegalArgumentException::new);
-            hecho.setVisible(false);
-            hechosRepository.save(hecho);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al eliminar el hecho: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void importarNuevosHechos() {
-        try {
-            List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
-
-            //TODO: ACA NORMALIZAR LOS HECHOS..
-
-            List<Coleccion> colecciones = coleccionRepository.findAll();
-
-            colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos)); //trabaja varias colecciones por core
-
-            coleccionRepository.saveAll(colecciones);
-        } catch (Exception e) {
-            throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
-        }
-    }
+  }
 }

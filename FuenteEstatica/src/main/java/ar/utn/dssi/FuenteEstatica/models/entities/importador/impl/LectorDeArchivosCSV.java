@@ -3,49 +3,48 @@ package ar.utn.dssi.FuenteEstatica.models.entities.importador.impl;
 import ar.utn.dssi.FuenteEstatica.models.entities.contenido.Hecho;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.HechoFactory;
 import ar.utn.dssi.FuenteEstatica.models.entities.importador.ILectorDeArchivos;
-import ar.utn.dssi.FuenteEstatica.models.repositories.IHechosRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class LectorDeArchivosCSV implements ILectorDeArchivos {
-    private final HechoFactory hechoFactory;
+  private final HechoFactory hechoFactory;
 
-    public LectorDeArchivosCSV(HechoFactory hechoFactory) {
-        this.hechoFactory = hechoFactory;
-    }
-    @Override
-    public List<Hecho> importarHechos(File archivo) {
-        List<Hecho> hechos = new ArrayList<>();
+  public LectorDeArchivosCSV(HechoFactory hechoFactory) {
+    this.hechoFactory = hechoFactory;
+  }
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), StandardCharsets.UTF_8))) {
-            String linea;
-            boolean esPrimeraLinea = true;
+  @Override
+  public List<Hecho> importarHechos(File archivo) {
+    List<Hecho> hechos = new ArrayList<>();
 
-            while ((linea = reader.readLine()) != null) {
-                if (esPrimeraLinea) {
-                    esPrimeraLinea = false; // saltar encabezado
-                    continue;
-                }
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(archivo), StandardCharsets.UTF_8))) {
+      String linea;
+      boolean esPrimeraLinea = true;
 
-                Hecho hechoObtenido = hechoFactory.crearHecho(linea);
-
-                if (hechoObtenido == null){
-                    throw new RuntimeException("No se pudo obtener el hecho, faltan campos.");
-                }
-                hechos.add(hechoObtenido);
-
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+      while ((linea = reader.readLine()) != null) {
+        if (esPrimeraLinea) {
+          esPrimeraLinea = false; // saltar encabezado
+          continue;
         }
-        return hechos;
+
+        Hecho hechoObtenido = hechoFactory.crearHecho(linea);
+
+        if (hechoObtenido == null) {
+          throw new RuntimeException("No se pudo obtener el hecho, faltan campos.");
+        }
+        hechos.add(hechoObtenido);
+
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
     }
+    return hechos;
+  }
 }

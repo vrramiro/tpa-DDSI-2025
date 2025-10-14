@@ -1,12 +1,10 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Embeddable
 @Getter
@@ -14,9 +12,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Ubicacion {
-    private Double latitud;
-    private Double longitud;
-    private String pais;
-    private String ciudad;
-    private String provincia;
+  private Double latitud;
+  private Double longitud;
+  private String pais;
+  private String ciudad;
+  private String provincia;
+
+  public Boolean invalida() {
+    return this.longitud == null || this.latitud == null ||
+        this.ciudad == null || this.provincia == null || this.pais == null;
+  }
 }

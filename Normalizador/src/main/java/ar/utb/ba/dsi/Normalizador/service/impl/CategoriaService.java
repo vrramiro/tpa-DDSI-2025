@@ -1,47 +1,54 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Input.CategoriaInputDTO;
-import ar.utb.ba.dsi.Normalizador.models.DTOs.Output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.Input.CategoriaInputDTO;
+import ar.utb.ba.dsi.Normalizador.dto.output.CategoriaOutputDTO;
+import ar.utb.ba.dsi.Normalizador.mappers.MapperDeCategorias;
 import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
-import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNotFoundException;
-import ar.utb.ba.dsi.Normalizador.models.mappers.MapperDeCategorias;
-import ar.utb.ba.dsi.Normalizador.models.repository.ICategoriaRepository;
+import ar.utb.ba.dsi.Normalizador.models.entities.errores.CategoriaNoEcontrada;
+import ar.utb.ba.dsi.Normalizador.models.repositories.ICategoriaRepository;
 import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriaService implements ICategoriaService {
-    private final ICategoriaRepository categoriaRepository;
 
-    public CategoriaService(ICategoriaRepository categoriaRepository) {
-        this.categoriaRepository = categoriaRepository;
+  private final ICategoriaRepository categoriaRepository;
+
+  @Override
+  public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {
+    String categoriaNombre = categoria.getCategoriaExterna();
+    return MapperDeCategorias.categoriaToOutputDTO(this.normalizarCategoria(categoriaNombre));
+  }
+
+  @Override
+  public Categoria normalizarCategoria(String categoriaInput) {
+
+    Categoria categoriaNormalizada = categoriaRepository.findCategoriaByNombre(categoriaInput);
+
+    if (categoriaNormalizada == null) {
+      categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaInput);
     }
 
-    @Override
-    public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria) {
-        String categoriaNombre = categoria.getCategoriaExterna();
-        return MapperDeCategorias.categoriaToOutputDTO(this.normalizarCategoria(categoriaNombre));
+    if (categoriaNormalizada == null) {
+      System.out.println("Categoria no encontrada");
+      throw new CategoriaNoEcontrada("Categoría no encontrada: " + categoriaInput);
     }
 
-    @Override
-    public Categoria normalizarCategoria(String categoriaInput) {
-        String categoriaExterna = categoriaInput.toLowerCase();
+    return categoriaNormalizada;
+  }
 
-        Categoria categoriaNormalizada = categoriaRepository.findCategoriaByCategoriaExterna(categoriaExterna);
+  @Override
+  public List<CategoriaOutputDTO> obtenerCategorias() {
+    return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
+  }
 
-        if (categoriaNormalizada == null) {
-            throw new CategoriaNotFoundException("Categoría no encontrada: " + categoriaInput);
-        }
-
-        return categoriaNormalizada;
-    }
-
-
-    @Override
-    public List<CategoriaOutputDTO> obtenerCategorias() {
-        return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
-    }
+  @Override
+  public CategoriaOutputDTO obtenerCategoriaPorId(Long idCategoria) {
+    Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow(() -> new CategoriaNoEcontrada("Categoría no encontrada con id: " + idCategoria));
+    return MapperDeCategorias.categoriaToOutputDTO(categoria);
+  }
 }

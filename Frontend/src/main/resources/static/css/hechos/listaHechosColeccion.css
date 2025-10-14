@@ -1,0 +1,171 @@
+/* ============================================================
+   EXTRAS Y OVERRIDES RESPECTO A base.css
+   ============================================================ */
+
+/* ===== Botones: altura uniforme y centrado ===== */
+.btn {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Enlaces con clase btn sin subrayado */
+.btn-primary,
+.btn-outline { text-decoration: none; }
+
+.btn-secondary { color: #fff; }
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+h1 {
+    margin: 2rem 0 1rem;
+    color: var(--dark-color);
+}
+
+/* ============================================================
+   LISTA DE HECHOS EN COLECCIÓN
+   ============================================================ */
+main {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: var(--space-4);
+}
+
+.main-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.main-actions h1 {
+    margin: 0;
+    color: var(--dark-color);
+    font-size: 2.2rem;
+}
+
+.main-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    height: auto;
+    width: auto;
+}
+
+/* ===== Contenedor de cards ===== */
+.grid,
+.hechos-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3); /* Espaciado vertical entre cards */
+    padding: 0.5rem 0;   /* Un poco de aire arriba/abajo */
+}
+
+/* ===== Cada card individual ===== */
+.hecho-card {
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: var(--space-3);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hecho-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0,0,0,.12);
+}
+
+.hecho-card-content {
+    flex: 1;
+    min-width: 280px;
+}
+
+.hecho-title {
+    color: var(--dark-color);
+    font-size: 1.5rem;
+    margin-bottom: var(--space-1);
+}
+
+.hecho-meta {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    margin-bottom: var(--space-2);
+}
+
+.hecho-card-actions .btn {
+    width: auto;
+    white-space: nowrap;
+}
+
+/* ============================================================
+   PAGINACIÓN
+   ============================================================ */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
+}
+
+.page-link,
+.page-link-ellipsis {
+    color: var(--secondary-color);
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link-ellipsis { border: none; }
+
+.pagination .page-link.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 992px) {
+    .main-header { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
+}
+
+@media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .hecho-card-actions .btn { width: 100%; }
+}
+
+@media (max-width: 576px) {
+    .hecho-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

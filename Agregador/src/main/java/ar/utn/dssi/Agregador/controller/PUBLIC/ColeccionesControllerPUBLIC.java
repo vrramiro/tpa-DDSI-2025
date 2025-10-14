@@ -1,42 +1,46 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.ColeccionInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.inputDTO.FiltroInputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.ColeccionOutputDTO;
-import ar.utn.dssi.Agregador.models.DTOs.outputDTO.HechoOutputDTO;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacion;
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
-import ar.utn.dssi.Agregador.services.IHechosService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping("/public/colecciones")
+@RequiredArgsConstructor
 public class ColeccionesControllerPUBLIC {
-  @Autowired
-  private IColeccionService coleccionService;
+  private final IColeccionService coleccionService;
 
-  @GetMapping("/{idColeccion}/hechos")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosDeColeccion(@PathVariable String handle) {
-    List<HechoOutputDTO> hechosDeColeccion = coleccionService.hechosDeColeccion(handle);
+  @GetMapping("/{handle}/hechos")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
+      (@PathVariable String handle,
+       @RequestParam(name = "modoNavegacion", defaultValue = "MODO_CURADO") String modoNavegacion,
+       @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+       @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+       @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+       @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+       @RequestParam(name = "ciudad", required = false) String ciudad,
+       @RequestParam(name = "provincia", required = false) String provincia
+      ) {
+    List<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
+        modoNavegacion,
+        handle,
+        fechaReporteDesde,
+        fechaReporteHasta,
+        fechaAcontecimientoDesde,
+        fechaAcontecimientoHasta,
+        provincia,
+        ciudad);
 
-    if(hechosDeColeccion.isEmpty()){
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
-    }
-
-    return ResponseEntity.ok(hechosDeColeccion); // status 200
-  }
-
-  @GetMapping
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(@ModelAttribute FiltroInputDTO filtros, @ModelAttribute ModoNavegacion modoNavegacion, @PathVariable String handle) {
-    List<HechoOutputDTO> hechos = coleccionService.navegacionColeccion(filtros, modoNavegacion, handle);
-
-    if(hechos.isEmpty()) {
+    if (hechos.isEmpty()) {
       return ResponseEntity.noContent().build(); // status 204
     }
 

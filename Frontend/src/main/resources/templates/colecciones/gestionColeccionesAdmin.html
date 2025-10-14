@@ -1,0 +1,103 @@
+<html th:replace="~{layout/base::html}">
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<div th:fragment="contenido" class="row">
+    <main class="content-container">
+        <h2>Colecciones:</h2>
+
+        <div class="collection-header">
+            <a th:href="@{/colecciones/nuevo}" class="btn btn-primary">Crear colección</a>
+        </div>
+
+        <div class="table-container">
+            <table class="tabla-colecciones">
+                <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Descripción</th>
+                    <th>Gestionar</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- Estado vacío -->
+                <tr th:if="${colecciones == null or #lists.isEmpty(colecciones)}">
+                    <td colspan="3" class="muted">No hay colecciones para mostrar.</td>
+                </tr>
+
+                <!-- Filas -->
+                <tr th:each="col : ${colecciones}">
+                    <td th:text="${col.titulo ?: 'Sin título'}">Sin título</td>
+                    <td th:text="${col.descripcion ?: '—'}">—</td>
+                    <td class="action-buttons">
+                        <!-- EDITAR -->
+                        <a class="btn btn-edit"
+                           th:href="@{/colecciones/{handle}/modificar(handle=${col.handle})}">
+                            Modificar
+                        </a>
+
+                        <!-- ELIMINAR -->
+                        <button type="button"
+                                class="btn btn-delete btn-sm"
+                                th:data-id="${col.handle}"
+                                th:data-titulo="${col.titulo}"
+                                onclick="abrirModalEliminarColeccion(this)"
+                                title="Eliminar">
+                            <i class="fas fa-trash"></i>
+                            <span>Eliminar</span>
+                        </button>
+                    </td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <!-- Paginación -->
+        <div th:replace="~{navegacion/navegacion :: pager(
+            ${page},
+            ${totalPages},
+            ${size},
+            ${baseUrl},
+            ${filtro},
+            ${sort},
+            ${isFirst},
+            ${isLast}
+        )}"></div>
+
+        <div class="footer-actions">
+            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
+        </div>
+
+        <!-- Form oculto para POST /colecciones/{id}/eliminar -->
+        <form id="form-eliminar-coleccion" method="post" hidden>
+            <input th:if="${_csrf != null}"
+                   type="hidden"
+                   th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
+        </form>
+
+        <!-- Modal de confirmación -->
+        <div id="modal-eliminar" class="modal" hidden aria-modal="true" role="dialog" aria-labelledby="modal-eliminar-titulo">
+            <div class="modal-content">
+                <h3 id="modal-eliminar-titulo" style="margin:0 0 .5rem">Confirmar eliminación</h3>
+                <p id="modal-eliminar-texto">¿Eliminar esta colección?</p>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="modal-eliminar-cancelar">Cancelar</button>
+                    <button type="button" class="btn btn-delete" id="modal-eliminar-confirmar">Sí, eliminar</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <th:block th:fragment="scripts">
+        <script th:src="@{/js/colecciones/gestionColecciones.js}"></script>
+    </th:block>
+</div>
+</html>
