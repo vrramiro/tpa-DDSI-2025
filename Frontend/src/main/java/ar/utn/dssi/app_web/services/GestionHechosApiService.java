@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
@@ -13,9 +14,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -27,17 +32,20 @@ public class GestionHechosApiService {
   private final String normalizadorServiceUrl;
   private final String fuenteDinamicaServiceUrl;
   private final String agregadorServiceUrl;
+  private final String fuenteEstaticaServiceUrl;
 
   public GestionHechosApiService(
           WebApiCallerService webApiCallerService,
           @Value("${normalizador.service.url}") String normalizadorServiceUrl,
           @Value("${fuenteDinamica.service.url}") String fuenteDinamicaServiceUrl,
-          @Value("${agregador.service.url}") String agregadorServiceUrl
+          @Value("${agregador.service.url}") String agregadorServiceUrl,
+          @Value("${fuenteEstatica.service.url}") String fuenteEstaticaServiceUrl
   ) {
     this.webApiCallerService = webApiCallerService;
     this.normalizadorServiceUrl = normalizadorServiceUrl;
     this.fuenteDinamicaServiceUrl = fuenteDinamicaServiceUrl;
     this.agregadorServiceUrl = agregadorServiceUrl;
+    this.fuenteEstaticaServiceUrl = fuenteEstaticaServiceUrl;
   }
 
   /** =========================================
@@ -60,6 +68,18 @@ public class GestionHechosApiService {
     } catch (Exception e) {
       log.error("Error inesperado al obtener ubicación", e);
       throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
+    }
+  }
+
+  public List<ProvinciaInputDTO> obtenerProvincias() {
+    String url = UriComponentsBuilder
+            .fromUriString(normalizadorServiceUrl)
+            .path("/ubicacion/provincias")
+            .toUriString();
+    try {
+      return webApiCallerService.getList(url, ProvinciaInputDTO.class);
+    } catch (WebClientException e) {
+      throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
     }
   }
 
@@ -91,13 +111,71 @@ public class GestionHechosApiService {
   }
 
   /** =========================================
+   *  CREAR HECHO ESTATICA
+   *  ========================================= */
+  public Boolean crearHechoEstatica(MultipartFile archivo) {
+    System.out.println("entre a controlador importar gestion hechos api service");
+
+    String url = UriComponentsBuilder
+            .fromUriString(fuenteEstaticaServiceUrl)
+            .path("/hechos/importar")
+            .toUriString();
+
+    try {
+      webApiCallerService.postMultipart(url, archivo, "archivo", Void.class);
+      return true;
+    } catch (Exception e) {
+      log.error("Error al crear hecho: {}", e.getMessage(), e);
+      return false;
+    }
+  }
+
+  /** =========================================
    *  OBTENER HECHO POR ID
    *  ========================================= */
+  public List<HechoOutputDTO> obtenerHechos(
+          LocalDate fechaReporteDesde,
+          LocalDate fechaReporteHasta,
+          LocalDate fechaAcontecimientoDesde,
+          LocalDate fechaAcontecimientoHasta,
+          Long idCategoria,
+          String provincia) {
+
+    UriComponentsBuilder builder = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/hecho/");
+
+    if (fechaReporteDesde != null) {
+      builder.queryParam("fechaReporteDesde", fechaReporteDesde);
+    }
+    if (fechaReporteHasta != null) {
+      builder.queryParam("fechaReporteHasta", fechaReporteHasta);
+    }
+    if (fechaAcontecimientoDesde != null) {
+      builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
+    }
+    if (fechaAcontecimientoHasta != null) {
+      builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
+    }
+    if (provincia != null && !provincia.isEmpty()) {
+      builder.queryParam("provincia", provincia);
+    }
+
+    String url = builder.build().toUriString();
+
+    try {
+      return webApiCallerService.getList(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener hechos desde el agregador", e);
+      return Collections.emptyList();
+    }
+  }
+
   public HechoOutputDTO obtenerHechoPorId(Long id) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
-            .path("/hecho")
-            .queryParam("id", id)
+            .path("/hecho/{id}")
+            .buildAndExpand(id)
             .toUriString();
 
     try {
@@ -161,7 +239,7 @@ public class GestionHechosApiService {
   /** =========================================
    *  BUSCAR HECHOS PAGINADOS
    *  ========================================= */
-  @SuppressWarnings("unchecked")
+  //TODO VER SI HACE FALTA CUANDO ESTE LISTO EL BACK
   public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(int page, int size, String filtro, String sort) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
@@ -205,4 +283,6 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error al verificar la ubicación: " + e.getMessage(), e);
     }
   }
+
+
 }
