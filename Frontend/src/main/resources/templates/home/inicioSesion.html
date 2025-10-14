@@ -22,7 +22,7 @@
                     </div>
                     <button class="btn btn-primary" style="width: 100%;" type="submit">Acceder</button>
                 </form>
-                <p style="text-align: center; margin-top: 1rem;">
+                <p style="text-align: center; margin-top: 1rem;", sec:authorize="!isAuthenticated()">
                     ¿No tienes cuenta? <a class="btn-link" th:href="@{/registro}">Regístrate</a>
                 </p>
 
@@ -32,6 +32,17 @@
             </div>
         </div>
     </section>
+
+    <div th:if="${mensaje}" id="mensajeModal" class="mensaje-modal"
+         th:classappend="${tipoMensaje == 'success' ? 'modal-success' : 'modal-error'}">
+        <div class="modal-contenido">
+            <h3 th:text="${tipoMensaje == 'success' ? '✓ Éxito' : '✗ Error'}"></h3>
+            <p th:text="${mensaje}"></p>
+            <button type="button" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+
+
 
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>

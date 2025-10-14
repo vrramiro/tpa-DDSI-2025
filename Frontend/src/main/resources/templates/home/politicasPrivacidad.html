@@ -1,0 +1,67 @@
+<html th:replace="~{layout/base::html}">
+<head>
+    <!-- CSS específico de esta vista -->
+    <th:block th:fragment="styles">
+        <link rel="stylesheet" th:href="@{/css/home/politicasPrivacidad.css}">
+    </th:block>
+</head>
+
+<div class="row" th:fragment="contenido">
+    <div class="main-wrapper">
+        <div class="container mt-5 mb-5">
+            <h1 class="text-center mb-4">Políticas de Privacidad</h1>
+            <p class="text-muted text-center mb-5">Última actualización: Octubre 2025</p>
+
+            <section class="mb-4">
+                <h4>1. Información que Recopilamos</h4>
+                <p>En MetaMapa recopilamos información necesaria para ofrecer una experiencia segura y personalizada.
+                    Esto puede incluir datos como nombre de usuario y actividad dentro de la plataforma.
+                    No recolectamos información sensible ni compartimos datos personales sin consentimiento.</p>
+            </section>
+
+            <section class="mb-4">
+                <h4>2. Cómo Usamos la Información</h4>
+                <p>Los datos recolectados se utilizan para mejorar la funcionalidad del sistema, mantener la seguridad,
+                    y permitir el acceso autenticado a los servicios. Nunca comercializamos ni transferimos información
+                    personal a terceros sin autorización expresa.</p>
+            </section>
+
+            <section class="mb-4">
+                <h4>3. Almacenamiento y Seguridad</h4>
+                <p>Utilizamos medidas técnicas y organizativas adecuadas para proteger la información frente a accesos
+                    no autorizados, pérdida o alteración. Toda la información se almacena de forma segura y cifrada
+                    en servidores protegidos.</p>
+            </section>
+
+            <section class="mb-4">
+                <h4>4. Cookies y Tecnologías Similares</h4>
+                <p>MetaMapa utiliza cookies para mejorar la experiencia del usuario. Puedes configurar tu navegador para
+                    rechazar cookies, pero algunas funciones del sitio podrían verse afectadas.</p>
+            </section>
+
+            <section class="mb-4">
+                <h4>5. Derechos del Usuario</h4>
+                <p>Podés solicitar el acceso, modificación o eliminación de tus datos personales en cualquier momento
+                    comunicándote con nuestro equipo de soporte. Nos comprometemos a responder en un plazo razonable
+                    y garantizar el cumplimiento de las normativas vigentes.</p>
+            </section>
+
+            <section class="mb-4">
+                <h4>6. Cambios en esta Política</h4>
+                <p>Nos reservamos el derecho de actualizar esta Política de Privacidad en cualquier momento. Las
+                    modificaciones se publicarán en esta misma página, indicando la fecha de la última revisión.</p>
+            </section>
+
+            <div class="text-center mt-5">
+                <a class="btn btn-volver" th:href="@{/}">
+                    Volver al Inicio
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/js/home/politicasPrivacidad.js}"></script>
+</th:block>
+</html>

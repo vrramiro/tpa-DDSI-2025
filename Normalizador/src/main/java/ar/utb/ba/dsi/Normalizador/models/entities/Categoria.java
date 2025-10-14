@@ -30,8 +30,8 @@ public class Categoria {
 
   @ElementCollection
   @CollectionTable(
-      name = "categorias_externas",
-      joinColumns = @JoinColumn(name = "categoria_id")
+          name = "categorias_externas",
+          joinColumns = @JoinColumn(name = "categoria_id")
   )
   private List<String> categoriasExternas;
 }

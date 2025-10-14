@@ -13,4 +13,8 @@ public class UsuarioDatosFaltantes extends RuntimeException {
   public void addFieldError(String field, String error) {
     fieldErrors.put(field, error);
   }
+
+  public Map<String, String> getFieldErrors() {
+    return fieldErrors;
+  }
 }

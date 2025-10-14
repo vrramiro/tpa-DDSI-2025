@@ -13,14 +13,16 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioDTO {
-  @JsonProperty("nombre_usuario")
+  @JsonProperty("username")
   private String nombreUsuario;
-  @JsonProperty("contrasenia")
+  @JsonProperty("password")
   private String contrasenia;
   @JsonProperty("rol")
   private Rol rol;
   @JsonProperty("fecha_nacimiento")
   private LocalDate fechaNacimiento;
+  @JsonProperty("nombre")
   private String nombre;
+  @JsonProperty("apellido")
   private String apellido;
 }

@@ -1,0 +1,88 @@
+/* ---------- Estilos Generales ---------- */
+body {
+    background-color: #f6fbfa;
+    color: #1a1a1a;
+    font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.7;
+}
+
+/* ---------- Contenedor Principal ---------- */
+.container {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 3rem 3.5rem;
+    max-width: 950px;
+}
+
+/* ---------- Título Principal ---------- */
+h1 {
+    color: #00695c;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* ---------- Subtítulo (última actualización) ---------- */
+.text-muted {
+    color: #6c757d !important;
+    font-style: italic;
+    font-size: 0.95rem;
+}
+
+/* ---------- Secciones ---------- */
+section {
+    margin-bottom: 2.5rem;
+}
+
+section h4 {
+    color: #004d40;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #009688;
+    padding-left: 0.75rem;
+}
+
+section p {
+    color: #333;
+    text-align: justify;
+}
+
+/* ---------- Botón de volver ---------- */
+.btn.btn-volver {
+    background-color: #009688;
+    color: #ffffff;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+}
+
+.btn.btn-volver:hover {
+    background-color: #00796b;
+    transform: translateY(-1px);
+}
+
+/* ---------- Adaptabilidad (Responsive) ---------- */
+@media (max-width: 768px) {
+    .container {
+        padding: 2rem;
+        border-radius: 12px;
+    }
+
+    section h4 {
+        font-size: 1.1rem;
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+}
+
+.main-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}

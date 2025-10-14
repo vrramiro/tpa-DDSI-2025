@@ -5,38 +5,53 @@
         <link rel="stylesheet" th:href="@{/css/home/registro.css}">
     </th:block>
 </head>
+
 <div class="row" th:fragment="contenido">
     <section id="register-page">
         <div class="container">
             <div class="card">
                 <h2>Registro de Contribuyente</h2>
-                <form id="register-form">
-                    <!-- Campo: Nombre -->
+
+                <form th:action="@{/crear_cuenta}" th:object="${userRequest}" method="POST" enctype="multipart/form-data" class="form">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
                     <div class="form-group">
-                        <label for="register-name">Nombre Completo (obligatorio)</label>
-                        <input class="form-control" id="register-name" required type="text">
+                        <label for="username">Nombre Usuario (obligatorio)</label>
+                        <input class="form-control" type="text" id="username" th:field="*{username}" required
+                               th:placeholder="${#fields.hasErrors('username') ? #fields.errors('username')[0] : 'Ingrese el nombre de usuario'}"
+                               th:classappend="${#fields.hasErrors('username')} ? 'input-error' : ''">
                     </div>
 
-                    <!-- Campo: Correo -->
                     <div class="form-group">
-                        <label for="register-email">Correo Electrónico (obligatorio)</label>
-                        <input class="form-control" id="register-email" required type="email">
+                        <label for="nombre">Nombre Completo (opcional)</label>
+                        <input class="form-control" id="nombre" type="text" th:field="*{nombre}">
                     </div>
 
-                    <!-- Campo: Contraseña -->
                     <div class="form-group">
-                        <label for="register-password">Contraseña (obligatorio)</label>
-                        <input class="form-control" id="register-password" required type="password">
+                        <label for="apellido">Apellido (opcional)</label>
+                        <input class="form-control" id="apellido" type="text" th:field="*{apellido}">
                     </div>
 
-                    <!-- Campo: Organización (opcional) -->
                     <div class="form-group">
-                        <label for="register-org">Organización (opcional)</label>
-                        <input class="form-control" id="register-org" placeholder="Ej: Periodistas Sin Fronteras"
-                               type="text">
+                        <label for="password">Contraseña (obligatorio)</label>
+                        <input class="form-control" id="password" type="password" th:field="*{password}" required>
                     </div>
 
-                    <!-- Botón principal -->
+                    <div class="form-group">
+                        <label for="fecha">Fecha Nacimiento (opcional)
+                            <span th:if="${#fields.hasErrors('fechaNacimiento')}"
+                                  th:text="${#fields.errors('fechaNacimiento')[0]}"
+                                  class="error-mensaje-label">
+            </span>
+                        </label>
+                        <input class="form-control" type="date" id="fecha" th:field="*{fechaNacimiento}"
+                               th:attr="max=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"
+                               th:classappend="${#fields.hasErrors('fechaNacimiento')} ? 'input-error' : ''"
+                               onclick="this.showPicker ? this.showPicker() : this.focus()">
+
+                    </div>
+
+                <!-- Botón principal -->
                     <button class="btn btn-primary" type="submit">Crear Cuenta</button>
                 </form>
 
@@ -48,10 +63,20 @@
             </div>
         </div>
     </section>
+</div>
 
-    <th:block th:fragment="scripts">
+<div th:if="${mensaje}" id="mensajeModal" class="mensaje-modal"
+     th:classappend="${tipoMensaje == 'success' ? 'modal-success' : 'modal-error'}">
+    <div class="modal-contenido">
+        <h3 th:text="${tipoMensaje == 'success' ? '✓ Éxito' : '✗ Error'}"></h3>
+        <p th:text="${mensaje}"></p>
+        <button type="button" onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
         <script th:src="@{/js/home/registro.js}"></script>
     </th:block>
-</div>
+
 </html>
