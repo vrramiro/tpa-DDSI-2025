@@ -47,7 +47,7 @@ function cerrarModal() {
         modal.style.display = 'none';
 
         if (debeRedirigir) {
-            window.location.href = window.location.origin + '/explorador';
+            window.location.href = window.location.origin + '/hechos/explorador';
         }
     }
 }

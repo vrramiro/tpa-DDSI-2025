@@ -12,6 +12,7 @@ import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Map;
 
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -287,6 +290,38 @@ public class HechoController {
     if (e.hasFieldErrors()) {
       e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
     }
+  }
+
+  @GetMapping("/explorador")
+  public String mapa(Model model) {
+    model.addAttribute("titulo", "Explorador");
+    model.addAttribute("categoria", categoriaService.obtenerCategorias());
+    model.addAttribute("provincias", hechosService.obtenerProvincias());
+    return "home/explorador";
+  }
+
+  @GetMapping("/explorador/datos")
+  @ResponseBody
+  public List<HechoOutputDTO> obtenerDatosParaMapa(
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+          @RequestParam(required = false) Long idCategoria,
+          @RequestParam(required = false) String provincia,
+          @RequestParam(required = false) String ciudad,
+          @RequestParam(required = false) Long idColeccion
+
+  ) {
+    if (idColeccion != null) {
+      // Llama al servicio que busca por colección
+      // return gestionHechosApiService.obtenerHechosDeColeccion(coleccion, ...);
+    }
+
+    return hechosService.obtenerHechos(
+            fechaReporteDesde,
+            fechaReporteHasta,
+            idCategoria,
+            provincia
+    );
   }
 
 /***********************************************************************************************************************/
