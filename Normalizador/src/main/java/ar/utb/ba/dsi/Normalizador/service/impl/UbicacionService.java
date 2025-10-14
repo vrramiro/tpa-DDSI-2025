@@ -1,5 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.service.impl;
 
+import ar.utb.ba.dsi.Normalizador.dto.output.ProvinciaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
@@ -8,10 +9,11 @@ import ar.utb.ba.dsi.Normalizador.models.entities.errores.HechoNoEcontrado;
 import ar.utb.ba.dsi.Normalizador.service.IUbicacionService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 public class UbicacionService implements IUbicacionService {
-  
+
   private final IUbicacionAdapter adapter;
 
   public UbicacionService(@Qualifier("georefAdapter") IUbicacionAdapter adapter) {
@@ -31,6 +33,11 @@ public class UbicacionService implements IUbicacionService {
     }
 
     return ubicacion;
+  }
+
+  public List<ProvinciaOutputDTO> obtenerProvincias() {
+    List<String> provincias = adapter.obtenerProvinciasDeAPI().block();
+    return provincias.stream().map(MapperDeUbicacion::provinciaOutputDTO).toList();
   }
 
   @Override

@@ -1,6 +1,7 @@
 package ar.utb.ba.dsi.Normalizador.mappers;
 
 import ar.utb.ba.dsi.Normalizador.dto.Input.UbicacionInputDTOGeoref;
+import ar.utb.ba.dsi.Normalizador.dto.output.ProvinciaOutputDTO;
 import ar.utb.ba.dsi.Normalizador.dto.output.UbicacionOutputDTO;
 import ar.utb.ba.dsi.Normalizador.models.entities.Ubicacion;
 
@@ -32,6 +33,12 @@ public class MapperDeUbicacion {
     ubicacionOutputDTO.setProvincia(ubicacion.getProvincia());
     ubicacionOutputDTO.setCiudad(ubicacion.getCiudad());
     return ubicacionOutputDTO;
+  }
+
+  public static ProvinciaOutputDTO provinciaOutputDTO(String nombre) {
+    ProvinciaOutputDTO provinciaOutputDTO = new ProvinciaOutputDTO();
+    provinciaOutputDTO.setNombre(nombre);
+    return provinciaOutputDTO;
   }
 
 }

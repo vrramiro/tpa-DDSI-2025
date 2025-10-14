@@ -1,5 +1,6 @@
 package ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.impl;
 
+import ar.utb.ba.dsi.Normalizador.dto.Input.ProvinciasInputDTO;
 import ar.utb.ba.dsi.Normalizador.dto.Input.UbicacionInputDTOGeoref;
 import ar.utb.ba.dsi.Normalizador.mappers.MapperDeUbicacion;
 import ar.utb.ba.dsi.Normalizador.models.entities.AdapterUbicacion.IUbicacionAdapter;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import java.time.Duration;
+import java.util.List;
 
 @Component
 public class GeorefAdapter implements IUbicacionAdapter {
@@ -40,5 +42,21 @@ public class GeorefAdapter implements IUbicacionAdapter {
         .bodyToMono(UbicacionInputDTOGeoref.class)
         .timeout(Duration.ofMillis(timeoutMs)) // aplica el timeout definido (LO USO PORQUE EN HECHOS PUSE UN BLOCK)
         .map(MapperDeUbicacion::ubicacionFromInput);
+  }
+
+  public Mono<List<String>> obtenerProvinciasDeAPI() {
+    return webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/provincias")
+            .queryParam("aplanar", true)
+            .queryParam("campos", "nombre")
+            .queryParam("formato", "json")
+            .build())
+        .retrieve()
+        .onStatus(HttpStatusCode::is4xxClientError, resp -> Mono.error(new RuntimeException("Error georef " + resp.statusCode() + ": No se pudieron obtener las provincias")))
+        .onStatus(HttpStatusCode::is5xxServerError, resp -> Mono.error(new RuntimeException("Error del servidor de georef")))
+        .bodyToMono(ProvinciasInputDTO.class)
+        .timeout(Duration.ofMillis(timeoutMs))
+        .map(response -> response.getProvincias().stream().map(provincia -> provincia.getNombre()).toList());
   }
 }
