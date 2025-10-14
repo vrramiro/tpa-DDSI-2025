@@ -13,7 +13,7 @@ import java.util.List;
 public class HechoInputDTO {
   private String titulo;
   private String descripcion;
-  private CategoriaInputDTO categoria;
+  private Long idCategoria;
   private Double latitud;
   private Double longitud;
   private LocalDate fechaAcontecimiento;
