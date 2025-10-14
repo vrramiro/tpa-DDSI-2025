@@ -202,3 +202,10 @@ img, svg, video, canvas {
 .modal-contenido button:hover {
     background-color: #1b995f;
 }
+
+.login-error {
+    color: #d9534f; /* rojo Bootstrap */
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1rem;
+}
