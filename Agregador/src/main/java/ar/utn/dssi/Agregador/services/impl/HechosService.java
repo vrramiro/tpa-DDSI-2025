@@ -11,7 +11,7 @@ import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +28,23 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaReporteDesde,
-                                            LocalDateTime fechaReporteHasta,
-                                            LocalDateTime fechaAcontecimientoDesde,
-                                            LocalDateTime fechaAcontecimientoHasta,
-                                            String ciudad,
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+                                            LocalDate fechaReporteHasta,
+                                            LocalDate fechaAcontecimientoDesde,
+                                            LocalDate fechaAcontecimientoHasta,
+                                            Long idCategoria,
                                             String provincia) {
     try {
-      return this.hechosRepository
-          .findHechosByVisibleTrueAndFiltrados(fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
-          .stream()
+      List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
+          fechaReporteDesde,
+          fechaReporteHasta,
+          fechaAcontecimientoDesde,
+          fechaAcontecimientoHasta,
+          idCategoria,
+          provincia
+      );
+
+      return hechos.stream()
           .map(MapperDeHechos::hechoToOutputDTO)
           .toList();
     } catch (Exception e) {
@@ -53,7 +60,7 @@ public class HechosService implements IHechosService {
 
   private Hecho intentarObtenerHecho(Long idHecho) {
     Optional<Hecho> hechoOp = this.hechosRepository.findHechoByIdAndVisible(idHecho, true);
-    
+
     if (hechoOp.isEmpty()) {
       throw new HechoNoEcontrado("No se encontró hecho con id: " + idHecho);
     }

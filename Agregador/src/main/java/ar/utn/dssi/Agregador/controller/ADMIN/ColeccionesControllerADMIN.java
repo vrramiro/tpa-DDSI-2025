@@ -4,6 +4,9 @@ import ar.utn.dssi.Agregador.dto.input.ColeccionInputDTO;
 import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +40,8 @@ public class ColeccionesControllerADMIN {
   }
 
   @GetMapping
-  public ResponseEntity<List<ColeccionOutputDTO>> obtenerColecciones() {
-    List<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones();
+  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault Pageable pageable) {
+    Page<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones(pageable);
 
     if (colecciones.isEmpty()) {
       return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204

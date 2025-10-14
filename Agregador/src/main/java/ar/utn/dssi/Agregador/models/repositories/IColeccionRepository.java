@@ -2,6 +2,8 @@ package ar.utn.dssi.Agregador.models.repositories;
 
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,7 +14,7 @@ import java.util.Optional;
 public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
   Optional<Coleccion> findColeccionByHandle(String handle);
 
-  List<Coleccion> findColeccionByActualizada(Boolean actualizada);
+  Page<Coleccion> findColeccionByActualizada(Pageable pageable, Boolean actualizada);
 
   Optional<Coleccion> findColeccionByTitulo(String titulo);
 
