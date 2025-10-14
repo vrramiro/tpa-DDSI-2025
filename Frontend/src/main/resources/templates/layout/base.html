@@ -15,7 +15,7 @@
     <nav class="main-nav" id="main-nav">
         <ul>
             <li><a class="btn btn-secondary" th:href="@{/estadisticas}">Estadisticas</a></li>
-            <li><a class="btn btn-secondary" th:href="@{/explorador}">Explorar</a></li>
+            <li><a class="btn btn-secondary" th:href="@{/hechos/explorador}">Explorar</a></li>
             <li><a class="btn btn-secondary" th:href="@{/colecciones}">Colecciones</a></li>
             <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/nuevo}">Crear hecho</a></li>
             <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/mis_hechos}">Mis hechos</a></li>

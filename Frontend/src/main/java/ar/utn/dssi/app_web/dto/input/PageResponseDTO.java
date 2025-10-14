@@ -1,22 +1,30 @@
 package ar.utn.dssi.app_web.dto.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
-@NoArgsConstructor
-@Builder
-@AllArgsConstructor
-public class PageResponseDTO<T> {
+public class PageResponseDTO<T>{
+    @JsonProperty("content")
     private List<T> content;
-    private Integer number;
-    private Integer size;
-    private Long totalElements;
-    private Integer totalPages;
-    private Boolean first;
-    private Boolean last;
+
+    @JsonProperty("totalPages")
+    private int totalPages;
+
+    @JsonProperty("totalElements")
+    private long totalElements;
+
+    @JsonProperty("number")
+    private int number;
+
+    @JsonProperty("size")
+    private int size;
+
+    @JsonProperty("first")
+    private boolean first;
+
+    @JsonProperty("last")
+    private boolean last;
 }

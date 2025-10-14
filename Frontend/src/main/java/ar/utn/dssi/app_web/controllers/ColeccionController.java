@@ -8,11 +8,13 @@ import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+
+import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,29 +26,53 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping("/colecciones")
-@RequiredArgsConstructor
 public class ColeccionController {
-
+  private static final Logger log = LoggerFactory.getLogger(ColeccionController.class);
   private final IColeccionService coleccionService;
   private final IHechoService hechosService;
   private final ICategoriaService categoriaService;
 
+  public ColeccionController(IColeccionService coleccionService, IHechoService hechosService, ICategoriaService categoriaService) {
+    this.coleccionService = coleccionService;
+    this.hechosService = hechosService;
+    this.categoriaService = categoriaService;
+  }
+
   @GetMapping
-  public String listarColecciones(Model model) {
-    PageResponseDTO<ColeccionResponseDTO> pageColeccion = coleccionService.listarColecciones();
+  public String listarColecciones(@RequestParam(defaultValue = "0") Integer page,
+                                  Model model) {
+    PageResponseDTO<ColeccionResponseDTO> pageColeccion;
 
-    model.addAttribute("pageHechos", pageColeccion);
-    model.addAttribute("hechos", pageColeccion.getContent());
-    model.addAttribute("page", pageColeccion.getNumber());
-    model.addAttribute("size", pageColeccion.getSize());
-    model.addAttribute("totalPages", pageColeccion.getTotalPages());
-    model.addAttribute("totalElements", pageColeccion.getTotalElements());
-    model.addAttribute("isFirst", pageColeccion.getFirst());
-    model.addAttribute("isLast", pageColeccion.getLast());
-    model.addAttribute("titulo", "Colecciones");
-    model.addAttribute("baseUrl", "/colecciones");
+    try {
+      pageColeccion = coleccionService.listarColecciones(page);
 
-    return "colecciones/lista_colecciones";
+      if(pageColeccion == null) {
+        log.warn("No se encontraron colecciones");
+      }
+
+      assert pageColeccion != null;
+      if(pageColeccion.getContent().isEmpty()) {
+        throw new NotFoundException("No se encontraron colecciones");
+      }
+
+      model.addAttribute("colecciones", pageColeccion.getContent());
+      model.addAttribute("page", pageColeccion.getNumber());
+      model.addAttribute("size", pageColeccion.getSize());
+      model.addAttribute("totalPages", pageColeccion.getTotalPages());
+      model.addAttribute("totalElements", pageColeccion.getTotalElements());
+      model.addAttribute("isFirst", pageColeccion.isFirst());
+      model.addAttribute("isLast", pageColeccion.isLast());
+      model.addAttribute("titulo", "Colecciones");
+      model.addAttribute("baseUrl", "/colecciones");
+
+      return "colecciones/lista_colecciones";
+
+    } catch (Exception ex) {
+      log.error("Error al listar colecciones", ex);
+      model.addAttribute("error", "No se pudieron obtener las colecciones.");
+      return "redirect:/404";
+    }
+
   }
 
   @GetMapping("/{id}/hechos")
@@ -60,8 +86,6 @@ public class ColeccionController {
     model.addAttribute("size", pageHechos.getSize());
     model.addAttribute("totalPages", pageHechos.getTotalPages());
     model.addAttribute("totalElements", pageHechos.getTotalElements());
-    model.addAttribute("isFirst", pageHechos.getFirst());
-    model.addAttribute("isLast", pageHechos.getLast());
     model.addAttribute("titulo", "Hechos de la Colección");
 
     model.addAttribute("baseUrl", "/colecciones/" + coleccionId + "/hechos");
@@ -86,7 +110,7 @@ public class ColeccionController {
   }
 
   @PostMapping("/crear")
-  public String crearColeccion(@ModelAttribute("coleccion") ColeccionRequestDTO coelccionCreada, Model model, RedirectAttributes redirectAttributes, BindingResult binding){
+  public String crearColeccion(@ModelAttribute("coleccion") ColeccionRequestDTO coelccionCreada, RedirectAttributes redirectAttributes, BindingResult binding){
 
     ColeccionResponseDTO coleccionCreada = coleccionService.crearColeccion(coelccionCreada);
 
@@ -108,11 +132,12 @@ public class ColeccionController {
   public String gestionColeccion(@RequestParam(defaultValue = "0") Integer page,
                                  @RequestParam(defaultValue = "12") Integer size,
                                  @RequestParam(required = false) String filtro,
-                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,Model model) {
+                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
+                                 Model model) {
 
     model.addAttribute("titulo", "Gestion de Colecciones");
 
-    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones();
+    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones(page);
 
     model.addAttribute("colecciones", pageColeccionResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -121,8 +146,6 @@ public class ColeccionController {
     model.addAttribute("filtro", filtro == null ? "" : filtro);
     model.addAttribute("totalPages", pageColeccionResponseDTO.getTotalPages());
     model.addAttribute("totalElements", pageColeccionResponseDTO.getTotalElements());
-    model.addAttribute("isFirst", pageColeccionResponseDTO.getFirst());
-    model.addAttribute("isLast", pageColeccionResponseDTO.getLast());
 
     model.addAttribute("baseUrl", "/colecciones/gestion_colecciones");
 
@@ -158,46 +181,6 @@ public class ColeccionController {
     return "redirect:/colecciones/gestion_colecciones";
   }
 
-  private <T> void addPageAttrs(
-          Model model,
-          PageResponseDTO<T> pageDto,
-          String titulo,
-          String baseUrl,
-          String listAlias
-  ) {
-    if (pageDto == null) {
-      pageDto = (PageResponseDTO<T>) emptyPage(); // fallback seguro
-    }
-
-    model.addAttribute(listAlias, pageDto.getContent() == null ? java.util.List.of() : pageDto.getContent());
-
-    model.addAttribute("pageDto", pageDto);
-
-    model.addAttribute("page", n(pageDto.getNumber()));
-    model.addAttribute("size", n(pageDto.getSize()));
-    model.addAttribute("totalPages", n(pageDto.getTotalPages()));
-    model.addAttribute("totalElements", nl(pageDto.getTotalElements()));
-    model.addAttribute("isFirst", nb(pageDto.getFirst()));
-    model.addAttribute("isLast", nb(pageDto.getLast()));
-    model.addAttribute("titulo", titulo);
-    model.addAttribute("baseUrl", baseUrl);
-  }
-
-
-  private PageResponseDTO<?> emptyPage() {
-    PageResponseDTO<Object> p = new PageResponseDTO<>();
-    p.setContent(java.util.List.of());
-    p.setNumber(0);
-    p.setSize(0);
-    p.setTotalElements(0L);
-    p.setTotalPages(0);
-    p.setFirst(true);
-    p.setLast(true);
-    return p;
-  }
-  private int n(Integer v) { return v == null ? 0 : v; }
-  private long nl(Long v) { return v == null ? 0L : v; }
-  private boolean nb(Boolean v) { return v != null && v; }
 }
 
 

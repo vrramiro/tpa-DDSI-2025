@@ -3,7 +3,6 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
-import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
 import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Optional;
 
 @Service
 public class GestionColeccionApiService {
@@ -44,8 +41,7 @@ public class GestionColeccionApiService {
                 .queryParam("id", id)
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.get(url, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.get(url, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -76,8 +72,7 @@ public class GestionColeccionApiService {
                 .path("/admin/colecciones")
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.post(url, coleccion, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.post(url, coleccion, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -93,8 +88,7 @@ public class GestionColeccionApiService {
                 .queryParam("id", id)
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.put(url, null, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.put(url, null, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -103,9 +97,13 @@ public class GestionColeccionApiService {
         }
     }
 
-    public PageResponseDTO<ColeccionResponseDTO> obtenerColeccionesPaginadas() {
+    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina) {
         return webClient.get()
-                .uri("/admin/colecciones") // sin params
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/colecciones")
+                        .queryParam("page", numeroPagina)
+                        .build()
+                )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
                 .block();
