@@ -71,11 +71,9 @@
 
                     <a th:href="@{/solicitudes//nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
 
-                    <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
-                          th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}"
-                          method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-danger">Rechazar</button>
-                    </form>
+                    <a th:href="@{/hechos/{id}/sugerir(id=${hecho.id})}" class="btn btn-primary">
+                        Aceptar
+                    </a>
 
                     <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
                           th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}"
