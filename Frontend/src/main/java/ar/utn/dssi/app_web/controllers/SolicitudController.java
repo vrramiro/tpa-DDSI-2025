@@ -7,6 +7,7 @@ import ar.utn.dssi.app_web.services.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,7 +44,7 @@ public class SolicitudController {
   }
 
   @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-  @GetMapping("/panel")
+  @GetMapping("/panel/solicitudId")
   public String panelSolicitudes( @RequestParam(name = "id") Long solicitudId,
                                   Model model) {
     SolicitudDTO solicitud = solicitudService.obtenerSolicitudPorId(solicitudId);
@@ -57,19 +58,8 @@ public class SolicitudController {
     return "solicitudes/panelSolicitudAdmin";
   }
 
-  @PostMapping("/actualizarEstado")
-  public String actualizarEstadoSolicitud(@RequestParam Long solicitudId,
-                                          @RequestParam String estado,
-                                          RedirectAttributes redirectAttributes) {
-    try {
-      solicitudService.actualizarEstado(solicitudId, estado);
-      redirectAttributes.addFlashAttribute("mensaje", "Estado actualizado correctamente");
-    } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("error", "Error al actualizar el estado");
-    }
-    return "redirect:/solicitudes/panel?id=" + solicitudId;
-  }
 
+  // CREACION DE SOLICITUDES
   @GetMapping("/crearSolicitud")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nueva Solicitud");
@@ -97,6 +87,20 @@ public class SolicitudController {
       model.addAttribute("titulo", "Crear Nueva Solicitud");
       return "solicitudes/solicitudEliminacion";
     }
+  }
+
+  // UPDATE DE SOLICITUDES
+  @PostMapping("/actualizarEstado")
+  public String actualizarEstadoSolicitud(@RequestParam Long solicitudId,
+                                          @RequestParam String estado,
+                                          RedirectAttributes redirectAttributes) {
+    try {
+      solicitudService.actualizarEstado(solicitudId, estado);
+      redirectAttributes.addFlashAttribute("mensaje", "Estado actualizado correctamente");
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("error", "Error al actualizar el estado");
+    }
+    return "redirect:/solicitudes/panel?id=" + solicitudId;
   }
 
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {

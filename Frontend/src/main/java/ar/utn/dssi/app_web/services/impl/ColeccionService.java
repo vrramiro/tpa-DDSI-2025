@@ -17,11 +17,15 @@ public class ColeccionService implements IColeccionService {
   private final GestionColeccionApiService gestionColeccionApiService;
   private static final int MAX_PAGE_SIZE = 50;
 
+    public PageResponseDTO<ColeccionResponseDTO> listarColecciones(){
+        return null;
+    }
+
+
     public ColeccionService(GestionColeccionApiService gestionColeccionApiService) {
         this.gestionColeccionApiService = gestionColeccionApiService;
     }
 
-    @Override
   public PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page, Integer size, String filtro, String sort) {
 
       int safePage = Math.max(0, page);
@@ -30,9 +34,9 @@ public class ColeccionService implements IColeccionService {
       String safeFiltro = StringUtils.hasText(filtro) ? filtro.trim() : null;
       String safeSort   = StringUtils.hasText(sort)   ? sort.trim()   : null;
 
-      PageResponseDTO<ColeccionResponseDTO> api = gestionColeccionApiService.paginacion(safePage, safeSize, safeFiltro, safeSort);
+      //PageResponseDTO<ColeccionResponseDTO> api = gestionColeccionApiService.paginacion(safePage, safeSize, safeFiltro, safeSort);
 
-      return api;
+      return null;
   }
 
   @Override

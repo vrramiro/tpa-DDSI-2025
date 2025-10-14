@@ -110,7 +110,7 @@ public class HechoController {
   @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/{id}/sugerir")
   public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
-    HechoOutputDTO hecho = hechosService.obtenerHechoPorId(id);
+    Optional<HechoOutputDTO> hecho = hechosService.obtenerHechoPorId(id);
     model.addAttribute("hecho", hecho);
     return "hechos/sugerirHecho";
   }

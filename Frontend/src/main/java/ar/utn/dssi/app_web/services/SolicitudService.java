@@ -50,8 +50,6 @@ public class SolicitudService implements ISolicitudService {
         if (solicitudDTO == null) throw new IllegalArgumentException("Solicitud vacía");
         if (solicitudDTO.getHecho() == null)
             throw new IllegalArgumentException("Debe indicar el hecho asociado");
-        if (solicitudDTO.getAutor() == null || solicitudDTO.getAutor().isBlank())
-            throw new IllegalArgumentException("Autor requerido");
     }
 
 }
