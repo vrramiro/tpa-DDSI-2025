@@ -35,21 +35,18 @@
             <div>
                 <label for="categoria">
                     Categoría
-                    <span th:if="${#fields.hasErrors('categoria')}"
-                          th:text="${#fields.errors('categoria')[0]}"
+                    <span th:if="${#fields.hasErrors('idCategoria')}"
+                          th:text="${#fields.errors('idCategoria')[0]}"
                           class="error-mensaje-label">
-        </span>
+                    </span>
                 </label>
 
-                <select id="categoria" th:field="*{categoria.id}"
-                        th:classappend="${#fields.hasErrors('categoria')} ? 'input-error' : ''">
-
+                <select id="categoria" th:field="*{idCategoria}"
+                        th:classappend="${#fields.hasErrors('idCategoria')} ? 'input-error' : ''">
                     <option value="">Seleccione una categoría</option>
-
                     <option th:each="cat : ${categorias}"
                             th:value="${cat.id}"
-                            th:text="${cat.categoria}"
-                            th:selected="${hecho.categoria != null and hecho.categoria.id == cat.id}">
+                            th:text="${cat.categoria}">
                     </option>
                 </select>
             </div>
@@ -67,20 +64,22 @@
             </div>
 
             <div>
-                <label>Ubicación</label>
+                <label>Ubicación
+                    <span th:if="${#fields.hasErrors('latitud') or #fields.hasErrors('longitud')}"
+                          th:text="${#fields.hasErrors('latitud') ? #fields.errors('latitud')[0] : #fields.errors('longitud')[0]}"
+                          class="error-mensaje-label">
+                    </span>
+                </label>
                 <div class="map-placeholder" id="map"></div>
                 <input type="hidden" id="latitud" th:field="*{latitud}">
                 <input type="hidden" id="longitud" th:field="*{longitud}">
-                <span th:if="${#fields.hasErrors('latitud')}"
-                      th:text="${#fields.errors('latitud')[0]}"
-                      class="error-mensaje-label"></span>
             </div>
 
 
             <div class="form-options">
                 <label class="anonimo-option">
                     <span>Publicar como anónimo</span>
-                    <input type="checkbox" id="anonimo" name="anonimo">  <!-- th:field="*{anonimo}" -->
+                    <input type="checkbox" id="anonimo" name="anonimo">  <!-- TODO th:field="*{anonimo}" -->
                 </label>
             </div>
 
