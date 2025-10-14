@@ -110,7 +110,7 @@ public class HechoController {
   @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/{id}/sugerir")
   public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
-    HechoOutputDTO hecho = hechosService.obtenerHechoPorId(id);
+    Optional<HechoOutputDTO> hecho = hechosService.obtenerHechoPorId(id);
     model.addAttribute("hecho", hecho);
     return "hechos/sugerirHecho";
   }
@@ -228,7 +228,7 @@ public class HechoController {
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtro, sort);
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos();
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -237,8 +237,6 @@ public class HechoController {
     model.addAttribute("filtro", filtro == null ? "" : filtro);
     model.addAttribute("totalPages", pageResponseDTO.getTotalPages());
     model.addAttribute("totalElements", pageResponseDTO.getTotalElements());
-    model.addAttribute("isFirst", pageResponseDTO.getFirst());
-    model.addAttribute("isLast", pageResponseDTO.getLast());
     model.addAttribute("titulo", "Mis Hechos");
 
     model.addAttribute("baseUrl", "/hechos/mis_hechos");
@@ -266,7 +264,7 @@ public class HechoController {
             .map(Enum::name)
             .orElse(null);
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado, sort);
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos();
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -275,8 +273,6 @@ public class HechoController {
     model.addAttribute("estado", estado == null ? "" : estado);
     model.addAttribute("totalPages", pageResponseDTO.getTotalPages());
     model.addAttribute("totalElements", pageResponseDTO.getTotalElements());
-    model.addAttribute("isFirst", pageResponseDTO.getFirst());
-    model.addAttribute("isLast", pageResponseDTO.getLast());
     model.addAttribute("titulo", "Gestión de Hechos");
     model.addAttribute("baseUrl", "/hechos/gestion_hecho");
 

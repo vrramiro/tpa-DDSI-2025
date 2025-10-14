@@ -1,7 +1,7 @@
 package ar.utn.dssi.app_web.controllers;
 
 import ar.utn.dssi.app_web.dto.Users.UserRequest;
-import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.UsuariosApiService;

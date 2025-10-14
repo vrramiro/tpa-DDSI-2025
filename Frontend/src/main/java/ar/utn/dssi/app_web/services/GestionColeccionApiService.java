@@ -3,19 +3,17 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
-import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
 import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.util.Optional;
 
 @Service
 public class GestionColeccionApiService {
@@ -103,9 +101,13 @@ public class GestionColeccionApiService {
         }
     }
 
-    public PageResponseDTO<ColeccionResponseDTO> obtenerColeccionesPaginadas() {
+    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina) {
         return webClient.get()
-                .uri("/admin/colecciones") // sin params
+                .uri(uriBuilder -> uriBuilder
+                        .path("/admin/colecciones")
+                        .queryParam("page", numeroPagina)
+                        .build()
+                )
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
                 .block();

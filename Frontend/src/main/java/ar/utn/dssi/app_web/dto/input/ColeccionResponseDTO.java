@@ -17,12 +17,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class ColeccionResponseDTO {
-    private Long id;
+    private String handle;
     private String titulo;
     private String descripcion;
-    private ConsensoDTO consenso;
-    private CategoriaDTO categoria;
     private List<CriterioDTO> criterios;
     private List<TipoFuente> fuentes;
-    private List<HechoRequest> hechos;
 }

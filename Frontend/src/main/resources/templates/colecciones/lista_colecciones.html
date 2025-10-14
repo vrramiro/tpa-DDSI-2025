@@ -30,13 +30,13 @@
 
         <th:block th:if="${coleccionCreada}">
             <div class="highlight-first"
-                 th:id="'row-col-' + ${coleccionCreada.id}">
+                 th:id="'row-col-' + ${coleccionCreada.handle}">
                 <div th:insert="~{colecciones/fragments/coleccion-card :: card(coleccion=${coleccionCreada})}"></div>
             </div>
         </th:block>
 
         <th:block th:each="col : ${colecciones}">
-            <th:block th:if="${coleccionCreada == null or col.id != coleccionCreada.id}">
+            <th:block th:if="${coleccionCreada == null or col.handle != coleccionCreada.handle}">
                 <div th:replace="~{colecciones/fragments/coleccion-card :: card(coleccion=${col})}"></div>
             </th:block>
         </th:block>

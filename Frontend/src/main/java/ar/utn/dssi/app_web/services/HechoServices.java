@@ -50,6 +50,16 @@ public class HechoServices implements IHechoService {
     return gestionHechosApiService.editarHecho(id, hechoRequest);
   }
 
+  @Override
+  public PageResponseDTO<HechoOutputDTO> listarHechos() {
+    return null;
+  }
+
+  @Override
+  public void registrarSugerencia(Long id, String sugerencia) {
+
+  }
+
   private void validarDatosBasicos(HechoRequest hechoRequest) {
     ValidationException validationException = new ValidationException("Errores de validación");
     boolean tieneErrores = false;
@@ -91,7 +101,7 @@ public class HechoServices implements IHechoService {
     }
   }
 
-  @Override //TODO REVISAR
+  @Override
   public PageResponseDTO<HechoOutputDTO> listarHechos(int page, int size, String filtro, String sort) {
     // Validaciones
     int safePage = Math.max(0, page);
@@ -108,7 +118,7 @@ public class HechoServices implements IHechoService {
   }
 
   @Override //TODO
-  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId) {
     return null;
   }
 

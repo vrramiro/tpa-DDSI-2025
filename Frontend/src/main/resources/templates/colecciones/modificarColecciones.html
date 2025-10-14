@@ -11,7 +11,7 @@
         <h2>Modificar colección</h2>
 
         <form id="coleccionForm" class="coleccion-form"
-              th:action="@{/colecciones/{id}/actualizar(id=${coleccion.id})}" th:object="${coleccion}" method="post" novalidate>
+              th:action="@{/colecciones/{handle}/actualizar(id=${coleccion.handle})}" th:object="${coleccion}" method="post" novalidate>
 
             <!-- Título -->
             <div class="form-group">
