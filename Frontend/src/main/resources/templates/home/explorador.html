@@ -11,30 +11,33 @@
     <h1>Explorar Hechos</h1>
 
     <div class="layout">
-        <!-- Filtros -->
         <aside class="filters">
             <h2>Filtros</h2>
 
             <label for="fecha-desde">Fecha desde:</label>
-            <input class="input" id="fecha-desde" type="date">
+            <input class="input" id="fecha-desde" name="fechaAcontecimientoDesde" type="date">
 
             <label for="fecha-hasta">Fecha hasta:</label>
-            <input class="input" id="fecha-hasta" type="date">
+            <input class="input" id="fecha-hasta" name="fechaAcontecimientoHasta" type="date">
 
             <label for="categoria">Categoría</label>
-            <select class="input" id="categoria" th:field="*{idCategoria}">
-                <option value="">-- Seleccione --</option>
+            <select class="input" id="categoria" name="idCategoria"> <option value="">-- Todas --</option>
                 <option th:each="cat : ${categorias}"
                         th:value="${cat.id}"
                         th:text="${cat.categoria}">
                 </option>
             </select>
 
-            <label for="ubicacion">Ubicación:</label>
-            <input class="input" id="ubicacion" placeholder="Ej: Buenos Aires" type="text">
+            <label for="provincia">Provincia:</label>
+            <select class="input" id="provincia" name="provincia"> <option value="">-- Todas --</option>
+                <option th:each="prov : ${provincias}"
+                        th:value="${prov}"
+                        th:text="${prov}">
+                </option>
+            </select>
 
             <label for="coleccion">Coleccion:</label>
-            <select class="input" id="coleccion">
+            <select class="input" id="coleccion" name="idColeccion"> <option value="">-- Ninguna --</option>
                 <option value="">-- Seleccione --</option>
                 <option>Protesta</option>
                 <option>Ambiental</option>
@@ -47,7 +50,7 @@
                 <input type="checkbox">
             </label>
 
-            <button class="btn btn-primary" id="btn-filtrar">Filtrar</button>
+            <button class="btn btn-primary" id="btn-filtrar" type="button">Filtrar</button>
         </aside>
 
         <main class="mapa">

@@ -13,12 +13,6 @@ public class HomeController {
     return "home/landing";
   }
 
-  @GetMapping("/explorador")
-  public String mapa(Model model) {
-    model.addAttribute("titulo", "Explorador");
-    return "home/explorador";
-  }
-
   @GetMapping("/panel_gestion")
   public String gestion(Model model) {
     model.addAttribute("titulo", "Panel de Gestion");

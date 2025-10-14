@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
@@ -66,6 +67,18 @@ public class GestionHechosApiService {
     }
   }
 
+  public List<ProvinciaInputDTO> obtenerProvincias() {
+    String url = UriComponentsBuilder
+            .fromUriString(normalizadorServiceUrl)
+            .path("/ubicacion/provincias")
+            .toUriString();
+    try {
+      return webApiCallerService.getList(url, ProvinciaInputDTO.class);
+    } catch (WebClientException e) {
+      throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
+    }
+  }
+
   /** =========================================
    *  CREAR HECHO
    *  ========================================= */
@@ -101,8 +114,8 @@ public class GestionHechosApiService {
           LocalDate fechaReporteHasta,
           LocalDate fechaAcontecimientoDesde,
           LocalDate fechaAcontecimientoHasta,
-          String provincia,
-          String ciudad) {
+          Long idCategoria,
+          String provincia) {
 
     UriComponentsBuilder builder = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
@@ -122,9 +135,6 @@ public class GestionHechosApiService {
     }
     if (provincia != null && !provincia.isEmpty()) {
       builder.queryParam("provincia", provincia);
-    }
-    if (ciudad != null && !ciudad.isEmpty()) {
-      builder.queryParam("ciudad", ciudad);
     }
 
     String url = builder.build().toUriString();

@@ -3,13 +3,17 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -111,4 +115,17 @@ public class HechoServices implements IHechoService {
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
     return null;
   }
+
+  @Override
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia) {
+      return gestionHechosApiService.obtenerHechos(fechaReporteDesde, fechaReporteHasta,
+                             null,null,
+                                                    idCategoria, provincia);
+  }
+
+  @Override //Ya se que esta mal no se donde ponerlo son las 3am
+  public List<ProvinciaInputDTO> obtenerProvincias() {
+    return gestionHechosApiService.obtenerProvincias();
+  }
+
 }
