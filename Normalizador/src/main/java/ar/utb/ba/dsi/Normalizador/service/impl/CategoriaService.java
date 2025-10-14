@@ -41,9 +41,14 @@ public class CategoriaService implements ICategoriaService {
     return categoriaNormalizada;
   }
 
-
   @Override
   public List<CategoriaOutputDTO> obtenerCategorias() {
     return categoriaRepository.findAll().stream().map(MapperDeCategorias::categoriaToOutputDTO).collect(Collectors.toList());
+  }
+
+  @Override
+  public CategoriaOutputDTO obtenerCategoriaPorId(Long idCategoria) {
+    Categoria categoria = categoriaRepository.findById(idCategoria).orElseThrow(() -> new CategoriaNoEcontrada("Categoría no encontrada con id: " + idCategoria));
+    return MapperDeCategorias.categoriaToOutputDTO(categoria);
   }
 }

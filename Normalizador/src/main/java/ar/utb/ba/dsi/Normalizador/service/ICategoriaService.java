@@ -6,9 +6,11 @@ import ar.utb.ba.dsi.Normalizador.models.entities.Categoria;
 import java.util.List;
 
 public interface ICategoriaService {
-  public CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria);
+  CategoriaOutputDTO normalizarCategoriaOutPut(CategoriaInputDTO categoria);
 
-  public Categoria normalizarCategoria(String categoriaInput);
+  Categoria normalizarCategoria(String categoriaInput);
 
-  public List<CategoriaOutputDTO> obtenerCategorias();
+  List<CategoriaOutputDTO> obtenerCategorias();
+
+  CategoriaOutputDTO obtenerCategoriaPorId(Long idCategoria);
 }
