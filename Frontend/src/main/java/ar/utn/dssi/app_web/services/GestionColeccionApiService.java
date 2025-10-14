@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -42,8 +41,7 @@ public class GestionColeccionApiService {
                 .queryParam("id", id)
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.get(url, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.get(url, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -74,8 +72,7 @@ public class GestionColeccionApiService {
                 .path("/admin/colecciones")
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.post(url, coleccion, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.post(url, coleccion, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -91,8 +88,7 @@ public class GestionColeccionApiService {
                 .queryParam("id", id)
                 .toUriString();
         try {
-            ColeccionResponseDTO response = webApiCallerService.put(url, null, ColeccionResponseDTO.class);
-            return response;
+            return webApiCallerService.put(url, null, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {

@@ -18,7 +18,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.Map;
 
 
 import java.util.Optional;
@@ -45,8 +44,7 @@ public class HechoController {
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String crearHecho(@ModelAttribute("hecho") HechoRequest hechoRequest,
                            BindingResult bindingResult,
-                           Model model,
-                           RedirectAttributes redirectAttributes) {
+                           Model model) {
 
     try {
       boolean exitoso = hechosService.crearHecho(hechoRequest);
@@ -173,8 +171,7 @@ public class HechoController {
   public String editarHecho(@PathVariable Long id,
                             @ModelAttribute("hecho") HechoRequest hechoRequest,
                             BindingResult bindingResult,
-                            Model model,
-                            RedirectAttributes redirectAttributes) {
+                            Model model) {
     try {
       boolean exitoso = hechosService.editarHecho(id, hechoRequest);
       if (exitoso) {

@@ -1,8 +1,5 @@
 package ar.utn.dssi.app_web.dto.input;
 
-
-import ar.utn.dssi.app_web.dto.CategoriaDTO;
-import ar.utn.dssi.app_web.dto.Consenso.ConsensoDTO;
 import ar.utn.dssi.app_web.dto.Criterio.CriterioDTO;
 import ar.utn.dssi.app_web.dto.Fuente.TipoFuente;
 import lombok.AllArgsConstructor;

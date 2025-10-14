@@ -3,7 +3,6 @@ package ar.utn.dssi.app_web.services.Interfaces;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
-import org.springframework.data.domain.Page;
 
 import java.util.Optional;
 

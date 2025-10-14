@@ -1,11 +1,7 @@
 package ar.utn.dssi.app_web.controllers;
 
 import ar.utn.dssi.app_web.dto.Users.UserRequest;
-import ar.utn.dssi.app_web.dto.input.HechoRequest;
-import ar.utn.dssi.app_web.error.UbicacionInvalida;
-import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -46,7 +42,6 @@ public class HomeController {
 
   @PostMapping("/crear_cuenta")
   public String registro(@ModelAttribute("userRequest") UserRequest request,
-                         BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
     try {

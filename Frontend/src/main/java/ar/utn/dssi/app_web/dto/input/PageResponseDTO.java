@@ -2,7 +2,6 @@ package ar.utn.dssi.app_web.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import org.springframework.data.domain.*;
 
 import java.util.List;
 
