@@ -9,6 +9,7 @@ import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 
@@ -27,6 +28,13 @@ public class HechoServices implements IHechoService {
     validarUbicacion(hechoRequest);
     return gestionHechosApiService.crearHecho(hechoRequest);
   }
+
+  @Override
+    public Boolean crearHechoEstatico(MultipartFile archivo) {
+    System.out.println("entre a crear estatico importar");
+
+    return gestionHechosApiService.crearHechoEstatica(archivo);
+    }
 
   @Override
   public Optional<HechoOutputDTO> obtenerHechoPorId(Long id) {
@@ -111,4 +119,7 @@ public class HechoServices implements IHechoService {
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(long coleccionId, int page, int size, String filtro, String sort) {
     return null;
   }
+
+  public void registrarSugerencia(long id, String sugerencia) {
+  };
 }

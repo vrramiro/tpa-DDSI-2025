@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class SolicitudDTO {
     private Long idSolicitud;
+    private String descripcion;
     private HechoOutputDTO hecho;
     private String autor;
     private String estadoDeSolicitud; //porque si cambia el enum del back me puede romper
