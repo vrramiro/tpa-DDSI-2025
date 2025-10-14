@@ -1,7 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
-import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
@@ -22,10 +22,10 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public Boolean crearHecho(HechoInputDTO hechoInputDTO) {
-    validarDatosBasicos(hechoInputDTO);
-    validarUbicacion(hechoInputDTO);
-    return gestionHechosApiService.crearHecho(hechoInputDTO);
+  public Boolean crearHecho(HechoRequest hechoRequest) {
+    validarDatosBasicos(hechoRequest);
+    validarUbicacion(hechoRequest);
+    return gestionHechosApiService.crearHecho(hechoRequest);
   }
 
   @Override
@@ -44,44 +44,39 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public Boolean editarHecho(Long id, HechoInputDTO hechoInputDTO) {
-    validarDatosBasicos(hechoInputDTO);
-    validarUbicacion(hechoInputDTO);
-    return gestionHechosApiService.editarHecho(id, hechoInputDTO);
+  public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
+    validarDatosBasicos(hechoRequest);
+    validarUbicacion(hechoRequest);
+    return gestionHechosApiService.editarHecho(id, hechoRequest);
   }
 
-
-  private void validarDatosBasicos(HechoInputDTO hechoInputDTO) {
+  private void validarDatosBasicos(HechoRequest hechoRequest) {
     ValidationException validationException = new ValidationException("Errores de validación");
     boolean tieneErrores = false;
 
-    if( hechoInputDTO.getTitulo() == null || hechoInputDTO.getTitulo().trim().isEmpty()) {
+    if( hechoRequest.getTitulo() == null || hechoRequest.getTitulo().trim().isEmpty()) {
       validationException.addFieldError("titulo", "El titulo es obligatorio");
       tieneErrores = true;
     }
 
-    if( hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().trim().isEmpty()) {
+    if( hechoRequest.getDescripcion() == null || hechoRequest.getDescripcion().trim().isEmpty()) {
       validationException.addFieldError("descripcion", "La descripcion es obligatoria");
       tieneErrores = true;
     }
 
-    if(hechoInputDTO.getFechaAcontecimiento() == null) {
+    if(hechoRequest.getFechaAcontecimiento() == null) {
       validationException.addFieldError("fechaAcontecimiento", "La fecha es obligatoria");
       tieneErrores = true;
     }
 
-    if(hechoInputDTO.getCategoria() == null || hechoInputDTO.getCategoria().getId() == null) {
-      validationException.addFieldError("categoria", "Debe seleccionar una categoría");
+    if(hechoRequest.getIdCategoria() == null ) {
+      validationException.addFieldError("idCategoria", "Debe seleccionar una categoría");
       tieneErrores = true;
     }
 
-    if(hechoInputDTO.getLatitud() == null) {
-      validationException.addFieldError("latitud", "La latitud es obligatoria");
-      tieneErrores = true;
-    }
-
-    if (hechoInputDTO.getLongitud() == null) {
-      validationException.addFieldError("longitud", "La longitud es obligatoria");
+    if(hechoRequest.getLatitud() == null || hechoRequest.getLongitud() == null) {
+      validationException.addFieldError("latitud", "La ubicacion es obligatoria");
+      validationException.addFieldError("longitud", "La ubicacion es obligatoria");
       tieneErrores = true;
     }
 
@@ -90,8 +85,8 @@ public class HechoServices implements IHechoService {
     }
   }
 
-  private void validarUbicacion(HechoInputDTO hechoInputDTO){
-    if(!gestionHechosApiService.ubicacionValida(hechoInputDTO.getLatitud(), hechoInputDTO.getLongitud())) {
+  private void validarUbicacion(HechoRequest hechoRequest){
+    if(!gestionHechosApiService.ubicacionValida(hechoRequest.getLatitud(), hechoRequest.getLongitud())) {
       throw new UbicacionInvalida();
     }
   }
