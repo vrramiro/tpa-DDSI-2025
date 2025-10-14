@@ -1,14 +1,13 @@
 package ar.utn.dssi.app_web.controllers;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
-import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
 import ar.utn.dssi.app_web.services.CategoriaService;
-import ar.utn.dssi.app_web.services.HechoServices;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -37,20 +36,20 @@ public class HechoController {
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nuevo Hecho");
-    model.addAttribute("hecho", new HechoInputDTO());
+    model.addAttribute("hecho", new HechoRequest());
     model.addAttribute("categorias", categoriaService.obtenerCategorias());
     return "hechos/crearHecho";
   }
 
   @PostMapping("/crear")
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
-  public String crearHecho(@ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
+  public String crearHecho(@ModelAttribute("hecho") HechoRequest hechoRequest,
                            BindingResult bindingResult,
                            Model model,
                            RedirectAttributes redirectAttributes) {
 
     try {
-      boolean exitoso = hechosService.crearHecho(hechoInputDTO);
+      boolean exitoso = hechosService.crearHecho(hechoRequest);
       if (exitoso) {
         model.addAttribute("mensaje", "El hecho fue subido correctamente, está siendo procesado.");
         model.addAttribute("tipoMensaje", "success");
@@ -60,6 +59,7 @@ public class HechoController {
         model.addAttribute("tipoMensaje", "error");
       }
       model.addAttribute("titulo", "Crear Nuevo Hecho");
+      model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "hechos/crearHecho";
     } catch (UbicacionInvalida e) {
       bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
@@ -70,12 +70,14 @@ public class HechoController {
     } catch (ValidationException e) {
       convertirValidationExceptionABindingResult(e, bindingResult);
       model.addAttribute("titulo", "Crear Nuevo Hecho");
+      model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "hechos/crearHecho";
     } catch (Exception e) {
       log.error("Error al crear hecho", e);
       model.addAttribute("mensaje", "Error inesperado al crear el hecho: " + e.getMessage());
       model.addAttribute("tipoMensaje", "error");
       model.addAttribute("titulo", "Crear Nuevo Hecho");
+      model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "hechos/crearHecho";
     }
   }
@@ -157,7 +159,7 @@ public class HechoController {
     }
 
     HechoOutputDTO hechoOutput = hechoOutputOpt.get();
-    HechoInputDTO hechoInput = HechoMapper.outputToInput(hechoOutput);
+    HechoRequest hechoInput = HechoMapper.outputToInput(hechoOutput);
 
     model.addAttribute("hecho", hechoInput);
     model.addAttribute("hechoOutput", hechoOutput);
@@ -169,25 +171,25 @@ public class HechoController {
 
   @PostMapping("/{id}/editar")
   public String editarHecho(@PathVariable Long id,
-                            @ModelAttribute("hecho") HechoInputDTO hechoInputDTO,
+                            @ModelAttribute("hecho") HechoRequest hechoRequest,
                             BindingResult bindingResult,
                             Model model,
                             RedirectAttributes redirectAttributes) {
     try {
-      boolean exitoso = hechosService.editarHecho(id, hechoInputDTO);
+      boolean exitoso = hechosService.editarHecho(id, hechoRequest);
       if (exitoso) {
         model.addAttribute("mensaje", "Hecho editado correctamente");
         model.addAttribute("tipoMensaje", "success");
         model.addAttribute("titulo", "Editar Hecho");
         model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id));
-        model.addAttribute("hecho", hechoInputDTO);
+        model.addAttribute("hecho", hechoRequest);
         model.addAttribute("categorias", categoriaService.obtenerCategorias());
         return "/hechos/editarHecho";
       } else {
         model.addAttribute("mensaje", "Error al editar el hecho, inténtelo nuevamente.");
         model.addAttribute("tipoMensaje", "error");
         model.addAttribute("titulo", "Editar Hecho");
-        model.addAttribute("hecho", hechoInputDTO);
+        model.addAttribute("hecho", hechoRequest);
         model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
         model.addAttribute("categorias", categoriaService.obtenerCategorias());
         return "/hechos/editarHecho";
@@ -196,14 +198,14 @@ public class HechoController {
       bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       bindingResult.rejectValue("longitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoInputDTO);
+      model.addAttribute("hecho", hechoRequest);
       model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "/hechos/editarHecho";
     } catch (ValidationException e) {
       convertirValidationExceptionABindingResult(e, bindingResult);
       model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoInputDTO);
+      model.addAttribute("hecho", hechoRequest);
       model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "/hechos/editarHecho";
@@ -212,7 +214,7 @@ public class HechoController {
       model.addAttribute("mensaje", "Error inesperado al editar el hecho: " + e.getMessage());
       model.addAttribute("tipoMensaje", "error");
       model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoInputDTO);
+      model.addAttribute("hecho", hechoRequest);
       model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
       return "/hechos/editarHecho";

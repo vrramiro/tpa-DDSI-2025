@@ -1,7 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
-import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
@@ -66,7 +66,7 @@ public class GestionHechosApiService {
   /** =========================================
    *  CREAR HECHO
    *  ========================================= */
-  public Boolean crearHecho(HechoInputDTO hechoInputDTO) {
+  public Boolean crearHecho(HechoRequest hechoRequest) {
     String url = UriComponentsBuilder
             .fromUriString(fuenteDinamicaServiceUrl)
             .path("/hechos")
@@ -74,13 +74,13 @@ public class GestionHechosApiService {
 
     try {
       // Clon sin archivos porque me rompen los archivos
-      HechoInputDTO dtoSinArchivos = new HechoInputDTO();
-      dtoSinArchivos.setTitulo(hechoInputDTO.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoInputDTO.getDescripcion());
-      dtoSinArchivos.setCategoria(hechoInputDTO.getCategoria());
-      dtoSinArchivos.setLatitud(hechoInputDTO.getLatitud());
-      dtoSinArchivos.setLongitud(hechoInputDTO.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+      HechoRequest dtoSinArchivos = new HechoRequest();
+      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
+      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
+      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
+      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
+      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
+      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
 
       webApiCallerService.post(url, dtoSinArchivos, Void.class);
       return true;
@@ -134,7 +134,7 @@ public class GestionHechosApiService {
   /** =========================================
    *  EDITAR HECHO
    *  ========================================= */
-  public Boolean editarHecho(Long id, HechoInputDTO hechoInputDTO) {
+  public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
     String url = UriComponentsBuilder
             .fromUriString(fuenteDinamicaServiceUrl)
             .path("/hechos/{id}")
@@ -142,13 +142,13 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoInputDTO dtoSinArchivos = new HechoInputDTO();
-      dtoSinArchivos.setTitulo(hechoInputDTO.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoInputDTO.getDescripcion());
-      dtoSinArchivos.setCategoria(hechoInputDTO.getCategoria());
-      dtoSinArchivos.setLatitud(hechoInputDTO.getLatitud());
-      dtoSinArchivos.setLongitud(hechoInputDTO.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+      HechoRequest dtoSinArchivos = new HechoRequest();
+      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
+      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
+      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
+      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
+      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
+      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
 
       webApiCallerService.put(url, dtoSinArchivos, Void.class);
       return true;

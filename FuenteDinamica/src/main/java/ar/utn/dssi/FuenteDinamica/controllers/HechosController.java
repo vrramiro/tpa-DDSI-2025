@@ -27,7 +27,7 @@ public class HechosController {
 
   @PostMapping
   public ResponseEntity<Void> crearHecho(@RequestBody HechoInputDTO hecho) {
-    System.out.println(hecho.getCategoria().getNombreCategoria());
+    System.out.println("Llego categoria de id: " + hecho.getIdCategoria());
     this.hechosService.crear(hecho);
     return ResponseEntity.ok().build();
   }

@@ -61,7 +61,7 @@
 
             <p class="hecho-estado" sec:authorize="hasRole('ADMINISTRADOR')">
                 <strong>Estado:</strong>
-                <span th:class="'badge badge-' + ${hecho.estado.name().toLowerCase()}"
+                <span th:class="'badge badge-' + ${hecho.estado.name()}"
                       th:text="${hecho.estado}">PENDIENTE</span>
             </p>
 
@@ -71,15 +71,19 @@
 
                     <a th:href="@{/solicitudes//nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
 
-                    <a th:href="@{/hechos/{id}/sugerir(id=${hecho.id})}" class="btn btn-primary">
-                        Aceptar
-                    </a>
+                    <div sec:authorize="hasRole('ADMINISTRADOR')"
+                         th:if="${hecho.estado.name() == 'PENDIENTE'}">
 
-                    <form th:if="${hecho.estado.name() == 'PENDIENTE'}"
-                          th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}"
-                          method="post" style="display: inline;">
-                        <button type="submit" class="btn btn-primary">Aceptar</button>
-                    </form>
+                        <form th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}"
+                              method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-danger">Rechazar</button>
+                        </form>
+
+                        <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}"
+                              method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-primary">Aceptar</button>
+                        </form>
+                    </div>
 
                     <a th:href="@{/explorador(lat=${hecho.ubicacion.latitud},lng=${hecho.ubicacion.longitud})}" class="btn btn-primary">Ver en mapa</a>
                 </div>

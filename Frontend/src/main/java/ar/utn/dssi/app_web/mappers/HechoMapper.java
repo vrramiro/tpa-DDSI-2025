@@ -1,15 +1,15 @@
 package ar.utn.dssi.app_web.mappers;
 
 import ar.utn.dssi.app_web.dto.CategoriaDTO;
-import ar.utn.dssi.app_web.dto.input.HechoInputDTO;
+import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class HechoMapper {
 
-    static public HechoInputDTO outputToInput(HechoOutputDTO output) {
-        HechoInputDTO input = new HechoInputDTO();
+    static public HechoRequest outputToInput(HechoOutputDTO output) {
+        HechoRequest input = new HechoRequest();
         input.setTitulo(output.getTitulo());
         input.setDescripcion(output.getDescripcion());
         input.setFechaAcontecimiento(output.getFechaAcontecimiento());
@@ -17,7 +17,7 @@ public class HechoMapper {
         if (output.getCategoria() != null) {
             CategoriaDTO categoria = new CategoriaDTO();
             categoria.setCategoria(output.getCategoria());
-            input.setCategoria(categoria);
+            input.setIdCategoria(categoria.getId());
         }
 
         if (output.getUbicacion() != null) {

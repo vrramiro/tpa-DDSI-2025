@@ -1,4 +1,4 @@
-package ar.utn.dssi.app_web.dto;
+package ar.utn.dssi.app_web.dto.Users;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -24,5 +24,5 @@ public class ColeccionResponseDTO {
     private CategoriaDTO categoria;
     private List<CriterioDTO> criterios;
     private List<TipoFuente> fuentes;
-    private List<HechoInputDTO> hechos;
+    private List<HechoRequest> hechos;
 }

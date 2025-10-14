@@ -1,7 +1,7 @@
 package ar.utn.dssi.app_web.services.internal;
 
-import ar.utn.dssi.app_web.dto.AuthResponseDTO;
-import ar.utn.dssi.app_web.dto.RefreshTokenDTO;
+import ar.utn.dssi.app_web.dto.Users.AuthResponseDTO;
+import ar.utn.dssi.app_web.dto.Users.RefreshTokenDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;

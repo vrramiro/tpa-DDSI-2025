@@ -1,11 +1,13 @@
 package ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.impl;
 
+import ar.utn.dssi.FuenteDinamica.dto.input.CategoriaNormalizadorDTO;
 import ar.utn.dssi.FuenteDinamica.dto.input.HechoInputDTONormalizador;
 import ar.utn.dssi.FuenteDinamica.dto.input.UbicacionInputDTO;
 import ar.utn.dssi.FuenteDinamica.dto.output.HechoOutputDTONormalizador;
-import ar.utn.dssi.FuenteDinamica.dto.output.UbicacionOutputDTONormalizador;
+import ar.utn.dssi.FuenteDinamica.mappers.MapperDeCategoria;
 import ar.utn.dssi.FuenteDinamica.mappers.MapperDeHechos;
 import ar.utn.dssi.FuenteDinamica.mappers.MapperDeUbicacion;
+import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
 import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormalizadorAdapter;
@@ -47,10 +49,30 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
         });
   }
 
-  public Mono<Ubicacion> obtenerUbicacionNormalizada(UbicacionOutputDTONormalizador ubicacionDTO) {
-    Double latitud = ubicacionDTO.getLatitud();
-    Double longitud = ubicacionDTO.getLongitud();
+  @Override
+  public Mono<Categoria> obtenerCategoria(Long idCategoria) {
+    return webClient.get()
+        .uri(uriBuilder -> uriBuilder
+            .path("/categoria/{idCategoria}")
+            .build(idCategoria)
+        )
+        .retrieve()
+        .bodyToMono(CategoriaNormalizadorDTO.class) // respuesta esperada
+        .timeout(Duration.ofMillis(timeoutMs))
+        .flatMap(categoriaNormalizador -> {
+          Categoria categoria = MapperDeCategoria.categoriaFromCategoriaNormalizadorDTO(categoriaNormalizador);
+          if (categoriaNormalizador == null) {
+            return Mono.error(new RuntimeException("El servicio normalizador devolvió null"));
+          }
+          if (categoria == null) {
+            return Mono.error(new RuntimeException("El mapper devolvió null"));
+          }
+          return Mono.just(categoria);
+        });
+  }
 
+  @Override
+  public Mono<Ubicacion> obtenerUbicacionNormalizada(Double latitud, Double longitud) {
     return webClient.get()
         .uri(uriBuilder -> uriBuilder
             .path("/ubicacion/normalizar")
@@ -72,5 +94,4 @@ public class NormalizadorAdapter implements INormalizadorAdapter {
           return Mono.just(normalizada);
         });
   }
-
 }

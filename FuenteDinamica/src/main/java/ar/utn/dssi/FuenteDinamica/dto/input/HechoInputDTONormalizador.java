@@ -13,7 +13,7 @@ public class HechoInputDTONormalizador {
   private String descripcion;
   private String tituloSanitizado;
   private String descripcionSanitizada;
-  private CategoriaInputDTO categoria;
+  private CategoriaNormalizadorDTO categoria;
   private UbicacionInputDTO ubicacion;
   private LocalDateTime fechaAcontecimiento;
 }

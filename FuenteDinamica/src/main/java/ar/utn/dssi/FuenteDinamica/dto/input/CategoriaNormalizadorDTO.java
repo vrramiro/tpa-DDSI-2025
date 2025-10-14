@@ -2,14 +2,11 @@ package ar.utn.dssi.FuenteDinamica.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Data
-@Getter
-@Setter
-public class CategoriaInputDTO {
-  private Long id;
+public class CategoriaNormalizadorDTO {
+  @JsonProperty("id")
+  private Long idCategoria;
   @JsonProperty("categoria")
-  private String nombreCategoria;
+  private String nombre;
 }
