@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -93,11 +96,52 @@ public class GestionHechosApiService {
   /** =========================================
    *  OBTENER HECHO POR ID
    *  ========================================= */
+  public List<HechoOutputDTO> obtenerHechos(
+          LocalDate fechaReporteDesde,
+          LocalDate fechaReporteHasta,
+          LocalDate fechaAcontecimientoDesde,
+          LocalDate fechaAcontecimientoHasta,
+          String provincia,
+          String ciudad) {
+
+    UriComponentsBuilder builder = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/hecho/");
+
+    if (fechaReporteDesde != null) {
+      builder.queryParam("fechaReporteDesde", fechaReporteDesde);
+    }
+    if (fechaReporteHasta != null) {
+      builder.queryParam("fechaReporteHasta", fechaReporteHasta);
+    }
+    if (fechaAcontecimientoDesde != null) {
+      builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
+    }
+    if (fechaAcontecimientoHasta != null) {
+      builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
+    }
+    if (provincia != null && !provincia.isEmpty()) {
+      builder.queryParam("provincia", provincia);
+    }
+    if (ciudad != null && !ciudad.isEmpty()) {
+      builder.queryParam("ciudad", ciudad);
+    }
+
+    String url = builder.build().toUriString();
+
+    try {
+      return webApiCallerService.getList(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener hechos desde el agregador", e);
+      return Collections.emptyList();
+    }
+  }
+
   public HechoOutputDTO obtenerHechoPorId(Long id) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
-            .path("/hecho")
-            .queryParam("id", id)
+            .path("/hecho/{id}")
+            .buildAndExpand(id)
             .toUriString();
 
     try {
@@ -161,7 +205,7 @@ public class GestionHechosApiService {
   /** =========================================
    *  BUSCAR HECHOS PAGINADOS
    *  ========================================= */
-  @SuppressWarnings("unchecked")
+  //TODO VER SI HACE FALTA CUANDO ESTE LISTO EL BACK
   public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(int page, int size, String filtro, String sort) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)

@@ -8,10 +8,8 @@
 </head>
 
 <div class="row" th:fragment="contenido">
-    <!-- TÍTULO -->
     <h1>Explorar Hechos</h1>
 
-    <!-- LAYOUT PRINCIPAL -->
     <div class="layout">
         <!-- Filtros -->
         <aside class="filters">
@@ -23,21 +21,13 @@
             <label for="fecha-hasta">Fecha hasta:</label>
             <input class="input" id="fecha-hasta" type="date">
 
-            <label for="origen">Fuentes de origen:</label>
-            <select class="input" id="origen">
+            <label for="categoria">Categoría</label>
+            <select class="input" id="categoria" th:field="*{idCategoria}">
                 <option value="">-- Seleccione --</option>
-                <option>Medios</option>
-                <option>Usuarios</option>
-                <option>ONGs</option>
-            </select>
-
-            <label for="categoria">Categoría:</label>
-            <select class="input" id="categoria">
-                <option value="">-- Seleccione --</option>
-                <option>Protesta</option>
-                <option>Ambiental</option>
-                <option>Social</option>
-                <option>Ayuda Humanitaria</option>
+                <option th:each="cat : ${categorias}"
+                        th:value="${cat.id}"
+                        th:text="${cat.categoria}">
+                </option>
             </select>
 
             <label for="ubicacion">Ubicación:</label>
@@ -60,7 +50,6 @@
             <button class="btn btn-primary" id="btn-filtrar">Filtrar</button>
         </aside>
 
-        <!-- Contenedor de Mapa -->
         <main class="mapa">
             <div id="map"></div>
         </main>
