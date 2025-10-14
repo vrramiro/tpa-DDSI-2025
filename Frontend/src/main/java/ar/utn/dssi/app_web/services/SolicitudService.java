@@ -46,13 +46,14 @@ public class SolicitudService implements ISolicitudService {
         return gestionSolicitudesApiService.crearSolicitud(solicitudOutputDTO);
     }
 
-    private void validarDatosBasicos(SolicitudDTO solicitudOutputDTO) {
-        if (solicitudOutputDTO == null) throw new IllegalArgumentException("Solicitud vacía");
-        if (solicitudOutputDTO.getHecho() == null)
+    private void validarDatosBasicos(SolicitudDTO solicitudDTO) {
+        if (solicitudDTO == null) throw new IllegalArgumentException("Solicitud vacía");
+        if (solicitudDTO.getHecho() == null)
             throw new IllegalArgumentException("Debe indicar el hecho asociado");
-        if (solicitudOutputDTO.getAutor() == null || solicitudOutputDTO.getAutor().isBlank())
+        if (solicitudDTO.getAutor() == null || solicitudDTO.getAutor().isBlank())
             throw new IllegalArgumentException("Autor requerido");
     }
 
 }
+
 
