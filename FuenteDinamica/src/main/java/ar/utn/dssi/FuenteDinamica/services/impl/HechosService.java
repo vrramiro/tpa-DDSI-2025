@@ -6,9 +6,8 @@ import ar.utn.dssi.FuenteDinamica.error.DatosFaltantes;
 import ar.utn.dssi.FuenteDinamica.error.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteDinamica.error.HechoNoEditable;
 import ar.utn.dssi.FuenteDinamica.error.RepositorioVacio;
-import ar.utn.dssi.FuenteDinamica.mappers.MapperDeCategoria;
 import ar.utn.dssi.FuenteDinamica.mappers.MapperDeHechos;
-import ar.utn.dssi.FuenteDinamica.mappers.MapperDeUbicacion;
+import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 import ar.utn.dssi.FuenteDinamica.models.entities.ContenidoMultimedia;
 import ar.utn.dssi.FuenteDinamica.models.entities.Hecho;
 import ar.utn.dssi.FuenteDinamica.models.entities.Ubicacion;
@@ -16,6 +15,7 @@ import ar.utn.dssi.FuenteDinamica.models.entities.normalizadorAdapter.INormaliza
 import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -23,6 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HechosService implements IHechosService {
@@ -34,7 +35,10 @@ public class HechosService implements IHechosService {
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
     validarHechoInput(hechoInputDTO);
-    Hecho hechoANormalizar = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
+
+    Hecho hechoANormalizar = obtenerHechoANormalizar(hechoInputDTO);
+
+    hechoANormalizar.setUbicacion(ubicacionNormalizada(hechoInputDTO));
 
     Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hechoANormalizar).block();
 
@@ -50,7 +54,6 @@ public class HechosService implements IHechosService {
     this.hechoRepository.save(hechoNormalizado);
   }
 
-  //Obtener todos los hechos
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde) {
 
@@ -106,6 +109,9 @@ public class HechosService implements IHechosService {
     if (hechoInputDTO.getDescripcion() == null || hechoInputDTO.getDescripcion().isBlank()) {
       throw new DatosFaltantes("La descripción es obligatoria.");
     }
+    if (hechoInputDTO.getIdCategoria() == null) {
+      throw new DatosFaltantes("La categoría es obligatoria.");
+    }
     if (hechoInputDTO.getFechaAcontecimiento() == null) {
       throw new DatosFaltantes("La fecha de acontecimiento es obligatoria.");
     }
@@ -120,7 +126,12 @@ public class HechosService implements IHechosService {
   private void actualizarCamposHecho(Hecho hechoExistente, HechoInputDTO hechoNuevo) {
     hechoExistente.setTitulo(hechoNuevo.getTitulo());
     hechoExistente.setDescripcion(hechoNuevo.getDescripcion());
-    hechoExistente.setCategoria(MapperDeCategoria.categoriaFromInputDTO(hechoNuevo.getCategoria()));
+
+    if (!hechoNuevo.getIdCategoria().equals(hechoExistente.getCategoria().getIdCategoria())) {
+      Categoria categoria = normalizadorAdapter.obtenerCategoria(hechoNuevo.getIdCategoria()).block();
+      hechoExistente.setCategoria(categoria);
+    }
+
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento().atStartOfDay());
 
     List<ContenidoMultimedia> contenidoMultimedia =
@@ -136,16 +147,27 @@ public class HechosService implements IHechosService {
     if (hechoExistente.getUbicacion().getLatitud() != hechoNuevo.getLatitud() ||
         hechoExistente.getUbicacion().getLongitud() != hechoNuevo.getLongitud()) {
 
-      Ubicacion ubicacion = normalizadorAdapter
-          .obtenerUbicacionNormalizada(
-              MapperDeUbicacion.ubicacionFromLatitudYLongitud(
-                  hechoNuevo.getLatitud(),
-                  hechoNuevo.getLongitud()
-              ))
-          .block();
+      Ubicacion ubicacion = ubicacionNormalizada(hechoNuevo);
 
       hechoExistente.setUbicacion(ubicacion);
     }
+  }
+
+  private Ubicacion ubicacionNormalizada(HechoInputDTO hechoInputDTO) {
+    Ubicacion ubicacion = normalizadorAdapter.obtenerUbicacionNormalizada(
+            hechoInputDTO.getLatitud(),
+            hechoInputDTO.getLongitud())
+        .block();
+
+    return ubicacion;
+  }
+
+  private Hecho obtenerHechoANormalizar(HechoInputDTO hechoInputDTO) {
+    Hecho hecho = MapperDeHechos.hechoFromInputDTO(hechoInputDTO);
+    Categoria categoria = normalizadorAdapter.obtenerCategoria(hechoInputDTO.getIdCategoria()).block();
+    hecho.setCategoria(categoria);
+
+    return hecho;
   }
 
   private void validarEdicion(Hecho hecho) {

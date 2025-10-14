@@ -1,14 +1,15 @@
 package ar.utn.dssi.FuenteDinamica.mappers;
 
-import ar.utn.dssi.FuenteDinamica.dto.input.CategoriaInputDTO;
+import ar.utn.dssi.FuenteDinamica.dto.input.CategoriaNormalizadorDTO;
 import ar.utn.dssi.FuenteDinamica.dto.output.CategoriaOutputDTO;
 import ar.utn.dssi.FuenteDinamica.models.entities.Categoria;
 
 public class MapperDeCategoria {
-  public static Categoria categoriaFromInputDTO(CategoriaInputDTO categoriaInputDTO) {
+
+  public static Categoria categoriaFromCategoriaNormalizadorDTO(CategoriaNormalizadorDTO categoriaNormalizador) {
     Categoria categoria = new Categoria();
-    categoria.setIdCategoria(categoriaInputDTO.getId());
-    categoria.setNombre(categoriaInputDTO.getNombreCategoria());
+    categoria.setIdCategoria(categoriaNormalizador.getIdCategoria());
+    categoria.setNombre(categoriaNormalizador.getNombre());
     return categoria;
   }
 

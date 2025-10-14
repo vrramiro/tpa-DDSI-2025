@@ -6,6 +6,7 @@ import ar.utb.ba.dsi.Normalizador.service.ICategoriaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,11 @@ public class CategoriaController {
   public ResponseEntity<List<CategoriaOutputDTO>> listarCategorias() {
     List<CategoriaOutputDTO> categorias = categoriaService.obtenerCategorias();
     return ResponseEntity.ok(categorias);
+  }
+
+  @GetMapping("/{idCategoria}")
+  public ResponseEntity<CategoriaOutputDTO> obtenerCategoriaPorId(@PathVariable Long idCategoria) {
+    CategoriaOutputDTO categoria = categoriaService.obtenerCategoriaPorId(idCategoria);
+    return ResponseEntity.ok(categoria);
   }
 }
