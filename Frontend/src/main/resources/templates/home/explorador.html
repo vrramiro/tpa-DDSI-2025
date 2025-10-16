@@ -60,6 +60,11 @@
 
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const initialHechos = /*[[${hechos}]]*/ [];
+            /*]]>*/
+        </script>
         <script th:src="@{/js/home/explorador.js}"></script>
     </th:block>
 </div>

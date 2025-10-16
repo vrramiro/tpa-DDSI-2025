@@ -286,39 +286,47 @@ public class HechoController {
   }
 
   @GetMapping("/explorador")
-  public String mapa(Model model) {
-    model.addAttribute("titulo", "Explorador");
-    model.addAttribute("categorias", categoriaService.obtenerCategorias());
-    model.addAttribute("provincias", hechosService.obtenerProvincias());
-    return "home/explorador";
-  }
-
-  @GetMapping("/explorador/datos")
-  @ResponseBody
-  public List<HechoOutputDTO> obtenerDatosParaMapa(
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
-          @RequestParam(required = false) Long idCategoria,
-          @RequestParam(required = false) String provincia,
-          @RequestParam(required = false) Long idColeccion
-
+  public String exploradorConFiltros(Model model,
+                                     // --- Parámetros de filtro (opcionales) ---
+                                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+                                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+                                     @RequestParam(required = false) Long idCategoria,
+                                     @RequestParam(required = false) String provincia,
+                                     @RequestParam(required = false) Long idColeccion
   ) {
-    if (idColeccion != null) {
-      // Llama al servicio que busca por colección
-      // return gestionHechosApiService.obtenerHechosDeColeccion(coleccion, ...);
-    }
 
-    return hechosService.obtenerHechos(
-            fechaReporteDesde,
-            fechaReporteHasta,
-            idCategoria,
-            provincia
-    );
-  }
+      model.addAttribute("titulo", "Explorador");
+      model.addAttribute("categorias", categoriaService.obtenerCategorias());
+      model.addAttribute("provincias", hechosService.obtenerProvincias());
+
+      // 2. Lógica para buscar hechos (solo si hay filtros o para carga inicial)
+      if (idColeccion != null) {
+        // Lógica para colecciones (si es diferente)
+        // model.addAttribute("hechos", gestionHechosApiService.obtenerHechosDeColeccion(idColeccion, ...));
+      } else {
+        // Llama al servicio con todos los filtros
+        List<HechoOutputDTO> hechosFiltrados = hechosService.obtenerHechos(
+                fechaAcontecimientoDesde,
+                fechaAcontecimientoHasta,
+                idCategoria,
+                provincia
+        );
+        model.addAttribute("hechos", hechosFiltrados);
+      }
+
+      // 3. Devolver los filtros al modelo para que el form los "recuerde"
+      // Esto hace que si filtraste por "Buenos Aires", el dropdown siga seleccionado
+      model.addAttribute("filtroProvincia", provincia);
+      model.addAttribute("filtroIdCategoria", idCategoria);
+      model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
+      model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
+
+      return "home/explorador";
+    }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
-  /***********************************************************************************************************************/
+/***********************************************************************************************************************/
 
 
   //TODO VERLO CON SANTI

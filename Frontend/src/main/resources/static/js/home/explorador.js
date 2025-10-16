@@ -8,15 +8,20 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
     maxZoom: 20
 }).addTo(map);
 
-// Función para limpiar marcadores actuales
+// Función para limpiar marcadores
 function limpiarMarcadores() {
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
 }
 
-// Función para renderizar hechos en el mapa
+// Función para renderizar hechos
 function renderizarHechos(hechos) {
     limpiarMarcadores();
+
+    if (!hechos) {
+        console.warn("No hay hechos para renderizar.");
+        return;
+    }
 
     hechos.forEach(hecho => {
         if (hecho.latitud && hecho.longitud) {
@@ -33,18 +38,20 @@ function renderizarHechos(hechos) {
     });
 }
 
-// Función para obtener solo los filtros que tienen valor
-function obtenerFiltrosActivos() {
+// Función para obtener los filtros
+function obtenerFiltrosParaUrl() {
     const params = new URLSearchParams();
 
+    // Ojo: los 'name' en el HTML son los que importan para la URL
     const fechaDesde = document.getElementById('fecha-desde').value;
     const fechaHasta = document.getElementById('fecha-hasta').value;
     const categoria = document.getElementById('categoria').value;
     const provincia = document.getElementById('provincia').value;
     const coleccion = document.getElementById('coleccion').value;
 
-    if (fechaDesde) params.append('fechaDesde', fechaDesde);
-    if (fechaHasta) params.append('fechaHasta', fechaHasta);
+    // Usamos los 'name' del HTML que coinciden con los @RequestParam
+    if (fechaDesde) params.append('fechaAcontecimientoDesde', fechaDesde);
+    if (fechaHasta) params.append('fechaAcontecimientoHasta', fechaHasta);
     if (categoria) params.append('idCategoria', categoria);
     if (provincia) params.append('provincia', provincia);
     if (coleccion) params.append('idColeccion', coleccion);
@@ -52,21 +59,17 @@ function obtenerFiltrosActivos() {
     return params.toString();
 }
 
-// Cargar hechos con filtros activos
-function cargarHechos() {
-    const params = obtenerFiltrosActivos();
-    const url = `/hechos/explorador/datos?${params}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(hechos => renderizarHechos(hechos))
-        .catch(error => console.error('Error al cargar hechos:', error));
-}
+// --- LÓGICA PRINCIPAL ---
 
+// 1. Event listener para el botón de filtrar
+document.getElementById('btn-filtrar').addEventListener('click', () => {
+    const paramsString = obtenerFiltrosParaUrl();
 
-// Event listener para el botón de filtrar
-document.getElementById('btn-filtrar').addEventListener('click', cargarHechos);
+    // Recargamos la página con los nuevos filtros como query params.
+    window.location.href = `/hechos/explorador?${paramsString}`;
+});
 
-// Cargar hechos al iniciar la página
+// 2. Cargar hechos al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
-    cargarHechos();
+    renderizarHechos(initialHechos);
 });
