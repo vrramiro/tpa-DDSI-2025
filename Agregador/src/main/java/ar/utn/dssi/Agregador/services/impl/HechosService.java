@@ -35,6 +35,7 @@ public class HechosService implements IHechosService {
                                             Long idCategoria,
                                             String provincia) {
     try {
+
       List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
           fechaReporteDesde,
           fechaReporteHasta,
@@ -86,9 +87,9 @@ public class HechosService implements IHechosService {
       hechosRepository.saveAll(hechosNuevos);
 
       List<Coleccion> colecciones = coleccionRepository.findAll();
-      System.out.println("HECHOS TRAIDOS: " + hechosNuevos.size());
+      System.out.println("CANTIDAD DE HECHOS TRAIDOS: " + hechosNuevos.size());
 
-      colecciones.parallelStream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
+      colecciones.stream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
 
       coleccionRepository.saveAll(colecciones);
     } catch (Exception e) {
