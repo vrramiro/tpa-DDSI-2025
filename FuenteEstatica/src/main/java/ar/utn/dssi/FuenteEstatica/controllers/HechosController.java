@@ -39,7 +39,7 @@ public class HechosController {
     }
   }
 
-  @GetMapping("/nuevos")
+  @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
       (@RequestParam(name = "fechaDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaDesde) {
     List<HechoOutputDTO> hechos = hechoServicio.obtenerHechos(fechaDesde);
