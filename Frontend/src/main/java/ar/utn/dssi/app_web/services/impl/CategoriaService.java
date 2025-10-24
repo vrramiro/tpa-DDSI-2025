@@ -1,4 +1,4 @@
-package ar.utn.dssi.app_web.services;
+package ar.utn.dssi.app_web.services.impl;
 
 import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;

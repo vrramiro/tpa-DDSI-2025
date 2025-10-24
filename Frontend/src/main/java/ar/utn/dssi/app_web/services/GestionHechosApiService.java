@@ -133,7 +133,7 @@ public class GestionHechosApiService {
 
     UriComponentsBuilder builder = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
-            .path("/hecho/");
+            .path("/hechos");
 
     if (fechaReporteDesde != null) {
       builder.queryParam("fechaReporteDesde", fechaReporteDesde);
@@ -151,7 +151,7 @@ public class GestionHechosApiService {
       builder.queryParam("provincia", provincia);
     }
     if (idCategoria != null) {
-        builder.queryParam("idCategoria", idCategoria);
+        builder.queryParam("id_categoria", idCategoria);
     }
 
     String url = builder.build().toUriString();

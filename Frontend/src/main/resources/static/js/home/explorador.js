@@ -23,17 +23,35 @@ function renderizarHechos(hechos) {
         return;
     }
 
+    const MAX_LENGTH_DESCRIPCION = 75;
+
     hechos.forEach(hecho => {
-        if (hecho.latitud && hecho.longitud) {
-            const marker = L.marker([hecho.latitud, hecho.longitud])
-                .bindPopup(`
-                    <strong>${hecho.titulo}</strong><br>
-                    ${hecho.descripcion}<br>
-                    <small>${hecho.fecha}</small>
-                `)
+        if (hecho.ubicacion && hecho.ubicacion.latitud != null && hecho.ubicacion.longitud != null) {
+
+            let descripcionCorta;
+            if (hecho.descripcion.length > MAX_LENGTH_DESCRIPCION) {
+                descripcionCorta = hecho.descripcion.substring(0, MAX_LENGTH_DESCRIPCION) + '...';
+            } else {
+                descripcionCorta = hecho.descripcion;
+            }
+
+            const urlVerMas = `/hechos/${hecho.id}`;
+
+            // --- Armado del Popup ---
+            const popupContent = `
+                <strong>${hecho.titulo}</strong><br>
+                ${descripcionCorta}<br>
+                ${hecho.fechaAcontecimiento} <br><br>
+                <a href="${urlVerMas}">Ver Mas...</a>
+            `;
+
+            const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud])
+                .bindPopup(popupContent)
                 .addTo(map);
 
             markers.push(marker);
+        } else {
+            console.warn("Hecho descartado por falta de 'ubicacion' o lat/lng:", hecho);
         }
     });
 }
@@ -55,6 +73,7 @@ function obtenerFiltrosParaUrl() {
     if (categoria) params.append('idCategoria', categoria);
     if (provincia) params.append('provincia', provincia);
     if (coleccion) params.append('idColeccion', coleccion);
+    //TODO if (modoCurado) params.append('modoCurado', 'true');
 
     return params.toString();
 }
@@ -71,5 +90,6 @@ document.getElementById('btn-filtrar').addEventListener('click', () => {
 
 // 2. Cargar hechos al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Hechos recibidos del servidor:", initialHechos);
     renderizarHechos(initialHechos);
 });
