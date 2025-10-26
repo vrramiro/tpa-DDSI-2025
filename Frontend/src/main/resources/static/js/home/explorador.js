@@ -36,12 +36,14 @@ function renderizarHechos(hechos) {
             }
 
             const urlVerMas = `/hechos/${hecho.id}`;
+            const parts = hecho.fechaAcontecimiento.split(/[-/]/);
+            const fechaFormateada = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
             // --- Armado del Popup ---
             const popupContent = `
                 <strong>${hecho.titulo}</strong><br>
                 ${descripcionCorta}<br>
-                ${hecho.fechaAcontecimiento} <br><br>
+                ${fechaFormateada} <br><br>
                 <a href="${urlVerMas}">Ver Mas...</a>
             `;
 
