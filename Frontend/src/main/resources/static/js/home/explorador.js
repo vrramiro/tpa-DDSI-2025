@@ -78,18 +78,42 @@ function obtenerFiltrosParaUrl() {
     return params.toString();
 }
 
-// --- LÓGICA PRINCIPAL ---
+const filterButton = document.getElementById('btn-filtrar');
+const resetButton = document.getElementById('btn-resetear');
+const filterInputs = document.querySelectorAll('aside.filters .input');
 
-// 1. Event listener para el botón de filtrar
-document.getElementById('btn-filtrar').addEventListener('click', () => {
+function toggleResetButtonVisibility() {
+    let hasActiveFilter = false;
+
+    for (const input of filterInputs) {
+        if (input.value !== '') {
+            hasActiveFilter = true;
+            break;
+        }
+    }
+
+    if (hasActiveFilter) {
+        resetButton.style.display = 'block';
+    } else {
+        resetButton.style.display = 'none';
+    }
+}
+
+filterButton.addEventListener('click', () => {
     const paramsString = obtenerFiltrosParaUrl();
-
-    // Recargamos la página con los nuevos filtros como query params.
     window.location.href = `/hechos/explorador?${paramsString}`;
 });
 
-// 2. Cargar hechos al iniciar la página
+resetButton.addEventListener('click', () => {
+    window.location.href = '/hechos/explorador';
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log("Hechos recibidos del servidor:", initialHechos);
     renderizarHechos(initialHechos);
+    toggleResetButtonVisibility();
+});
+
+filterInputs.forEach(input => {
+    input.addEventListener('change', toggleResetButtonVisibility);
 });

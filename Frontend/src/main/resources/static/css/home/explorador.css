@@ -123,3 +123,7 @@ h1 {
     position: absolute;
     inset: 0;
 }
+
+#btn-resetear {
+    display: none;
+}
