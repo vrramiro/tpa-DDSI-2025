@@ -16,4 +16,7 @@ public interface IHechoRepository extends JpaRepository<Hecho, Long> {
       "OR (h.fechaCarga >= :fechaLimite " +
       "OR (h.fechaEdicion IS NOT NULL AND h.fechaEdicion >= :fechaLimite))")
   List<Hecho> findHechosByFechaLimite(@Param("fechaLimite") LocalDateTime fechaLimite);
+
+  boolean existsByTituloAndDescripcion(String titulo, String descripcion);
+
 }

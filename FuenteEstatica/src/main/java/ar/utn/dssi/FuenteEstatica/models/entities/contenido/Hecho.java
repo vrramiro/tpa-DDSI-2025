@@ -1,19 +1,10 @@
 package ar.utn.dssi.FuenteEstatica.models.entities.contenido;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "hecho")
@@ -32,6 +23,12 @@ public class Hecho {
 
   @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
   private String descripcion;
+
+  @Column(name = "tituloSanitizado", nullable = false)
+  private String tituloSanitizado;
+
+  @Column(name = "descripcionSanitizado", nullable = false, columnDefinition = "TEXT")
+  private String descripcionSanitizado;
 
   @Embedded
   private Categoria categoria;

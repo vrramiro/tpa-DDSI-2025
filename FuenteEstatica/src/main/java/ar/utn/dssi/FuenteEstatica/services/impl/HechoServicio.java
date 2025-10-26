@@ -47,6 +47,7 @@ public class HechoServicio implements IHechoServicio {
         .map(hecho -> {
           try {
             Hecho normalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block();
+            System.out.println("Hecho " + normalizado.getTituloSanitizado() + normalizado.getDescripcionSanitizado() + normalizado.getUbicacion().getCiudad());
 
             if (normalizado == null) {
               throw new IllegalStateException("El normalizador devolvió null para el hecho: " + hecho.getTitulo());

@@ -17,6 +17,9 @@ public class MapperDeHechos {
     dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
     dtoHecho.setFechaCarga(hecho.getFechaCarga());
     dtoHecho.setIdOrigen(hecho.getId());
+    dtoHecho.setTituloSanitizado(hecho.getTituloSanitizado());
+    dtoHecho.setDescripcionSanitizada(hecho.getDescripcionSanitizado());
+
     return dtoHecho;
   }
 
@@ -27,6 +30,8 @@ public class MapperDeHechos {
     hecho.setCategoria(MapperDeCategoria.categoriaFromInput(hechoInputDTO.getCategoria()));
     hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
     hecho.setFechaAcontecimiento(hechoInputDTO.getFechaAcontecimiento());
+    hecho.setDescripcionSanitizado(hechoInputDTO.getDescripcionSanitizada());
+    hecho.setTituloSanitizado(hechoInputDTO.getTituloSanitizado());
     return hecho;
   }
 
