@@ -1,5 +1,6 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
@@ -7,7 +8,7 @@ import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
-import ar.utn.dssi.app_web.services.CategoriaService;
+import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +34,7 @@ public class HechoController {
 
   private static final Logger log = LoggerFactory.getLogger(HechoController.class);
   private final IHechoService hechosService;
-  private final CategoriaService categoriaService;
+  private final ICategoriaService categoriaService;
 
   @GetMapping("/nuevo")
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
@@ -107,7 +109,7 @@ public class HechoController {
     }
     return "redirect:/hechos/" + id;
   }
-/*
+/* TODO
   @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/{id}/sugerir")
   public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
@@ -286,39 +288,72 @@ public class HechoController {
   }
 
   @GetMapping("/explorador")
-  public String mapa(Model model) {
-    model.addAttribute("titulo", "Explorador");
-    model.addAttribute("categorias", categoriaService.obtenerCategorias());
-    model.addAttribute("provincias", hechosService.obtenerProvincias());
-    return "home/explorador";
-  }
-
-  @GetMapping("/explorador/datos")
-  @ResponseBody
-  public List<HechoOutputDTO> obtenerDatosParaMapa(
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
-          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
-          @RequestParam(required = false) Long idCategoria,
-          @RequestParam(required = false) String provincia,
-          @RequestParam(required = false) Long idColeccion
-
+  public String exploradorConFiltros(Model model,
+                                     @RequestParam(required = false) Long idHecho,
+                                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+                                     @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+                                     @RequestParam(required = false) Long idCategoria,
+                                     @RequestParam(required = false) String provincia,
+                                     @RequestParam(required = false) Long idColeccion
   ) {
-    if (idColeccion != null) {
-      // Llama al servicio que busca por colección
-      // return gestionHechosApiService.obtenerHechosDeColeccion(coleccion, ...);
-    }
 
-    return hechosService.obtenerHechos(
-            fechaReporteDesde,
-            fechaReporteHasta,
-            idCategoria,
-            provincia
-    );
-  }
+    log.info("--- Filtros recibidos en /explorador ---");
+    log.info("idHecho: {}", idHecho);
+    log.info("idCategoria: {}", idCategoria);
+    log.info("provincia: {}", provincia);
+    log.info("fechaDesde: {}", fechaAcontecimientoDesde);
+    log.info("fechaHasta: {}", fechaAcontecimientoHasta);
+    log.info("idColeccion: {}", idColeccion);
+    // log.info("modoCurado: {}", modoCurado);
+    log.info("-----------------------------------------");
+
+      model.addAttribute("titulo", "Explorador");
+
+      List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+      categorias.sort(Comparator.comparing(CategoriaDTO::getCategoria));
+      model.addAttribute("categorias", categorias);
+
+      model.addAttribute("provincias", hechosService.obtenerProvincias());
+
+      if(idHecho != null) {
+
+        Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
+        if (hechoOptional.isPresent()) {
+          HechoOutputDTO hechoDTO = hechoOptional.get();
+          model.addAttribute("hechos", List.of(hechoDTO));
+          model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
+          model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
+        }
+
+      } else if (idColeccion != null) {
+
+        // Lógica para colecciones (si es diferente)
+        // model.addAttribute("hechos", gestionHechosApiService.obtenerHechosDeColeccion(idColeccion, ...));
+
+      } else {
+
+        List<HechoOutputDTO> hechosFiltrados = hechosService.obtenerHechos(
+                fechaAcontecimientoDesde,
+                fechaAcontecimientoHasta,
+                idCategoria,
+                provincia
+                //TODO modoCurado??
+        );
+        model.addAttribute("hechos", hechosFiltrados);
+      }
+
+      model.addAttribute("filtroProvincia", provincia);
+      model.addAttribute("filtroIdCategoria", idCategoria);
+      model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
+      model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
+      //TODO model.addAttribute("filtroModoCurado", modoCurado);???
+
+      return "home/explorador";
+    }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
-  /***********************************************************************************************************************/
+/***********************************************************************************************************************/
 
 
   //TODO VERLO CON SANTI

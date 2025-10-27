@@ -15,14 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GestionHechosApiService {
@@ -133,7 +131,7 @@ public class GestionHechosApiService {
 
     UriComponentsBuilder builder = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
-            .path("/hecho/");
+            .path("/hechos");
 
     if (fechaReporteDesde != null) {
       builder.queryParam("fechaReporteDesde", fechaReporteDesde);
@@ -151,7 +149,7 @@ public class GestionHechosApiService {
       builder.queryParam("provincia", provincia);
     }
     if (idCategoria != null) {
-        builder.queryParam("idCategoria", idCategoria);
+        builder.queryParam("id_categoria", idCategoria);
     }
 
     String url = builder.build().toUriString();
@@ -167,7 +165,7 @@ public class GestionHechosApiService {
   public HechoOutputDTO obtenerHechoPorId(Long id) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
-            .path("/hecho/{id}")
+            .path("/hechos/{id}")
             .buildAndExpand(id)
             .toUriString();
 

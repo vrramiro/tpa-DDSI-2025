@@ -38,7 +38,7 @@ public class FuenteEstatica implements ITipoFuente {
 
   private Flux<HechoFuenteEstaticaIntputDTO> getHechos(String baseUrl, LocalDateTime fechaDesde) {
     WebClient webClient = WebClient.builder()
-        .baseUrl(baseUrl + "/hechos")
+        .baseUrl(baseUrl + "/hechos/nuevos")
         .build();
 
     return webClient.get()

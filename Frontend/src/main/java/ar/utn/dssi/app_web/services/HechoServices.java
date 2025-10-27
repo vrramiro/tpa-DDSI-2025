@@ -9,7 +9,6 @@ import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -114,13 +113,13 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia) {
-    return gestionHechosApiService.obtenerHechos(fechaReporteDesde, fechaReporteHasta,
-            null,null,
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia) {
+    return gestionHechosApiService.obtenerHechos(null, null,
+            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
             idCategoria, provincia);
   }
 
-  @Override //Ya se que esta mal no se donde ponerlo son las 3am
+  @Override
   public List<ProvinciaInputDTO> obtenerProvincias() {
     return gestionHechosApiService.obtenerProvincias();
   }

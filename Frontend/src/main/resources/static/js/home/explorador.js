@@ -1,5 +1,11 @@
-let map = L.map('map').setView([-33.3017, -66.3378], 5);
+let map;
 let markers = [];
+
+if (centroLat && centroLng) {
+    map = L.map('map').setView([centroLat, centroLng], 15); // Zoom 15 (o el que te guste)
+} else {
+    map = L.map('map').setView([-33.3017, -66.3378], 5);
+}
 
 // Cargar el mapa base
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -8,65 +14,114 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
     maxZoom: 20
 }).addTo(map);
 
-// Función para limpiar marcadores actuales
+// Función para limpiar marcadores
 function limpiarMarcadores() {
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
 }
 
-// Función para renderizar hechos en el mapa
+// Función para renderizar hechos
 function renderizarHechos(hechos) {
     limpiarMarcadores();
 
+    if (!hechos) {
+        console.warn("No hay hechos para renderizar.");
+        return;
+    }
+
+    const MAX_LENGTH_DESCRIPCION = 75;
+
     hechos.forEach(hecho => {
-        if (hecho.latitud && hecho.longitud) {
-            const marker = L.marker([hecho.latitud, hecho.longitud])
-                .bindPopup(`
-                    <strong>${hecho.titulo}</strong><br>
-                    ${hecho.descripcion}<br>
-                    <small>${hecho.fecha}</small>
-                `)
+        if (hecho.ubicacion && hecho.ubicacion.latitud != null && hecho.ubicacion.longitud != null) {
+
+            let descripcionCorta;
+            if (hecho.descripcion.length > MAX_LENGTH_DESCRIPCION) {
+                descripcionCorta = hecho.descripcion.substring(0, MAX_LENGTH_DESCRIPCION) + '...';
+            } else {
+                descripcionCorta = hecho.descripcion;
+            }
+
+            const urlVerMas = `/hechos/${hecho.id}`;
+            const parts = hecho.fechaAcontecimiento.split(/[-/]/);
+            const fechaFormateada = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+            // --- Armado del Popup ---
+            const popupContent = `
+                <strong>${hecho.titulo}</strong><br>
+                ${descripcionCorta}<br>
+                ${fechaFormateada} <br><br>
+                <a href="${urlVerMas}" onclick="console.log('Clickeaste el Hecho ID:', ${hecho.id})">Ver Mas...</a>
+            `;
+
+            const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud])
+                .bindPopup(popupContent)
                 .addTo(map);
 
             markers.push(marker);
+        } else {
+            console.warn("Hecho descartado por falta de 'ubicacion' o lat/lng:", hecho);
         }
     });
 }
 
-// Función para obtener solo los filtros que tienen valor
-function obtenerFiltrosActivos() {
+// Función para obtener los filtros
+function obtenerFiltrosParaUrl() {
     const params = new URLSearchParams();
 
+    // Ojo: los 'name' en el HTML son los que importan para la URL
     const fechaDesde = document.getElementById('fecha-desde').value;
     const fechaHasta = document.getElementById('fecha-hasta').value;
     const categoria = document.getElementById('categoria').value;
     const provincia = document.getElementById('provincia').value;
     const coleccion = document.getElementById('coleccion').value;
 
-    if (fechaDesde) params.append('fechaDesde', fechaDesde);
-    if (fechaHasta) params.append('fechaHasta', fechaHasta);
+    // Usamos los 'name' del HTML que coinciden con los @RequestParam
+    if (fechaDesde) params.append('fechaAcontecimientoDesde', fechaDesde);
+    if (fechaHasta) params.append('fechaAcontecimientoHasta', fechaHasta);
     if (categoria) params.append('idCategoria', categoria);
     if (provincia) params.append('provincia', provincia);
     if (coleccion) params.append('idColeccion', coleccion);
+    //TODO if (modoCurado) params.append('modoCurado', 'true');
 
     return params.toString();
 }
 
-// Cargar hechos con filtros activos
-function cargarHechos() {
-    const params = obtenerFiltrosActivos();
-    const url = `/hechos/explorador/datos?${params}`;
-    fetch(url)
-        .then(response => response.json())
-        .then(hechos => renderizarHechos(hechos))
-        .catch(error => console.error('Error al cargar hechos:', error));
+const filterButton = document.getElementById('btn-filtrar');
+const resetButton = document.getElementById('btn-resetear');
+const filterInputs = document.querySelectorAll('aside.filters .input');
+
+function toggleResetButtonVisibility() {
+    let hasActiveFilter = false;
+
+    for (const input of filterInputs) {
+        if (input.value !== '') {
+            hasActiveFilter = true;
+            break;
+        }
+    }
+
+    if (hasActiveFilter) {
+        resetButton.style.display = 'block';
+    } else {
+        resetButton.style.display = 'none';
+    }
 }
 
+filterButton.addEventListener('click', () => {
+    const paramsString = obtenerFiltrosParaUrl();
+    window.location.href = `/hechos/explorador?${paramsString}`;
+});
 
-// Event listener para el botón de filtrar
-document.getElementById('btn-filtrar').addEventListener('click', cargarHechos);
+resetButton.addEventListener('click', () => {
+    window.location.href = '/hechos/explorador';
+});
 
-// Cargar hechos al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
-    cargarHechos();
+    console.log("Hechos recibidos del servidor:", initialHechos);
+    renderizarHechos(initialHechos);
+    toggleResetButtonVisibility();
+});
+
+filterInputs.forEach(input => {
+    input.addEventListener('change', toggleResetButtonVisibility);
 });

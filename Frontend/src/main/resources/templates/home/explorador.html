@@ -15,29 +15,35 @@
             <h2>Filtros</h2>
 
             <label for="fecha-desde">Fecha desde:</label>
-            <input class="input" id="fecha-desde" name="fechaAcontecimientoDesde" type="date">
+            <input class="input" id="fecha-desde" name="fechaAcontecimientoDesde"
+                   type="date" th:value="${filtroFechaDesde}">
 
             <label for="fecha-hasta">Fecha hasta:</label>
-            <input class="input" id="fecha-hasta" name="fechaAcontecimientoHasta" type="date">
+            <input class="input" id="fecha-hasta" name="fechaAcontecimientoHasta"
+                   type="date" th:value="${filtroFechaHasta}">
 
             <label for="categoria">Categoría</label>
-            <select class="input" id="categoria" name="idCategoria"> <option value="">-- Todas --</option>
+            <select class="input" id="categoria" name="idCategoria">
+                <option value="">-- Todas --</option>
                 <option th:each="cat : ${categorias}"
                         th:value="${cat.id}"
-                        th:text="${cat.categoria}">
+                        th:text="${cat.categoria}"
+                        th:selected="(${filtroIdCategoria} != null) AND (${cat.id} == ${filtroIdCategoria})">
                 </option>
             </select>
 
             <label for="provincia">Provincia:</label>
-            <select class="input" id="provincia" name="provincia"> <option value="">-- Todas --</option>
+            <select class="input" id="provincia" name="provincia">
+                <option value="">-- Todas --</option>
                 <option th:each="prov : ${provincias}"
-                        th:value="${prov}"
-                        th:text="${prov}">
+                        th:value="${prov.nombre}"
+                        th:text="${prov.nombre}"
+                        th:selected="(${filtroProvincia} != null) AND (${prov.nombre} == ${filtroProvincia})">
                 </option>
             </select>
 
             <label for="coleccion">Coleccion:</label>
-            <select class="input" id="coleccion" name="idColeccion"> <option value="">-- Ninguna --</option>
+            <select class="input" id="coleccion" name="idColeccion">
                 <option value="">-- Seleccione --</option>
                 <option>Protesta</option>
                 <option>Ambiental</option>
@@ -48,9 +54,14 @@
             <label>
                 Modo curado
                 <input type="checkbox">
+                <!-- TODO <input type="checkbox"
+                           name="modoCurado"
+                           th:checked="(${filtroModoCurado} != null) AND ${filtroModoCurado}">-->
             </label>
 
+
             <button class="btn btn-primary" id="btn-filtrar" type="button">Filtrar</button>
+            <button class="btn btn-secondary" id="btn-resetear" type="button">Limpiar Filtros</button>
         </aside>
 
         <main class="mapa">
@@ -60,6 +71,13 @@
 
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const initialHechos = /*[[${hechos}]]*/ [];
+            const centroLat = /*[[${centroMapaLat}]]*/ null;
+            const centroLng = /*[[${centroMapaLng}]]*/ null;
+            /*]]>*/
+        </script>
         <script th:src="@{/js/home/explorador.js}"></script>
     </th:block>
 </div>

@@ -12,8 +12,9 @@
     <main class="hecho-container">
         <div class="hecho-card">
             <div class="hecho-meta">
-                <a th:if="${hecho.estado.name() != 'RECHAZADO'}"
+
                 <!-- TODO FALTA AGREGAR: and hecho.autor.username == #authentication.name}"-->
+                <a th:if="${hecho.estado.name() != 'RECHAZADO'}"
                    th:href="@{/hechos/{id}/editar(id=${hecho.id})}"
                    class="btn btn-editar">Editar</a>
 
@@ -85,7 +86,7 @@
                         </form>
                     </div>
 
-                    <a th:href="@{/explorador(lat=${hecho.ubicacion.latitud},lng=${hecho.ubicacion.longitud})}" class="btn btn-primary">Ver en mapa</a>
+                    <a th:href="@{/hechos/explorador(idHecho=${hecho.id})}" class="btn btn-primary">Ver en mapa</a>
                 </div>
             </div>
         </div>
