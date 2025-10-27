@@ -12,6 +12,7 @@ import ar.utn.dssi.Agregador.services.IHechosService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,23 +36,40 @@ public class HechosService implements IHechosService {
                                             Long idCategoria,
                                             String provincia) {
     try {
+      LocalDateTime fechaReporteDesdeDT = (fechaReporteDesde != null)
+              ? fechaReporteDesde.atStartOfDay()
+              : null;
+
+      LocalDateTime fechaReporteHastaDT = (fechaReporteHasta != null)
+              ? fechaReporteHasta.atTime(23, 59, 59)
+              : null;
+
+      LocalDateTime fechaAcontecimientoDesdeDT = (fechaAcontecimientoDesde != null)
+              ? fechaAcontecimientoDesde.atStartOfDay()
+              : null;
+
+      LocalDateTime fechaAcontecimientoHastaDT = (fechaAcontecimientoHasta != null)
+              ? fechaAcontecimientoHasta.atTime(23, 59, 59)
+              : null;
 
       List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
-          fechaReporteDesde,
-          fechaReporteHasta,
-          fechaAcontecimientoDesde,
-          fechaAcontecimientoHasta,
-          idCategoria,
-          provincia
+              fechaReporteDesdeDT,
+              fechaReporteHastaDT,
+              fechaAcontecimientoDesdeDT,
+              fechaAcontecimientoHastaDT,
+              idCategoria,
+              provincia
       );
 
       return hechos.stream()
-          .map(MapperDeHechos::hechoToOutputDTO)
-          .toList();
+              .map(MapperDeHechos::hechoToOutputDTO)
+              .toList();
+
     } catch (Exception e) {
       throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
     }
   }
+
 
   @Override
   public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
