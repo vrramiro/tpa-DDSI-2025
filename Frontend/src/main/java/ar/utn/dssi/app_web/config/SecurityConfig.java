@@ -3,14 +3,15 @@ package ar.utn.dssi.app_web.config;
 import ar.utn.dssi.app_web.providers.CustomAuthProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-@EnableMethodSecurity(prePostEnabled = false)
 @Configuration
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
     //Indico que voy a utilizar un autenticacion manager personalizado
     @Bean
@@ -31,7 +32,6 @@ public class SecurityConfig {
                                 "/registro",
                                 "/crear_cuenta",
                                 "/hechos/explorador",
-                                "hechos/provincias",
                                 "/colecciones",
                                 "/privacidad",
                                 "/estadisticas",
