@@ -1,6 +1,7 @@
 package ar.utn.dssi.FuenteEstatica.services.impl;
 
 import ar.utn.dssi.FuenteEstatica.dto.output.HechoOutputDTO;
+import ar.utn.dssi.FuenteEstatica.error.ErrorGeneralRepositorio;
 import ar.utn.dssi.FuenteEstatica.error.RepositorioVacio;
 import ar.utn.dssi.FuenteEstatica.error.ValidacionException;
 import ar.utn.dssi.FuenteEstatica.mappers.MapperDeHechos;
@@ -47,6 +48,7 @@ public class HechoServicio implements IHechoServicio {
         .map(hecho -> {
           try {
             Hecho normalizado = normalizadorAdapter.obtenerHechoNormalizado(hecho).block();
+            System.out.println("Hecho " + normalizado.getTituloSanitizado() + normalizado.getDescripcionSanitizado() + normalizado.getUbicacion().getCiudad());
 
             if (normalizado == null) {
               throw new IllegalStateException("El normalizador devolvió null para el hecho: " + hecho.getTitulo());
@@ -81,9 +83,6 @@ public class HechoServicio implements IHechoServicio {
 
   @Override
   public List<HechoOutputDTO> obtenerHechos(LocalDateTime fechaDesde) {
-    if (fechaDesde == null) {
-      throw new IllegalArgumentException("Error al cargar la fecha de ultima comunicacion");
-    }
 
     var hechos = this.hechoRepositorio.findHechosByFechaLimite(fechaDesde);
 
@@ -91,7 +90,11 @@ public class HechoServicio implements IHechoServicio {
       throw new RepositorioVacio("El repositorio esta vacio, no tiene datos.");
     }
 
-    return hechos.stream().map(MapperDeHechos::hechoOutputDTO).toList();
+    try {
+      return hechos.stream().map(MapperDeHechos::hechoOutputDTO).toList();
+    } catch (Exception e) {
+      throw new ErrorGeneralRepositorio("Error al obtener los hechos.");
+    }
   }
 }
 

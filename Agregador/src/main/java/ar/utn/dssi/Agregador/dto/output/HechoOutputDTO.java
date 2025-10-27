@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class HechoOutputDTO {
+  private Long id;
   private String titulo;
   private String descripcion;
   private String categoria;

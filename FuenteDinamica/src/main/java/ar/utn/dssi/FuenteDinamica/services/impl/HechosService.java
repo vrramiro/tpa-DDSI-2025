@@ -34,23 +34,19 @@ public class HechosService implements IHechosService {
 
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
-    validarHechoInput(hechoInputDTO);
+      detectarSpamHechos(hechoInputDTO);
+      validarHechoInput(hechoInputDTO);
 
     Hecho hechoANormalizar = obtenerHechoANormalizar(hechoInputDTO);
-
     hechoANormalizar.setUbicacion(ubicacionNormalizada(hechoInputDTO));
-
     Hecho hechoNormalizado = normalizadorAdapter.obtenerHechoNormalizado(hechoANormalizar).block();
-
     hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
     List<ContenidoMultimedia> contenidoMultimedia = this.contenidoMultimediaService
         .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
 
     hechoNormalizado.setMultimedia(contenidoMultimedia);
-
     hechoNormalizado.setVisible(true);
-
     this.hechoRepository.save(hechoNormalizado);
   }
 
@@ -173,6 +169,17 @@ public class HechosService implements IHechosService {
   private void validarEdicion(Hecho hecho) {
     if (ChronoUnit.DAYS.between(hecho.getFechaCarga(), LocalDateTime.now()) > 7) {
       throw new HechoNoEditable("El hecho con id: " + hecho.getIdHecho() + " no puede ser editado después de 7 días desde su carga.");
+    }
+  }
+
+  private void detectarSpamHechos(HechoInputDTO hechoInputDTO) {
+    boolean existe = hechoRepository.existsByTituloAndDescripcion(
+            hechoInputDTO.getTitulo(),
+            hechoInputDTO.getDescripcion()
+    );
+
+    if (existe) {
+      throw new RuntimeException("Hecho duplicado: se considera spam");
     }
   }
 }

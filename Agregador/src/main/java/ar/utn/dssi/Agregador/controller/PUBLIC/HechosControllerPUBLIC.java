@@ -33,9 +33,12 @@ public class HechosControllerPUBLIC {
       @RequestParam(name = "provincia", required = false) String provincia
   ) {
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
-        fechaReporteDesde, fechaReporteHasta,
-        fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-        idCategoria, provincia
+            fechaReporteDesde,
+            fechaReporteHasta,
+            fechaAcontecimientoDesde,
+            fechaAcontecimientoHasta,
+            idCategoria,
+            provincia
     );
 
     if (hechos.isEmpty()) {

@@ -8,6 +8,7 @@ import ar.utn.dssi.Agregador.models.entities.Hecho;
 public class MapperDeHechos {
   static public HechoOutputDTO hechoToOutputDTO(Hecho hecho) {
     HechoOutputDTO dto = new HechoOutputDTO();
+    dto.setId(hecho.getId());
     dto.setTitulo(hecho.getTitulo());
     dto.setDescripcion(hecho.getDescripcion());
     dto.setCategoria(hecho.getCategoria().getNombre());

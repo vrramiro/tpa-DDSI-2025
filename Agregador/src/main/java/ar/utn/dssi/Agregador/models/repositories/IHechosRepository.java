@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,12 +18,13 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
       "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
       "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
       "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) " +
+          "AND (:idCategoria IS NULL OR h.categoria.id = :idCategoria) " +
       "AND h.visible = true")
   List<Hecho> findHechosByVisibleTrueAndFiltrados(
-      @Param("fechaReporteDesde") LocalDate fechaReporteDesde,
-      @Param("fechaReporteHasta") LocalDate fechaReporteHasta,
-      @Param("fechaAcontecimientoDesde") LocalDate fechaAcontecimientoDesde,
-      @Param("fechaAcontecimientoHasta") LocalDate fechaAcontecimientoHasta,
+      @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
+      @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
+      @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,
+      @Param("fechaAcontecimientoHasta") LocalDateTime fechaAcontecimientoHasta,
       @Param("idCategoria") Long idCategoria,
       @Param("provincia") String provincia
   );

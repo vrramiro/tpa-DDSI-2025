@@ -26,10 +26,14 @@ public class HechosController {
   private final IHechosService hechosService;
 
   @PostMapping
-  public ResponseEntity<Void> crearHecho(@RequestBody HechoInputDTO hecho) {
-    System.out.println("Llego categoria de id: " + hecho.getIdCategoria());
+  public ResponseEntity<String> crearHecho(@RequestBody HechoInputDTO hecho) {
+    try {
     this.hechosService.crear(hecho);
-    return ResponseEntity.ok().build();
+    } catch (RuntimeException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+    return ResponseEntity.ok("Hecho creado");
+
   }
 
   @GetMapping
