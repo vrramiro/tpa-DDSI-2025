@@ -1,5 +1,11 @@
-let map = L.map('map').setView([-33.3017, -66.3378], 5);
+let map;
 let markers = [];
+
+if (centroLat && centroLng) {
+    map = L.map('map').setView([centroLat, centroLng], 15); // Zoom 15 (o el que te guste)
+} else {
+    map = L.map('map').setView([-33.3017, -66.3378], 5);
+}
 
 // Cargar el mapa base
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
@@ -44,7 +50,7 @@ function renderizarHechos(hechos) {
                 <strong>${hecho.titulo}</strong><br>
                 ${descripcionCorta}<br>
                 ${fechaFormateada} <br><br>
-                <a href="${urlVerMas}">Ver Mas...</a>
+                <a href="${urlVerMas}" onclick="console.log('Clickeaste el Hecho ID:', ${hecho.id})">Ver Mas...</a>
             `;
 
             const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud])

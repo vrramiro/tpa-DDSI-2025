@@ -74,6 +74,8 @@
         <script th:inline="javascript">
             /*<![CDATA[*/
             const initialHechos = /*[[${hechos}]]*/ [];
+            const centroLat = /*[[${centroMapaLat}]]*/ null;
+            const centroLng = /*[[${centroMapaLng}]]*/ null;
             /*]]>*/
         </script>
         <script th:src="@{/js/home/explorador.js}"></script>

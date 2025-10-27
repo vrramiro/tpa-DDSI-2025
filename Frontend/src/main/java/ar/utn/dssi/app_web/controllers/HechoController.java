@@ -289,6 +289,7 @@ public class HechoController {
 
   @GetMapping("/explorador")
   public String exploradorConFiltros(Model model,
+                                     @RequestParam(required = false) Long idHecho,
                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
                                      @RequestParam(required = false) Long idCategoria,
@@ -297,6 +298,7 @@ public class HechoController {
   ) {
 
     log.info("--- Filtros recibidos en /explorador ---");
+    log.info("idHecho: {}", idHecho);
     log.info("idCategoria: {}", idCategoria);
     log.info("provincia: {}", provincia);
     log.info("fechaDesde: {}", fechaAcontecimientoDesde);
@@ -313,10 +315,23 @@ public class HechoController {
 
       model.addAttribute("provincias", hechosService.obtenerProvincias());
 
-      if (idColeccion != null) {
+      if(idHecho != null) {
+
+        Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
+        if (hechoOptional.isPresent()) {
+          HechoOutputDTO hechoDTO = hechoOptional.get();
+          model.addAttribute("hechos", List.of(hechoDTO));
+          model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
+          model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
+        }
+
+      } else if (idColeccion != null) {
+
         // Lógica para colecciones (si es diferente)
         // model.addAttribute("hechos", gestionHechosApiService.obtenerHechosDeColeccion(idColeccion, ...));
+
       } else {
+
         List<HechoOutputDTO> hechosFiltrados = hechosService.obtenerHechos(
                 fechaAcontecimientoDesde,
                 fechaAcontecimientoHasta,
