@@ -33,6 +33,7 @@ public class SecurityConfig {
                                 "/crear_cuenta",
                                 "/hechos/explorador",
                                 "/colecciones",
+                                "/colecciones/{handle}/hechos",
                                 "/privacidad",
                                 "/estadisticas",
                                 "/css/**",
