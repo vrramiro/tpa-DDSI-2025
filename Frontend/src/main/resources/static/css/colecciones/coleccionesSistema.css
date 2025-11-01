@@ -20,6 +20,7 @@ h1 {
     margin: auto;
 }
 
+/* Tarjeta base */
 .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
@@ -27,31 +28,72 @@ h1 {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    transition: transform .2s;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
+    cursor: pointer;
 }
 
-.card:hover { transform: translateY(-5px); }
+/* Efecto decorativo con gradiente al pasar el mouse */
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--dark-color, #004aad), transparent 80%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
 
+/* Hover con efecto animado */
+.card:hover {
+    transform: scale(1.05) translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    background-color: var(--dark-color, #004aad);
+    color: #fff;
+}
+
+.card:hover::before {
+    opacity: 0.25;
+}
+
+/* Mantener contenido por encima del gradiente */
+.card-header,
+.card-details,
+.card-footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* Header del card */
 .card-header {
     font-weight: 700;
     font-size: 1.1rem;
     margin-bottom: .5rem;
 }
 
+/* Detalles dentro del card */
 .card-details {
     background: var(--light-color);
     border-radius: var(--border-radius);
     padding: 1rem;
     text-align: center;
     margin: 1rem 0;
+    transition: background-color 0.35s ease;
 }
 
+/* Cambia el fondo de los detalles en hover para contraste */
+.card:hover .card-details {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* Footer con botón */
 .card-footer {
     display: flex;
     justify-content: center;
 }
 
-/* Botón "Ver Coleccion" como enlace sin subrayado */
+/* Botón "Ver Colección" como enlace sin subrayado */
 .card-footer .btn,
 .card-footer .btn:link,
 .card-footer .btn:visited,
@@ -59,6 +101,18 @@ h1 {
 .card-footer .btn:active {
     text-decoration: none;
     display: inline-block;
+    background: var(--light-color);
+    color: var(--dark-color);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Efecto del botón en hover */
+.card:hover .btn {
+    background: #fff;
+    color: var(--dark-color);
 }
 
 /* Paginación */
