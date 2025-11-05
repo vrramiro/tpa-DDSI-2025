@@ -1,9 +1,14 @@
 package ar.utn.dssi.Agregador.controller.PUBLIC;
 
+import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,4 +51,16 @@ public class ColeccionesControllerPUBLIC {
 
     return ResponseEntity.ok(hechos); // status 200
   }
+
+  @GetMapping
+  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault Pageable pageable) {
+    Page<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones(pageable);
+
+    if (colecciones.isEmpty()) {
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build(); // status 204
+    }
+
+    return ResponseEntity.ok(colecciones); // status 200
+  }
+
 }
