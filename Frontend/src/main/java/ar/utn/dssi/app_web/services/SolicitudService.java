@@ -15,7 +15,6 @@ public class SolicitudService implements ISolicitudService {
 
     private final GestionSolicitudesApiService gestionSolicitudesApiService;
 
-    //todo: ver si filtrar lo que sea spam
     public List<SolicitudDTO> obtenerTodasLasSolicitudes() {
         return gestionSolicitudesApiService.obtenerSolicitudes();
     }

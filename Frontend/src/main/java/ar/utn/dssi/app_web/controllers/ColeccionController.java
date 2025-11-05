@@ -1,6 +1,5 @@
 package ar.utn.dssi.app_web.controllers;
 
-
 import ar.utn.dssi.app_web.dto.Consenso.ConsensoDTO;
 import ar.utn.dssi.app_web.dto.Consenso.TipoConsenso;
 import ar.utn.dssi.app_web.dto.Fuente.TipoFuente;
@@ -9,7 +8,7 @@ import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 
-import ar.utn.dssi.app_web.error.NotFoundException;
+import ar.utn.dssi.app_web.error.NotFoundException; // Se mantiene por si se usa en otros métodos
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
@@ -47,13 +46,12 @@ public class ColeccionController {
       pageColeccion = coleccionService.listarColecciones(page);
 
       if(pageColeccion == null) {
-        log.warn("No se encontraron colecciones");
+        log.warn("El servicio devolvió null para colecciones. Inicializando DTO vacío.");
+        pageColeccion = new PageResponseDTO<>(); // El service ya debería prevenir el null, pero esto es un fallback seguro
       }
 
-      assert pageColeccion != null;
-      if(pageColeccion.getContent().isEmpty()) {
-        throw new NotFoundException("No se encontraron colecciones");
-      }
+      // **Lógica Corregida: Se elimina el bloque if(pageColeccion.getContent().isEmpty()){...}**
+      // Se permite que la lista vacía fluya al modelo para ser manejada en el template.
 
       model.addAttribute("colecciones", pageColeccion.getContent());
       model.addAttribute("page", pageColeccion.getNumber());
@@ -69,10 +67,9 @@ public class ColeccionController {
 
     } catch (Exception ex) {
       log.error("Error al listar colecciones", ex);
-      model.addAttribute("error", "No se pudieron obtener las colecciones.");
+      model.addAttribute("error", "No se pudieron obtener las colecciones. Intente más tarde.");
       return "redirect:/404";
     }
-
   }
 
   @GetMapping("/{handle}/hechos")
@@ -181,5 +178,3 @@ public class ColeccionController {
   }
 
 }
-
-

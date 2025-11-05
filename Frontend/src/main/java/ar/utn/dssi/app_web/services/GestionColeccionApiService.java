@@ -12,7 +12,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
+import reactor.core.publisher.Mono;
 
 @Service
 public class GestionColeccionApiService {
@@ -41,7 +43,7 @@ public class GestionColeccionApiService {
                 .queryParam("id", id)
                 .toUriString();
         try {
-            return webApiCallerService.get(url, ColeccionResponseDTO.class);
+            return webApiCallerService.getPublic(url, ColeccionResponseDTO.class);
         } catch (WebClientException e) {
             throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
@@ -98,15 +100,36 @@ public class GestionColeccionApiService {
     }
 
     public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina) {
-        return webClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/admin/colecciones")
-                        .queryParam("page", numeroPagina)
-                        .build()
-                )
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
-                .block();
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/public/colecciones")
+                            .queryParam("page", numeroPagina)
+                            .build()
+                    )
+                    .retrieve()
+                    // 1. Manejar 204 No Content (Agregador devuelve 204 si no hay colecciones)
+                    .onStatus(status -> status.value() == 204,
+                            clientResponse -> clientResponse.bodyToMono(Void.class).thenReturn(null))
+
+                    .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
+
+                    // 2. Manejar errores HTTP (4xx, 5xx)
+                    .onErrorResume(WebClientResponseException.class, e -> {
+                        log.error("Error {} al llamar /public/colecciones: {}", e.getStatusCode(), e.getMessage());
+                        return Mono.just(new PageResponseDTO<ColeccionResponseDTO>()); // Devuelve un DTO vacío, no nulo.
+                    })
+
+                    // 3. Manejar el caso del 204 (el Mono es null), reemplazándolo con un DTO vacío.
+                    .defaultIfEmpty(new PageResponseDTO<ColeccionResponseDTO>())
+
+                    .block();
+        } catch (Exception e) {
+            // Este catch se activa si hay un error de conexión de red (no HTTP) o si la excepción
+            // se propagó por otro motivo.
+            log.error("Error de red/conexión al obtener colecciones públicas: {}", e.getMessage());
+            return new PageResponseDTO<ColeccionResponseDTO>(); // Siempre retorna un objeto instanciado.
+        }
     }
 }
 

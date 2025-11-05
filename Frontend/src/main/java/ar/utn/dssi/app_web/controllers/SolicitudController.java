@@ -24,7 +24,7 @@ public class SolicitudController {
   private final SolicitudService solicitudService;
   private static final Logger log = LoggerFactory.getLogger(SolicitudController.class);
 
-  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   @GetMapping("/gestion")
   public String gestionSolicitudes(
           @RequestParam(name = "estado", required = false, defaultValue = "Todos") String estado,
@@ -43,7 +43,7 @@ public class SolicitudController {
     return "solicitudes/gestionSolicitudesAdmin";
   }
 
-  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   @GetMapping("/panel/solicitudId")
   public String panelSolicitudes( @RequestParam(name = "id") Long solicitudId,
                                   Model model) {

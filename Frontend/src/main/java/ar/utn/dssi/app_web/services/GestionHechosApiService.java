@@ -74,7 +74,7 @@ public class GestionHechosApiService {
             .path("/ubicacion/provincias")
             .toUriString();
     try {
-      return webApiCallerService.getList(url, ProvinciaInputDTO.class);
+      return webApiCallerService.getListPublic(url, ProvinciaInputDTO.class);
     } catch (WebClientException e) {
       throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
     }
@@ -155,7 +155,7 @@ public class GestionHechosApiService {
     String url = builder.build().toUriString();
 
     try {
-      return webApiCallerService.getList(url, HechoOutputDTO.class);
+      return webApiCallerService.getListPublic(url, HechoOutputDTO.class);
     } catch (Exception e) {
       log.error("Error al obtener hechos desde el agregador", e);
       return Collections.emptyList();
