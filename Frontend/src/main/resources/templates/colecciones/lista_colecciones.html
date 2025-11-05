@@ -13,18 +13,15 @@
 
     <h1>Colecciones disponibles:</h1>
 
-    <!-- Estado vacío (solo si no hay colecciones ni recién creada) -->
-    <div th:if="${(colecciones == null or #lists.isEmpty(colecciones)) and coleccionCreada == null}"
-         class="grid empty-grid">
-        <div class="card empty-card">
-            <div class="card-header">🗂️ Sin colecciones disponibles</div>
-            <div class="card-details">
-                <p class="muted">No encontramos colecciones para mostrar en este momento.</p>
-            </div>
+    <div th:if="${#lists.isEmpty(colecciones) and coleccionCreada == null}"
+         class="grid empty-grid"> <div class="card empty-card" style="text-align: center;">
+        <div class="card-header">🗂️ Sin colecciones disponibles</div>
+        <div class="card-details">
+            <p class="muted">No se encontraron colecciones disponibles en este momento.</p>
         </div>
     </div>
+    </div>
 
-    <!-- Grid -->
     <div class="grid"
          th:unless="${#lists.isEmpty(colecciones) and coleccionCreada == null}">
 
@@ -42,8 +39,8 @@
         </th:block>
     </div>
 
-    <!-- Paginación -->
-    <div th:replace="~{navegacion/navegacion :: pager(
+    <div th:if="${not #lists.isEmpty(colecciones) or coleccionCreada != null}"
+         th:replace="~{navegacion/navegacion :: pager(
       ${page},
       ${totalPages},
       ${size},

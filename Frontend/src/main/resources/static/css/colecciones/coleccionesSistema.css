@@ -111,7 +111,6 @@ h1 {
     opacity: 0.5;
 }
 
-/* Estado vacío: reutiliza tu grid y card */
 .empty-grid {
     /* ya es display:grid por .grid */
     grid-template-columns: 1fr;  /* una sola columna centrada */
@@ -122,7 +121,7 @@ h1 {
 .empty-card {
     max-width: 520px;            /* ancho agradable */
     width: min(90%, 520px);
-    text-align: center;
+    /* Removido text-align: center; porque se aplica en el HTML */
 }
 
 /* Texto atenuado coherente con tu paleta */
