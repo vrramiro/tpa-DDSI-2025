@@ -31,7 +31,8 @@ public class SecurityConfig {
                                 "/login",
                                 "/registro",
                                 "/crear_cuenta",
-                                "/hechos/explorador",
+                                "/hechos/explorador", // <--- Esta es la principal.
+                                "/hechos/explorador/**", // <--- Permitir cualquier cosa que venga detrás (incluye query params)
                                 "/colecciones",
                                 "/privacidad",
                                 "/estadisticas",
