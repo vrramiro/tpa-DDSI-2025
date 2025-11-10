@@ -20,7 +20,6 @@ h1 {
     margin: auto;
 }
 
-/* Tarjeta base */
 .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
@@ -28,72 +27,31 @@ h1 {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
-    cursor: pointer;
+    transition: transform .2s;
 }
 
-/* Efecto decorativo con gradiente al pasar el mouse */
-.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--dark-color, #004aad), transparent 80%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
-}
+.card:hover { transform: translateY(-5px); }
 
-/* Hover con efecto animado */
-.card:hover {
-    transform: scale(1.05) translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-    background-color: var(--dark-color, #004aad);
-    color: #fff;
-}
-
-.card:hover::before {
-    opacity: 0.25;
-}
-
-/* Mantener contenido por encima del gradiente */
-.card-header,
-.card-details,
-.card-footer {
-    position: relative;
-    z-index: 1;
-}
-
-/* Header del card */
 .card-header {
     font-weight: 700;
     font-size: 1.1rem;
     margin-bottom: .5rem;
 }
 
-/* Detalles dentro del card */
 .card-details {
     background: var(--light-color);
     border-radius: var(--border-radius);
     padding: 1rem;
     text-align: center;
     margin: 1rem 0;
-    transition: background-color 0.35s ease;
 }
 
-/* Cambia el fondo de los detalles en hover para contraste */
-.card:hover .card-details {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-/* Footer con botón */
 .card-footer {
     display: flex;
     justify-content: center;
 }
 
-/* Botón "Ver Colección" como enlace sin subrayado */
+/* Botón "Ver Coleccion" como enlace sin subrayado */
 .card-footer .btn,
 .card-footer .btn:link,
 .card-footer .btn:visited,
@@ -101,59 +59,7 @@ h1 {
 .card-footer .btn:active {
     text-decoration: none;
     display: inline-block;
-    background: var(--light-color);
-    color: var(--dark-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease;
 }
-
-/* Efecto del botón en hover */
-.card:hover .btn {
-    background: #fff;
-    color: var(--dark-color);
-}
-
-/* Header en grid: título y categoría */
-.card-header-grid {
-    display: grid;
-    grid-template-columns: 1fr auto; /* título ocupa todo el ancho, badge solo lo necesario */
-    align-items: start;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-/* Título: puede ocupar todo el ancho y partir en líneas */
-.card-title {
-    font-weight: 700;
-    font-size: 1.1rem;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.3;
-    color: var(--dark-color);
-}
-
-/* Badge de categoría */
-.card-category {
-    background: rgba(0, 150, 100, 0.15); /* verde suave */
-    color: #006644;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    padding: 0.3rem 0.7rem;
-    border-radius: 1rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    white-space: nowrap; /* evita que se parta en dos líneas */
-}
-
-/* Hover: se refuerza el color del badge */
-.card:hover .card-category {
-    background: rgba(0, 150, 100, 0.3);
-    color: #fff;
-}
-
 
 /* Paginación */
 .grid .pagination {
