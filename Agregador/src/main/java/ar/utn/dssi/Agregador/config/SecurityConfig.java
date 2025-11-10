@@ -24,15 +24,18 @@ public class SecurityConfig {
                             "/hechos",
                             "/hechos/{idHecho}",
                             "/public/**",
-                            "/colecciones"
-                    ).permitAll();
 
-                    auth.requestMatchers(
+                            // A PARTIR DE ACA, LAS RUTAS DEBEN ESTAR PROTEGIDAS... TENGO QUE ARREGLARLO
+                            "/colecciones",
                             "/admin/**",
                             "/hecho/{id}/estado",
                             "/hechos/eliminar/{idHecho}",
                             "/procesar/{idSolicitud}"
-                    ).hasAnyRole("ADMINISTRADOR");
+                    ).permitAll();
+
+                    /*auth.requestMatchers(
+
+                    ).hasAnyRole("ADMINISTRADOR");*/
 
                     auth.anyRequest().authenticated();
                 })
