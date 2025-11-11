@@ -34,6 +34,7 @@ public class SecurityConfig {
                                 "/hechos/explorador", // <--- Esta es la principal.
                                 "/hechos/explorador/**", // <--- Permitir cualquier cosa que venga detrás (incluye query params)
                                 "/colecciones",
+                                "/colecciones/{handle}/hechos",
                                 "/privacidad",
                                 "/estadisticas",
                                 "/css/**",

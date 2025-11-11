@@ -1,13 +1,10 @@
 /* =========================================
    OVERRIDES Y ESPECÍFICOS (gestionColecciones)
    ========================================= */
-
 /* Override útil si .btn-primary es <a> */
 .btn-primary { text-decoration: none; }
-
 /* En base.css .btn-secondary tiene texto oscuro; acá lo fijamos blanco */
 .btn-secondary { color: #fff; } /* base: color: var(--dark-color) */
-
 /* Contenedor y títulos de la vista */
 main { flex: 1; padding-bottom: 2rem; }
 .content-container {
@@ -20,7 +17,6 @@ main { flex: 1; padding-bottom: 2rem; }
     box-shadow: var(--box-shadow);
 }
 h1, h2 { color: var(--dark-color); margin: 0; }
-
 /* ===== Cabecera: título a la izquierda y botón a la derecha ===== */
 .collection-header{
     display:flex;
@@ -30,13 +26,11 @@ h1, h2 { color: var(--dark-color); margin: 0; }
 }
 .collection-header h2{ margin:0; }
 .collection-header .btn{ margin-left:auto; } /* empuja el botón a la derecha */
-
 /* En móviles, que se apilen prolijo */
 @media (max-width: 640px){
     .collection-header{ flex-direction:column; align-items:flex-start; }
     .collection-header .btn{ margin-left:0; align-self:stretch; }
 }
-
 /* ===== Filtros (si se usan) ===== */
 .filter-controls {
     display: flex;
@@ -52,7 +46,6 @@ h1, h2 { color: var(--dark-color); margin: 0; }
     background-color: var(--background-color);
     font-size: 0.9rem;
 }
-
 /* ===== Tabla responsive ===== */
 .table-container {
     overflow-x: auto;
@@ -65,7 +58,6 @@ th, td { padding: var(--space-2); border: 1px solid var(--border-color); }
 thead { background-color: #f0f0f0; }
 thead th { font-weight: 700; color: var(--dark-color); }
 tbody tr:hover { background-color: var(--light-color); }
-
 /* ===== Columna de acciones: misma línea y a la derecha ===== */
 .action-buttons{
     display:flex;
@@ -83,14 +75,12 @@ tbody tr:hover { background-color: var(--light-color); }
     padding: var(--space-1) .9rem;
     font-size: .9rem;
 }
-
 /* ===== Botones concretos ===== */
 .btn-edit{
     text-decoration:none;
     background-color: var(--accent-color);
     color: var(--dark-color);
 }
-
 /* Botón eliminar (relleno rojo) */
 .btn-delete{
     background-color: var(--danger-color);
@@ -102,7 +92,6 @@ tbody tr:hover { background-color: var(--light-color); }
     outline: 3px solid color-mix(in srgb, var(--danger-color) 35%, transparent);
     outline-offset: 2px;
 }
-
 /* Si en algún lugar queda .btn-outline-danger, armonizamos */
 .btn-outline-danger{
     border: 1px solid var(--danger-color);
@@ -112,11 +101,9 @@ tbody tr:hover { background-color: var(--light-color); }
 .btn-outline-danger:hover{
     background: color-mix(in srgb, var(--danger-color) 10%, #fff);
 }
-
 /* Botón con ícono + texto (Eliminar) */
 .btn-icon-text{ display:inline-flex; align-items:center; gap:.45rem; }
 .btn-delete.btn-sm{ padding:.45rem .75rem; }
-
 /* ===== Paginación ===== */
 .pagination {
     display: flex;
@@ -147,10 +134,8 @@ tbody tr:hover { background-color: var(--light-color); }
     cursor: default;
 }
 .page-link-ellipsis { border: none; }
-
 /* ===== Botón de volver al final ===== */
 .footer-actions { margin-top: var(--space-3); }
-
 /* ===== Modal genérico ===== */
 .modal[hidden]{ display:none; }
 .modal{
@@ -162,7 +147,6 @@ tbody tr:hover { background-color: var(--light-color); }
     box-shadow:0 10px 30px rgba(0,0,0,.2);
 }
 .modal-actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:1rem; }
-
 /* Botón cancelar del modal (sin transparencia) */
 #modal-eliminar-cancelar{
     background: #e8f4f1;       /* sólido */
@@ -179,3 +163,56 @@ tbody tr:hover { background-color: var(--light-color); }
     outline-offset: 2px;
 }
 
+/* ===== Botones cuadrados con íconos centrados ===== */
+.icon-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;        /* esquinas redondeadas suaves */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #fff;
+    transition: transform 0.1s ease, background-color 0.15s ease;
+}
+
+/* Espaciado entre los tres */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Colores específicos */
+.btn-view {
+    background-color: #1e88e5; /* azul */
+}
+.btn-view:hover {
+    background-color: #1565c0;
+}
+
+.btn-edit {
+    background-color: #ffca28; /* amarillo */
+    color: #5d4037;
+}
+.btn-edit:hover {
+    background-color: #ffb300;
+}
+
+.btn-delete {
+    background-color: #e53935; /* rojo */
+}
+.btn-delete:hover {
+    background-color: #c62828;
+}
+
+/* Animaciones */
+.icon-btn:hover {
+    transform: scale(1.08);
+}
+.icon-btn:active {
+    transform: scale(0.95);
+}
