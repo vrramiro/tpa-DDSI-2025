@@ -22,5 +22,5 @@ public interface IHechoService {
     PageResponseDTO<HechoOutputDTO> listarHechos(Integer page);
     Boolean crearHechoEstatico(MultipartFile archivo);
     List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia);
-    List<ProvinciaInputDTO> obtenerProvincias();
+    List<String> obtenerProvincias();
 }
