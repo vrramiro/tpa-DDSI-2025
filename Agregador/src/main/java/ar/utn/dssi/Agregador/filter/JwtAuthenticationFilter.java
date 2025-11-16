@@ -1,7 +1,8 @@
+package ar.utn.dssi.Agregador.filter;
 
-package ar.utn.dssi.Agregador.filter; // o el paquete correspondiente a FuenteEstatica
-
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,14 +20,21 @@ import java.util.Base64;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final Key key = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
+    private final Key key;
+
+    public JwtAuthenticationFilter(String secretString) {
+        byte[] keyBytes = Decoders.BASE64.decode(secretString);
+        this.key = Keys.hmacShaKeyFor(keyBytes);
+    }
 
     private String extraerClaim(String token, String claim) {
         try {
-            String[] chunks = token.split("\\.");
-            Base64.Decoder decoder = Base64.getUrlDecoder();
-            String payload = new String(decoder.decode(chunks[1]));
-            return new com.fasterxml.jackson.databind.ObjectMapper().readValue(payload, java.util.Map.class).get(claim).toString();
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(this.key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.get(claim, String.class);
         } catch (Exception e) {
             return null;
         }
@@ -34,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String validarToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(this.key)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
@@ -58,15 +66,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 String username = validarToken(token);
                 String rol = extraerClaim(token, "rol");
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
-                );
-                SecurityContextHolder.getContext().setAuthentication(auth);
+
+                if (username != null && rol != null) {
+                    UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
+                    );
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
             } catch (Exception e) {
-                // El token es inválido/expirado, pero permitimos el flujo para las rutas públicas.
-                // Si la ruta requiere autenticación, Spring Security se encargará de denegar el acceso (403/401).
+                SecurityContextHolder.clearContext();
             }
         }
         filterChain.doFilter(request, response);

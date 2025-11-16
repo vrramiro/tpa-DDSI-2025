@@ -1,6 +1,7 @@
 package ar.utn.dssi.Agregador.config;
 
 import ar.utn.dssi.Agregador.filter.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -14,6 +15,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -23,23 +27,19 @@ public class SecurityConfig {
                     auth.requestMatchers(
                             "/hechos",
                             "/hechos/{idHecho}",
-                            "/public/**",
+                            "/public/**"
+                    ).permitAll();
 
-                            // A PARTIR DE ACA, LAS RUTAS DEBEN ESTAR PROTEGIDAS... TENGO QUE ARREGLARLO
-                            "/colecciones",
+                    auth.requestMatchers(
                             "/admin/**",
                             "/hecho/{id}/estado",
                             "/hechos/eliminar/{idHecho}",
                             "/procesar/{idSolicitud}"
-                    ).permitAll();
-
-                    /*auth.requestMatchers(
-
-                    ).hasAnyRole("ADMINISTRADOR");*/
+                    ).hasRole("ADMINISTRADOR");
 
                     auth.anyRequest().authenticated();
                 })
-                .addFilterBefore(new JwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtSecret), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
