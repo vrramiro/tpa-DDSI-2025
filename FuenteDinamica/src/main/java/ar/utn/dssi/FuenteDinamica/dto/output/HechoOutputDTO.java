@@ -25,4 +25,6 @@ public class HechoOutputDTO {
   private LocalDateTime fechaCarga;
 
   private List<String> contenidoMultimedia;
+
+  private String autor;
 }

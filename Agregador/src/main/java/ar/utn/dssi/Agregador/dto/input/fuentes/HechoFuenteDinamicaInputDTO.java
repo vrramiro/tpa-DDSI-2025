@@ -24,5 +24,5 @@ public class HechoFuenteDinamicaInputDTO {
 
   private List<String> contenidoMultimedia;
 
-  //private String autor; TODO agregar cuando se suba uso de usuarios
+  private String autor;
 }

@@ -30,4 +30,6 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   );
 
   Optional<Hecho> findHechoByIdAndVisible(Long idHecho, boolean visible);
+
+  List<Hecho> findByAutor(String autor);
 }

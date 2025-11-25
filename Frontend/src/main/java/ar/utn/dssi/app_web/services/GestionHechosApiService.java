@@ -259,4 +259,18 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error al verificar la ubicación: " + e.getMessage(), e);
     }
   }
+
+  public List<HechoOutputDTO> obtenerMisHechos() {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/hechos/misHechos")
+            .toUriString();
+
+    try {
+      return webApiCallerService.getList(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener mis hechos: {}", e.getMessage());
+      return Collections.emptyList();
+    }
+  }
 }

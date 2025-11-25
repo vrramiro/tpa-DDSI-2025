@@ -19,7 +19,7 @@
             <li><a class="btn btn-secondary" th:href="@{/hechos/explorador}">Explorar</a></li>
             <li><a class="btn btn-secondary" th:href="@{/colecciones}">Colecciones</a></li>
             <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/nuevo}">Crear hecho</a></li>
-            <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/mis_hechos}">Mis hechos</a></li>
+            <li sec:authorize="isAuthenticated()"><a class="btn btn-secondary" th:href="@{/hechos/misHechos}">Mis hechos</a></li>
             <li sec:authorize="hasRole('ADMINISTRADOR')"><a class="btn btn-secondary" th:href="@{/panel_gestion}">Gestionar</a></li>
 
             <li sec:authorize="!isAuthenticated()">
@@ -40,6 +40,15 @@
 </main>
 
 
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/layout/base.js}"></script>
+
+<th:block th:replace="~{::scripts}"></th:block>
+
+</body>
+
 <footer class="main-footer">
     <p>&copy; 2025 MetaMapa. Todos los derechos reservados.</p>
     <div>
@@ -47,9 +56,4 @@
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script th:src="@{/js/layout/base.js}"></script>
-
-<th:block th:replace="~{::scripts}"></th:block>
-</body>
 </html>
