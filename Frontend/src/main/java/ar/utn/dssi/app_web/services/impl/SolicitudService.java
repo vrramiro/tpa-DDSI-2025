@@ -1,8 +1,8 @@
-package ar.utn.dssi.app_web.services;
+package ar.utn.dssi.app_web.services.impl;
 
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
-import ar.utn.dssi.app_web.services.interfaces.ISolicitudService;
+import ar.utn.dssi.app_web.services.Interfaces.ISolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

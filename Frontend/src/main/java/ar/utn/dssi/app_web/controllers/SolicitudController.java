@@ -3,7 +3,7 @@ package ar.utn.dssi.app_web.controllers;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
 import ar.utn.dssi.app_web.error.ValidationException;
-import ar.utn.dssi.app_web.services.SolicitudService;
+import ar.utn.dssi.app_web.services.impl.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
