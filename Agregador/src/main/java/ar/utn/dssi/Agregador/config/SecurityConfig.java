@@ -27,7 +27,8 @@ public class SecurityConfig {
                     auth.requestMatchers(
                             "/hechos",
                             "/hechos/{idHecho}",
-                            "/public/**"
+                            "/public/**",
+                            "/hechos/misHechos"
                     ).permitAll();
 
                     auth.requestMatchers(
