@@ -25,14 +25,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        // Recursos estáticos y login público
                         .requestMatchers(
                                 "/",
                                 "/login",
                                 "/registro",
                                 "/crear_cuenta",
                                 "/hechos/explorador",
+                                "/hechos/explorador/**",
                                 "/colecciones",
+                                "/colecciones/{handle}/hechos",
                                 "/privacidad",
                                 "/estadisticas",
                                 "/css/**",
@@ -40,27 +41,24 @@ public class SecurityConfig {
                                 "/images/**",
                                 "/webjars/**"
                         ).permitAll()
-                        // Lo demás requiere autenticación
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")    // tu template de login
+                        .loginPage("/login")
                         .permitAll()
-                        .defaultSuccessUrl("/", true) // redirigir tras login exitoso
+                        .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout") // redirigir tras logout
+                        .logoutSuccessUrl("/login?logout")
                         .permitAll()
                 )
                 .exceptionHandling(ex -> ex
-                        // Usuario no autenticado → redirigir a login
                         .authenticationEntryPoint((request, response, authException) ->
                                 response.sendRedirect("/login?unauthorized")
                         )
-                        // Usuario autenticado pero sin permisos → redirigir a página de error
                         .accessDeniedHandler((request, response, accessDeniedException) ->
-                                response.sendRedirect("/")  //TODO: AGREGAR PAGINA ERROR
+                                response.sendRedirect("/")
                         )
                 );
 

@@ -1,18 +1,19 @@
-package ar.utn.dssi.app_web.services;
+package ar.utn.dssi.app_web.services.impl;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
-import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
+import ar.utn.dssi.app_web.services.GestionHechosApiService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +21,33 @@ import java.util.Optional;
 public class HechoServices implements IHechoService {
 
   private final GestionHechosApiService gestionHechosApiService;
+
+  private static final List<String> NOMBRES_PROVINCIAS = Arrays.asList(
+          "Buenos Aires",
+          "Catamarca",
+          "Chaco",
+          "Chubut",
+          "Ciudad Autónoma de Buenos Aires",
+          "Córdoba",
+          "Corrientes",
+          "Entre Ríos",
+          "Formosa",
+          "Jujuy",
+          "La Pampa",
+          "La Rioja",
+          "Mendoza",
+          "Misiones",
+          "Neuquén",
+          "Río Negro",
+          "Salta",
+          "San Juan",
+          "San Luis",
+          "Santa Cruz",
+          "Santa Fe",
+          "Santiago del Estero",
+          "Tierra del Fuego, Antártida e Islas del Atlántico Sur",
+          "Tucumán"
+  );
 
   public HechoServices(GestionHechosApiService gestionHechosApiService) {
     this.gestionHechosApiService = gestionHechosApiService;
@@ -120,8 +148,14 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public List<ProvinciaInputDTO> obtenerProvincias() {
-    return gestionHechosApiService.obtenerProvincias();
+  public List<String> obtenerProvincias() {
+    return NOMBRES_PROVINCIAS;
   }
+
+  @Override
+  public List<HechoOutputDTO> obtenerMisHechos() {
+    return gestionHechosApiService.obtenerMisHechos();
+  }
+
 
 }

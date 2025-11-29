@@ -2,6 +2,7 @@
 <head>
     <th:block th:fragment="styles">
         <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </th:block>
 </head>
 
@@ -34,21 +35,32 @@
                     <td th:text="${col.titulo ?: 'Sin título'}">Sin título</td>
                     <td th:text="${col.descripcion ?: '—'}">—</td>
                     <td class="action-buttons">
+
+                        <!-- VER -->
+                        <a class="icon-btn btn-view"
+                           th:href="@{/colecciones/{handle}(handle=${col.handle})}"
+                           title="Ver">
+                            <i class="fa-solid fa-eye"></i>
+                            <span class="sr-only">Ver</span>
+                        </a>
+
                         <!-- EDITAR -->
-                        <a class="btn btn-edit"
-                           th:href="@{/colecciones/{handle}/modificar(handle=${col.handle})}">
-                            Modificar
+                        <a class="icon-btn btn-edit"
+                           th:href="@{/colecciones/{handle}/modificar(handle=${col.handle})}"
+                           title="Editar">
+                            <i class="fa-solid fa-pen"></i>
+                            <span class="sr-only">Editar</span>
                         </a>
 
                         <!-- ELIMINAR -->
                         <button type="button"
-                                class="btn btn-delete btn-sm"
+                                class="icon-btn btn-delete"
                                 th:data-id="${col.handle}"
                                 th:data-titulo="${col.titulo}"
                                 onclick="abrirModalEliminarColeccion(this)"
                                 title="Eliminar">
-                            <i class="fas fa-trash"></i>
-                            <span>Eliminar</span>
+                            <i class="fa-solid fa-trash"></i>
+                            <span class="sr-only">Eliminar</span>
                         </button>
                     </td>
 

@@ -223,25 +223,44 @@ public class HechoController {
     }
   }
 
-  @GetMapping("/mis_hechos")
+  @GetMapping("/misHechos")
   public String listarMisHechos(@RequestParam(defaultValue = "0") int page,
                                 @RequestParam(defaultValue = "9") int size,
                                 @RequestParam(required = false) String filtro,
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
+    List<HechoOutputDTO> todosMisHechos = hechosService.obtenerMisHechos();
 
-    model.addAttribute("hechos", pageResponseDTO.getContent());
+    if (filtro != null && !filtro.isEmpty()) {
+      todosMisHechos = todosMisHechos.stream()
+              .filter(h -> h.getTitulo().toLowerCase().contains(filtro.toLowerCase()))
+              .toList();
+    }
+
+    int totalElements = todosMisHechos.size();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
+
+    int fromIndex = page * size;
+    int toIndex = Math.min(fromIndex + size, totalElements);
+
+    List<HechoOutputDTO> hechosPaginados;
+
+    if (fromIndex >= totalElements) {
+      hechosPaginados = List.of();
+    } else {
+      hechosPaginados = todosMisHechos.subList(fromIndex, toIndex);
+    }
+
+    model.addAttribute("hechos", hechosPaginados);
     model.addAttribute("page", page);
     model.addAttribute("size", size);
     model.addAttribute("sort", sort);
     model.addAttribute("filtro", filtro == null ? "" : filtro);
-    model.addAttribute("totalPages", pageResponseDTO.getTotalPages());
-    model.addAttribute("totalElements", pageResponseDTO.getTotalElements());
+    model.addAttribute("totalPages", totalPages > 0 ? totalPages : 1);
+    model.addAttribute("totalElements", totalElements);
     model.addAttribute("titulo", "Mis Hechos");
-
-    model.addAttribute("baseUrl", "/hechos/mis_hechos");
+    model.addAttribute("baseUrl", "/hechos/misHechos");
 
     return "hechos/misHechos";
   }
@@ -350,6 +369,7 @@ public class HechoController {
 
       return "home/explorador";
     }
+
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/

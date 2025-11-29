@@ -8,18 +8,19 @@
 
 <div class="error-container" th:fragment="contenido">
     <div class="error-content">
-        <h1 class="error-code">403</h1>
-        <h2 class="error-title">Acceso denegado</h2>
+        <h1 class="error-code">500</h1>
+        <h2 class="error-title">Error Interno del Servidor</h2>
         <p class="error-message">
-            Lo sentimos, no tienes permiso para acceder a esta página.
+            Lo sentimos, algo salió mal de nuestro lado.
+            Esto puede deberse a un error en la aplicación o a que un servicio no está disponible.
         </p>
 
         <div class="error-actions">
             <a class="btn btn-primary" th:href="@{ / }">
-                <i class="fas fa-home me-1"></i> Ir al inicio
+                Ir al inicio
             </a>
-            <a class="btn btn-outline-primary" th:href="@{/hechos/explorador}">
-                <i class="fas fa-compass me-1"></i> Explorar mapa
+            <a class="btn btn-outline-primary" href="javascript:history.back()">
+                Volver atrás
             </a>
         </div>
     </div>
