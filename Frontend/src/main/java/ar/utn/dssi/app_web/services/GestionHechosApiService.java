@@ -87,7 +87,6 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      // Clon sin archivos porque me rompen los archivos
       HechoRequest dtoSinArchivos = new HechoRequest();
       dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
       dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
