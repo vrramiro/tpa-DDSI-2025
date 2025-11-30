@@ -53,7 +53,7 @@ public class ColeccionesControllerPUBLIC {
   }
 
   @GetMapping
-  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault Pageable pageable) {
+  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault (page = 0, size = 12) Pageable pageable) {
     Page<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones(pageable);
 
     if (colecciones.isEmpty()) {

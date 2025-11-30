@@ -39,35 +39,35 @@ public class ColeccionController {
 
   @GetMapping
   public String listarColecciones(@RequestParam(defaultValue = "0") Integer page,
+                                  @RequestParam(defaultValue = "12") Integer size, // Recibimos size
                                   Model model) {
     PageResponseDTO<ColeccionResponseDTO> pageColeccion;
 
     try {
-      pageColeccion = coleccionService.listarColecciones(page);
+      // Llamamos al servicio con page y size
+      pageColeccion = coleccionService.listarColecciones(page, size);
 
       if(pageColeccion == null) {
-        log.warn("El servicio devolvió null para colecciones. Inicializando DTO vacío.");
-        pageColeccion = new PageResponseDTO<>(); // El service ya debería prevenir el null, pero esto es un fallback seguro
+        pageColeccion = new PageResponseDTO<>();
       }
 
-      // **Lógica Corregida: Se elimina el bloque if(pageColeccion.getContent().isEmpty()){...}**
-      // Se permite que la lista vacía fluya al modelo para ser manejada en el template.
-
       model.addAttribute("colecciones", pageColeccion.getContent());
+
+      // Pasamos los datos de paginación a la vista
       model.addAttribute("page", pageColeccion.getNumber());
-      model.addAttribute("size", pageColeccion.getSize());
+      model.addAttribute("size", pageColeccion.getSize()); // Asegurate de que el DTO tenga este valor correcto
       model.addAttribute("totalPages", pageColeccion.getTotalPages());
       model.addAttribute("totalElements", pageColeccion.getTotalElements());
       model.addAttribute("isFirst", pageColeccion.isFirst());
       model.addAttribute("isLast", pageColeccion.isLast());
+
       model.addAttribute("titulo", "Colecciones");
-      model.addAttribute("baseUrl", "/colecciones");
+      model.addAttribute("baseUrl", "/colecciones"); // Url base para los botones del paginador
 
       return "colecciones/lista_colecciones";
 
     } catch (Exception ex) {
       log.error("Error al listar colecciones", ex);
-      model.addAttribute("error", "No se pudieron obtener las colecciones. Intente más tarde.");
       return "redirect:/404";
     }
   }
@@ -133,7 +133,7 @@ public class ColeccionController {
 
     model.addAttribute("titulo", "Gestion de Colecciones");
 
-    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones(page);
+    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones(page,size);
 
     model.addAttribute("colecciones", pageColeccionResponseDTO.getContent());
     model.addAttribute("page", page);

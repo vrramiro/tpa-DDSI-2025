@@ -99,12 +99,13 @@ public class GestionColeccionApiService {
         }
     }
 
-    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina) {
+    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina, Integer tamanioPagina) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/public/colecciones")
                             .queryParam("page", numeroPagina)
+                            .queryParam("size", tamanioPagina)
                             .build()
                     )
                     .retrieve()

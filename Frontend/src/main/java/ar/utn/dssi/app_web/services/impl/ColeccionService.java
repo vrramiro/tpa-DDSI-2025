@@ -20,8 +20,8 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page) {
-        return gestionColeccionApiService.obtenerColecciones(page);
+  public PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page, Integer size) {
+        return gestionColeccionApiService.obtenerColecciones(page, size);
   }
 
   @Override
