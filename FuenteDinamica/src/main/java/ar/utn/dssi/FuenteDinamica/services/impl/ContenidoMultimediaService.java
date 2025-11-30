@@ -20,32 +20,39 @@ public class ContenidoMultimediaService implements IContenidoMultimediaService {
   private final AlmacenadorMultimedia almacenadorMultimedia;
 
   @Override
-  public List<ContenidoMultimedia> crear(List<MultipartFile> archivos, Hecho hecho) {
+  public List<ContenidoMultimedia> crear(List<String> urls, Hecho hecho) {
 
-    List<ContenidoMultimedia> multimedia = new ArrayList<>();
+    List<ContenidoMultimedia> multimediaList = new ArrayList<>();
 
-    if (archivos != null && !archivos.isEmpty()) {
-      for (MultipartFile archivo : archivos) {
-        String urlArchivo = almacenadorMultimedia.guardarArchivo(archivo);
-        ContenidoMultimedia cm = MapperContenidoMultimedia.convertirAContenido(urlArchivo, hecho);
-        this.multimediaRepository.save(cm);
-        multimedia.add(cm);
+    if (urls != null && !urls.isEmpty()) {
+      for (String url : urls) {
+        ContenidoMultimedia cm = new ContenidoMultimedia();
+        cm.setUrl(url);     // Guardamos la ruta
+        cm.setHecho(hecho); // Relacionamos con el padre
+
+        this.multimediaRepository.save(cm); // Guardamos en BD
+        multimediaList.add(cm);
       }
     }
-
-    return multimedia;
+    return multimediaList;
   }
 
   //Elimino todos los archivos del hecho y los vuelvo a subir (es la unica forma simple que pense)
   //Por ahi se podria crear un controler para los multimedia que se encarge de la edicion pero no me copa la idea
   @Override
-  public List<ContenidoMultimedia> editar(List<MultipartFile> files, Hecho hecho) {
-    List<ContenidoMultimedia> contenidosActualesDelHecho = multimediaRepository.findByHecho(hecho);
+  public List<ContenidoMultimedia> editar(List<String> nuevasUrls, Hecho hecho) {
 
-    for (ContenidoMultimedia multimedia : contenidosActualesDelHecho) {
-      almacenadorMultimedia.eliminarArchivo(multimedia.getUrl());
+    List<ContenidoMultimedia> multimediaViejos = multimediaRepository.findByHecho(hecho);
+    for (ContenidoMultimedia viejo : multimediaViejos) {
+      almacenadorMultimedia.eliminarArchivo(viejo.getUrl());
     }
 
-    return this.crear(files, hecho);
+    multimediaRepository.deleteAll(multimediaViejos);
+
+    if(hecho.getMultimedia() != null) {
+      hecho.getMultimedia().clear();
+    }
+
+    return this.crear(nuevasUrls, hecho);
   }
 }
