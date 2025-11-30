@@ -45,7 +45,7 @@ public class HechosService implements IHechosService {
     hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
     List<ContenidoMultimedia> contenidoMultimedia = this.contenidoMultimediaService
-        .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
+        .crear(hechoInputDTO.getUrlsContenidoMultimedia(), hechoNormalizado);
 
     hechoNormalizado.setMultimedia(contenidoMultimedia);
     hechoNormalizado.setVisible(true);
@@ -137,7 +137,7 @@ public class HechosService implements IHechosService {
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento().atStartOfDay());
 
     List<ContenidoMultimedia> contenidoMultimedia =
-        this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
+        this.contenidoMultimediaService.editar(hechoNuevo.getUrlsContenidoMultimedia(), hechoExistente);
     hechoExistente.setMultimedia(contenidoMultimedia);
 
     actualizarUbicacion(hechoExistente, hechoNuevo);

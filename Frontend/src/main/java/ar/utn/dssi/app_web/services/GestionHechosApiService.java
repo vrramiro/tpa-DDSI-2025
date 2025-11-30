@@ -87,15 +87,8 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoRequest dtoSinArchivos = new HechoRequest();
-      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
-      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
-      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
-      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
+      webApiCallerService.post(url, hechoRequest, Void.class);
 
-      webApiCallerService.post(url, dtoSinArchivos, Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al crear hecho: {}", e.getMessage(), e);
@@ -204,15 +197,7 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoRequest dtoSinArchivos = new HechoRequest();
-      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
-      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
-      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
-      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
-
-      webApiCallerService.put(url, dtoSinArchivos, Void.class);
+      webApiCallerService.put(url,hechoRequest, Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al editar hecho {}: {}", id, e.getMessage());

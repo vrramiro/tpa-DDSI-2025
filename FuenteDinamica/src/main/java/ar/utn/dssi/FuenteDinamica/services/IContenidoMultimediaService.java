@@ -6,8 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface IContenidoMultimediaService {
-  List<ContenidoMultimedia> crear(List<MultipartFile> files, Hecho hecho);
+  List<ContenidoMultimedia> crear(List<String> files, Hecho hecho);
 
-  List<ContenidoMultimedia> editar(List<MultipartFile> files, Hecho hecho);
+  List<ContenidoMultimedia> editar(List<String> files, Hecho hecho);
 
 }
