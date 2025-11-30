@@ -88,6 +88,7 @@ public class GestionHechosApiService {
 
     try {
       webApiCallerService.post(url, hechoRequest, Void.class);
+
       return true;
     } catch (Exception e) {
       log.error("Error al crear hecho: {}", e.getMessage(), e);

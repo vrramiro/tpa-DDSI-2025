@@ -83,6 +83,7 @@ public class FuenteEstatica implements ITipoFuente {
     hecho.setFechaCarga(input.getFechaCarga());
     hecho.setVisible(true);
 
+    hecho.setAutor(input.getAutor());
     return hecho;
   }
 }
