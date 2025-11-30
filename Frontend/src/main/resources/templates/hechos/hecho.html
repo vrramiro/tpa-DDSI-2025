@@ -25,9 +25,8 @@
                 <h1 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h1>
             </div>
 
-            <img th:if="${!hecho.contenidoMultimedia.isEmpty()}"
-                 class="hecho-imagen"
-                 th:src="${hecho.contenidoMultimedia[0].url}"
+            <img class="hecho-imagen"
+                 th:src="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()} ? ${hecho.contenidoMultimedia[0].url} : @{/static/img/metamapa.jpg}"
                  alt="Imagen del hecho">
 
             <div class="hecho-meta-info">

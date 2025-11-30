@@ -22,7 +22,15 @@
             <div class="card" th:each="hecho : ${hechos}" th:data-id="${hecho.id}" onclick="abrirModalHecho(this)">
 
                 <div class="card-image-wrapper">
-                    <img src="https://placehold.co/600x400?text=Sin+Imagen" alt="Imagen del hecho" loading="lazy">
+                    <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
+                         th:src="@{${hecho.contenidoMultimedia[0].url}}"
+                         alt="Imagen del hecho"
+                         loading="lazy">
+
+                    <img th:if="${hecho.contenidoMultimedia == null or hecho.contenidoMultimedia.isEmpty()}"
+                         th:src="@{/img/metamapa.jpg}"
+                         alt="Imagen por defecto"
+                         loading="lazy">
                     <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
                 </div>
 
