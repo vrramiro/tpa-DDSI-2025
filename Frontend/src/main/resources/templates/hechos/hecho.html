@@ -26,7 +26,7 @@
             </div>
 
             <img class="hecho-imagen"
-                 th:src="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()} ? ${hecho.contenidoMultimedia[0].url} : @{/static/img/metamapa.jpg}"
+                 th:src="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()} ? 'http://localhost:8082' + ${hecho.contenidoMultimedia[0].url} : @{/img/metamapa.jpg}"
                  alt="Imagen del hecho">
 
             <div class="hecho-meta-info">
