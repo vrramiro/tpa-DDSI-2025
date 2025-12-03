@@ -162,12 +162,27 @@ public class HechoController {
     }
 
     HechoOutputDTO hechoOutput = hechoOutputOpt.get();
-    HechoRequest hechoInput = HechoMapper.outputToInput(hechoOutput);
+
+    HechoRequest hechoInput = new HechoRequest();
+    hechoInput.setTitulo(hechoOutput.getTitulo());
+    hechoInput.setDescripcion(hechoOutput.getDescripcion());
+    hechoInput.setFechaAcontecimiento(hechoOutput.getFechaAcontecimiento());
+
+    List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+    categorias.stream()
+            .filter(c -> c.getCategoria().equals(hechoOutput.getCategoria()))
+            .findFirst()
+            .ifPresent(cat -> hechoInput.setIdCategoria(cat.getId()));
+
+    if (hechoOutput.getUbicacion() != null) {
+      hechoInput.setLatitud(hechoOutput.getUbicacion().getLatitud());
+      hechoInput.setLongitud(hechoOutput.getUbicacion().getLongitud());
+    }
 
     model.addAttribute("hecho", hechoInput);
     model.addAttribute("hechoOutput", hechoOutput);
+    model.addAttribute("categorias", categorias);
     model.addAttribute("titulo", "Editar Hecho");
-    model.addAttribute("categorias", categoriaService.obtenerCategorias());
 
     return "hechos/editarHecho";
   }
@@ -178,49 +193,37 @@ public class HechoController {
                             BindingResult bindingResult,
                             Model model) {
     try {
-      boolean exitoso = hechosService.editarHecho(id, hechoRequest);
-      if (exitoso) {
-        model.addAttribute("mensaje", "Hecho editado correctamente");
-        model.addAttribute("tipoMensaje", "success");
-        model.addAttribute("titulo", "Editar Hecho");
-        model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id));
-        model.addAttribute("hecho", hechoRequest);
-        model.addAttribute("categorias", categoriaService.obtenerCategorias());
-        return "/hechos/editarHecho";
-      } else {
-        model.addAttribute("mensaje", "Error al editar el hecho, inténtelo nuevamente.");
-        model.addAttribute("tipoMensaje", "error");
-        model.addAttribute("titulo", "Editar Hecho");
-        model.addAttribute("hecho", hechoRequest);
-        model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-        model.addAttribute("categorias", categoriaService.obtenerCategorias());
-        return "/hechos/editarHecho";
+      if (hechoRequest.getTitulo().isBlank())
+        bindingResult.rejectValue("titulo", "error", "El título es obligatorio");
+
+      if (bindingResult.hasErrors()) {
+        return recargarFormularioError(id, hechoRequest, model);
       }
-    } catch (UbicacionInvalida e) {
-      bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
-      bindingResult.rejectValue("longitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
-    } catch (ValidationException e) {
-      convertirValidationExceptionABindingResult(e, bindingResult);
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
+
+      boolean exitoso = hechosService.crearSolicitudEdicion(id, hechoRequest);
+
+      if (exitoso) {
+        model.addAttribute("mensaje", "Tu solicitud de edición ha sido enviada correctamente. Un administrador la revisará.");
+        model.addAttribute("tipoMensaje", "success");
+      } else {
+        model.addAttribute("mensaje", "Error al enviar la solicitud. Intenta nuevamente.");
+        model.addAttribute("tipoMensaje", "error");
+      }
+
+      return recargarFormularioError(id, hechoRequest, model);
+
     } catch (Exception e) {
-      log.error("Error al editar hecho", e);
-      model.addAttribute("mensaje", "Error inesperado al editar el hecho: " + e.getMessage());
+      model.addAttribute("mensaje", "Error inesperado: " + e.getMessage());
       model.addAttribute("tipoMensaje", "error");
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
+      return recargarFormularioError(id, hechoRequest, model);
     }
+  }
+
+  private String recargarFormularioError(Long id, HechoRequest request, Model model) {
+    model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
+    model.addAttribute("categorias", categoriaService.obtenerCategorias());
+    model.addAttribute("titulo", "Editar Hecho");
+    return "hechos/editarHecho";
   }
 
   @GetMapping("/misHechos")

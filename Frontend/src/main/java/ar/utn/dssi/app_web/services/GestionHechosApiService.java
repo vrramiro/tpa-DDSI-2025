@@ -257,4 +257,20 @@ public class GestionHechosApiService {
       return Collections.emptyList();
     }
   }
+
+  public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/public/solicitudes-edicion/{idHecho}")
+            .buildAndExpand(idHecho)
+            .toUriString();
+
+    try {
+      webApiCallerService.post(url, nuevosDatos, Void.class);
+      return true;
+    } catch (Exception e) {
+      log.error("Error al crear solicitud de edición para hecho {}: {}", idHecho, e.getMessage());
+      throw new RuntimeException("Error en el servicio de solicitudes de edición", e);
+    }
+  }
 }

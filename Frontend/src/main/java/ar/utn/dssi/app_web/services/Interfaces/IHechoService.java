@@ -18,8 +18,7 @@ public interface IHechoService {
     Boolean crearHecho(HechoRequest hecho);
     Optional<HechoOutputDTO> obtenerHechoPorId(Long id);
     void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado);
-    Boolean editarHecho(Long idHecho, HechoRequest hechoRequest);
-    PageResponseDTO<HechoOutputDTO> listarHechos(Integer page);
+    Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos);    PageResponseDTO<HechoOutputDTO> listarHechos(Integer page);
     Boolean crearHechoEstatico(MultipartFile archivo);
     List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia);
     List<String> obtenerProvincias();

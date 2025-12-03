@@ -16,7 +16,7 @@ public class SolicitudService implements ISolicitudService {
     private final GestionSolicitudesApiService gestionSolicitudesApiService;
 
     public List<SolicitudDTO> obtenerTodasLasSolicitudes() {
-        return gestionSolicitudesApiService.obtenerSolicitudes();
+        return gestionSolicitudesApiService.obtenerSolicitudesEliminacion();
     }
 
     public List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado) {

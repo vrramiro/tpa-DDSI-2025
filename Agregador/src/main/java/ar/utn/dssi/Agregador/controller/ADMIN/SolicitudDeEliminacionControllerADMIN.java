@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/solicitudes")
+@RequestMapping("/admin/solicitudes-eliminacion")
 @RequiredArgsConstructor
 public class SolicitudDeEliminacionControllerADMIN {
   private final SolicitudDeEliminacionService solicitudesService;

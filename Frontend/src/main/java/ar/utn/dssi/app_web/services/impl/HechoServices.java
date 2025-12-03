@@ -83,10 +83,11 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
-    validarDatosBasicos(hechoRequest);
-    validarUbicacion(hechoRequest);
-    return gestionHechosApiService.editarHecho(id, hechoRequest);
+  public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
+    if (nuevosDatos.getIdCategoria() == null) {
+      throw new ValidationException("La categoría es obligatoria");
+    }
+    return gestionHechosApiService.crearSolicitudEdicion(idHecho, nuevosDatos);
   }
 
   private void validarDatosBasicos(HechoRequest hechoRequest) {
