@@ -6,6 +6,7 @@ import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
@@ -19,8 +20,10 @@ import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GestionHechosApiService {
@@ -205,16 +208,49 @@ public class GestionHechosApiService {
     }
   }
 
-  //TODO VER SI HACE FALTA CUANDO ESTE LISTO EL BACK
-  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page) {
+  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page, Integer size, String estado) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos")
-            .queryParam("page", page)
             .toUriString();
 
-    return (PageResponseDTO<HechoOutputDTO>)
-            webApiCallerService.get(url, PageResponseDTO.class);
+    List<HechoOutputDTO> todosLosHechos;
+    try {
+      todosLosHechos = webApiCallerService.getListPublic(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener lista de hechos para paginar", e);
+      todosLosHechos = Collections.emptyList();
+    }
+
+    if (estado != null && !estado.trim().isEmpty()) {
+      todosLosHechos = todosLosHechos.stream()
+              .filter(h -> h.getEstado() != null && h.getEstado().name().equalsIgnoreCase(estado))
+              .collect(Collectors.toList());
+    }
+
+    int totalElements = todosLosHechos.size();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
+    if (totalPages == 0) totalPages = 1;
+
+    if (page < 0) page = 0;
+    if (page >= totalPages) page = totalPages - 1;
+
+    int fromIndex = page * size;
+    int toIndex = Math.min(fromIndex + size, totalElements);
+
+    List<HechoOutputDTO> paginaContent;
+    if (totalElements == 0) {
+      paginaContent = Collections.emptyList();
+    } else {
+      paginaContent = todosLosHechos.subList(fromIndex, toIndex);
+    }
+
+    PageResponseDTO<HechoOutputDTO> response = new PageResponseDTO<>();
+    response.setContent(paginaContent);
+    response.setTotalPages(totalPages);
+    response.setTotalElements((long) totalElements); // Asumiendo que es Long en el DTO
+
+    return response;
   }
 
   private void validarUbicacion(UbicacionOutputDTO ubicacion) {
@@ -273,4 +309,35 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error en el servicio de solicitudes de edición", e);
     }
   }
+
+  public List<SolicitudEdicionDTO> obtenerSolicitudesEdicionPendientes() {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/admin/solicitudes-edicion/pendientes")
+            .toUriString();
+
+    try {
+      SolicitudEdicionDTO[] response = webApiCallerService.get(url, SolicitudEdicionDTO[].class);
+      return response != null ? Arrays.asList(response) : Collections.emptyList();
+    } catch (Exception e) {
+      log.error("Error al obtener solicitudes de edición pendientes", e);
+      return Collections.emptyList();
+    }
+  }
+
+  public void procesarSolicitudEdicion(Long idSolicitud, String accion) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/admin/solicitudes-edicion/{id}/procesar")
+            .queryParam("accion", accion)
+            .buildAndExpand(idSolicitud)
+            .toUriString();
+
+    try {
+      webApiCallerService.post(url, null, Void.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Error al procesar la solicitud de edición", e);
+    }
+  }
+
 }

@@ -58,5 +58,7 @@ public class GestionSolicitudesApiService {
         String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion" + idSolicitud + "/estado";
         webApiCallerService.put(url, nuevoEstado, Void.class);
     }
+
+
 }
 

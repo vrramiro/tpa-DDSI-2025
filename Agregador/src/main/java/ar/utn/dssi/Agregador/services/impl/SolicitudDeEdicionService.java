@@ -1,7 +1,9 @@
 package ar.utn.dssi.Agregador.services.impl;
 
 import ar.utn.dssi.Agregador.dto.input.SolicitudEdicionInputDTO;
+import ar.utn.dssi.Agregador.dto.output.SolicitudEdicionOutputDTO;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.mappers.MapperDeSolicitudesEdicion;
 import ar.utn.dssi.Agregador.models.entities.Categoria;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -93,7 +96,10 @@ public class SolicitudDeEdicionService {
         hechosRepository.save(hecho);
     }
 
-    public List<SolicitudDeEdicion> obtenerPendientes() {
-        return solicitudRepository.findByEstado(EstadoDeSolicitud.PENDIENTE);
+    public List<SolicitudEdicionOutputDTO> obtenerPendientesDTO() {
+        return solicitudRepository.findByEstado(EstadoDeSolicitud.PENDIENTE)
+                .stream()
+                .map(MapperDeSolicitudesEdicion::toDTO)
+                .collect(Collectors.toList());
     }
 }

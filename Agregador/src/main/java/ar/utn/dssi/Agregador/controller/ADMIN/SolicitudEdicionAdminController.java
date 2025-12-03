@@ -1,6 +1,6 @@
 package ar.utn.dssi.Agregador.controller.ADMIN;
 
-import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEdicion;
+import ar.utn.dssi.Agregador.dto.output.SolicitudEdicionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEdicionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +14,8 @@ public class SolicitudEdicionAdminController {
     private final SolicitudDeEdicionService servicio;
 
     @GetMapping("/pendientes")
-    public ResponseEntity<List<SolicitudDeEdicion>> listarPendientes() {
-        return ResponseEntity.ok(servicio.obtenerPendientes());
+    public ResponseEntity<List<SolicitudEdicionOutputDTO>> listarPendientes() {
+        return ResponseEntity.ok(servicio.obtenerPendientesDTO());
     }
 
     @PostMapping("/{idSolicitud}/procesar")

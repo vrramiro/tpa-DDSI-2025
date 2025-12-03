@@ -5,6 +5,7 @@ import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
@@ -295,7 +296,10 @@ public class HechoController {
             .map(Enum::name)
             .orElse(null);
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado);
+
+    List<SolicitudEdicionDTO> solicitudesEdicion = hechosService.obtenerSolicitudesEdicionPendientes();
+    model.addAttribute("solicitudesEdicion", solicitudesEdicion);
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -310,6 +314,45 @@ public class HechoController {
     return "hechos/gestionHechosAdmin";
   }
 
+  @GetMapping("/gestion_hecho/revisar/{id}")
+  @PreAuthorize("hasRole('ADMINISTRADOR')")
+  public String revisarEdicion(@PathVariable Long id, Model model) {
+    Optional<SolicitudEdicionDTO> solicitudOpt = hechosService.obtenerSolicitudEdicionPorId(id);
+
+    if (solicitudOpt.isEmpty()) {
+      return "redirect:/hechos/gestion_hecho?error=SolicitudNoEncontrada";
+    }
+
+    SolicitudEdicionDTO solicitud = solicitudOpt.get();
+    model.addAttribute("solicitud", solicitud);
+    model.addAttribute("hechoOriginal", solicitud.getHechoOriginal());
+
+    if (solicitud.getNuevoIdCategoria() != null) {
+      categoriaService.obtenerCategorias().stream()
+              .filter(c -> c.getId().equals(solicitud.getNuevoIdCategoria()))
+              .findFirst()
+              .ifPresent(cat -> model.addAttribute("nombreNuevaCategoria", cat.getCategoria()));
+    }
+
+    return "hechos/revisarEdicion";
+  }
+
+  @PostMapping("/gestion_hecho/procesar")
+  @PreAuthorize("hasRole('ADMINISTRADOR')")
+  public String procesarEdicion(@RequestParam Long idSolicitud,
+                                @RequestParam String accion,
+                                RedirectAttributes redirectAttributes) {
+    try {
+      hechosService.procesarSolicitudEdicion(idSolicitud, accion);
+      redirectAttributes.addFlashAttribute("mensaje", "Solicitud procesada correctamente (" + accion + ")");
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+    } catch (Exception e) {
+      log.error("Error procesando solicitud", e);
+      redirectAttributes.addFlashAttribute("mensaje", "Error al procesar solicitud");
+      redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+    }
+    return "redirect:/hechos/gestion_hecho";
+  }
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
     if (e.hasFieldErrors()) {
       e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
