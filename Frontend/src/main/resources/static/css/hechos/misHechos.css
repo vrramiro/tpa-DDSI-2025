@@ -16,10 +16,11 @@ h1 {
 /* ================= GRID SYSTEM ================= */
 .grid {
     display: grid;
-    /* Crea columnas automáticas pero con un ancho mínimo de 300px */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    width: 90%;
+    max-width: 1300px;
+    margin: auto;
 }
 
 /* ================= TARJETA (CARD) ================= */
@@ -138,50 +139,43 @@ h1 {
     transform: translateX(3px);
 }
 
-/* ================= PAGINACIÓN ================= */
 .pagination-wrapper {
     display: flex;
     justify-content: center;
     margin-top: 2rem;
 }
 
-/* =========================================
-   MODAL (VENTANA EMERGENTE) - CORREGIDO
-   ========================================= */
+
 .modal-overlay {
-    position: fixed; /* Fundamental: Fijo respecto a la ventana del navegador */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100vw; /* Ancho total de la ventana */
-    height: 100vh; /* Alto total de la ventana */
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro semitransparente */
-    z-index: 9999; /* Asegura que quede por encima de TODO */
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 9999;
 
-    /* ESTADO INICIAL: OCULTO */
     display: none;
 
-    /* Para centrar el contenido cuando se muestre */
     justify-content: center;
     align-items: center;
     padding: 1rem;
     box-sizing: border-box;
 }
 
-/* Clase que JS añadirá para mostrar el modal */
 .modal-overlay.active {
-    display: flex !important; /* Se muestra usando flexbox para centrar */
+    display: flex !important;
 }
 
-/* El contenedor blanco del contenido */
 .modal-content {
     background: #ffffff;
     padding: 2rem;
     border-radius: 16px;
     width: 100%;
-    max-width: 700px; /* Ancho máximo para que se vea bien en PC */
-    max-height: 90vh; /* Altura máxima (90% de la pantalla) */
-    overflow-y: auto; /* Scroll si el contenido es muy largo */
-    position: relative; /* Necesario para posicionar el botón "X" */
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
     box-shadow: 0 15px 30px rgba(0,0,0,0.2);
 }
 
@@ -204,17 +198,15 @@ h1 {
     color: var(--dark-color);
 }
 
-/* Imagen dentro del modal */
 #modal-image {
     width: 100%;
-    height: 350px; /* Altura fija para consistencia */
+    height: 350px;
     object-fit: cover;
     border-radius: 12px;
     margin-bottom: 1.5rem;
-    background-color: #f0f0f0; /* Color de fondo si falla la carga */
+    background-color: #f0f0f0;
 }
 
-/* Header del modal */
 .modal-header {
     margin-bottom: 1rem;
 }
@@ -231,7 +223,6 @@ h1 {
     font-weight: 500;
 }
 
-/* Cuerpo y descripción */
 .modal-body {
     position: relative;
     margin-bottom: 2rem;
@@ -242,7 +233,6 @@ h1 {
     color: var(--dark-color);
 }
 
-/* Footer y botones de acción */
 .modal-footer {
     display: flex;
     justify-content: space-between;
@@ -277,7 +267,6 @@ h1 {
     }
 }
 
-/* ================= EMPTY STATE ================= */
 .empty-state-container {
     text-align: center;
     padding: 4rem 1rem;
@@ -287,7 +276,6 @@ h1 {
     max-width: 600px;
 }
 
-/* ================= PAGINACIÓN (Estilo Unificado) ================= */
 
 .pagination-wrapper {
     display: flex;

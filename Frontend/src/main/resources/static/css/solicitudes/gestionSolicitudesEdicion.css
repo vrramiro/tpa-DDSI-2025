@@ -1,6 +1,4 @@
-/* Hereda variables de base.css automÃ¡ticamente */
 
-/* Contenedor principal idéntico a gestionSolicitudes.css */
 .content-container {
     width: 90%;
     max-width: var(--container-max);
@@ -11,7 +9,6 @@
     box-shadow: var(--box-shadow);
 }
 
-/* Encabezados */
 .solicitud-header {
     display: flex;
     justify-content: space-between;
