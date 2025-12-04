@@ -76,23 +76,16 @@ public class ColeccionController {
                                         @RequestParam(defaultValue = "0") Integer page, // Recibir página
                                         Model model) {
 
-    // 1. Obtener la colección (Cabecera)
     Optional<ColeccionResponseDTO> coleccionOpt = coleccionService.obtenerColeccion(handle);
     if (coleccionOpt.isEmpty()) {
       return "redirect:/404";
     }
-
-    // 2. Obtener los hechos paginados
-    // Nota: Asegurate de que tu IHechoService.listarHechosDeColeccion acepte el parámetro 'page'
-    // Si tu servicio actual no recibe 'page', deberás actualizarlo también.
     PageResponseDTO<HechoOutputDTO> pageHechos = hechosService.listarHechosDeColeccion(handle, page);
 
-    // 3. Cargar datos en el modelo
     model.addAttribute("coleccion", coleccionOpt.get());
     model.addAttribute("hechos", pageHechos.getContent());
     model.addAttribute("titulo", "Colección: " + coleccionOpt.get().getTitulo());
 
-    // 4. Cargar variables de paginación para la vista
     model.addAttribute("page", pageHechos.getNumber());
     model.addAttribute("size", pageHechos.getSize());
     model.addAttribute("totalPages", pageHechos.getTotalPages());
@@ -100,7 +93,6 @@ public class ColeccionController {
     model.addAttribute("isFirst", pageHechos.isFirst());
     model.addAttribute("isLast", pageHechos.isLast());
 
-    // Url base para los links de los números de página
     model.addAttribute("baseUrl", "/colecciones/" + handle + "/hechos");
 
     return "hechos/listaHechosColeccion";
@@ -147,17 +139,22 @@ public class ColeccionController {
                                  @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                  Model model) {
 
-    model.addAttribute("titulo", "Gestion de Colecciones");
+    model.addAttribute("titulo", "Gestión de Colecciones");
 
-    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones(page,size);
+    PageResponseDTO<ColeccionResponseDTO> pageColeccionResponseDTO = coleccionService.listarColecciones(page, size);
 
     model.addAttribute("colecciones", pageColeccionResponseDTO.getContent());
-    model.addAttribute("page", page);
-    model.addAttribute("size", size);
-    model.addAttribute("sort", sort);
-    model.addAttribute("filtro", filtro == null ? "" : filtro);
+
+    model.addAttribute("page", pageColeccionResponseDTO.getNumber()); // Usar el número real que devolvió el backend
+    model.addAttribute("size", pageColeccionResponseDTO.getSize());   // Usar el size real
     model.addAttribute("totalPages", pageColeccionResponseDTO.getTotalPages());
     model.addAttribute("totalElements", pageColeccionResponseDTO.getTotalElements());
+
+    model.addAttribute("sort", sort);
+    model.addAttribute("filtro", filtro == null ? "" : filtro);
+
+    model.addAttribute("isFirst", pageColeccionResponseDTO.isFirst());
+    model.addAttribute("isLast", pageColeccionResponseDTO.isLast());
 
     model.addAttribute("baseUrl", "/colecciones/gestion_colecciones");
 

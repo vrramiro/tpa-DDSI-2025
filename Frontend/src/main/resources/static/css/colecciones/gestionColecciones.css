@@ -1,12 +1,8 @@
 /* =========================================
-   OVERRIDES Y ESPECÍFICOS (gestionColecciones)
+   ESTILOS DE GESTIÓN DE COLECCIONES
    ========================================= */
-/* Override útil si .btn-primary es <a> */
-.btn-primary { text-decoration: none; }
-/* En base.css .btn-secondary tiene texto oscuro; acá lo fijamos blanco */
-.btn-secondary { color: #fff; } /* base: color: var(--dark-color) */
-/* Contenedor y títulos de la vista */
-main { flex: 1; padding-bottom: 2rem; }
+
+/* Contenedor Principal */
 .content-container {
     width: 90%;
     max-width: var(--container-max);
@@ -16,158 +12,128 @@ main { flex: 1; padding-bottom: 2rem; }
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
 }
-h1, h2 { color: var(--dark-color); margin: 0; }
-/* ===== Cabecera: título a la izquierda y botón a la derecha ===== */
-.collection-header{
-    display:flex;
-    align-items:center;
-    gap: var(--space-2);
-    margin-bottom: var(--space-3);
-}
-.collection-header h2{ margin:0; }
-.collection-header .btn{ margin-left:auto; } /* empuja el botón a la derecha */
-/* En móviles, que se apilen prolijo */
-@media (max-width: 640px){
-    .collection-header{ flex-direction:column; align-items:flex-start; }
-    .collection-header .btn{ margin-left:0; align-self:stretch; }
-}
-/* ===== Filtros (si se usan) ===== */
-.filter-controls {
-    display: flex;
+
+/* ===== BOTONES DENTRO DEL CONTENIDO (NO HEADER) ===== */
+/* Esto asegura que el header mantenga su estilo original */
+
+.content-container .btn {
+    text-decoration: none !important;
+    display: inline-flex;
     align-items: center;
-    gap: var(--space-2);
-    margin-bottom: 0;
-}
-.filter-controls label { font-weight: 600; margin-right: var(--space-2); }
-.filter-controls select {
-    padding: var(--space-1);
-    border-radius: var(--border-radius);
-    border: 2px solid var(--border-color);
-    background-color: var(--background-color);
-    font-size: 0.9rem;
-}
-/* ===== Tabla responsive ===== */
-.table-container {
-    overflow-x: auto;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-}
-table { width: 100%; border-collapse: collapse; text-align: left; }
-th, td { padding: var(--space-2); border: 1px solid var(--border-color); }
-thead { background-color: #f0f0f0; }
-thead th { font-weight: 700; color: var(--dark-color); }
-tbody tr:hover { background-color: var(--light-color); }
-/* ===== Columna de acciones: misma línea y a la derecha ===== */
-.action-buttons{
-    display:flex;
-    flex-direction:row;           /* misma línea */
-    justify-content:flex-end;     /* a la derecha del todo */
-    align-items:center;
-    gap: var(--space-1);
-}
-.action-buttons > a.btn,
-.action-buttons > form{ display:inline-flex; }
-.action-buttons > form{ margin:0; }
-.action-buttons > a.btn,
-.action-buttons > form .btn{
-    flex: 0 0 auto;
-    padding: var(--space-1) .9rem;
-    font-size: .9rem;
-}
-/* ===== Botones concretos ===== */
-.btn-edit{
-    text-decoration:none;
-    background-color: var(--accent-color);
-    color: var(--dark-color);
-}
-/* Botón eliminar (relleno rojo) */
-.btn-delete{
-    background-color: var(--danger-color);
-    color:#fff;
-    border:1px solid var(--danger-color);
-}
-.btn-delete:hover{ filter: brightness(.95); }
-.btn-delete:focus-visible{
-    outline: 3px solid color-mix(in srgb, var(--danger-color) 35%, transparent);
-    outline-offset: 2px;
-}
-/* Si en algún lugar queda .btn-outline-danger, armonizamos */
-.btn-outline-danger{
-    border: 1px solid var(--danger-color);
-    color: var(--danger-color);
-    background: transparent;
-}
-.btn-outline-danger:hover{
-    background: color-mix(in srgb, var(--danger-color) 10%, #fff);
-}
-/* Botón con ícono + texto (Eliminar) */
-.btn-icon-text{ display:inline-flex; align-items:center; gap:.45rem; }
-.btn-delete.btn-sm{ padding:.45rem .75rem; }
-/* ===== Paginación ===== */
-.pagination {
-    display: flex;
     justify-content: center;
-    align-items: center;
-    gap: var(--space-1);
-    margin-top: var(--space-4);
-    flex-wrap: wrap;
-}
-.page-link, .page-link-ellipsis {
-    color: var(--secondary-color);
-    text-decoration: none;
-    padding: 0.6rem 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: var(--border-radius);
-    transition: background-color .3s, color .3s;
-    font-weight: 600;
-}
-.page-link:hover {
-    background-color: var(--secondary-color);
-    color: #fff;
-    border-color: var(--secondary-color);
-}
-.page-link.active {
-    background-color: var(--primary-color);
-    color: #fff;
-    border-color: var(--primary-color);
-    cursor: default;
-}
-.page-link-ellipsis { border: none; }
-/* ===== Botón de volver al final ===== */
-.footer-actions { margin-top: var(--space-3); }
-/* ===== Modal genérico ===== */
-.modal[hidden]{ display:none; }
-.modal{
-    position:fixed; inset:0; background:rgba(0,0,0,.45);
-    display:flex; align-items:center; justify-content:center; z-index:3000;
-}
-.modal-content{
-    background:#fff; padding:1rem 1.25rem; border-radius:10px; width:min(420px,90%);
-    box-shadow:0 10px 30px rgba(0,0,0,.2);
-}
-.modal-actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:1rem; }
-/* Botón cancelar del modal (sin transparencia) */
-#modal-eliminar-cancelar{
-    background: #e8f4f1;       /* sólido */
-    color: #0f766e;
-    border: 1px solid #c6ebe4;
-    opacity: 1;                /* clave: sin transparencia */
     cursor: pointer;
-}
-#modal-eliminar-cancelar:hover{
-    background: #dff0ec;
-}
-#modal-eliminar-cancelar:focus-visible{
-    outline: 3px solid rgba(15,118,110,.35);
-    outline-offset: 2px;
+    border: none;
+    transition: background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* ===== Botones cuadrados con íconos centrados ===== */
+/* Botón "Volver" (Secundario) - SÓLIDO */
+.content-container .btn-secondary {
+    background-color: var(--secondary-color) !important; /* Verde Teal Fuerte */
+    color: #fff !important;                              /* Texto Blanco */
+    border: 1px solid var(--secondary-color) !important;
+}
+
+.content-container .btn-secondary:hover {
+    background-color: #00695c !important; /* Más oscuro al pasar el mouse */
+    border-color: #00695c !important;
+}
+
+/* Botón "Nueva Colección" (Primario) */
+.content-container .btn-primary {
+    background-color: var(--primary-color) !important;
+    color: #fff !important;
+}
+
+.content-container .btn-primary:hover {
+    background-color: #17a085 !important;
+}
+
+/* ===== CABECERA DE SECCIÓN ===== */
+.collection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.collection-header h2 {
+    margin: 0;
+    color: var(--dark-color);
+    font-weight: 700;
+}
+
+.collection-header .btn {
+    gap: 0.5rem;
+    font-weight: 600;
+    padding: 0.6rem 1.2rem;
+}
+
+/* ===== TABLA ===== */
+.table-container {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+}
+
+.tabla-colecciones {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    min-width: 600px;
+}
+
+.tabla-colecciones th,
+.tabla-colecciones td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.tabla-colecciones th {
+    background-color: #f8f9fa;
+    color: var(--dark-color);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.tabla-colecciones tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.tabla-colecciones tbody tr:hover {
+    background-color: #f1f8f6;
+}
+
+/* Celda de descripción */
+.desc-cell {
+    max-width: 350px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #666;
+}
+
+.text-end {
+    text-align: right !important;
+}
+
+/* ===== BOTONES DE ACCIÓN (Iconos) ===== */
+.action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
 .icon-btn {
     width: 36px;
     height: 36px;
-    border-radius: 6px;        /* esquinas redondeadas suaves */
+    border-radius: 6px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -175,44 +141,97 @@ tbody tr:hover { background-color: var(--light-color); }
     cursor: pointer;
     font-size: 1rem;
     color: #fff;
-    transition: transform 0.1s ease, background-color 0.15s ease;
+    transition: transform 0.2s, opacity 0.2s;
+    text-decoration: none !important;
 }
 
-/* Espaciado entre los tres */
-.action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-/* Colores específicos */
-.btn-view {
-    background-color: #1e88e5; /* azul */
-}
-.btn-view:hover {
-    background-color: #1565c0;
-}
-
-.btn-edit {
-    background-color: #ffca28; /* amarillo */
-    color: #5d4037;
-}
-.btn-edit:hover {
-    background-color: #ffb300;
-}
-
-.btn-delete {
-    background-color: #e53935; /* rojo */
-}
-.btn-delete:hover {
-    background-color: #c62828;
-}
-
-/* Animaciones */
 .icon-btn:hover {
-    transform: scale(1.08);
+    transform: translateY(-2px);
+    opacity: 0.9;
 }
-.icon-btn:active {
-    transform: scale(0.95);
+
+.btn-view { background-color: #17a2b8; }
+.btn-edit { background-color: #ffc107; color: #333 !important; }
+.btn-delete { background-color: #dc3545; }
+
+/* ===== PAGINACIÓN ===== */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
 }
+
+.pagination {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.page-link {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    text-decoration: none !important;
+    font-weight: 500;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+.page-link:hover {
+    background-color: var(--light-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.page-link.active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.page-link.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    background-color: #f8f9fa;
+}
+
+/* ===== FOOTER (Botón Volver) ===== */
+.footer-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+/* ===== MODAL ===== */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    text-align: center;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-content h3 {

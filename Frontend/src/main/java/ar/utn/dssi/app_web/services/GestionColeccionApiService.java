@@ -97,37 +97,28 @@ public class GestionColeccionApiService {
         }
     }
 
-    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer numeroPagina, Integer tamanioPagina) {
+    public PageResponseDTO<ColeccionResponseDTO> obtenerColecciones(Integer page, Integer size) {
         try {
             return webClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/public/colecciones")
-                            .queryParam("page", numeroPagina)
-                            .queryParam("size", tamanioPagina)
+                            .queryParam("page", page)
+                            .queryParam("size", size)
                             .build()
                     )
                     .retrieve()
-                    // 1. Manejar 204 No Content (Agregador devuelve 204 si no hay colecciones)
                     .onStatus(status -> status.value() == 204,
                             clientResponse -> clientResponse.bodyToMono(Void.class).thenReturn(null))
-
                     .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
-
-                    // 2. Manejar errores HTTP (4xx, 5xx)
                     .onErrorResume(WebClientResponseException.class, e -> {
                         log.error("Error {} al llamar /public/colecciones: {}", e.getStatusCode(), e.getMessage());
-                        return Mono.just(new PageResponseDTO<ColeccionResponseDTO>()); // Devuelve un DTO vacío, no nulo.
+                        return Mono.just(new PageResponseDTO<ColeccionResponseDTO>());
                     })
-
-                    // 3. Manejar el caso del 204 (el Mono es null), reemplazándolo con un DTO vacío.
                     .defaultIfEmpty(new PageResponseDTO<ColeccionResponseDTO>())
-
                     .block();
         } catch (Exception e) {
-            // Este catch se activa si hay un error de conexión de red (no HTTP) o si la excepción
-            // se propagó por otro motivo.
-            log.error("Error de red/conexión al obtener colecciones públicas: {}", e.getMessage());
-            return new PageResponseDTO<ColeccionResponseDTO>(); // Siempre retorna un objeto instanciado.
+            log.error("Error de conexión al obtener colecciones: {}", e.getMessage());
+            return new PageResponseDTO<ColeccionResponseDTO>();
         }
     }
 }
