@@ -1,4 +1,4 @@
-<html th:replace="~{layout/base::html}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base::html}">
 <head>
     <th:block th:fragment="styles">
         <link th:href="@{/css/colecciones/crearColecciones.css}" rel="stylesheet">
@@ -11,23 +11,20 @@
         <h2>Crear colección</h2>
 
         <form id="coleccionForm" class="coleccion-form"
-              th:action="@{/colecciones/crear}" th:object="${coleccion}" method="post" novalidate>
+              th:action="@{/colecciones/crear}" th:object="${coleccion}" method="post">
 
-            <!-- Título -->
             <div class="form-group">
                 <label for="titulo">Título</label>
-                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Texto" required>
+                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Ej: Inundaciones 2024" required>
             </div>
 
-            <!-- Descripción -->
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Texto">
+                <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Breve descripción...">
             </div>
 
-            <!-- Consenso -->
             <div class="form-group">
-                <label for="consenso">Consenso</label>
+                <label for="consenso">Tipo de Consenso</label>
                 <select id="consenso" th:field="*{consenso.tipo}" class="form-control">
                     <option value="">Seleccione...</option>
                     <option th:each="tipo : ${tiposDeConsenso}"
@@ -39,74 +36,66 @@
 
             <div class="form-group">
                 <label for="categoria">Categoría</label>
-                <select id="categoria" th:field="*{categoria.nombreCategoria}" class="form-control">
+                <select id="categoria" th:field="*{categoria.categoria}" class="form-control">
                     <option value="">Seleccione...</option>
                     <option th:each="cat : ${categoriasDisponibles}"
-                            th:value="${cat.nombreCategoria}"
-                            th:text="${#strings.capitalize(cat.nombreCategoria.toLowerCase())}">
+                            th:value="${cat.categoria}"
+                            th:text="${cat.categoria}">
                     </option>
                 </select>
             </div>
 
-            <!-- Criterios de pertenencia (Bindeo directo a la lista criterios[]) -->
             <fieldset class="criterios">
-                <legend>Criterios de pertenencia</legend>
-
+                <legend>Criterios de filtrado</legend>
                 <div class="form-grid">
-                    <!-- FECHA_DESDE -->
+
                     <div class="form-group">
-                        <label for="fechaDesde">Fecha acontecimiento desde</label>
-                        <input type="date" id="fechaDesde"
-                               th:name="${'criterios[0].valor'}">
-                        <input type="hidden" th:name="${'criterios[0].tipo'}" value="FECHA_DESDE">
+                        <label for="fechaDesde">Fecha desde</label>
+                        <input type="date" id="fechaDesde" th:field="*{criterios[0].valor}">
+                        <input type="hidden" th:field="*{criterios[0].tipo}">
                     </div>
 
-                    <!-- FECHA_HASTA -->
                     <div class="form-group">
-                        <label for="fechaHasta">Fecha acontecimiento hasta</label>
-                        <input type="date" id="fechaHasta"
-                               th:name="${'criterios[1].valor'}">
-                        <input type="hidden" th:name="${'criterios[1].tipo'}" value="FECHA_HASTA">
+                        <label for="fechaHasta">Fecha hasta</label>
+                        <input type="date" id="fechaHasta" th:field="*{criterios[1].valor}">
+                        <input type="hidden" th:field="*{criterios[1].tipo}">
                     </div>
                 </div>
 
-                <!-- PROVINCIA -->
                 <div class="form-group">
                     <label for="provincia">Provincia</label>
-                    <select id="provincia" class="form-control"
-                            th:name="${'criterios[2].valor'}">
-                        <option value=""></option>
-                        <option>Buenos Aires</option>
-                        <option>Catamarca</option>
-                        <option>Chaco</option>
-                        <option>Chubut</option>
-                        <option>Córdoba</option>
-                        <option>Corrientes</option>
-                        <option>Entre Ríos</option>
-                        <option>Formosa</option>
-                        <option>Jujuy</option>
-                        <option>La Pampa</option>
-                        <option>La Rioja</option>
-                        <option>Mendoza</option>
-                        <option>Misiones</option>
-                        <option>Neuquén</option>
-                        <option>Río Negro</option>
-                        <option>Salta</option>
-                        <option>San Juan</option>
-                        <option>San Luis</option>
-                        <option>Santa Cruz</option>
-                        <option>Santa Fe</option>
-                        <option>Santiago del Estero</option>
-                        <option>Tierra del Fuego</option>
-                        <option>Tucumán</option>
+                    <select id="provincia" class="form-control" th:field="*{criterios[2].valor}">
+                        <option value="">Todas</option>
+                        <option value="Buenos Aires">Buenos Aires</option>
+                        <option value="Catamarca">Catamarca</option>
+                        <option value="Chaco">Chaco</option>
+                        <option value="Chubut">Chubut</option>
+                        <option value="Córdoba">Córdoba</option>
+                        <option value="Corrientes">Corrientes</option>
+                        <option value="Entre Ríos">Entre Ríos</option>
+                        <option value="Formosa">Formosa</option>
+                        <option value="Jujuy">Jujuy</option>
+                        <option value="La Pampa">La Pampa</option>
+                        <option value="La Rioja">La Rioja</option>
+                        <option value="Mendoza">Mendoza</option>
+                        <option value="Misiones">Misiones</option>
+                        <option value="Neuquén">Neuquén</option>
+                        <option value="Río Negro">Río Negro</option>
+                        <option value="Salta">Salta</option>
+                        <option value="San Juan">San Juan</option>
+                        <option value="San Luis">San Luis</option>
+                        <option value="Santa Cruz">Santa Cruz</option>
+                        <option value="Santa Fe">Santa Fe</option>
+                        <option value="Santiago del Estero">Santiago del Estero</option>
+                        <option value="Tierra del Fuego">Tierra del Fuego</option>
+                        <option value="Tucumán">Tucumán</option>
                     </select>
-                    <input type="hidden" th:name="${'criterios[2].tipo'}" value="PROVINCIA">
+                    <input type="hidden" th:field="*{criterios[2].tipo}">
                 </div>
             </fieldset>
 
-            <!-- Fuentes -->
             <div class="form-group">
-                <label>Fuentes</label>
+                <label>Fuentes de datos</label>
                 <div class="custom-multiselect" th:each="fuenteEnum : ${tiposDeFuentes}">
                     <label>
                         <input type="checkbox" th:field="*{fuentes}" th:value="${fuenteEnum}">
@@ -117,7 +106,7 @@
 
             <div class="form-actions">
                 <a th:href="@{/colecciones}" class="btn btn-secondary">Volver</a>
-                <button type="submit" class="btn btn-primary">Crear</button>
+                <button type="submit" class="btn btn-primary">Crear Colección</button>
             </div>
         </form>
     </main>

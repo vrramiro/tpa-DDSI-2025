@@ -235,3 +235,59 @@
 }
 
 .modal-content h3 {
+    margin-top: 0;
+    color: var(--dark-color);
+}
+
+.modal-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+/* Estilo específico para botones del modal */
+.modal-actions .btn {
+    min-width: 100px;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none !important;
+    cursor: pointer;
+    font-weight: 600;
+    border: none;
+}
+
+.modal-actions .btn-secondary {
+    background-color: #6c757d; /* Gris para cancelar */
+    color: #fff;
+}
+.modal-actions .btn-secondary:hover { background-color: #5a6268; }
+
+.modal-actions .btn-delete {
+    background-color: #dc3545;
+    color: #fff;
+}
+.modal-actions .btn-delete:hover { background-color: #c82333; }
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .collection-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .collection-header .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .desc-cell {
+        display: none;
+    }
+}

@@ -1,5 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
+import ar.utn.dssi.app_web.dto.Criterio.CriterioDTO;
+import ar.utn.dssi.app_web.dto.Fuente.TipoFuente;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
@@ -16,6 +18,11 @@ import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class GestionColeccionApiService {
@@ -71,13 +78,51 @@ public class GestionColeccionApiService {
                 .fromUriString(agregadorServiceUrl)
                 .path("/admin/colecciones")
                 .toUriString();
+
         try {
-            return webApiCallerService.post(url, coleccion, ColeccionResponseDTO.class);
-        } catch (WebClientException e) {
-            throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("titulo", coleccion.getTitulo());
+            payload.put("descripcion", coleccion.getDescripcion());
+
+            if (coleccion.getConsenso() != null && coleccion.getConsenso().getTipo() != null) {
+                payload.put("consenso", coleccion.getConsenso().getTipo().name());
+            }
+
+            List<Map<String, String>> listaCriteriosParaEnviar = new ArrayList<>();
+
+            if (coleccion.getCriterios() != null) {
+                for (CriterioDTO criterio : coleccion.getCriterios()) {
+                    if (criterio.getValor() != null && !criterio.getValor().isBlank()) {
+                        listaCriteriosParaEnviar.add(Map.of(
+                                "tipo", criterio.getTipo().name(),
+                                "valor", criterio.getValor()
+                        ));
+                    }
+                }
+            }
+
+            if (coleccion.getCategoria() != null && coleccion.getCategoria().getCategoria() != null) {
+                listaCriteriosParaEnviar.add(Map.of(
+                        "tipo", "CATEGORIA",
+                        "valor", coleccion.getCategoria().getCategoria()
+                ));
+            }
+
+            payload.put("criteriosDePertenecias", listaCriteriosParaEnviar);
+
+            List<Map<String, String>> listaFuentes = new ArrayList<>();
+            if (coleccion.getFuentes() != null) {
+                for (TipoFuente tf : coleccion.getFuentes()) {
+                    listaFuentes.add(Map.of("tipoFuente", tf.name()));
+                }
+            }
+            payload.put("fuentes", listaFuentes);
+
+            return webApiCallerService.post(url, payload, ColeccionResponseDTO.class);
+
         } catch (Exception e) {
-            log.error("Error inesperado al obtener ubicación", e);
-            throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
+            log.error("Error creando colección", e);
+            throw new ServicioNormalizadorException("Error inesperado al crear colección", e);
         }
     }
 

@@ -1,7 +1,10 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.dto.Consenso.ConsensoDTO;
 import ar.utn.dssi.app_web.dto.Consenso.TipoConsenso;
+import ar.utn.dssi.app_web.dto.Criterio.CriterioDTO;
+import ar.utn.dssi.app_web.dto.Criterio.TipoCriterio;
 import ar.utn.dssi.app_web.dto.Fuente.TipoFuente;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -102,9 +106,13 @@ public class ColeccionController {
   public String mostrarFormularioCrear(Model model) {
     ColeccionRequestDTO coleccion = new ColeccionRequestDTO();
     coleccion.setConsenso(new ConsensoDTO());
+    coleccion.setCategoria(new CategoriaDTO());
     coleccion.setFuentes(new ArrayList<>());
 
-    model.addAttribute("categorias", categoriaService.obtenerCategorias());
+    List<CriterioDTO> listaCriterios = inicializarCriterios(coleccion);
+    coleccion.setCriterios(listaCriterios);
+
+    model.addAttribute("categoriasDisponibles", categoriaService.obtenerCategorias());
     model.addAttribute("coleccion", coleccion);
     model.addAttribute("tiposDeConsenso", TipoConsenso.values());
     model.addAttribute("tiposDeFuentes", TipoFuente.values());
@@ -188,6 +196,24 @@ public class ColeccionController {
     redirectAttributes.addFlashAttribute("mensaje", "Colección Actualizada");
     redirectAttributes.addFlashAttribute("tipoMensaje", "success");
     return "redirect:/colecciones/gestion_colecciones";
+  }
+
+  private List<CriterioDTO> inicializarCriterios(ColeccionRequestDTO coleccion) {
+    List<CriterioDTO> listaCriterios = new ArrayList<>();
+
+    CriterioDTO critDesde = new CriterioDTO();
+    critDesde.setTipo(TipoCriterio.FECHA_DESDE);
+    listaCriterios.add(critDesde);
+
+    CriterioDTO critHasta = new CriterioDTO();
+    critHasta.setTipo(TipoCriterio.FECHA_HASTA);
+    listaCriterios.add(critHasta);
+
+    CriterioDTO critProv = new CriterioDTO();
+    critProv.setTipo(TipoCriterio.PROVINCIA);
+    listaCriterios.add(critProv);
+
+    return listaCriterios;
   }
 
 }
