@@ -136,8 +136,8 @@ public class HechoServices implements IHechoService {
   }
 
   @Override //TODO
-  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle) {
-    return null;
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page) {
+    return gestionHechosApiService.listarHechosDeColeccion(handle,page);
   }
 
   @Override

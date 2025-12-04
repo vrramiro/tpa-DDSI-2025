@@ -1,17 +1,14 @@
 <!-- templates/_fragments/coleccion-card.html -->
 <div th:fragment="card(coleccion)">
+
     <div class="card" th:if="${coleccion != null}">
+
         <div class="card-header-grid">
             <span class="card-title"
                   th:text="${coleccion.titulo != null ? coleccion.titulo : 'Sin título'}">
                 Sin título
             </span>
-
-                <span class="card-category"
-                      th:text="${coleccion.categoria != null ? coleccion.categoria : 'Sin categoría'}">
-                Sin categoría
-            </span>
-            </div>
+        </div>
 
             <div class="card-details">
                 <p class="card-description"
@@ -19,16 +16,15 @@
                     Sin descripción
                 </p>
             </div>
-            <div class="card-footer">
-                <a class="btn btn-outline"
-                   th:href="@{/colecciones/{handle}/hechos(handle=${coleccion.handle})}"
-                   th:classappend="${coleccion.handle == null} ? ' disabled'">
-                    Ver Colección
-                </a>
-            </div>
+        <div class="card-footer">
+            <a class="btn btn-outline"
+               th:href="@{/colecciones/{handle}/hechos(handle=${coleccion.handle})}"
+               th:classappend="${coleccion.handle == null} ? ' disabled'">
+                Ver Colección
+            </a>
+        </div>
         </div>
 
-    <!-- fallback visual si querés mostrar algo cuando es null -->
     <div class="card empty-card" th:if="${coleccion == null}">
             <div class="card-header"><span class="card-title">Sin datos</span></div>
             <div class="card-details"><p class="card-description muted">Item inválido.</p></div>

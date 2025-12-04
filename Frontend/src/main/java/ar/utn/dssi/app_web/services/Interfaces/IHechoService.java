@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IHechoService {
-    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle);
+    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page);
     Boolean crearHecho(HechoRequest hecho);
     Optional<HechoOutputDTO> obtenerHechoPorId(Long id);
     void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado);

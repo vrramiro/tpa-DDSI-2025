@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IColeccionService {
     PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page, Integer size);
-    Optional<ColeccionResponseDTO> obtenerColeccion(Long id);
+    Optional<ColeccionResponseDTO> obtenerColeccion(String handle);
     ColeccionResponseDTO crearColeccion(ColeccionRequestDTO coleccion);
     void eliminarColeccion(Long id);
     ColeccionResponseDTO actualizarColeccion(Long id);

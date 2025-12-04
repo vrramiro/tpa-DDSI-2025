@@ -8,7 +8,6 @@ import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 
-import ar.utn.dssi.app_web.error.NotFoundException; // Se mantiene por si se usa en otros métodos
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
@@ -73,18 +72,35 @@ public class ColeccionController {
   }
 
   @GetMapping("/{handle}/hechos")
-  public String listarHechosDeColeccion(@PathVariable("handle") String handle, Model model) {
+  public String listarHechosDeColeccion(@PathVariable("handle") String handle,
+                                        @RequestParam(defaultValue = "0") Integer page, // Recibir página
+                                        Model model) {
 
-    PageResponseDTO<HechoOutputDTO> pageHechos = hechosService.listarHechosDeColeccion(handle);
+    // 1. Obtener la colección (Cabecera)
+    Optional<ColeccionResponseDTO> coleccionOpt = coleccionService.obtenerColeccion(handle);
+    if (coleccionOpt.isEmpty()) {
+      return "redirect:/404";
+    }
 
-    model.addAttribute("pageHechos", pageHechos);
+    // 2. Obtener los hechos paginados
+    // Nota: Asegurate de que tu IHechoService.listarHechosDeColeccion acepte el parámetro 'page'
+    // Si tu servicio actual no recibe 'page', deberás actualizarlo también.
+    PageResponseDTO<HechoOutputDTO> pageHechos = hechosService.listarHechosDeColeccion(handle, page);
+
+    // 3. Cargar datos en el modelo
+    model.addAttribute("coleccion", coleccionOpt.get());
     model.addAttribute("hechos", pageHechos.getContent());
+    model.addAttribute("titulo", "Colección: " + coleccionOpt.get().getTitulo());
+
+    // 4. Cargar variables de paginación para la vista
     model.addAttribute("page", pageHechos.getNumber());
     model.addAttribute("size", pageHechos.getSize());
     model.addAttribute("totalPages", pageHechos.getTotalPages());
     model.addAttribute("totalElements", pageHechos.getTotalElements());
-    model.addAttribute("titulo", "Hechos de la Colección");
+    model.addAttribute("isFirst", pageHechos.isFirst());
+    model.addAttribute("isLast", pageHechos.isLast());
 
+    // Url base para los links de los números de página
     model.addAttribute("baseUrl", "/colecciones/" + handle + "/hechos");
 
     return "hechos/listaHechosColeccion";
@@ -156,9 +172,9 @@ public class ColeccionController {
     return "redirect:/colecciones/gestion_colecciones";
   }
 
-  @GetMapping("{id}/modificar")
-  public String mostrarFormularioModificar(@PathVariable Long id, Model model) {
-    Optional<ColeccionResponseDTO> coleccion = coleccionService.obtenerColeccion(id);
+  @GetMapping("{handle}/modificar")
+  public String mostrarFormularioModificar(@PathVariable String handle, Model model) {
+    Optional<ColeccionResponseDTO> coleccion = coleccionService.obtenerColeccion(handle);
 
     model.addAttribute("tiposDeConsenso", TipoConsenso.values());
     model.addAttribute("tiposDeFuentes", TipoFuente.values());

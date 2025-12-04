@@ -25,14 +25,13 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public Optional<ColeccionResponseDTO> obtenerColeccion(Long id) {
-      try{
-        ColeccionResponseDTO coleccion = gestionColeccionApiService.obtenerColeccion(id);
-        return Optional.of(coleccion);
-      }
-      catch (NotFoundException e) {
-        return Optional.empty();
-      }
+  public Optional<ColeccionResponseDTO> obtenerColeccion(String handle) {
+    try {
+      ColeccionResponseDTO coleccion = gestionColeccionApiService.obtenerColeccion(handle);
+      return Optional.ofNullable(coleccion);
+    } catch (NotFoundException e) {
+      return Optional.empty();
+    }
   }
 
   @Override
@@ -43,7 +42,8 @@ public class ColeccionService implements IColeccionService {
 
   @Override
   public void eliminarColeccion(Long id) {
-    gestionColeccionApiService.obtenerColeccion(id);
+    String handle = "";
+    gestionColeccionApiService.obtenerColeccion(handle);
     gestionColeccionApiService.eliminarColeccion(id);
   }
 

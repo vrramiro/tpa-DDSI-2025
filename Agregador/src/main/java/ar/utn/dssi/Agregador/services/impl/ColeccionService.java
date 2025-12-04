@@ -15,6 +15,7 @@ import ar.utn.dssi.Agregador.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -117,19 +118,42 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad) {
-    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
+  public Page<HechoOutputDTO> obtenerHechosDeColeccion(
+          String modoNavegacion,
+          String handle,
+          LocalDate fechaReporteDesde,
+          LocalDate fechaReporteHasta,
+          LocalDate fechaAcontecimientoDesde,
+          LocalDate fechaAcontecimientoHasta,
+          String provincia,
+          String ciudad,
+          Pageable pageable // <-- Parámetro recibido
+  ) {
+    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
-    if (!coleccion.getActualizada())
-      throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navergación.");
+    if (!Boolean.TRUE.equals(coleccion.getActualizada()))
+      throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navegación.");
 
     IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
 
-    return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
-        .stream()
-        .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
-        .map(MapperDeHechos::hechoToOutputDTO)
-        .toList();
+    Page<Hecho> hechosPage = coleccionRepository.filtrarHechosDeColeccion(
+            handle, fechaReporteDesde, fechaReporteHasta,
+            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
+            ciudad, provincia, pageable
+    );
+
+
+    return hechosPage.map(MapperDeHechos::hechoToOutputDTO);
+  }
+
+
+  @Override
+  public ColeccionOutputDTO obtenerColeccion(String handle) {
+    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
+
+    return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
   }
 
   private void validarDatosBasicos(ColeccionInputDTO input) {

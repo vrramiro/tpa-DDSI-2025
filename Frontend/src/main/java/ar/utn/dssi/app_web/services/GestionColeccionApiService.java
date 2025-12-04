@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.services;
 import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.ColeccionRequestDTO;
+import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
 import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
@@ -35,20 +36,17 @@ public class GestionColeccionApiService {
                 .build();
     }
 
-    public ColeccionResponseDTO obtenerColeccion(long id) {
-
+    public ColeccionResponseDTO obtenerColeccion(String handle) {
         String url = UriComponentsBuilder
                 .fromUriString(agregadorServiceUrl)
-                .path("/admin/colecciones")
-                .queryParam("id", id)
+                .path("/public/colecciones/" + handle)
                 .toUriString();
+
         try {
             return webApiCallerService.getPublic(url, ColeccionResponseDTO.class);
-        } catch (WebClientException e) {
-            throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
         } catch (Exception e) {
-            log.error("Error inesperado al obtener ubicación", e);
-            throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
+            log.error("Error al obtener la colección con handle {}: {}", handle, e.getMessage());
+            throw new NotFoundException("Colección", handle);
         }
     }
 
