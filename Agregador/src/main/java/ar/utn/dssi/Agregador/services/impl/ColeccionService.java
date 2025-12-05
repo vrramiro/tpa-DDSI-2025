@@ -228,10 +228,9 @@ public class ColeccionService implements IColeccionService {
 
   private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
     List<String> tiposDeFuentes = input.getFuentes().stream()
-        .map(f -> f.getTipoFuente().toString())
-        .collect(Collectors.toList());
+            .map(f -> f.getTipoFuente().toString())
+            .collect(Collectors.toList());
 
-    //tiene que ser string xq para persistir se usa un converter que pasa el ITipoFuente a string
     return fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentes);
   }
 
