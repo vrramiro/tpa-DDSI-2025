@@ -53,6 +53,8 @@ public class ColeccionService implements IColeccionService {
   @Transactional
   public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
 
+    filtrarCriteriosVacios(input);
+
     validarDatosBasicos(input);
     validarCriterios(input);
     validarDuplicadoPorTitulo(input.getTitulo());
@@ -214,16 +216,26 @@ public class ColeccionService implements IColeccionService {
   }
 
   private void validarCriterios(ColeccionInputDTO input) {
-    Map<TipoCriterio, String> criterios = input.getCriteriosDePertenecias().stream()
-        .collect(Collectors.toMap(CriterioDePertenenciaInputDTO::getTipo, CriterioDePertenenciaInputDTO::getValor));
+    Map<TipoCriterio, String> criterios = new java.util.HashMap<>();
 
-    if (criterios.size() != input.getCriteriosDePertenecias().size())
-      throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo.");
+    for (CriterioDePertenenciaInputDTO c : input.getCriteriosDePertenecias()) {
+      if (c.getTipo() == null || c.getValor() == null || c.getValor().trim().isEmpty()) {
+        continue;
+      }
 
-    LocalDate fechaDesde = criterios.containsKey(TipoCriterio.FECHA_DESDE) ? MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE)) : null;
+      if (criterios.containsKey(c.getTipo())) {
+        throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo (" + c.getTipo() + ").");
+      }
 
-    if (fechaDesde != null && fechaDesde.isAfter(LocalDate.now()))
-      throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+      criterios.put(c.getTipo(), c.getValor());
+    }
+
+    if (criterios.containsKey(TipoCriterio.FECHA_DESDE)) {
+      LocalDate fechaDesde = MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE));
+      if (fechaDesde.isAfter(LocalDate.now())) {
+        throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+      }
+    }
   }
 
   private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
@@ -240,6 +252,16 @@ public class ColeccionService implements IColeccionService {
     } catch (Exception e) {
       log.error("Error al guardar la coleccion: {}", e.getMessage());
       throw e;
+    }
+  }
+
+  private void filtrarCriteriosVacios(ColeccionInputDTO input) {
+    if (input.getCriteriosDePertenecias() != null) {
+      input.setCriteriosDePertenecias(
+              input.getCriteriosDePertenecias().stream()
+                      .filter(c -> c.getValor() != null && !c.getValor().trim().isEmpty())
+                      .collect(Collectors.toList())
+      );
     }
   }
 }

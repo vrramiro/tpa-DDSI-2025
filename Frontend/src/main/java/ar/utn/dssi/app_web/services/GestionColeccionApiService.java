@@ -94,7 +94,7 @@ public class GestionColeccionApiService {
                 for (CriterioDTO criterio : coleccion.getCriterios()) {
                     if (criterio.getValor() != null && !criterio.getValor().isBlank()) {
                         listaCriteriosParaEnviar.add(Map.of(
-                                "tipo", criterio.getTipo().name(),
+                                "tipo_criterio", criterio.getTipo().name(),
                                 "valor", criterio.getValor()
                         ));
                     }
@@ -103,7 +103,7 @@ public class GestionColeccionApiService {
 
             if (coleccion.getCategoria() != null && coleccion.getCategoria().getCategoria() != null) {
                 listaCriteriosParaEnviar.add(Map.of(
-                        "tipo", "CATEGORIA",
+                        "tipo_criterio", "CATEGORIA",
                         "valor", coleccion.getCategoria().getCategoria()
                 ));
             }
