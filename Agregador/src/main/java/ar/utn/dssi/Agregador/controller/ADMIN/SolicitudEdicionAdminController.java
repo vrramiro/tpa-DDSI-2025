@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.controller.ADMIN;
 
+import ar.utn.dssi.Agregador.dto.input.SolicitudEdicionInputDTO;
 import ar.utn.dssi.Agregador.dto.output.SolicitudEdicionOutputDTO;
 import ar.utn.dssi.Agregador.services.impl.SolicitudDeEdicionService;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,12 @@ public class SolicitudEdicionAdminController {
     }
 
     @PostMapping("/{idSolicitud}/procesar")
-    public ResponseEntity<Void> procesar(@PathVariable Long idSolicitud, @RequestParam String accion) {
-        servicio.procesarSolicitud(idSolicitud, accion);
+    public ResponseEntity<Void> procesar(
+            @PathVariable Long idSolicitud,
+            @RequestParam String accion,
+            @RequestBody(required = false) SolicitudEdicionInputDTO modificaciones) { // Nuevo
+
+        servicio.procesarSolicitud(idSolicitud, accion, modificaciones);
         return ResponseEntity.ok().build();
     }
 }

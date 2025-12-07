@@ -13,6 +13,8 @@ import ar.utn.dssi.Agregador.models.entities.solicitud.SolicitudDeEdicion;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.models.repositories.ISolicitudDeEdicionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,11 +49,13 @@ public class SolicitudDeEdicionService {
         solicitud.setEstado(EstadoDeSolicitud.PENDIENTE);
         solicitud.setFechaCreacion(LocalDateTime.now());
 
+        solicitud.setAutor(obtenerUsuarioActual());
+
         return solicitudRepository.save(solicitud);
     }
 
     @Transactional
-    public void procesarSolicitud(Long idSolicitud, String accion) {
+    public void procesarSolicitud(Long idSolicitud, String accion, SolicitudEdicionInputDTO modificaciones) {
         SolicitudDeEdicion solicitud = solicitudRepository.findById(idSolicitud)
                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
 
@@ -60,6 +64,19 @@ public class SolicitudDeEdicionService {
         }
 
         if ("ACEPTAR".equalsIgnoreCase(accion)) {
+            if (modificaciones != null) {
+                if (modificaciones.getTitulo() != null && !modificaciones.getTitulo().isBlank()) {
+                    solicitud.setNuevoTitulo(modificaciones.getTitulo());
+                }
+                if (modificaciones.getDescripcion() != null && !modificaciones.getDescripcion().isBlank()) {
+                    solicitud.setNuevaDescripcion(modificaciones.getDescripcion());
+                }
+                if (modificaciones.getIdCategoria() != null) {
+                    solicitud.setNuevoIdCategoria(modificaciones.getIdCategoria());
+                }
+                solicitudRepository.save(solicitud);
+            }
+
             aplicarCambios(solicitud);
             solicitud.setEstado(EstadoDeSolicitud.ACEPTADA);
         } else {
@@ -67,23 +84,21 @@ public class SolicitudDeEdicionService {
         }
 
         solicitud.setFechaEvaluacion(LocalDateTime.now());
+        solicitud.setGestionadoPor(obtenerUsuarioActual());
         solicitudRepository.save(solicitud);
     }
 
     private void aplicarCambios(SolicitudDeEdicion solicitud) {
         Hecho hecho = solicitud.getHechoOriginal();
 
-        // 1. Título
         if (solicitud.getNuevoTitulo() != null && !solicitud.getNuevoTitulo().isBlank()) {
             hecho.setTitulo(solicitud.getNuevoTitulo());
         }
 
-        // 2. Descripción
         if (solicitud.getNuevaDescripcion() != null && !solicitud.getNuevaDescripcion().isBlank()) {
             hecho.setDescripcion(solicitud.getNuevaDescripcion());
         }
 
-        // 3. Categoría (Usando el Normalizador)
         Long nuevoIdCat = solicitud.getNuevoIdCategoria();
         if (nuevoIdCat != null && !nuevoIdCat.equals(hecho.getCategoria().getId())) {
 
@@ -101,5 +116,15 @@ public class SolicitudDeEdicionService {
                 .stream()
                 .map(MapperDeSolicitudesEdicion::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    private String obtenerUsuarioActual() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null
+                && authentication.isAuthenticated()
+                && !authentication.getPrincipal().equals("anonymousUser")) {
+            return authentication.getName();
+        }
+        return null;
     }
 }

@@ -30,4 +30,10 @@ public class SolicitudDeEdicion {
 
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaEvaluacion;
+
+    @Column(name = "autor")
+    private String autor;
+
+    @Column(name = "gestionado_por")
+    private String gestionadoPor;
 }
