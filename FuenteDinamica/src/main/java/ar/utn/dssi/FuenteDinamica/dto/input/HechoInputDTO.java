@@ -19,4 +19,6 @@ public class HechoInputDTO {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate fechaAcontecimiento;
   private List<String> urlsContenidoMultimedia;
+
+  private Boolean anonimo;
 }
