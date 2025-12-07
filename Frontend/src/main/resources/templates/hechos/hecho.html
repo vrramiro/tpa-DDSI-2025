@@ -1,100 +1,142 @@
-<html th:replace="~{layout/base::html}">
-
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/base :: html}">
 <head>
-    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
         <link th:href="@{/css/hechos/hecho.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     </th:block>
 </head>
 
+<body>
 <div th:fragment="contenido">
 
-    <main class="hecho-container">
-        <div class="hecho-card">
-            <div class="hecho-meta">
+    <main class="container-detalle">
 
-                <!-- TODO FALTA AGREGAR: and hecho.autor.username == #authentication.name}"-->
-                <a th:if="${hecho.estado.name() != 'RECHAZADO'}"
-                   th:href="@{/hechos/{id}/editar(id=${hecho.id})}"
-                   class="btn btn-editar">Editar</a>
+        <div class="hecho-cover">
 
-                <span class="hecho-fecha"
-                      th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}"></span>
-            </div>
+            <img th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
+                 th:src="${'http://localhost:8082' + hecho.contenidoMultimedia[0].url}"
+                 alt="Portada del hecho">
+
+            <img th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}"
+                 th:src="@{/img/metamapa.jpg}"
+                 alt="Imagen por defecto">
+        </div>
+
+        <div class="hecho-content">
+
             <div class="hecho-header">
-                <h1 class="hecho-titulo" th:text="${hecho.titulo}">Título del hecho</h1>
-            </div>
+                <div class="hecho-badges">
+                    <span class="badge badge-category" th:text="${hecho.categoria}">Categoría</span>
 
-            <img class="hecho-imagen"
-                 th:src="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()} ? 'http://localhost:8082' + ${hecho.contenidoMultimedia[0].url} : @{/img/metamapa.jpg}"
-                 alt="Imagen del hecho">
-
-            <div class="hecho-meta-info">
-                <p class="hecho-autor"><strong>Autor:</strong> Juan Pérez
-                <!--<span th:text="${hecho.autor.nombre}"></span>-->
-                </p>
-                <div sec:authorize="hasRole('ADMINISTRADOR')">
-                    <p class="hecho-gestionado">
-                        <strong>Gestionado por:</strong>
-                        <span th:text="${hecho.gestionadoPor != null ? hecho.gestionadoPor : 'No asignado'}">
-                            Admin X
-                        </span>
-                    </p>
-                    <p class="hecho-fecha-carga">
-                        <strong>Fecha de carga:</strong>
-                        <span th:text="${#temporals.format(hecho.fechaCarga, 'dd/MM/yyyy HH:mm')}">
-                            01/08/2025 15:00
-                        </span>
-                    </p>
-                    <p th:if="${hecho.fechaActualizacion != null}" class="hecho-fecha-actualizacion">
-                        <strong>Última actualización:</strong>
-                        <span th:text="${#temporals.format(hecho.fechaActualizacion, 'dd/MM/yyyy HH:mm')}">
-                            03/08/2025 10:30
-                        </span>
-                    </p>
+                    <span th:if="${hecho.estado != null}"
+                          th:class="'badge badge-status ' + ${hecho.estado}"
+                          th:text="${hecho.estado}">ESTADO</span>
                 </div>
 
-                <span class="hecho-categoria" th:text="${hecho.categoria}">Categoría</span>
+                <h1 class="hecho-title" th:text="${hecho.titulo}">Título del Hecho</h1>
+
+                <div class="hecho-meta">
+                    <span><i class="fa-regular fa-calendar"></i>
+                        <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">Fecha</span>
+                    </span>
+                    <span><i class="fa-solid fa-location-dot"></i>
+                        <span th:text="${hecho.ubicacion.ciudad + ', ' + hecho.ubicacion.provincia}">Ubicación</span>
+                    </span>
+                    <span><i class="fa-regular fa-user"></i>
+                        <span th:text="${hecho.autor ?: 'Anónimo'}">Autor</span>
+                    </span>
+                </div>
             </div>
 
-            <p class="hecho-descripcion" th:text="${hecho.descripcion}"></p>
+            <div class="hecho-description">
+                <p th:text="${hecho.descripcion}">Descripción del hecho...</p>
+            </div>
 
-            <p class="hecho-estado" sec:authorize="hasRole('ADMINISTRADOR')">
-                <strong>Estado:</strong>
-                <span th:class="'badge badge-' + ${hecho.estado.name()}"
-                      th:text="${hecho.estado}">PENDIENTE</span>
-            </p>
-
-            <div class="hecho-footer">
-                <div class="hecho-botones">
-                    <a href="#" onclick="history.back()" class="btn btn-volver">Volver</a>
-
-                    <a th:href="@{/solicitudes//nueva(hechoId=${hecho.id})}" class="btn btn-danger">Solicitud de eliminación</a>
-
-                    <div sec:authorize="hasRole('ADMINISTRADOR')"
-                         th:if="${hecho.estado.name() == 'PENDIENTE'}">
-
-                        <form th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}"
-                              method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-danger">Rechazar</button>
-                        </form>
-
-                        <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}"
-                              method="post" style="display: inline;">
-                            <button type="submit" class="btn btn-primary">Aceptar</button>
-                        </form>
+            <div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
+                <h3><i class="fa-solid fa-photo-film"></i> Multimedia</h3>
+                <div class="gallery-grid">
+                    <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
+                        <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
+                            <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
+                        </a>
                     </div>
-
-                    <a th:href="@{/hechos/explorador(idHecho=${hecho.id})}" class="btn btn-primary">Ver en mapa</a>
                 </div>
+            </div>
+
+            <div class="map-section">
+                <h3><i class="fa-solid fa-map-location-dot"></i> Ubicación del hecho</h3>
+                <div id="map-detail"></div>
+            </div>
+
+        </div>
+
+        <div class="hecho-actions">
+            <a href="javascript:history.back()" class="btn btn-outline">
+                <i class="fa-solid fa-arrow-left"></i> Volver
+            </a>
+
+            <div class="action-group">
+                <a th:href="@{/solicitudes/nueva(hechoId=${hecho.id})}" class="btn btn-danger">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
+                </a>
+
+                <a th:if="${hecho.estado?.name() != 'RECHAZADO'}"
+                   th:href="@{/hechos/{id}/editar(id=${hecho.id})}"
+                   class="btn btn-primary">
+                    <i class="fa-solid fa-pen"></i> Editar
+                </a>
+            </div>
+
+            <div class="action-group" sec:authorize="hasRole('ADMINISTRADOR')"
+                 th:if="${hecho.estado?.name() == 'PENDIENTE'}">
+
+                <form th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Rechazar este hecho?')">Rechazar</button>
+                </form>
+
+                <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Aceptar y publicar este hecho?')">Aceptar</button>
+                </form>
             </div>
         </div>
     </main>
 
-
-    <th:block th:fragment="scripts">
-        <script th:src="@{/js/hechos/gestionHecho.js}"></script>
-    </th:block>
-
 </div>
+
+<th:block th:fragment="scripts">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function() {
+            // Obtenemos coordenadas desde Thymeleaf
+            const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
+            const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
+            const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
+
+            if (lat != null && lng != null) {
+                // Inicializar mapa
+                const map = L.map('map-detail').setView([lat, lng], 14);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+
+                // Marcador
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
+                    .openPopup();
+            } else {
+                document.getElementById('map-detail').innerHTML =
+                    '<p style="text-align:center; padding:2rem; color:#666;">Ubicación no disponible.</p>';
+            }
+        });
+        /*]]>*/
+    </script>
+</th:block>
+
+</body>
 </html>
