@@ -33,7 +33,7 @@ public class MapperDeHechos {
         })
         .toList()
     );
-
+    dto.setAutor(hecho.getAutor());
     return dto;
   }
 }

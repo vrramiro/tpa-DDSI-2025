@@ -28,6 +28,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/hechos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/hechos/**").permitAll()
                         .anyRequest().permitAll()
@@ -37,3 +38,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+

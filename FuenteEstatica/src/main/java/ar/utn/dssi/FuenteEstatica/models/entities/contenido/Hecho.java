@@ -42,4 +42,7 @@ public class Hecho {
   @CreatedDate
   @Column(name = "fecha_carga", nullable = false)
   private LocalDateTime fechaCarga;
+
+  @Column(name = "autor")
+  private String autor;
 }

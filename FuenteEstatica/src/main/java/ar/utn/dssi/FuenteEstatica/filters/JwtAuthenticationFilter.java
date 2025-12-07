@@ -22,7 +22,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final Key key;
 
     public JwtAuthenticationFilter(String secretString) {
-        // Usamos Base64 para coincidir con el servicio de Usuarios
         byte[] keyBytes = Decoders.BASE64.decode(secretString);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -45,8 +44,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = claims.getSubject();
                 String rol = claims.get("rol", String.class);
 
+                System.out.println(">>> [FILTER] Token Válido. Usuario: " + username + ", Rol: " + rol);
+
                 if (username != null) {
-                    String rolSpring = (rol != null) ? "ROLE_" + rol : "ROLE_CONTRIBUYENTE";
+                    String rolSpring = (rol != null) ? "ROLE_" + rol : "ROLE_ADMINISTRADOR";
 
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             username,
@@ -56,9 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
-                SecurityContextHolder.clearContext();
+                System.err.println(">>> [FILTER ERROR] Falló la validación del token: " + e.getMessage());
+                e.printStackTrace();
             }
         }
+
         filterChain.doFilter(request, response);
     }
 

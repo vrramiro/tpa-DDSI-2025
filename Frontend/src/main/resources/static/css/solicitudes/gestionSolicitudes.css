@@ -1,12 +1,9 @@
-/* ===== ESTILOS ESPECÍFICOS DE GESTIÓN ===== */
 
-/* Main layout */
 main {
     flex: 1;
     padding-bottom: 2rem;
 }
 
-/* Contenedor principal de contenido */
 .content-container {
     width: 90%;
     max-width: var(--container-max);
@@ -22,7 +19,6 @@ h1, h2 {
     margin: 0;
 }
 
-/* ===== FILTROS Y CONTROLES ===== */
 .filter-controls {
     display: flex;
     align-items: center;
@@ -45,7 +41,6 @@ h1, h2 {
     align-items: center;
 }
 
-/* Cabecera de sección */
 .solicitud-header {
     display: flex;
     justify-content: space-between;
@@ -55,7 +50,6 @@ h1, h2 {
     gap: var(--space-2);
 }
 
-/* ===== BOTONES DE ACCIÓN ===== */
 .action-buttons {
     display: flex;
     flex-direction: column;
@@ -79,7 +73,6 @@ h1, h2 {
     color: #fff;
 }
 
-/* ===== TABLAS ===== */
 .table-container {
     overflow-x: auto;
     background-color: var(--background-color);
@@ -111,7 +104,6 @@ tbody tr:hover {
     background-color: var(--light-color);
 }
 
-/* ===== PAGINACIÓN ===== */
 .pagination {
     display: flex;
     justify-content: center;
@@ -148,16 +140,14 @@ tbody tr:hover {
     border: none;
 }
 
-/* Footer actions */
 .footer-actions {
     margin-top: var(--space-3);
 }
 
-/* ===== SOBREESCRITURAS ESPECÍFICAS ===== */
 .btn-secondary {
-    color: #fff; /* Cambia el color de texto del botón secundario */
+    color: #fff;
 }
 
 .btn-primary {
-    text-decoration: none; /* Asegura que los enlaces con clase btn-primary no tengan subrayado */
+    text-decoration: none;
 }

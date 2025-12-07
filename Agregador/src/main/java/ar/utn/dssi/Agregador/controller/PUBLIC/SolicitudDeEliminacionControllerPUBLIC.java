@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/public/solicitudes")
+@RequestMapping("/public/solicitudes-eliminacion")
 @RequiredArgsConstructor
 public class SolicitudDeEliminacionControllerPUBLIC {
   private final SolicitudDeEliminacionService solicitudesService;

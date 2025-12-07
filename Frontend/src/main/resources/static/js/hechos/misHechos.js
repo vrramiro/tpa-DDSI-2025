@@ -1,16 +1,12 @@
-/* ============================================================
-   LÓGICA DE MIS HECHOS (misHechos.js)
-   ============================================================ */
+
 
 let imagenesActuales = [];
 let indiceImagenActual = 0;
 let hechoActualId = null;
 
-// Inicialización de eventos globales (Cerrar modal, teclas, etc.)
 document.addEventListener('DOMContentLoaded', () => {
     const modalOverlay = document.getElementById('eventModal');
 
-    // Cerrar modal al hacer clic en el fondo oscuro
     if (modalOverlay) {
         modalOverlay.addEventListener('click', (event) => {
             if (event.target === modalOverlay) {
@@ -19,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Cerrar modal con la tecla ESCAPE
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const modal = document.getElementById('eventModal');
@@ -30,10 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/* ----------------------------------------------------------------
-   FUNCIÓN PRINCIPAL: Abrir el modal
-   Se llama desde el HTML: onclick="abrirModalHecho(this)"
-   ---------------------------------------------------------------- */
+
 function abrirModalHecho(cardElement) {
     // 1. Capturar ID
     hechoActualId = cardElement.getAttribute('data-id');
@@ -108,12 +100,11 @@ function actualizarEnlacesModal(hechoId) {
 
     if (verMasBtn) {
         // Ajusta la URL según tu controlador Spring Boot
-        verMasBtn.href = `/hechos/detalle/${hechoId}`;
-    }
+        verMasBtn.href = `/hechos/${hechoId}`;    }
 
     if (editarBtn) {
         // Ajusta la URL según tu controlador Spring Boot
-        editarBtn.href = `/hechos/editar/${hechoId}`;
+        editarBtn.href = `/hechos/${hechoId}/editar`;
     }
 }
 

@@ -1,8 +1,3 @@
-/* ============================================================
-   ESTILOS ESPECÍFICOS DE DETALLE
-   ============================================================ */
-
-/* ===== CONTENIDO ===== */
 .container {
     width: min(92%, var(--container-max));
     margin-inline: auto;
@@ -22,7 +17,6 @@ h1 {
     gap: var(--space-3);
 }
 
-/* ===== TARJETAS ===== */
 .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
@@ -48,7 +42,6 @@ h1 {
     text-decoration: none;
 }
 
-/* ===== CAJA DE TEXTO SIMULADA ===== */
 .textarea {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -58,7 +51,6 @@ h1 {
     margin-bottom: var(--space-2);
 }
 
-/* ===== ACCIONES ===== */
 .actions {
     display: flex;
     gap: var(--space-2);

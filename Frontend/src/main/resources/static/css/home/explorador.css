@@ -40,7 +40,6 @@ h1 {
     border-radius: var(--border-radius);
 }
 
-/* Contenedor del mapa: SIN alturas fijas */
 .mapa {
     flex: 2.5;
     background: var(--background-color);
@@ -109,7 +108,6 @@ h1 {
     }
 }
 
-/* Altura base en desktop */
 .mapa {
     position: relative;
     height: clamp(320px, 70vh, 680px);
@@ -118,7 +116,6 @@ h1 {
     overflow: hidden;
 }
 
-/* El mapa ocupa todo el contenedor */
 #map {
     position: absolute;
     inset: 0;
@@ -126,4 +123,29 @@ h1 {
 
 #btn-resetear {
     display: none;
+}
+
+.btn-ver-mas {
+    display: inline-block;
+    background-color: #20C997FF;
+    color: white !important;
+    padding: 6px 16px;
+    margin-top: 10px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-ver-mas:hover {
+    background-color: #20C9973F;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
+}
+
+.leaflet-popup-content {
+    margin: 12px;
+    line-height: 1.5;
 }

@@ -20,4 +20,6 @@ public class HechoFuenteEstaticaIntputDTO {
 
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
+
+  private String autor;
 }
