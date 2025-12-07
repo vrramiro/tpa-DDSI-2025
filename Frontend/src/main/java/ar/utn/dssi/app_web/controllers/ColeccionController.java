@@ -122,22 +122,39 @@ public class ColeccionController {
   }
 
   @PostMapping("/crear")
-  public String crearColeccion(@ModelAttribute("coleccion") ColeccionRequestDTO coelccionCreada, RedirectAttributes redirectAttributes, BindingResult binding){
-
-    ColeccionResponseDTO coleccionCreada = coleccionService.crearColeccion(coelccionCreada);
+  public String crearColeccion(@ModelAttribute("coleccion") ColeccionRequestDTO coleccionCreada,
+                               BindingResult binding,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
 
     if (binding.hasErrors()) {
-      redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.coleccion", binding);
-      redirectAttributes.addFlashAttribute("coleccion", coelccionCreada);
-      return "redirect:/colecciones/crear";
+      cargarDatosFormulario(model); // Método helper para no repetir código
+      model.addAttribute("mensaje", "Verifique los datos ingresados.");
+      model.addAttribute("tipoMensaje", "error");
+      return "colecciones/crearColecciones";
     }
 
-    redirectAttributes.addFlashAttribute("mensaje", "Colección creada exitosamente");
-    redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-    redirectAttributes.addFlashAttribute("coleccionCreada", coleccionCreada);
+    try {
+      ColeccionResponseDTO respuesta = coleccionService.crearColeccion(coleccionCreada);
 
-    System.out.println(coleccionCreada.getCriterios());
-    return "redirect:/colecciones";
+      redirectAttributes.addFlashAttribute("mensaje", "Colección creada exitosamente.");
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+      redirectAttributes.addFlashAttribute("coleccionCreada", respuesta);
+      return "redirect:/colecciones";
+
+    } catch (Exception e) {
+
+      String mensajeLimpio = e.getMessage().replace("Error al crear: ", "");
+
+      model.addAttribute("mensaje", mensajeLimpio);
+      model.addAttribute("tipoMensaje", "error");
+
+      cargarDatosFormulario(model);
+
+      model.addAttribute("coleccion", coleccionCreada);
+
+      return "colecciones/crearColecciones"; // Volvemos a la vista, NO redirect
+    }
   }
 
   @GetMapping("/gestion_colecciones")
@@ -214,6 +231,13 @@ public class ColeccionController {
     listaCriterios.add(critProv);
 
     return listaCriterios;
+  }
+
+  private void cargarDatosFormulario(Model model) {
+    model.addAttribute("categoriasDisponibles", categoriaService.obtenerCategorias());
+    model.addAttribute("tiposDeConsenso", TipoConsenso.values());
+    model.addAttribute("tiposDeFuentes", TipoFuente.values());
+    model.addAttribute("titulo", "Crear Colección");
   }
 
 }

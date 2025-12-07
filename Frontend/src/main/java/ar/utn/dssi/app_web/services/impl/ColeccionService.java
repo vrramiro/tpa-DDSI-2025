@@ -49,7 +49,12 @@ public class ColeccionService implements IColeccionService {
 
   @Override
   public ColeccionResponseDTO actualizarColeccion(Long id) {
-      return gestionColeccionApiService.actualizarColeccion(id);
+    return null;
   }
+
+  /*@Override
+  public ColeccionResponseDTO actualizarColeccion(Long id) {
+      return gestionColeccionApiService.actualizarColeccion(id);
+  }*/
 
 }

@@ -80,65 +80,39 @@ public class GestionColeccionApiService {
                 .toUriString();
 
         try {
-            Map<String, Object> payload = new HashMap<>();
-            payload.put("titulo", coleccion.getTitulo());
-            payload.put("descripcion", coleccion.getDescripcion());
-
-            if (coleccion.getConsenso() != null && coleccion.getConsenso().getTipo() != null) {
-                payload.put("consenso", coleccion.getConsenso().getTipo().name());
-            }
-
-            List<Map<String, String>> listaCriteriosParaEnviar = new ArrayList<>();
-
-            if (coleccion.getCriterios() != null) {
-                for (CriterioDTO criterio : coleccion.getCriterios()) {
-                    if (criterio.getValor() != null && !criterio.getValor().isBlank()) {
-                        listaCriteriosParaEnviar.add(Map.of(
-                                "tipo_criterio", criterio.getTipo().name(),
-                                "valor", criterio.getValor()
-                        ));
-                    }
-                }
-            }
-
-            if (coleccion.getCategoria() != null && coleccion.getCategoria().getCategoria() != null) {
-                listaCriteriosParaEnviar.add(Map.of(
-                        "tipo_criterio", "CATEGORIA",
-                        "valor", coleccion.getCategoria().getCategoria()
-                ));
-            }
-
-            payload.put("criteriosDePertenecias", listaCriteriosParaEnviar);
-
-            List<Map<String, String>> listaFuentes = new ArrayList<>();
-            if (coleccion.getFuentes() != null) {
-                for (TipoFuente tf : coleccion.getFuentes()) {
-                    listaFuentes.add(Map.of("tipoFuente", tf.name()));
-                }
-            }
-            payload.put("fuentes", listaFuentes);
+            Map<String, Object> payload = construirPayload(coleccion);
 
             return webApiCallerService.post(url, payload, ColeccionResponseDTO.class);
 
+        } catch (WebClientResponseException e) {
+            String mensajeError = e.getResponseBodyAsString();
+            throw new ServicioNormalizadorException(mensajeError, e);
+
         } catch (Exception e) {
             log.error("Error creando colección", e);
-            throw new ServicioNormalizadorException("Error inesperado al crear colección", e);
+            throw new RuntimeException("Error inesperado al crear colección", e);
         }
     }
 
-    public ColeccionResponseDTO actualizarColeccion(Long id) {
+    public ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion) {
         String url = UriComponentsBuilder
                 .fromUriString(agregadorServiceUrl)
-                .path("/admin/colecciones")
-                .queryParam("id", id)
+                .path("/admin/colecciones/{handle}")
+                .buildAndExpand(handle)
                 .toUriString();
+
         try {
-            return webApiCallerService.put(url, null, ColeccionResponseDTO.class);
-        } catch (WebClientException e) {
-            throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
+            Map<String, Object> payload = construirPayload(coleccion);
+            return webApiCallerService.put(url, payload, ColeccionResponseDTO.class);
+
+        } catch (WebClientResponseException e) {
+            String mensajeBackend = e.getResponseBodyAsString();
+
+            throw new ServicioNormalizadorException("Error al actualizar: " + mensajeBackend, e);
+
         } catch (Exception e) {
-            log.error("Error inesperado al obtener ubicación", e);
-            throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
+            log.error("Error inesperado al actualizar colección", e);
+            throw new RuntimeException("Error inesperado al actualizar colección", e);
         }
     }
 
@@ -157,14 +131,61 @@ public class GestionColeccionApiService {
                     .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
                     .onErrorResume(WebClientResponseException.class, e -> {
                         log.error("Error {} al llamar /public/colecciones: {}", e.getStatusCode(), e.getMessage());
-                        return Mono.just(new PageResponseDTO<ColeccionResponseDTO>());
+                        return Mono.just(new PageResponseDTO<>());
                     })
-                    .defaultIfEmpty(new PageResponseDTO<ColeccionResponseDTO>())
+                    .defaultIfEmpty(new PageResponseDTO<>())
                     .block();
         } catch (Exception e) {
             log.error("Error de conexión al obtener colecciones: {}", e.getMessage());
-            return new PageResponseDTO<ColeccionResponseDTO>();
+            return new PageResponseDTO<>();
         }
+    }
+
+    private Map<String, Object> construirPayload(ColeccionRequestDTO coleccion) {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("titulo", coleccion.getTitulo());
+        payload.put("descripcion", coleccion.getDescripcion());
+
+        if (coleccion.getConsenso() != null && coleccion.getConsenso().getTipo() != null) {
+            payload.put("consenso", coleccion.getConsenso().getTipo().name());
+        }
+
+        List<Map<String, String>> listaCriterios = getMaps(coleccion);
+        payload.put("criteriosDePertenecias", listaCriterios);
+
+        List<Map<String, String>> listaFuentes = new ArrayList<>();
+        if (coleccion.getFuentes() != null) {
+            for (TipoFuente tf : coleccion.getFuentes()) {
+                if (tf != null) {
+                    listaFuentes.add(Map.of("tipoFuente", tf.name()));
+                }
+            }
+        }
+        payload.put("fuentes", listaFuentes);
+
+        return payload;
+    }
+
+    private static List<Map<String, String>> getMaps(ColeccionRequestDTO coleccion) {
+        List<Map<String, String>> listaCriterios = new ArrayList<>();
+        if (coleccion.getCriterios() != null) {
+            for (CriterioDTO criterio : coleccion.getCriterios()) {
+                if (criterio.getTipo() != null && criterio.getValor() != null && !criterio.getValor().isBlank()) {
+                    Map<String, String> cMap = new HashMap<>();
+                    cMap.put("tipo_criterio", criterio.getTipo().name());
+                    cMap.put("valor", criterio.getValor());
+                    listaCriterios.add(cMap);
+                }
+            }
+        }
+        if (coleccion.getCategoria() != null && coleccion.getCategoria().getCategoria() != null
+                && !coleccion.getCategoria().getCategoria().isBlank()) {
+            Map<String, String> catMap = new HashMap<>();
+            catMap.put("tipo_criterio", "CATEGORIA");
+            catMap.put("valor", coleccion.getCategoria().getCategoria());
+            listaCriterios.add(catMap);
+        }
+        return listaCriterios;
     }
 }
 
