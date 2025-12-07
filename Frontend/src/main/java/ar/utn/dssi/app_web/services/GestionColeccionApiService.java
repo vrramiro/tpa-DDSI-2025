@@ -57,19 +57,21 @@ public class GestionColeccionApiService {
         }
     }
 
-    public void eliminarColeccion(Long id) {
+    public void eliminarColeccion(String handle) {
         String url = UriComponentsBuilder
                 .fromUriString(agregadorServiceUrl)
-                .path("/admin/colecciones")
-                .queryParam("id", id)
+                .path("/admin/colecciones/{handle}")
+                .buildAndExpand(handle)
                 .toUriString();
+
         try {
             webApiCallerService.delete(url);
-        } catch (WebClientException e) {
-            throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
+        } catch (WebClientResponseException e) {
+            log.error("Error al eliminar colección: {}", e.getResponseBodyAsString());
+            throw new ServicioNormalizadorException("Error al eliminar la colección.", e);
         } catch (Exception e) {
-            log.error("Error inesperado al obtener ubicación", e);
-            throw new ServicioNormalizadorException("Error inesperado al normalizar ubicación", e);
+            log.error("Error inesperado al eliminar colección", e);
+            throw new RuntimeException("Error inesperado al eliminar la colección.", e);
         }
     }
 

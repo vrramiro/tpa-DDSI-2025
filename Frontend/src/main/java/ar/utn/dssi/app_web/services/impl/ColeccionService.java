@@ -41,10 +41,8 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public void eliminarColeccion(Long id) {
-    String handle = "";
-    gestionColeccionApiService.obtenerColeccion(handle);
-    gestionColeccionApiService.eliminarColeccion(id);
+  public void eliminarColeccion(String handle) {
+    gestionColeccionApiService.eliminarColeccion(handle);
   }
 
   @Override

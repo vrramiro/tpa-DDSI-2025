@@ -186,11 +186,19 @@ public class ColeccionController {
     return "colecciones/gestionColeccionesAdmin";
   }
 
-  @PostMapping("{id}/eliminar")
-  public String eliminarColeccion(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-    coleccionService.eliminarColeccion(id);
-    redirectAttributes.addFlashAttribute("mensaje", "Colección eliminada");
-    redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+  @PostMapping("/{handle}/eliminar")
+  public String eliminarColeccion(@PathVariable("handle") String handle, RedirectAttributes redirectAttributes) {
+    try {
+      coleccionService.eliminarColeccion(handle);
+
+      redirectAttributes.addFlashAttribute("mensaje", "Colección eliminada exitosamente.");
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+
+    } catch (Exception e) {
+      redirectAttributes.addFlashAttribute("mensaje", "Error al eliminar: " + e.getMessage());
+      redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+    }
+
     return "redirect:/colecciones/gestion_colecciones";
   }
 

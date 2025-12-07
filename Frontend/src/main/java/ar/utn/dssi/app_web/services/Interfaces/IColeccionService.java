@@ -10,6 +10,6 @@ public interface IColeccionService {
     PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page, Integer size);
     Optional<ColeccionResponseDTO> obtenerColeccion(String handle);
     ColeccionResponseDTO crearColeccion(ColeccionRequestDTO coleccion);
-    void eliminarColeccion(Long id);
+    void eliminarColeccion(String handle);
     ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion);
 }

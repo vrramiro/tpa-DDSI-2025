@@ -91,17 +91,19 @@
             <input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         </form>
 
-        <div id="modal-eliminar" class="modal" hidden aria-modal="true" role="dialog">
-            <div class="modal-content">
-                <h3>Confirmar eliminación</h3>
-                <p id="modal-eliminar-texto">¿Eliminar esta colección?</p>
-                <div class="modal-actions">
+        <div id="modal-eliminar" class="modal" hidden style="background-color: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center;">
+            <div class="modal-content" style="background: white; padding: 2rem; border-radius: 8px; max-width: 400px; text-align: center;">
+                <h3 style="color: #dc3545; margin-top: 0;">¿Eliminar Colección?</h3>
+
+                <p id="modal-eliminar-texto" style="margin: 1.5rem 0; color: #555;">
+                </p>
+
+                <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: center;">
                     <button type="button" class="btn btn-secondary" id="modal-eliminar-cancelar">Cancelar</button>
-                    <button type="button" class="btn btn-delete" id="modal-eliminar-confirmar">Sí, eliminar</button>
+                    <button type="button" class="btn btn-danger" id="modal-eliminar-confirmar" style="background-color: #dc3545; color: white;">Sí, eliminar</button>
                 </div>
             </div>
         </div>
-
     </main>
 
     <th:block th:fragment="scripts">

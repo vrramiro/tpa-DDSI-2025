@@ -114,8 +114,8 @@ public class ColeccionService implements IColeccionService {
 
   @Override
   public void eliminarColeccion(String handle) {
-    Coleccion coleccion = obtenerColeccionSiExiste(handle);
-
+    Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
     coleccionRepository.delete(coleccion);
   }
 
