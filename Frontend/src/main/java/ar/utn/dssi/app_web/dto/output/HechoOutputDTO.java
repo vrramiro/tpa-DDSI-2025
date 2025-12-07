@@ -2,7 +2,6 @@ package ar.utn.dssi.app_web.dto.output;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import lombok.Data;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,5 +16,6 @@ public class HechoOutputDTO {
   private LocalDate fechaCarga;
   private List<ContenidoMultimediaOuputDTO> contenidoMultimedia;
   private EstadoHecho estado;
-}
 
+  private String autor;
+}
