@@ -48,13 +48,7 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public ColeccionResponseDTO actualizarColeccion(Long id) {
-    return null;
+  public ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion) {
+    return gestionColeccionApiService.actualizarColeccion(handle, coleccion);
   }
-
-  /*@Override
-  public ColeccionResponseDTO actualizarColeccion(Long id) {
-      return gestionColeccionApiService.actualizarColeccion(id);
-  }*/
-
 }

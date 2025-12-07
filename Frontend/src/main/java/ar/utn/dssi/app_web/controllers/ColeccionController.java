@@ -196,23 +196,61 @@ public class ColeccionController {
 
   @GetMapping("{handle}/modificar")
   public String mostrarFormularioModificar(@PathVariable String handle, Model model) {
-    Optional<ColeccionResponseDTO> coleccion = coleccionService.obtenerColeccion(handle);
+    // 1. Buscamos la colección (ResponseDTO)
+    Optional<ColeccionResponseDTO> coleccionOpt = coleccionService.obtenerColeccion(handle);
 
+    if (coleccionOpt.isEmpty()) {
+      return "redirect:/404";
+    }
+
+    ColeccionResponseDTO responseDTO = coleccionOpt.get();
+
+    // 2. LA CLAVE: Convertimos ResponseDTO -> RequestDTO para que el formulario lo entienda
+    ColeccionRequestDTO requestDTO = mapearARequest(responseDTO);
+
+    // 3. Cargamos los datos auxiliares
     model.addAttribute("tiposDeConsenso", TipoConsenso.values());
     model.addAttribute("tiposDeFuentes", TipoFuente.values());
     model.addAttribute("categorias", categoriaService.obtenerCategorias());
-    model.addAttribute("coleccion", coleccion);
+
+    // 4. Pasamos el objeto Request al formulario
+    model.addAttribute("coleccion", requestDTO);
+
+    // 5. Pasamos el handle por separado (porque el RequestDTO no lo tiene)
+    model.addAttribute("handle", handle);
 
     model.addAttribute("titulo", "Editar Colección");
     return "colecciones/modificarColecciones";
   }
 
-  @PostMapping("{id}/actualizar")
-  public String actualizarColeccion(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
-    coleccionService.actualizarColeccion(id);
-    redirectAttributes.addFlashAttribute("mensaje", "Colección Actualizada");
-    redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-    return "redirect:/colecciones/gestion_colecciones";
+  @PostMapping("/{handle}/actualizar")
+  public String actualizarColeccion(@PathVariable("handle") String handle,
+                                    @ModelAttribute("coleccion") ColeccionRequestDTO coleccionRequest,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
+    try {
+      coleccionService.actualizarColeccion(handle, coleccionRequest);
+
+      redirectAttributes.addFlashAttribute("mensaje", "La colección ha sido actualizada correctamente.");
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+      return "redirect:/colecciones/gestion_colecciones";
+
+    } catch (Exception e) {
+      String mensajeError = e.getMessage().replace("Error al actualizar: ", "");
+
+      model.addAttribute("mensaje", "No se pudo actualizar: " + mensajeError);
+      model.addAttribute("tipoMensaje", "error");
+
+      model.addAttribute("tiposDeConsenso", TipoConsenso.values());
+      model.addAttribute("tiposDeFuentes", TipoFuente.values());
+      model.addAttribute("categorias", categoriaService.obtenerCategorias());
+
+      model.addAttribute("coleccion", coleccionRequest);
+      model.addAttribute("handle", handle); // Importante: devolver el handle para el th:action
+      model.addAttribute("titulo", "Editar Colección");
+
+      return "colecciones/modificarColecciones";
+    }
   }
 
   private List<CriterioDTO> inicializarCriterios(ColeccionRequestDTO coleccion) {
@@ -238,6 +276,52 @@ public class ColeccionController {
     model.addAttribute("tiposDeConsenso", TipoConsenso.values());
     model.addAttribute("tiposDeFuentes", TipoFuente.values());
     model.addAttribute("titulo", "Crear Colección");
+  }
+
+  private ColeccionRequestDTO mapearARequest(ColeccionResponseDTO response) {
+    ColeccionRequestDTO request = new ColeccionRequestDTO();
+    request.setTitulo(response.getTitulo());
+    request.setDescripcion(response.getDescripcion());
+    request.setFuentes(response.getFuentes());
+
+    ConsensoDTO consensoDTO = new ConsensoDTO();
+    if (response.getConsenso() != null) {
+      try {
+        consensoDTO.setTipo(TipoConsenso.valueOf(response.getConsenso()));
+      } catch (IllegalArgumentException ignored) {
+      }
+    }
+    request.setConsenso(consensoDTO);
+
+    List<CriterioDTO> criteriosOrdenados = new ArrayList<>();
+    for(int i=0; i<3; i++) criteriosOrdenados.add(new CriterioDTO()); // Rellenar con vacíos
+
+    request.setCriterios(criteriosOrdenados);
+    request.setCategoria(new CategoriaDTO()); // Inicializar categoría vacía
+
+    if (response.getCriterios() != null) {
+      for (CriterioDTO c : response.getCriterios()) {
+        if (c.getTipo() == null) continue;
+
+        switch (c.getTipo()) {
+          case FECHA_DESDE:
+            request.getCriterios().set(0, c);
+            break;
+          case FECHA_HASTA:
+            request.getCriterios().set(1, c);
+            break;
+          case PROVINCIA:
+            request.getCriterios().set(2, c);
+            break;
+          case CATEGORIA:
+            CategoriaDTO cat = new CategoriaDTO();
+            cat.setCategoria(c.getValor());
+            request.setCategoria(cat);
+            break;
+        }
+      }
+    }
+    return request;
   }
 
 }

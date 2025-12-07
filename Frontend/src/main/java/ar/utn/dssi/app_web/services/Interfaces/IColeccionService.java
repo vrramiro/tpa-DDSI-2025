@@ -11,5 +11,5 @@ public interface IColeccionService {
     Optional<ColeccionResponseDTO> obtenerColeccion(String handle);
     ColeccionResponseDTO crearColeccion(ColeccionRequestDTO coleccion);
     void eliminarColeccion(Long id);
-    ColeccionResponseDTO actualizarColeccion(Long id);
+    ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion);
 }
