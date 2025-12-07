@@ -67,6 +67,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = validarToken(token);
                 String rol = extraerClaim(token, "rol");
 
+                System.out.println(">>> [AGREGADOR FILTER] Token recibido");
+                System.out.println(">>> Usuario extraído: " + username);
+                System.out.println(">>> Rol extraído del token: " + rol);
+                System.out.println(">>> Authority generada: ROLE_" + rol);
+
                 if (username != null && rol != null) {
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                             username,
@@ -76,6 +81,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             } catch (Exception e) {
+                System.out.println(">>> [AGREGADOR FILTER] Error validando token: " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }
