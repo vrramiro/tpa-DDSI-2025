@@ -100,8 +100,7 @@ function actualizarEnlacesModal(hechoId) {
 
     if (verMasBtn) {
         // Ajusta la URL según tu controlador Spring Boot
-        verMasBtn.href = `/hechos/detalle/${hechoId}`;
-    }
+        verMasBtn.href = `/hechos/${hechoId}`;    }
 
     if (editarBtn) {
         // Ajusta la URL según tu controlador Spring Boot

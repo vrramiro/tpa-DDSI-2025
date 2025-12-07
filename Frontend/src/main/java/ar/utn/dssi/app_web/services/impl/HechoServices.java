@@ -165,8 +165,8 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public void procesarSolicitudEdicion(Long id, String accion) {
-    gestionHechosApiService.procesarSolicitudEdicion(id, accion);
+  public void procesarSolicitudEdicion(Long id, String accion, HechoRequest modificaciones) {
+    gestionHechosApiService.procesarSolicitudEdicion(id, accion, modificaciones);
   }
 
   @Override

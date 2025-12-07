@@ -325,7 +325,7 @@ public class GestionHechosApiService {
     }
   }
 
-  public void procesarSolicitudEdicion(Long idSolicitud, String accion) {
+  public void procesarSolicitudEdicion(Long idSolicitud, String accion, HechoRequest modificaciones) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/admin/solicitudes-edicion/{id}/procesar")
@@ -334,7 +334,8 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      webApiCallerService.post(url, null, Void.class);
+      Object body = (modificaciones != null) ? modificaciones : "";
+      webApiCallerService.post(url, body, Void.class);
     } catch (Exception e) {
       throw new RuntimeException("Error al procesar la solicitud de edición", e);
     }

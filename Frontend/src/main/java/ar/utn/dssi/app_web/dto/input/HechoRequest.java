@@ -2,8 +2,6 @@ package ar.utn.dssi.app_web.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -17,4 +15,6 @@ public class HechoRequest {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate fechaAcontecimiento;
   private List<String> urlsContenidoMultimedia;
+
+  private Boolean anonimo;
 }

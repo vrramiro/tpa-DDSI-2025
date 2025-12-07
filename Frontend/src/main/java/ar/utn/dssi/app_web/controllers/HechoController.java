@@ -341,22 +341,20 @@ public class HechoController {
   @PreAuthorize("hasRole('ADMINISTRADOR')")
   public String procesarEdicion(@RequestParam Long idSolicitud,
                                 @RequestParam String accion,
+                                @ModelAttribute HechoRequest modificaciones,
                                 RedirectAttributes redirectAttributes) {
     try {
-      hechosService.procesarSolicitudEdicion(idSolicitud, accion);
-      redirectAttributes.addFlashAttribute("mensaje", "Solicitud procesada correctamente (" + accion + ")");
+      hechosService.procesarSolicitudEdicion(idSolicitud, accion, modificaciones);
+
+      String mensaje = "ACEPTAR".equals(accion) ? "Edición aceptada y aplicada." : "Solicitud rechazada.";
+      redirectAttributes.addFlashAttribute("mensaje", mensaje);
       redirectAttributes.addFlashAttribute("tipoMensaje", "success");
     } catch (Exception e) {
       log.error("Error procesando solicitud", e);
-      redirectAttributes.addFlashAttribute("mensaje", "Error al procesar solicitud");
+      redirectAttributes.addFlashAttribute("mensaje", "Error: " + e.getMessage());
       redirectAttributes.addFlashAttribute("tipoMensaje", "error");
     }
     return "redirect:/hechos/gestion_hecho";
-  }
-  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
-    if (e.hasFieldErrors()) {
-      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
-    }
   }
 
   @GetMapping("/explorador")
@@ -423,6 +421,11 @@ public class HechoController {
       return "home/explorador";
     }
 
+  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
+    if (e.hasFieldErrors()) {
+      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
+    }
+  }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
@@ -435,5 +438,6 @@ public class HechoController {
     model.addAttribute("titulo", "Hechos de Coleccion");
     return "hechos/listaHechosColeccion";
   }*/
+
 }
 
