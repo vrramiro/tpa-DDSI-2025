@@ -1,10 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
-import ar.utn.dssi.app_web.dto.input.HechoPageResponseDTO;
-import ar.utn.dssi.app_web.dto.input.HechoRequest;
-import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
-import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
+import ar.utn.dssi.app_web.dto.input.*;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
@@ -210,7 +207,7 @@ public class GestionHechosApiService {
     }
   }
 
-  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page, Integer size, String estado) {
+  public PageResponseHechosDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page, Integer size, String estado) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos")
@@ -247,7 +244,7 @@ public class GestionHechosApiService {
       paginaContent = todosLosHechos.subList(fromIndex, toIndex);
     }
 
-    PageResponseDTO<HechoOutputDTO> response = new PageResponseDTO<>();
+    PageResponseHechosDTO<HechoOutputDTO> response = new PageResponseHechosDTO<>();
     response.setContent(paginaContent);
     response.setTotalPages(totalPages);
     response.setTotalElements((long) totalElements); // Asumiendo que es Long en el DTO
@@ -310,7 +307,9 @@ public class GestionHechosApiService {
     } catch (Exception e) {
       log.error("Error al listar hechos de la colección {}: {}", handle, e.getMessage());
       return new PageResponseDTO<>();
-      
+    }
+  }
+
   public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)

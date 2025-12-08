@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.services.impl;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
@@ -133,9 +134,10 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public PageResponseDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado) {
+  public PageResponseHechosDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado) {
     return gestionHechosApiService.buscarProximosHechosAPaginar(page, size, estado);
   }
+
 
   @Override //TODO
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page) {

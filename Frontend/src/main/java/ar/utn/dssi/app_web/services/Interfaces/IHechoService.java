@@ -3,6 +3,7 @@ package ar.utn.dssi.app_web.services.Interfaces;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,9 +21,8 @@ public interface IHechoService {
     void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado);
     Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos);
 
-    PageResponseDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado);
+    PageResponseHechosDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado);
 
-    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle);
     List<HechoOutputDTO> obtenerHechos(LocalDate desde, LocalDate hasta, Long categoria, String provincia);
     List<String> obtenerProvincias();
     List<HechoOutputDTO> obtenerMisHechos();

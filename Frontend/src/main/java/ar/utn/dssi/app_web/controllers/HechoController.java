@@ -4,6 +4,7 @@ import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
@@ -296,7 +297,7 @@ public class HechoController {
             .map(Enum::name)
             .orElse(null);
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado);
+    PageResponseHechosDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado);
 
     List<SolicitudEdicionDTO> solicitudesEdicion = hechosService.obtenerSolicitudesEdicionPendientes();
     model.addAttribute("solicitudesEdicion", solicitudesEdicion);
