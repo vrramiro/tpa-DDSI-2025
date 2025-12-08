@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -57,7 +58,7 @@ public class ColeccionesControllerPUBLIC {
           @RequestParam(name = "provincia", required = false) String provincia
   ) {
 
-    Pageable pageable = PageRequest.of(page, size, Sort.by("fechaAcontecimiento").descending());
+    Pageable pageable = PageRequest.of(page, size, JpaSort.unsafe(Sort.Direction.DESC, "h.fechaAcontecimiento"));
 
     // Pasamos el valor EXACTO de tu Enum: "NAVEGACION_IRRESTRICTA"
     Page<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(

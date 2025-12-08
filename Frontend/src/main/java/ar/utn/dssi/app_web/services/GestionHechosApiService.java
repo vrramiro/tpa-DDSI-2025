@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
+import ar.utn.dssi.app_web.dto.input.HechoPageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
@@ -283,11 +284,11 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      // Hacemos un cast porque getPublic retorna Object/T genérico
-      return (PageResponseDTO<HechoOutputDTO>) webApiCallerService.getPublic(url, PageResponseDTO.class);
+      return webApiCallerService.getPublic(url, HechoPageResponseDTO.class);
+
     } catch (Exception e) {
       log.error("Error al listar hechos de la colección {}: {}", handle, e.getMessage());
-      return new PageResponseDTO<>(); // Retornamos vacío en caso de error para no romper la vista
+      return new PageResponseDTO<>();
     }
   }
 
