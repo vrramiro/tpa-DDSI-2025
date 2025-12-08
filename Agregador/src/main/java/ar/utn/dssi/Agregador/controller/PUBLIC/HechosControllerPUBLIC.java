@@ -4,7 +4,10 @@ import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,5 +60,23 @@ public class HechosControllerPUBLIC {
     }
 
     return ResponseEntity.ok(hecho);
+  }
+
+  @GetMapping("/misHechos")
+  public ResponseEntity<?> obtenerMisHechos() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth == null || !auth.isAuthenticated() || "anonymousUser".equals(auth.getPrincipal())) {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Debe iniciar sesión.");
+    }
+
+    String usuario = auth.getName();
+
+    try {
+      List<HechoOutputDTO> misHechos = hechosService.obtenerHechosPorAutor(usuario);
+      return ResponseEntity.ok(misHechos);
+    } catch (Exception e) {
+      return ResponseEntity.internalServerError().build();
+    }
   }
 }

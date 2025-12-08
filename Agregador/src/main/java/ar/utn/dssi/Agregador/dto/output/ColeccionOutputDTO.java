@@ -18,4 +18,6 @@ public class ColeccionOutputDTO {
   private List<CriterioDePertenenciaOutputDTO> criterios;
   @JsonProperty("fuentes")
   private Set<TipoFuente> fuentes;
+  @JsonProperty("consenso")
+  private String consenso;
 }

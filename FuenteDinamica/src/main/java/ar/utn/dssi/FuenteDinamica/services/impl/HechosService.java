@@ -16,6 +16,8 @@ import ar.utn.dssi.FuenteDinamica.models.repositories.IHechoRepository;
 import ar.utn.dssi.FuenteDinamica.services.IHechosService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
@@ -47,6 +49,10 @@ public class HechosService implements IHechosService {
 
     hechoNormalizado.setMultimedia(contenidoMultimedia);
     hechoNormalizado.setVisible(true);
+
+    String autor = obtenerAutorActual();
+    hechoNormalizado.setAutor(autor);
+
     this.hechoRepository.save(hechoNormalizado);
   }
 
@@ -181,5 +187,18 @@ public class HechosService implements IHechosService {
     if (existe) {
       throw new RuntimeException("Hecho duplicado: se considera spam");
     }
+  }
+
+  private String obtenerAutorActual() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    if (authentication != null
+            && authentication.isAuthenticated()
+            && !authentication.getPrincipal().equals("anonymousUser")) {
+      System.out.println("Autenticando usuario: " + authentication.getName());
+      return authentication.getName();
+    }
+
+    return null;
   }
 }

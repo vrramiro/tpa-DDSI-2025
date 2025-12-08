@@ -22,10 +22,12 @@ public class LoginService implements ILoginService {
 
   private final IUsuarioRepository usuariosRepository;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final JwtUtil jwtUtil;
 
-  public LoginService(IUsuarioRepository usuariosRepository) {
+  public LoginService(IUsuarioRepository usuariosRepository, JwtUtil jwtUtil) {
     this.usuariosRepository = usuariosRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
+    this.jwtUtil = jwtUtil;
   }
 
   @Override
@@ -37,8 +39,8 @@ public class LoginService implements ILoginService {
     if (!passwordEncoder.matches(credenciales.getContrasenia(), usuario.getContrasenia()))
       throw new UsuarioContraseniaIncorrecta("La contrasenia es incorrecta");
 
-    String accessToken = this.generarAccessToken(usuario);
-    String refreshToken = this.generarRefreshToken(usuario);
+    String accessToken = jwtUtil.generarAccessToken(usuario);
+    String refreshToken = jwtUtil.generarRefreshToken(usuario);
 
     AuthResponseDTO authResponseDTO = new AuthResponseDTO();
     authResponseDTO.setAccessToken(accessToken);
@@ -58,14 +60,14 @@ public class LoginService implements ILoginService {
     Usuario usuario = usuarioOpt.get();
 
     return UserRolesDTO.builder()
-        .username(usuario.getNombreUsuario())
-        .rol(usuario.getRol())
-        .build();
+            .username(usuario.getNombreUsuario())
+            .rol(usuario.getRol())
+            .build();
   }
 
   @Override
   public RefreshResponse refrescarAccessToken(RefreshRequest request) {
-    Claims claims = JwtUtil.extraerClaims(request.getRefreshToken());
+    Claims claims = jwtUtil.extraerClaims(request.getRefreshToken());
 
     if (!"refresh".equals(claims.get("type", String.class))) {
       throw new IllegalArgumentException("El token proporcionado no es un token de refresco.");
@@ -74,9 +76,9 @@ public class LoginService implements ILoginService {
     String username = claims.getSubject();
 
     Usuario usuario = usuariosRepository.findUsuarioByNombreUsuario(username)
-        .orElseThrow(() -> new UsuarioNoEncontrado(username));
+            .orElseThrow(() -> new UsuarioNoEncontrado(username));
 
-    String newAccessToken = JwtUtil.generarAccessToken(usuario);
+    String newAccessToken = jwtUtil.generarAccessToken(usuario);
 
     return new RefreshResponse(newAccessToken, request.getRefreshToken());
   }
@@ -91,16 +93,9 @@ public class LoginService implements ILoginService {
     }
   }
 
-
   private Usuario intentarRecuperarUsuario(String nombreUsuario) {
-    return usuariosRepository.findUsuarioByNombreUsuario(nombreUsuario).orElseThrow(() -> new UsuarioNoEncontrado(nombreUsuario));
+    return usuariosRepository.findUsuarioByNombreUsuario(nombreUsuario)
+            .orElseThrow(() -> new UsuarioNoEncontrado(nombreUsuario));
   }
 
-  public String generarAccessToken(Usuario usuario) {
-    return JwtUtil.generarAccessToken(usuario);
-  }
-
-  public String generarRefreshToken(Usuario usuario) {
-    return JwtUtil.generarRefreshToken(usuario);
-  }
 }
