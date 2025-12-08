@@ -5,7 +5,10 @@ import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -24,36 +27,8 @@ import java.util.List;
 public class ColeccionesControllerPUBLIC {
   private final IColeccionService coleccionService;
 
-  @GetMapping("/{handle}/hechos")
-  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
-      (@PathVariable String handle,
-       @RequestParam(name = "modoNavegacion", defaultValue = "MODO_CURADO") String modoNavegacion,
-       @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
-       @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
-       @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
-       @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
-       @RequestParam(name = "ciudad", required = false) String ciudad,
-       @RequestParam(name = "provincia", required = false) String provincia
-      ) {
-    List<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
-        modoNavegacion,
-        handle,
-        fechaReporteDesde,
-        fechaReporteHasta,
-        fechaAcontecimientoDesde,
-        fechaAcontecimientoHasta,
-        provincia,
-        ciudad);
-
-    if (hechos.isEmpty()) {
-      return ResponseEntity.noContent().build(); // status 204
-    }
-
-    return ResponseEntity.ok(hechos); // status 200
-  }
-
   @GetMapping
-  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault Pageable pageable) {
+  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault (page = 0, size = 12) Pageable pageable) {
     Page<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones(pageable);
 
     if (colecciones.isEmpty()) {
@@ -61,6 +36,43 @@ public class ColeccionesControllerPUBLIC {
     }
 
     return ResponseEntity.ok(colecciones); // status 200
+  }
+
+  @GetMapping("/{handle}")
+  public ResponseEntity<ColeccionOutputDTO> obtenerColeccion(@PathVariable String handle) {
+    ColeccionOutputDTO coleccion = coleccionService.obtenerColeccion(handle);
+    return ResponseEntity.ok(coleccion);
+  }
+
+  @GetMapping("/{handle}/hechos")
+  public ResponseEntity<Page<HechoOutputDTO>> obtenerHechos(
+          @PathVariable String handle,
+          // ELIMINAMOS el @RequestParam de modoNavegacion
+          @RequestParam(name = "page", defaultValue = "0") int page,
+          @RequestParam(name = "size", defaultValue = "9") int size,
+          @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+          @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+          @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+          @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+          @RequestParam(name = "ciudad", required = false) String ciudad,
+          @RequestParam(name = "provincia", required = false) String provincia
+  ) {
+
+    Pageable pageable = PageRequest.of(page, size, JpaSort.unsafe(Sort.Direction.DESC, "h.fechaAcontecimiento"));
+
+    // Pasamos el valor EXACTO de tu Enum: "NAVEGACION_IRRESTRICTA"
+    Page<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
+            "NAVEGACION_IRRESTRICTA",
+            handle,
+            fechaReporteDesde,
+            fechaReporteHasta,
+            fechaAcontecimientoDesde,
+            fechaAcontecimientoHasta,
+            provincia,
+            ciudad,
+            pageable);
+
+    return ResponseEntity.ok(hechos);
   }
 
 }

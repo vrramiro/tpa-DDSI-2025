@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
+import ar.utn.dssi.app_web.dto.input.HechoPageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
@@ -14,6 +15,7 @@ import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -294,6 +296,21 @@ public class GestionHechosApiService {
     }
   }
 
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/public/colecciones/{handle}/hechos")
+            .queryParam("page", page)
+            .buildAndExpand(handle)
+            .toUriString();
+
+    try {
+      return webApiCallerService.getPublic(url, HechoPageResponseDTO.class);
+
+    } catch (Exception e) {
+      log.error("Error al listar hechos de la colección {}: {}", handle, e.getMessage());
+      return new PageResponseDTO<>();
+      
   public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IHechoService {
+  
+    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page);
     Boolean crearHecho(HechoRequest hechoRequest);
     Boolean crearHechoEstatico(MultipartFile archivo);
     Optional<HechoOutputDTO> obtenerHechoPorId(Long id);

@@ -2,30 +2,55 @@ package ar.utn.dssi.app_web.dto.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor; // Importante para Jackson
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PageResponseDTO<T>{
+public class PageResponseDTO<T> {
+
     @JsonProperty("content")
     private List<T> content = new ArrayList<>();
 
-    @JsonProperty("totalPages")
-    private int totalPages;
+    // Mapeamos el objeto anidado "page" del JSON
+    @JsonProperty("page")
+    private PageMetadata page;
 
-    @JsonProperty("totalElements")
-    private long totalElements;
+    // --- Métodos "puente" para que tu Controller y Service sigan funcionando igual ---
 
-    @JsonProperty("number")
-    private int number;
+    public int getTotalPages() {
+        return page != null ? page.getTotalPages() : 0;
+    }
 
-    @JsonProperty("size")
-    private int size;
+    public long getTotalElements() {
+        return page != null ? page.getTotalElements() : 0;
+    }
 
-    @JsonProperty("first")
-    private boolean first;
+    public int getNumber() {
+        return page != null ? page.getNumber() : 0;
+    }
 
-    @JsonProperty("last")
-    private boolean last;
+    public int getSize() {
+        return page != null ? page.getSize() : 0;
+    }
+
+    // Calculamos estos manualmente porque a veces "page" no trae first/last explícitos
+    public boolean isFirst() {
+        return getNumber() == 0;
+    }
+
+    public boolean isLast() {
+        return getNumber() >= (getTotalPages() - 1);
+    }
+
+    // Clase interna para mapear la info que viene dentro de "page"
+    @Data
+    @NoArgsConstructor
+    public static class PageMetadata {
+        private int size;
+        private long totalElements;
+        private int totalPages;
+        private int number;
+    }
 }
