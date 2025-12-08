@@ -43,6 +43,8 @@ public class HechosController {
     return ResponseEntity.ok(hechos);
   }
 
+
+  //AHORA SE HACE EN AGREGADOR
   @PatchMapping("/{idHecho}/visibilidad")
   public ResponseEntity<Void> actualizarVisibilidad(@PathVariable Long idHecho, @RequestParam Boolean visibilidad) {
     this.hechosService.actualizarVisibilidad(idHecho, visibilidad);

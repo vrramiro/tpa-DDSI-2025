@@ -11,7 +11,7 @@
     <section class="form-container">
         <h1>Crear Hecho</h1>
 
-        <form th:action="@{/hechos/crear}" th:object="${hecho}" method="POST" enctype="multipart/form-data" class="form">
+        <form id="formCrearHecho" th:action="@{/hechos/crear}" th:object="${hecho}" method="POST" enctype="multipart/form-data" class="form">
             <div>
                 <label for="titulo">Título</label>
                 <input type="text" id="titulo" th:field="*{titulo}"
@@ -58,9 +58,20 @@
                           th:classappend="${#fields.hasErrors('descripcion')} ? 'input-error' : ''"></textarea>
             </div>
 
-            <div>
-                <label for="multimedia">Multimedia</label>
-                <input type="file" id="multimedia" th:field="*{contenidoMultimedia}">
+            <div class="form-group">
+                <label class="form-label">Multimedia (Máx 5)</label>
+
+                <div class="upload-area">
+                    <input type="file" id="fileInput" accept="image/*,video/*" multiple hidden>
+                    <label for="fileInput" class="btn btn-secondary btn-upload">
+                        <span>+ Agregar archivos</span>
+                    </label>
+                    <span id="upload-counter" class="ms-2 text-muted">0/5</span>
+                </div>
+
+                <div id="preview-container" class="preview-grid mt-3"></div>
+
+                <div id="hidden-inputs"></div>
             </div>
 
             <div>
@@ -79,7 +90,7 @@
             <div class="form-options">
                 <label class="anonimo-option">
                     <span>Publicar como anónimo</span>
-                    <input type="checkbox" id="anonimo" name="anonimo">  <!-- TODO th:field="*{anonimo}" -->
+                    <input type="checkbox" id="anonimo" th:field="*{anonimo}">
                 </label>
             </div>
 

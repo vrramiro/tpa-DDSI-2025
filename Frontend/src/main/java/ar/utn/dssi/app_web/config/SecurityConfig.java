@@ -38,8 +38,9 @@ public class SecurityConfig {
                                 "/estadisticas",
                                 "/css/**",
                                 "/js/**",
-                                "/images/**",
-                                "/webjars/**"
+                                "/img/**",
+                                "/webjars/**",
+                                "/uploads/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

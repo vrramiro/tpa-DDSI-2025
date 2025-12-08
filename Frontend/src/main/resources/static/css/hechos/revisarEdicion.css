@@ -1,0 +1,233 @@
+
+.container {
+    width: min(95%, var(--container-max));
+    margin: 2rem auto;
+}
+
+.content-container {
+    background-color: var(--background-color);
+    padding: var(--space-4);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+h2 {
+    color: var(--dark-color);
+    text-align: center;
+    margin-bottom: var(--space-3);
+    font-size: 1.8rem;
+}
+
+.comparison-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.comparison-box {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: var(--space-3);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.comparison-box h3 {
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--light-color);
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.comparison-box.modified {
+    border-color: var(--accent-color);
+}
+
+.comparison-box.modified h3 {
+    color: #d97706;
+    border-bottom-color: #fcd34d;
+}
+
+/* Campos individuales */
+.field-row {
+    margin-bottom: 1.2rem;
+}
+
+.field-label {
+    display: block;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.field-value {
+    padding: 0.75rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    font-size: 1rem;
+    min-height: 2.8rem; /* Para alinear alturas */
+}
+
+.highlight-change {
+    background-color: #fffbeb;
+    border: 1px solid #fcd34d;
+    color: #92400e;
+    font-weight: 600;
+    position: relative;
+}
+
+.highlight-change::after {
+    content: "MODIFICADO";
+    position: absolute;
+    top: -8px;
+    right: 10px;
+    background: #fcd34d;
+    color: #78350f;
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+}
+
+.no-change {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.actions-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+    .comparison-container {
+        grid-template-columns: 1fr;
+    }
+
+    .actions-bar {
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .actions-bar .btn {
+        width: 100%;
+    }
+}
+
+/* Estilos para inputs */
+.form-control {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.2);
+}
+
+/* Resaltar inputs que vienen con cambios propuestos */
+.input-changed {
+    background-color: #fffbeb;
+    border-color: #fcd34d;
+}
+
+.field-value-readonly {
+    padding: 0.6rem;
+    background-color: #f3f4f6;
+    border: 1px solid transparent;
+    color: #6b7280;
+    border-radius: var(--border-radius);
+}
+
+/* ... (estilos anteriores) ... */
+
+/* === MODAL PERSONALIZADO === */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    display: none; /* Oculto por defecto */
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.show {
+    display: flex;
+    opacity: 1;
+}
+
+.confirm-box {
+    background-color: #fff;
+    width: 90%;
+    max-width: 450px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    padding: 0; /* El padding lo manejan los hijos */
+    overflow: hidden;
+    transform: translateY(-20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.show .confirm-box {
+    transform: translateY(0);
+}
+
+.modal-header {
+    background-color: var(--light-color);
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--dark-color);
+    text-align: left; /* Alineado a la izquierda como un diálogo nativo */
+    border: none;
+}
+
+.modal-body {
+    padding: 2rem 1.5rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    background-color: #f9fafb;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Ajuste de botones dentro del modal */
+.modal-footer .btn {
+    min-width: 100px;
+    font-size: 0.95rem;
+    padding: 0.5rem 1rem;
+}

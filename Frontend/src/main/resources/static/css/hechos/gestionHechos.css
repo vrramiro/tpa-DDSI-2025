@@ -1,11 +1,6 @@
-/* ============================================================
-   EXTRAS Y OVERRIDES RESPECTO A base.css
-   ============================================================ */
 
-/* Ajuste mínimo del layout general */
 body { min-height: 100vh; }
 
-/* Contenido principal (reemplaza al viejo "grid") */
 main {
     flex: 1;
     padding-bottom: 2rem;
@@ -26,7 +21,6 @@ h1, h2 {
     margin: 0;
 }
 
-/* ===== Filtros y cabecera de la colección ===== */
 .filter-controls {
     display: flex;
     align-items: center;
@@ -58,7 +52,6 @@ h1, h2 {
     gap: var(--space-2);
 }
 
-/* ===== Tabla responsive ===== */
 .table-container {
     overflow-x: auto;
     background-color: var(--background-color);
@@ -86,7 +79,6 @@ thead th {
 
 tbody tr:hover { background-color: var(--light-color); }
 
-/* ===== Paginación ===== */
 .pagination {
     display: flex;
     justify-content: center;
@@ -122,19 +114,17 @@ tbody tr:hover { background-color: var(--light-color); }
 
 .page-link-ellipsis { border: none; }
 
-/* Botón de volver al final de la página */
 .footer-actions { margin-top: var(--space-3); }
 
-/* ===== Botones adicionales y overrides ===== */
 .action-buttons {
     display: flex;
-    flex-direction: column; /* uno debajo del otro */
+    flex-direction: column;
     gap: var(--space-1);
-    align-items: stretch; /* ocupan ancho completo */
+    align-items: stretch;
 }
 
 .action-buttons .btn {
-    padding: var(--space-1); /* más pequeños */
+    padding: var(--space-1);
     font-size: 0.9rem;
 }
 
@@ -143,13 +133,10 @@ tbody tr:hover { background-color: var(--light-color); }
     font-size: 0.9rem;
 }
 
-/* Mantener botones ancla sin subrayado cuando son .btn-primary */
 .btn-primary { text-decoration: none; }
 
-/* Override: en base.css .btn-secondary tiene color de texto oscuro */
 .btn-secondary { color: #fff; }
 
-/* Botones específicos de acción */
 .btn-edit {
     text-decoration: none;
     background-color: var(--accent-color);

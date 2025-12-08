@@ -20,8 +20,8 @@ public class GestionSolicitudesApiService {
     @Value("${agregador.service.url}")
     private String agregadorServiceUrl;
 
-    public List<SolicitudDTO> obtenerSolicitudes() {
-        String url = agregadorServiceUrl + "/admin/solicitudes";
+    public List<SolicitudDTO> obtenerSolicitudesEliminacion() {
+        String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion";
         List<SolicitudDTO> solicitudesArray = List.of(webApiCallerService.get(url, SolicitudDTO[].class));
         System.out.println(solicitudesArray);
 
@@ -40,23 +40,25 @@ public class GestionSolicitudesApiService {
 
 
     public SolicitudDTO obtenerSolicitudPorId(Long solicitudId) {
-        String url = agregadorServiceUrl + "/admin/solicitudes/" + solicitudId;
+        String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion/" + solicitudId;
         return webApiCallerService.get(url, SolicitudDTO.class);
     }
 
     public HechoOutputDTO obtenerHechoPorSolicitud(Long solicitudId) {
-        String url = agregadorServiceUrl + "/admin/solicitudes/" + solicitudId + "/hecho";
+        String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion" + solicitudId + "/hecho";
         return webApiCallerService.get(url, HechoOutputDTO.class);
     }
 
     public SolicitudDTO crearSolicitud(SolicitudDTO dto) {
-        String url = agregadorServiceUrl + "/admin/solicitudes";
+        String url = agregadorServiceUrl + "/public/solicitudes-eliminacion";
         return webApiCallerService.post(url, dto, SolicitudDTO.class);
     }
 
     public void actualizarEstado(Long idSolicitud, String nuevoEstado) {
-        String url = agregadorServiceUrl + "/admin/solicitudes/" + idSolicitud + "/estado";
+        String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion" + idSolicitud + "/estado";
         webApiCallerService.put(url, nuevoEstado, Void.class);
     }
+
+
 }
 

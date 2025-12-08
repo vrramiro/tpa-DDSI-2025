@@ -1,9 +1,9 @@
 package ar.utn.dssi.FuenteDinamica.dto.input;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,6 +16,9 @@ public class HechoInputDTO {
   private Long idCategoria;
   private Double latitud;
   private Double longitud;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate fechaAcontecimiento;
-  private List<MultipartFile> contenidoMultimedia;
+  private List<String> urlsContenidoMultimedia;
+
+  private Boolean anonimo;
 }

@@ -36,8 +36,8 @@ public class HechosService implements IHechosService {
 
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
-      detectarSpamHechos(hechoInputDTO);
-      validarHechoInput(hechoInputDTO);
+    detectarSpamHechos(hechoInputDTO);
+    validarHechoInput(hechoInputDTO);
 
     Hecho hechoANormalizar = obtenerHechoANormalizar(hechoInputDTO);
     hechoANormalizar.setUbicacion(ubicacionNormalizada(hechoInputDTO));
@@ -45,13 +45,17 @@ public class HechosService implements IHechosService {
     hechoNormalizado.setFechaCarga(LocalDateTime.now());
 
     List<ContenidoMultimedia> contenidoMultimedia = this.contenidoMultimediaService
-        .crear(hechoInputDTO.getContenidoMultimedia(), hechoNormalizado);
+            .crear(hechoInputDTO.getUrlsContenidoMultimedia(), hechoNormalizado);
 
     hechoNormalizado.setMultimedia(contenidoMultimedia);
     hechoNormalizado.setVisible(true);
 
-    String autor = obtenerAutorActual();
-    hechoNormalizado.setAutor(autor);
+    if (Boolean.TRUE.equals(hechoInputDTO.getAnonimo())) {
+      hechoNormalizado.setAutor(null);
+    } else {
+      String autor = obtenerAutorActual();
+      hechoNormalizado.setAutor(autor);
+    }
 
     this.hechoRepository.save(hechoNormalizado);
   }
@@ -137,7 +141,7 @@ public class HechosService implements IHechosService {
     hechoExistente.setFechaAcontecimiento(hechoNuevo.getFechaAcontecimiento().atStartOfDay());
 
     List<ContenidoMultimedia> contenidoMultimedia =
-        this.contenidoMultimediaService.editar(hechoNuevo.getContenidoMultimedia(), hechoExistente);
+        this.contenidoMultimediaService.editar(hechoNuevo.getUrlsContenidoMultimedia(), hechoExistente);
     hechoExistente.setMultimedia(contenidoMultimedia);
 
     actualizarUbicacion(hechoExistente, hechoNuevo);

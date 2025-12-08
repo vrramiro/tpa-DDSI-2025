@@ -4,6 +4,7 @@ import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
@@ -83,10 +84,11 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
-    validarDatosBasicos(hechoRequest);
-    validarUbicacion(hechoRequest);
-    return gestionHechosApiService.editarHecho(id, hechoRequest);
+  public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
+    if (nuevosDatos.getIdCategoria() == null) {
+      throw new ValidationException("La categoría es obligatoria");
+    }
+    return gestionHechosApiService.crearSolicitudEdicion(idHecho, nuevosDatos);
   }
 
   private void validarDatosBasicos(HechoRequest hechoRequest) {
@@ -131,8 +133,8 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public PageResponseDTO<HechoOutputDTO> listarHechos(Integer page) {
-    return gestionHechosApiService.buscarProximosHechosAPaginar(page);
+  public PageResponseDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado) {
+    return gestionHechosApiService.buscarProximosHechosAPaginar(page, size, estado);
   }
 
   @Override //TODO
@@ -157,5 +159,20 @@ public class HechoServices implements IHechoService {
     return gestionHechosApiService.obtenerMisHechos();
   }
 
+  @Override
+  public List<SolicitudEdicionDTO> obtenerSolicitudesEdicionPendientes() {
+    return gestionHechosApiService.obtenerSolicitudesEdicionPendientes();
+  }
 
+  @Override
+  public void procesarSolicitudEdicion(Long id, String accion, HechoRequest modificaciones) {
+    gestionHechosApiService.procesarSolicitudEdicion(id, accion, modificaciones);
+  }
+
+  @Override
+  public Optional<SolicitudEdicionDTO> obtenerSolicitudEdicionPorId(Long id) {
+    return obtenerSolicitudesEdicionPendientes().stream()
+            .filter(s -> s.getId().equals(id))
+            .findFirst();
+  }
 }

@@ -50,10 +50,13 @@ function renderizarHechos(hechos) {
                 : '';
 
             const popupContent = `
-                <strong>${hecho.titulo}</strong><br>
-                ${descripcionCorta}<br>
-                ${fechaFormateada} <br><br>
-                <a href="${urlVerMas}">Ver Mas...</a>
+            <div style="text-align: center;">
+            <strong style="font-size: 14px;">${hecho.titulo}</strong><br>
+            <span style="font-size: 13px; color: #555;">${descripcionCorta}</span><br>
+            <small style="color: #888;">${fechaFormateada}</small> <br>
+            
+            <a href="${urlVerMas}" class="btn-ver-mas">Ver detalle</a>
+             </div>
             `;
 
             const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud], {

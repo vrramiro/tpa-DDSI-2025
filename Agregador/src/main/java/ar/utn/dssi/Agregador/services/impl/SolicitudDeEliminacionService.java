@@ -18,6 +18,8 @@ import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -31,7 +33,6 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   private final IHechosRepository hechosRepository;
   private final SolicitudDeEliminacionFactory solicitudDeEliminacionFactory;
 
-  //CREAR SOLICITUDES DE ELIMINACION
   @Override
   public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion) {
     Hecho hecho = hechosRepository.findById(solicitudDeEliminacion.getIdHecho())
@@ -47,7 +48,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.PENDIENTE);
       log.info("Solicitud creada y en estado PENDIENTE");
     }
-
+    solicitud.setAutor(obtenerUsuarioActual());
     this.solicitudDeEliminacionRepository.save(solicitud);
 
     return MapperDeSolicitudesDeEliminacion.outpuDTOFromSolicitudDeEliminacion(solicitud);
@@ -71,14 +72,13 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     } else {
       solicitud.rechazar();
     }
-
+    solicitud.setAutor(obtenerUsuarioActual());
     this.solicitudDeEliminacionRepository.save(solicitud);
 
     log.info("Solicitud {}{}{}", solicitud.getIdSolicitud().toString(), " procesada como ", solicitud.getEstadoDeSolicitud().toString());
   }
 
   @Override
-  //No valido nada sobre los parametros porque si mete true y aceptada no le va a traer nada y eso no esta mal, solo es boludo
   public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado, Boolean spam) {
     EstadoDeSolicitud estadoDeSolicitud = null;
 
@@ -90,5 +90,15 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     return solicitudes.stream()
         .map(MapperDeSolicitudesDeEliminacion::outpuDTOFromSolicitudDeEliminacion)
         .toList();
+  }
+
+  private String obtenerUsuarioActual() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null
+            && authentication.isAuthenticated()
+            && !authentication.getPrincipal().equals("anonymousUser")) {
+      return authentication.getName();
+    }
+    return null;
   }
 }
