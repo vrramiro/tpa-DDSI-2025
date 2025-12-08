@@ -14,12 +14,6 @@ import java.util.Collections;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final JwtUtil jwtUtil;
-
-  public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-    this.jwtUtil = jwtUtil;
-  }
-
   @Override
   protected void doFilterInternal(HttpServletRequest request,
                                   HttpServletResponse response,
@@ -28,13 +22,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       String token = extraerToken(request);
       if (token != null) {
-        String username = jwtUtil.validarToken(token);
-        String rol = jwtUtil.extraerClaim(token, "rol");
-
+        String username = JwtUtil.validarToken(token);
+        String rol = JwtUtil.extraerClaim(token, "rol");
         UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                username,
-                null,
-                Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
+            username,
+            null,
+            Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol))
         );
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
@@ -49,6 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) {
     String path = request.getRequestURI();
+    // No aplicar el filtro JWT solo a los endpoints públicos de autenticación
     return path.equals("/auth") || path.equals("/auth/refresh") || path.equals("/usuarios");
   }
 

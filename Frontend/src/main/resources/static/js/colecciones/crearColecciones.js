@@ -45,16 +45,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-function cerrarModal() {
-    const modal = document.getElementById('mensajeModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-        cerrarModal();
-    }
-});

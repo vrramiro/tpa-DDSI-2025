@@ -18,6 +18,4 @@ public interface IHechosService {
   void eliminarHecho(Long idHecho);
 
   void importarNuevosHechos();
-
-  List<HechoOutputDTO> obtenerHechosPorAutor(String autor);
 }

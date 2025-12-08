@@ -19,7 +19,7 @@ public class MapperDeHechos {
     dtoHecho.setIdOrigen(hecho.getId());
     dtoHecho.setTituloSanitizado(hecho.getTituloSanitizado());
     dtoHecho.setDescripcionSanitizada(hecho.getDescripcionSanitizado());
-    dtoHecho.setAutor(hecho.getAutor());
+
     return dtoHecho;
   }
 

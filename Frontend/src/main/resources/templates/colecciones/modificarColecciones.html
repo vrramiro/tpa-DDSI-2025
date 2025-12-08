@@ -1,4 +1,4 @@
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base::html}">
+<html th:replace="~{layout/base::html}">
 <head>
     <th:block th:fragment="styles">
         <link th:href="@{/css/colecciones/crearColecciones.css}" rel="stylesheet">
@@ -11,22 +11,23 @@
         <h2>Modificar colección</h2>
 
         <form id="coleccionForm" class="coleccion-form"
-              th:action="@{/colecciones/{handle}/actualizar(handle=${handle})}"
-              th:object="${coleccion}"
-              method="post" novalidate>
+              th:action="@{/colecciones/{handle}/actualizar(id=${coleccion.handle})}" th:object="${coleccion}" method="post" novalidate>
 
+            <!-- Título -->
             <div class="form-group">
                 <label for="titulo">Título</label>
-                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Título de la colección" required>
+                <input type="text" id="titulo" th:field="*{titulo}" placeholder="Texto" required>
             </div>
 
+            <!-- Descripción -->
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Breve descripción">
+                <input type="text" id="descripcion" th:field="*{descripcion}" placeholder="Texto">
             </div>
 
+            <!-- Consenso -->
             <div class="form-group">
-                <label for="consenso">Tipo de Consenso</label>
+                <label for="consenso">Consenso</label>
                 <select id="consenso" th:field="*{consenso.tipo}" class="form-control">
                     <option value="">Seleccione...</option>
                     <option th:each="tipo : ${tiposDeConsenso}"
@@ -36,38 +37,43 @@
                 </select>
             </div>
 
+            <!-- Categoría -->
             <div class="form-group">
                 <label for="categoria">Categoría</label>
-                <select id="categoria" th:field="*{categoria.categoria}" class="form-control">
-                    <option value="">Seleccione...</option>
+                <select id="categoria" th:field="*{categoria.nombreCategoria}" class="form-control">
+                    <option value=""></option>
                     <option th:each="cat : ${categorias}"
-                            th:value="${cat.categoria}"
-                            th:text="${cat.categoria}">
+                            th:value="${cat.nombreCategoria}"
+                            th:text="${#strings.capitalize(cat.nombreCategoria.toLowerCase())}">
                     </option>
                 </select>
             </div>
 
+            <!-- Criterios de pertenencia -->
             <fieldset class="criterios">
                 <legend>Criterios de pertenencia</legend>
-                <div class="form-grid">
 
+                <div class="form-grid">
+                    <!-- FECHA_DESDE -->
                     <div class="form-group">
-                        <label for="fechaDesde">Fecha desde</label>
+                        <label for="fechaDesde">Fecha acontecimiento desde</label>
                         <input type="date" id="fechaDesde" th:field="*{criterios[0].valor}">
-                        <input type="hidden" name="criterios[0].tipo" value="FECHA_DESDE">
+                        <input type="hidden" th:field="*{criterios[0].tipo}" value="FECHA_DESDE">
                     </div>
 
+                    <!-- FECHA_HASTA -->
                     <div class="form-group">
-                        <label for="fechaHasta">Fecha hasta</label>
+                        <label for="fechaHasta">Fecha acontecimiento hasta</label>
                         <input type="date" id="fechaHasta" th:field="*{criterios[1].valor}">
-                        <input type="hidden" name="criterios[1].tipo" value="FECHA_HASTA">
+                        <input type="hidden" th:field="*{criterios[1].tipo}" value="FECHA_HASTA">
                     </div>
                 </div>
 
+                <!-- PROVINCIA -->
                 <div class="form-group">
                     <label for="provincia">Provincia</label>
                     <select id="provincia" class="form-control" th:field="*{criterios[2].valor}">
-                        <option value="">Todas</option>
+                        <option value=""></option>
                         <option value="Buenos Aires">Buenos Aires</option>
                         <option value="Catamarca">Catamarca</option>
                         <option value="Chaco">Chaco</option>
@@ -92,12 +98,13 @@
                         <option value="Tierra del Fuego">Tierra del Fuego</option>
                         <option value="Tucumán">Tucumán</option>
                     </select>
-                    <input type="hidden" name="criterios[2].tipo" value="PROVINCIA">
+                    <input type="hidden" th:field="*{criterios[2].tipo}" value="PROVINCIA">
                 </div>
             </fieldset>
 
+            <!-- Fuentes -->
             <div class="form-group">
-                <label>Fuentes de datos</label>
+                <label>Fuentes</label>
                 <div class="custom-multiselect" th:each="fuenteEnum : ${tiposDeFuentes}">
                     <label>
                         <input type="checkbox" th:field="*{fuentes}" th:value="${fuenteEnum}">
@@ -107,24 +114,14 @@
             </div>
 
             <div class="form-actions">
-                <a th:href="@{/colecciones/gestion_colecciones}" class="btn btn-secondary">Volver</a>
+                <a th:href="@{/colecciones}" class="btn btn-secondary">Volver</a>
                 <button type="submit" class="btn btn-primary">Actualizar</button>
             </div>
         </form>
     </main>
 
-    <div th:if="${mensaje}" id="mensajeModal" class="modal"
-         style="display: flex; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; align-items: center; justify-content: center;">
-
-        <div class="modal-content" style="background: white; padding: 2rem; border-radius: 8px; max-width: 400px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-            <h3 style="color: #dc3545; margin-top: 0;">Error al Actualizar</h3>
-            <p th:text="${mensaje}" style="margin: 1.5rem 0; font-size: 1.1rem; color: #333;"></p>
-            <button type="button" class="btn btn-primary" onclick="cerrarModal()">Entendido</button>
-        </div>
-    </div>
-
     <th:block th:fragment="scripts">
-        <script th:src="@{/js/colecciones/modificarColecciones.js}"></script>
+        <script th:src="@{/js/colecciones/crearColecciones.js}"></script>
         <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
     </th:block>
 </div>

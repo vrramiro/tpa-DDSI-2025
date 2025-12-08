@@ -15,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class HechosService implements IHechosService {
@@ -76,15 +75,6 @@ public class HechosService implements IHechosService {
   public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
     Hecho hecho = intentarObtenerHecho(idHecho);
     return MapperDeHechos.hechoToOutputDTO(hecho);
-  }
-
-  @Override
-  @Transactional
-  public List<HechoOutputDTO> obtenerHechosPorAutor(String autor) {
-    List<Hecho> hechos = hechosRepository.findByAutor(autor);
-    return hechos.stream()
-            .map(MapperDeHechos::hechoToOutputDTO)
-            .collect(Collectors.toList());
   }
 
   private Hecho intentarObtenerHecho(Long idHecho) {

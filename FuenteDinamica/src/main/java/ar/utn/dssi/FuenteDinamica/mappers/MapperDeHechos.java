@@ -25,7 +25,6 @@ public class MapperDeHechos {
     dtoHecho.setFechaCarga(hecho.getFechaCarga());
     dtoHecho.setContenidoMultimedia(MapperContenidoMultimedia.obtenerUrlContenido(hecho.getMultimedia()));
     dtoHecho.setIdOrigen(hecho.getIdHecho());
-    dtoHecho.setAutor(hecho.getAutor());
     return dtoHecho;
   }
 

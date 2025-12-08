@@ -1,32 +1,26 @@
 let map;
 let markers = [];
 
-const iconoUnificado = L.icon({
-    iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-    // TODO: ver......  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-});
-
 if (centroLat && centroLng) {
-    map = L.map('map').setView([centroLat, centroLng], 15);
+    map = L.map('map').setView([centroLat, centroLng], 15); // Zoom 15 (o el que te guste)
 } else {
     map = L.map('map').setView([-33.3017, -66.3378], 5);
 }
 
+// Cargar el mapa base
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: 'abcd',
     maxZoom: 20
 }).addTo(map);
 
+// Función para limpiar marcadores
 function limpiarMarcadores() {
     markers.forEach(marker => map.removeLayer(marker));
     markers = [];
 }
 
+// Función para renderizar hechos
 function renderizarHechos(hechos) {
     limpiarMarcadores();
 
@@ -40,46 +34,54 @@ function renderizarHechos(hechos) {
     hechos.forEach(hecho => {
         if (hecho.ubicacion && hecho.ubicacion.latitud != null && hecho.ubicacion.longitud != null) {
 
-            let descripcionCorta = hecho.descripcion.length > MAX_LENGTH_DESCRIPCION
-                ? hecho.descripcion.substring(0, MAX_LENGTH_DESCRIPCION) + '...'
-                : hecho.descripcion;
+            let descripcionCorta;
+            if (hecho.descripcion.length > MAX_LENGTH_DESCRIPCION) {
+                descripcionCorta = hecho.descripcion.substring(0, MAX_LENGTH_DESCRIPCION) + '...';
+            } else {
+                descripcionCorta = hecho.descripcion;
+            }
 
             const urlVerMas = `/hechos/${hecho.id}`;
-            const fechaFormateada = hecho.fechaAcontecimiento
-                ? hecho.fechaAcontecimiento.split('-').reverse().join('/')
-                : '';
+            const parts = hecho.fechaAcontecimiento.split(/[-/]/);
+            const fechaFormateada = `${parts[2]}/${parts[1]}/${parts[0]}`;
 
+            // --- Armado del Popup ---
             const popupContent = `
                 <strong>${hecho.titulo}</strong><br>
                 ${descripcionCorta}<br>
                 ${fechaFormateada} <br><br>
-                <a href="${urlVerMas}">Ver Mas...</a>
+                <a href="${urlVerMas}" onclick="console.log('Clickeaste el Hecho ID:', ${hecho.id})">Ver Mas...</a>
             `;
 
-            const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud], {
-                icon: iconoUnificado // <--- ESTO FUERZA QUE SEAN IGUALES
-            })
+            const marker = L.marker([hecho.ubicacion.latitud, hecho.ubicacion.longitud])
                 .bindPopup(popupContent)
                 .addTo(map);
 
             markers.push(marker);
+        } else {
+            console.warn("Hecho descartado por falta de 'ubicacion' o lat/lng:", hecho);
         }
     });
 }
 
+// Función para obtener los filtros
 function obtenerFiltrosParaUrl() {
     const params = new URLSearchParams();
+
+    // Ojo: los 'name' en el HTML son los que importan para la URL
     const fechaDesde = document.getElementById('fecha-desde').value;
     const fechaHasta = document.getElementById('fecha-hasta').value;
     const categoria = document.getElementById('categoria').value;
     const provincia = document.getElementById('provincia').value;
     const coleccion = document.getElementById('coleccion').value;
 
+    // Usamos los 'name' del HTML que coinciden con los @RequestParam
     if (fechaDesde) params.append('fechaAcontecimientoDesde', fechaDesde);
     if (fechaHasta) params.append('fechaAcontecimientoHasta', fechaHasta);
     if (categoria) params.append('idCategoria', categoria);
     if (provincia) params.append('provincia', provincia);
     if (coleccion) params.append('idColeccion', coleccion);
+    //TODO if (modoCurado) params.append('modoCurado', 'true');
 
     return params.toString();
 }
@@ -90,17 +92,24 @@ const filterInputs = document.querySelectorAll('aside.filters .input');
 
 function toggleResetButtonVisibility() {
     let hasActiveFilter = false;
+
     for (const input of filterInputs) {
         if (input.value !== '') {
             hasActiveFilter = true;
             break;
         }
     }
-    resetButton.style.display = hasActiveFilter ? 'block' : 'none';
+
+    if (hasActiveFilter) {
+        resetButton.style.display = 'block';
+    } else {
+        resetButton.style.display = 'none';
+    }
 }
 
 filterButton.addEventListener('click', () => {
-    window.location.href = `/hechos/explorador?${obtenerFiltrosParaUrl()}`;
+    const paramsString = obtenerFiltrosParaUrl();
+    window.location.href = `/hechos/explorador?${paramsString}`;
 });
 
 resetButton.addEventListener('click', () => {
@@ -108,7 +117,7 @@ resetButton.addEventListener('click', () => {
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("Hechos recibidos:", initialHechos);
+    console.log("Hechos recibidos del servidor:", initialHechos);
     renderizarHechos(initialHechos);
     toggleResetButtonVisibility();
 });

@@ -5,10 +5,7 @@ import ar.utn.dssi.Agregador.dto.output.ColeccionOutputDTO;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -68,36 +65,30 @@ public class ColeccionesControllerADMIN {
   }
 
   @GetMapping("/{handle}/hechos")
-  public ResponseEntity<Page<HechoOutputDTO>> obtenerHechos( // Cambiado a Page<HechoOutputDTO>
-                                                             @PathVariable String handle,
-                                                             @RequestParam(name = "modoNavegacion", defaultValue = "NAVEGACION_IRRESTRICTA") String modoNavegacion,
-                                                             @RequestParam(name = "page", defaultValue = "0") int page, // Nuevo
-                                                             @RequestParam(name = "size", defaultValue = "9") int size,  // Nuevo
-                                                             @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
-                                                             @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
-                                                             @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
-                                                             @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
-                                                             @RequestParam(name = "ciudad", required = false) String ciudad,
-                                                             @RequestParam(name = "provincia", required = false) String provincia
-  ) {
-
-    Pageable pageable = PageRequest.of(page, size, JpaSort.unsafe(Sort.Direction.DESC, "h.fechaAcontecimiento"));
-
-    Page<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
-            modoNavegacion,
-            handle,
-            fechaReporteDesde,
-            fechaReporteHasta,
-            fechaAcontecimientoDesde,
-            fechaAcontecimientoHasta,
-            provincia,
-            ciudad,
-            pageable);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechos
+      (@PathVariable String handle,
+       @RequestParam(name = "modoNavegacion", defaultValue = "MODO_IRRESTRICTO") String modoNavegacion,
+       @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+       @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+       @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+       @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+       @RequestParam(name = "ciudad", required = false) String ciudad,
+       @RequestParam(name = "provincia", required = false) String provincia
+      ) {
+    List<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
+        modoNavegacion,
+        handle,
+        fechaReporteDesde,
+        fechaReporteHasta,
+        fechaAcontecimientoDesde,
+        fechaAcontecimientoHasta,
+        provincia,
+        ciudad);
 
     if (hechos.isEmpty()) {
-      return ResponseEntity.ok(hechos);
+      return ResponseEntity.noContent().build(); // status 204
     }
 
-    return ResponseEntity.ok(hechos);
+    return ResponseEntity.ok(hechos); // status 200
   }
 }

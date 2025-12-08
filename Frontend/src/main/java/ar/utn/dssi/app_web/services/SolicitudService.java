@@ -1,8 +1,8 @@
-package ar.utn.dssi.app_web.services.impl;
+package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
-import ar.utn.dssi.app_web.services.Interfaces.ISolicitudService;
+import ar.utn.dssi.app_web.services.interfaces.ISolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,7 @@ public class SolicitudService implements ISolicitudService {
 
     private final GestionSolicitudesApiService gestionSolicitudesApiService;
 
+    //todo: ver si filtrar lo que sea spam
     public List<SolicitudDTO> obtenerTodasLasSolicitudes() {
         return gestionSolicitudesApiService.obtenerSolicitudes();
     }

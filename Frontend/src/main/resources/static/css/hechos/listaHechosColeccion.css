@@ -1,374 +1,171 @@
 /* ============================================================
-   LAYOUT GENERAL
+   EXTRAS Y OVERRIDES RESPECTO A base.css
    ============================================================ */
-main.main-container {
-    width: 98%;           /* Ocupa casi todo el ancho */
-    max-width: none;      /* Elimina el límite de 1000px */
-    margin: 0 auto;
-    padding-bottom: 2rem; /* Menos espacio abajo */
+
+/* ===== Botones: altura uniforme y centrado ===== */
+.btn {
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Títulos generales */
-h1, h2 {
+/* Enlaces con clase btn sin subrayado */
+.btn-primary,
+.btn-outline { text-decoration: none; }
+
+.btn-secondary { color: #fff; }
+
+/* ============================================================
+   TÍTULOS
+   ============================================================ */
+h1 {
+    margin: 2rem 0 1rem;
     color: var(--dark-color);
-    margin: 0;
-}
-
-/* Separador */
-.divider {
-    border: 0;
-    border-top: 1px solid #e0e0e0;
-    margin: 1.5rem 0; /* Reducido de 3rem */
 }
 
 /* ============================================================
-   SECCIÓN: INFORMACIÓN DE LA COLECCIÓN (Superior)
+   LISTA DE HECHOS EN COLECCIÓN
    ============================================================ */
-.coleccion-info-card {
-    background: #fff;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 1rem 1.5rem; /* Reducido el padding vertical */
-    margin-top: 1rem;     /* Reducido el margen superior */
-    border-left: 5px solid var(--primary-color);
+main {
+    width: 90%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding-bottom: var(--space-4);
 }
 
-.info-header {
+.main-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0.5rem; /* Muy poco espacio debajo del título */
-    flex-wrap: wrap;
-    gap: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
-.info-header h1 {
-    font-size: 1.8rem; /* Un poco más chico para que no ocupe tanto alto */
-    line-height: 1.2;
-}
-
-.description {
-    font-size: 1rem;
-    color: var(--text-color);
-    margin-bottom: 0.8rem; /* Reducido de 2rem */
-    line-height: 1.4;
-}
-
-/* Grid de metadatos (Consenso, Fuentes) - Más compacto */
-.meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    background: #f8f9fa;
-    padding: 0.8rem;      /* Padding reducido */
-    border-radius: 8px;
-    margin-bottom: 0.8rem; /* Margen reducido */
-    border: 1px solid #eee;
-}
-
-.meta-item strong {
-    display: block;
-    color: var(--secondary-color);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    margin-bottom: 0.2rem;
-}
-
-/* Listas inline (Fuentes) */
-.lista-inline {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin: 0; /* Sin margen extra */
-}
-
-.tag-fuente {
-    background: #fff;
-    border: 1px solid #d1d5db;
-    padding: 0.1rem 0.5rem; /* Padding más pequeño */
-    border-radius: 4px;
-    font-size: 0.85rem;
-    color: #4b5563;
-}
-
-/* Criterios */
-.criterios-section h3 {
-    font-size: 1rem;
+.main-actions h1 {
+    margin: 0;
     color: var(--dark-color);
-    margin-bottom: 0.4rem;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 0.2rem;
+    font-size: 2.2rem;
 }
 
-.tags-criterios-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+.main-actions .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    height: auto;
+    width: auto;
 }
 
-.tag-criterio {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    background-color: #eff6ff;
-    color: #1e40af;
-    padding: 0.2rem 0.6rem; /* Más compacto */
-    border-radius: 6px;
-    font-size: 0.85rem;
-    border: 1px solid #dbeafe;
-}
-
-.tag-criterio i {
-    font-size: 0.75rem;
-    opacity: 0.7;
-}
-
-/* Acciones de Colección */
-.info-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 1rem; /* Reducido */
-    justify-content: flex-end;
-}
-
-/* ============================================================
-   SECCIÓN: LISTA DE HECHOS (Inferior)
-   ============================================================ */
-.hechos-section h2 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-size: 1.6rem;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    background: #f8f9fa;
-    border-radius: var(--border-radius);
-    color: #6c757d;
-    font-style: italic;
-}
-
-/* Contenedor de tarjetas */
+/* ===== Contenedor de cards ===== */
+.grid,
 .hechos-list {
     display: flex;
     flex-direction: column;
-    gap: 1rem; /* Menos espacio entre tarjetas */
+    gap: var(--space-3); /* Espaciado vertical entre cards */
+    padding: 0.5rem 0;   /* Un poco de aire arriba/abajo */
 }
 
-/* TARJETA DE HECHO */
+/* ===== Cada card individual ===== */
 .hecho-card {
     background-color: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    padding: 1.2rem; /* Padding reducido */
+    padding: var(--space-3);
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 1.5rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid transparent;
+    gap: var(--space-4);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
 .hecho-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    border-color: var(--border-color);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 12px rgba(0,0,0,.12);
 }
 
 .hecho-card-content {
     flex: 1;
+    min-width: 280px;
 }
 
-/* 1. Título y Descripción del Hecho */
 .hecho-title {
-    font-size: 1.3rem;
-    margin: 0 0 0.3rem 0;
     color: var(--dark-color);
-    font-weight: 700;
+    font-size: 1.5rem;
+    margin-bottom: var(--space-1);
 }
 
-.hecho-desc {
-    font-size: 0.95rem;
-    color: #555;
-    line-height: 1.4;
-    margin-bottom: 0.8rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-/* 2. ESTILO SOFISTICADO DE TAGS (Píldoras) */
-.hecho-tags-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-}
-
-.meta-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.25rem 0.7rem; /* Más compacto */
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-    transition: all 0.2s;
-    user-select: none;
-    border: 1px solid transparent;
-}
-
-.meta-tag i {
-    font-size: 0.75rem;
-}
-
-/* Colores específicos */
-.tag-date {
-    background-color: #fff7ed;
-    color: #9a3412;
-    border-color: #ffedd5;
-}
-.tag-category {
-    background-color: #eff6ff;
-    color: #1e40af;
-    border-color: #dbeafe;
-}
-.tag-location {
-    background-color: #f0fdf4;
-    color: #166534;
-    border-color: #dcfce7;
-}
-.tag-status {
-    text-transform: uppercase;
-    font-size: 0.7rem;
-}
-.status-aceptado {
-    background-color: #ecfdf5;
-    color: #047857;
-    border-color: #a7f3d0;
-}
-.status-pendiente {
-    background-color: #fffbeb;
-    color: #b45309;
-    border-color: #fde68a;
-}
-.status-rechazado {
-    background-color: #fef2f2;
-    color: #b91c1c;
-    border-color: #fecaca;
-}
-
-/* Acciones de la tarjeta */
-.hecho-card-actions .btn {
-    white-space: nowrap;
-    padding: 0.5rem 1.2rem;
-    height: auto;
+.hecho-meta {
     font-size: 0.85rem;
-    border-radius: 50px;
+    color: var(--secondary-color);
+    margin-bottom: var(--space-2);
 }
 
-/* ============================================================
-   BOTONES GENERALES
-   ============================================================ */
-.btn {
-    height: auto;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-.btn-primary {
-    background-color: var(--primary-color);
-    color: #fff;
-    border: none;
-}
-
-.btn-secondary {
-    background-color: var(--secondary-color);
-    color: #fff;
-    border: none;
-}
-
-.btn-outline {
-    background-color: transparent;
-    border: 2px solid var(--primary-color);
-    color: var(--primary-color);
-}
-.btn-outline:hover {
-    background-color: var(--primary-color);
-    color: #fff;
+.hecho-card-actions .btn {
+    width: auto;
+    white-space: nowrap;
 }
 
 /* ============================================================
    PAGINACIÓN
    ============================================================ */
-.pagination-wrapper {
-    margin-top: 2rem;
-    display: flex;
-    justify-content: center;
-}
 .pagination {
     display: flex;
-    gap: 0.5rem;
+    justify-content: center;
     align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
 }
-.page-link, .page-link-ellipsis {
+
+.page-link,
+.page-link-ellipsis {
     color: var(--secondary-color);
     text-decoration: none;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1rem;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    transition: all 0.2s;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
 }
+
 .page-link:hover {
     background-color: var(--secondary-color);
     color: #fff;
+    border-color: var(--secondary-color);
 }
+
 .page-link.active {
     background-color: var(--primary-color);
     color: #fff;
     border-color: var(--primary-color);
+    cursor: default;
 }
-.page-link.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
+
 .page-link-ellipsis { border: none; }
+
+.pagination .page-link.disabled {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.5;
+}
 
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+@media (max-width: 992px) {
+    .main-header { padding-inline: 4%; }
+    .main-nav ul { justify-content: flex-end; }
+}
+
 @media (max-width: 768px) {
+    .main-header { padding-inline: 3%; }
+    .main-nav ul { gap: .5rem; }
+    .hecho-card-actions .btn { width: 100%; }
+}
+
+@media (max-width: 576px) {
     .hecho-card {
         flex-direction: column;
-        align-items: flex-start;
-        padding: 1rem;
-    }
-    .hecho-card-actions {
-        width: 100%;
-        margin-top: 0.8rem;
-        text-align: right;
-    }
-    .hecho-card-actions .btn {
-        width: 100%;
-        justify-content: center;
-    }
-    .main-actions {
-        flex-direction: column;
-        gap: 1rem;
-        text-align: center;
-    }
-    .info-actions {
-        flex-direction: column;
-    }
-    .info-actions .btn {
-        width: 100%;
+        align-items: stretch;
     }
 }

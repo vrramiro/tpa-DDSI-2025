@@ -3,6 +3,7 @@ main {
     flex: 1;
     padding-bottom: 3rem;
 }
+
 h1 {
     text-align: center;
     margin: 2rem 0 1rem;
@@ -19,7 +20,6 @@ h1 {
     margin: auto;
 }
 
-/* Tarjeta base */
 .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
@@ -27,135 +27,56 @@ h1 {
     padding: 1rem;
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.35s ease, box-shadow 0.35s ease, background-color 0.35s ease;
-    cursor: pointer;
-    border: 1px solid #eaeaea;
+    transition: transform .2s;
 }
 
-/* Efecto decorativo con gradiente al pasar el mouse */
-.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, var(--dark-color, #004aad), transparent 80%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 0;
-}
+.card:hover { transform: translateY(-5px); }
 
-/* Hover con efecto animado */
-.card:hover {
-    transform: scale(1.05) translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-    background-color: var(--dark-color, #004aad); /* Fondo oscuro al hacer hover */
-    border-color: transparent;
-}
-
-.card:hover::before {
-    opacity: 0.25;
-}
-
-/* Mantener contenido por encima del gradiente */
-.card-header,
-.card-details,
-.card-footer {
-    position: relative;
-    z-index: 1;
-}
-
-/* Header del card */
 .card-header {
+    font-weight: 700;
+    font-size: 1.1rem;
     margin-bottom: .5rem;
 }
 
-/* Título */
-.card-title {
-    font-weight: 700;
-    font-size: 1.2rem;
-    overflow-wrap: anywhere;
-    word-break: break-word;
-    line-height: 1.3;
-    color: var(--dark-color);
-    transition: color 0.3s ease;
-    display: block; /* Asegura que ocupe el espacio */
-}
-
-/* CORRECCIÓN 1: Título blanco y con contraste al pasar el mouse */
-.card:hover .card-title {
-    color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
-
-/* Detalles dentro del card */
 .card-details {
     background: var(--light-color);
     border-radius: var(--border-radius);
     padding: 1rem;
     text-align: center;
     margin: 1rem 0;
-    transition: background-color 0.35s ease, border 0.35s ease;
-    border: 1px solid transparent;
 }
 
-/* CORRECCIÓN 3: Fondo sutil y texto claro en la descripción al pasar el mouse */
-.card:hover .card-details {
-    background: rgba(255, 255, 255, 0.15); /* Transparente blanco */
-    border: 1px solid rgba(255,255,255,0.2);
-}
-
-.card-description {
-    color: var(--text-color);
-    transition: color 0.3s ease;
-}
-
-.card:hover .card-description {
-    color: #f0f0f0; /* Texto claro */
-}
-
-/* Footer con botón */
 .card-footer {
     display: flex;
     justify-content: center;
-    margin-top: auto; /* Empuja el footer al fondo si hay espacio */
 }
 
-/* Botón "Ver Colección" */
+/* Botón "Ver Coleccion" como enlace sin subrayado */
 .card-footer .btn,
 .card-footer .btn:link,
-.card-footer .btn:visited {
+.card-footer .btn:visited,
+.card-footer .btn:hover,
+.card-footer .btn:active {
     text-decoration: none;
     display: inline-block;
-    background: var(--light-color);
-    color: var(--dark-color);
-    padding: 0.5rem 1rem;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* Efecto del botón en hover de la tarjeta */
-.card:hover .btn {
-    background: #fff;
-    color: var(--dark-color); /* Texto oscuro sobre botón blanco */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 /* Paginación */
 .grid .pagination {
-    grid-column: 1 / -1;
-    justify-self: center;
+    grid-column: 1 / -1;    /* ocupar todo el ancho del grid */
+    justify-self: center;   /* centrar el nav en el grid */
     width: 100%;
 }
+
 .pagination {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* centrar items */
     align-items: center;
     gap: var(--space-1);
     margin-top: var(--space-4);
     flex-wrap: wrap;
 }
+
 .page-link,
 .page-link-ellipsis {
     color: var(--secondary-color);
@@ -166,50 +87,111 @@ h1 {
     transition: background-color 0.3s, color 0.3s;
     font-weight: 600;
 }
+
 .page-link:hover {
     background-color: var(--secondary-color);
     color: #fff;
     border-color: var(--secondary-color);
 }
+
 .page-link.active {
     background-color: var(--primary-color);
     color: #fff;
     border-color: var(--primary-color);
     cursor: default;
 }
+
 .page-link-ellipsis {
     border: none;
 }
+
 .pagination .page-link.disabled {
     pointer-events: none;
     cursor: default;
     opacity: 0.5;
 }
 
-/* Estado vacío */
+/* Estado vacío: reutiliza tu grid y card */
 .empty-grid {
-    grid-template-columns: 1fr;
-    min-height: 40vh;
-    place-items: center;
-}
-.empty-card {
-    max-width: 520px;
-    width: min(90%, 520px);
-    text-align: center;
-    cursor: default;
-}
-.empty-card:hover {
-    transform: none;
-    box-shadow: var(--box-shadow);
-    background-color: var(--background-color);
-    color: inherit;
+    /* ya es display:grid por .grid */
+    grid-template-columns: 1fr;  /* una sola columna centrada */
+    min-height: 40vh;            /* altura cómoda para centrar */
+    place-items: center;         /* centra horizontal y vertical */
 }
 
+.empty-card {
+    max-width: 520px;            /* ancho agradable */
+    width: min(90%, 520px);
+    text-align: center;
+}
+
+/* Texto atenuado coherente con tu paleta */
 .muted {
     color: var(--secondary-color);
 }
 
-/* Mensajes Flash / Toast */
+/* estado seleccionado: resalta el “card” del label */
+.custom-multiselect label:has(input[type="checkbox"]:checked) {
+    background: color-mix(in srgb, var(--primary-color) 12%, #fff);
+    border-color: color-mix(in srgb, var(--primary-color) 45%, var(--border-color));
+    box-shadow: 0 1px 0 0 color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* efecto de “tap” sutil */
+.custom-multiselect label:active { transform: scale(.998); }
+
+/* === Mensaje de éxito flotante === */
+.flash-created {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+    animation: slideIn 0.4s ease-out;
+}
+
+.flash-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #28a745;
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    font-size: 0.95rem;
+    min-width: 280px;
+    max-width: 420px;
+}
+
+.flash-message i {
+    font-size: 1.2rem;
+}
+
+.flash-message .btn-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.flash-message .btn-close:hover {
+    opacity: 1;
+}
+
+/* Animaciones */
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
 .toast-notify {
     position: fixed;
     top: 20px;
@@ -245,3 +227,5 @@ h1 {
     opacity: .6;
 }
 .toast-notify .close-btn:hover { opacity: 1; }
+
+

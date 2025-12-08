@@ -223,51 +223,25 @@ public class HechoController {
     }
   }
 
-  @GetMapping("/misHechos")
+  @GetMapping("/mis_hechos")
   public String listarMisHechos(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "9") int size, // Volvemos a un número razonable
+                                @RequestParam(defaultValue = "9") int size,
                                 @RequestParam(required = false) String filtro,
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    List<HechoOutputDTO> todosMisHechos = hechosService.obtenerMisHechos();
+    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
 
-    if (filtro != null && !filtro.isEmpty()) {
-      todosMisHechos = todosMisHechos.stream()
-              .filter(h -> h.getTitulo().toLowerCase().contains(filtro.toLowerCase()))
-              .toList();
-    }
-
-    int totalElements = todosMisHechos.size();
-    int totalPages = (int) Math.ceil((double) totalElements / size);
-    if (totalPages == 0) totalPages = 1;
-
-    if (page < 0) page = 0;
-    if (page >= totalPages) page = totalPages - 1;
-
-    int fromIndex = page * size;
-    int toIndex = Math.min(fromIndex + size, totalElements);
-
-    List<HechoOutputDTO> hechosPaginados;
-    if (totalElements == 0) {
-      hechosPaginados = List.of();
-    } else {
-      hechosPaginados = todosMisHechos.subList(fromIndex, toIndex);
-    }
-
-    model.addAttribute("hechos", hechosPaginados);
-    model.addAttribute("page", page);             // Variable 'current' en el fragmento
+    model.addAttribute("hechos", pageResponseDTO.getContent());
+    model.addAttribute("page", page);
     model.addAttribute("size", size);
     model.addAttribute("sort", sort);
     model.addAttribute("filtro", filtro == null ? "" : filtro);
-    model.addAttribute("totalPages", totalPages);
-    model.addAttribute("totalElements", totalElements);
-    model.addAttribute("baseUrl", "/hechos/misHechos");
-
-    model.addAttribute("isFirst", page == 0);
-    model.addAttribute("isLast", page == totalPages - 1);
-
+    model.addAttribute("totalPages", pageResponseDTO.getTotalPages());
+    model.addAttribute("totalElements", pageResponseDTO.getTotalElements());
     model.addAttribute("titulo", "Mis Hechos");
+
+    model.addAttribute("baseUrl", "/hechos/mis_hechos");
 
     return "hechos/misHechos";
   }
@@ -376,7 +350,6 @@ public class HechoController {
 
       return "home/explorador";
     }
-
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/

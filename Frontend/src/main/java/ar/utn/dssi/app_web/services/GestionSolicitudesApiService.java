@@ -1,4 +1,4 @@
-package ar.utn.dssi.app_web.services.impl;
+package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;

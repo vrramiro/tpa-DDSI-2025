@@ -1,86 +1,76 @@
 <html th:replace="~{layout/base:: html}">
 <head>
+    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
         <link th:href="@{/css/hechos/misHechos.css}" rel="stylesheet">
         <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
     </th:block>
 </head>
 
-<div th:fragment="contenido" class="main-container">
+<div th:fragment="contenido" class="row">
     <h1>Mis Hechos</h1>
 
-    <div class="empty-state-container" th:if="${#lists.isEmpty(hechos)}">
-        <h3>No se encontraron hechos</h3>
-        <p class="text-muted">Parece que todavía no has cargado ningún hecho. ¡Anímate a contribuir!</p>
-        <a th:href="@{/hechos/nuevo}" class="btn btn-primary mt-3">
-            <i class="fa-solid fa-plus"></i> Crear nuevo hecho
-        </a>
-    </div>
-
-    <div class="grid-container" th:unless="${#lists.isEmpty(hechos)}">
-        <div class="grid">
-            <div class="card" th:each="hecho : ${hechos}" th:data-id="${hecho.id}" onclick="abrirModalHecho(this)">
-
-                <div class="card-image-wrapper">
-                    <img src="https://placehold.co/600x400?text=Sin+Imagen" alt="Imagen del hecho" loading="lazy">
-                    <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
-                </div>
-
-                <div class="card-content">
-                    <div class="card-header">
-                        <h3 class="card-title" th:text="${hecho.titulo}">Título del hecho</h3>
-                        <span class="card-date">
-                            <i class="fa-regular fa-calendar"></i>
-                            <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2024</span>
-                        </span>
-                    </div>
-
-                    <div class="card-body">
-                        <p class="card-description" th:text="${hecho.descripcion}">Descripción corta...</p>
-                    </div>
-                </div>
-
-                <div class="card-footer">
-                    <span class="status-indicator published">Publicado</span>
-                    <a href="#" class="btn-icon" title="Ver detalle">
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
+    <div class="grid">
+        <div class="card"
+             th:each="hecho : ${hechos}"
+             th:data-id="${hecho.id}">
+            <div class="card-header">
+                <span class="card-title" th:text="${hecho.titulo}">Título del hecho</span>
+                <span class="card-date" th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/08/2025</span>
+            </div>
+            <img class="card-img"
+                 th:src="${!#lists.isEmpty(hecho.contenidoMultimedia) ? hecho.contenidoMultimedia[0].url : 'https://picsum.photos/400/200?random=1'}"
+                 th:alt="${hecho.titulo}">
+            <div class="card-details">
+                <p class="card-description" th:text="${hecho.descripcion}">Descripción del hecho</p>
+            </div>
+            <div class="card-footer">
+                <span class="footer-tag" th:text="${hecho.categoria}">Categoría</span>
             </div>
         </div>
     </div>
 
-    <div class="pagination-wrapper" th:unless="${#lists.isEmpty(hechos)}">
-        <div th:replace="~{navegacion/navegacion :: pager(
-          ${page}, ${totalPages}, ${size}, ${baseUrl}, ${filtro}, ${sort}, ${isFirst}, ${isLast}
-        )}"></div>
+    <div th:if="${#lists.isEmpty(hechos)}" class="alert alert-info">
+        <p>No se encontraron hechos para mostrar.</p>
     </div>
 
+    <!-- Modal -->
     <div class="modal-overlay" id="eventModal">
         <div class="modal-content">
-            <span class="modal-close" onclick="cerrarModal()">&times;</span>
-
+            <button class="modal-close" onclick="cerrarModal()" aria-label="Cerrar modal">&times;</button>
             <div class="modal-header">
-                <h2 id="modal-title">Título del hecho</h2>
-                <span id="modal-date">01/01/2025</span>
+                <h2 id="modal-title"></h2>
+                <span id="modal-date"></span>
             </div>
-
             <div class="modal-body">
-                <img id="modal-image" src="https://placehold.co/800x400?text=Cargando..." alt="Imagen del hecho">
-                <p id="modal-description">Descripción completa aquí...</p>
+                <img id="modal-image" src="" alt="Imagen del hecho">
+                <button class="carousel-arrow left" aria-label="Imagen anterior">&#10094;</button>
+                <button class="carousel-arrow right" aria-label="Imagen siguiente">&#10095;</button>
+                <p id="modal-description"></p>
             </div>
-
             <div class="modal-footer">
-                <span class="card-badge" id="modal-category" style="position: static; margin:0;">Categoría</span>
-
+                <span id="modal-category"></span>
                 <div class="modal-actions">
-                    <a id="modal-ver-mas" href="#" class="btn btn-primary">Ver detalle completo</a>
-                    <a id="modal-editar" href="#" class="btn btn-outline-primary">Modificar</a>
-                    <button class="btn btn-danger">Eliminar</button>
+
+                    <a id="modal-ver-mas" href="#" class="btn btn-primary">Ver más</a>
+                    <a id="modal-editar" href="#" class="btn btn-primary">Modificar</a>
+                    <button class="btn btn-danger" onclick="eliminarHecho()">Eliminar</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Paginación -->
+    <div th:replace="~{navegacion/navegacion :: pager(
+      ${page},
+      ${totalPages},
+      ${size},
+      ${baseUrl},
+      ${filtro},
+      ${sort},
+      ${isFirst},
+      ${isLast}
+  )}"></div>
 
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>

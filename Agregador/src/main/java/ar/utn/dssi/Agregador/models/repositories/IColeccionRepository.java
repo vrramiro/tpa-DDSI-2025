@@ -27,14 +27,14 @@ public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
       "AND (:ciudad IS NULL OR h.ubicacion.ciudad = :ciudad) " +
       "AND (:provincia IS NULL OR h.ubicacion.provincia = :provincia) "
   )
-  Page<Hecho> filtrarHechosDeColeccion(
-          @Param("handler") String handler,
-          @Param("fechaReporteDesde") LocalDate fechaReporteDesde,
-          @Param("fechaReporteHasta") LocalDate fechaReporteHasta,
-          @Param("fechaAcontecimientoDesde") LocalDate fechaAcontecimientoDesde,
-          @Param("fechaAcontecimientoHasta") LocalDate fechaAcontecimientoHasta,
-          @Param("ciudad") String ciudad,
-          @Param("provincia") String provincia,
-          Pageable pageable // <-- Nuevo parámetro
+  List<Hecho> filtrarHechosDeColeccion(
+      @Param("handler") String handler,
+      @Param("fechaReporteDesde") LocalDate fechaReporteDesde,
+      @Param("fechaReporteHasta") LocalDate fechaReporteHasta,
+      @Param("fechaAcontecimientoDesde") LocalDate fechaAcontecimientoDesde,
+      @Param("fechaAcontecimientoHasta") LocalDate fechaAcontecimientoHasta,
+      @Param("ciudad") String ciudad,
+      @Param("provincia") String provincia
   );
+
 }

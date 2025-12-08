@@ -3,7 +3,7 @@ package ar.utn.dssi.app_web.controllers;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
 import ar.utn.dssi.app_web.error.ValidationException;
-import ar.utn.dssi.app_web.services.impl.SolicitudService;
+import ar.utn.dssi.app_web.services.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class SolicitudController {
   private final SolicitudService solicitudService;
   private static final Logger log = LoggerFactory.getLogger(SolicitudController.class);
 
-  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/gestion")
   public String gestionSolicitudes(
           @RequestParam(name = "estado", required = false, defaultValue = "Todos") String estado,
@@ -43,7 +43,7 @@ public class SolicitudController {
     return "solicitudes/gestionSolicitudesAdmin";
   }
 
-  @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
+  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
   @GetMapping("/panel/solicitudId")
   public String panelSolicitudes( @RequestParam(name = "id") Long solicitudId,
                                   Model model) {

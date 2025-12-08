@@ -14,8 +14,6 @@ import ar.utn.dssi.FuenteEstatica.services.IHechoServicio;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.time.LocalDateTime;
@@ -36,7 +34,6 @@ public class HechoServicio implements IHechoServicio {
 
   @Override
   public void importarArchivo(File archivo) {
-    String autor = obtenerAutorActual();
     ILectorDeArchivos lectorDeArchivos = factoryLector.crearLector(archivo);
     List<Hecho> hechos = lectorDeArchivos.importarHechos(archivo);
 
@@ -69,10 +66,7 @@ public class HechoServicio implements IHechoServicio {
                   actual, total, hecho.getTitulo(), hecho.getUbicacion().getLatitud(),
                   hecho.getUbicacion().getLongitud());
             }
-
-            normalizado.setAutor(autor);
             return normalizado;
-
           } catch (Exception e) {
             System.err.println("Error normalizando hecho: " + e.getMessage());
             return hecho;
@@ -102,19 +96,5 @@ public class HechoServicio implements IHechoServicio {
       throw new ErrorGeneralRepositorio("Error al obtener los hechos.");
     }
   }
-
-  private String obtenerAutorActual() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-    if (authentication != null
-            && authentication.isAuthenticated()
-            && !authentication.getPrincipal().equals("anonymousUser")) {
-      System.out.println("Autenticando usuario: " + authentication.getName());
-      return authentication.getName();
-    }
-
-    return null;
-  }
-
 }
 

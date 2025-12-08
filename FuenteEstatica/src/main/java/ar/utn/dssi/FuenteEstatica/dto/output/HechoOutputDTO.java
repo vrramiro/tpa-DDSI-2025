@@ -18,5 +18,4 @@ public class HechoOutputDTO {
   private UbicacionOutputDTO ubicacion;
   private LocalDateTime fechaAcontecimiento;
   private LocalDateTime fechaCarga;
-  private String autor;
 }

@@ -1,354 +1,345 @@
+/* ============================================================
+   ESTILOS ESPECÍFICOS DE HECHOS
+   ============================================================ */
 
-/* ================= LAYOUT GENERAL ================= */
-.main-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem 1rem;
+/* Contenedor centralizado */
+.container {
+    width: min(92%, var(--container-max));
+    margin-inline: auto;
 }
 
+/* Imágenes y medios siempre fluidos */
+img, svg, video, canvas {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Menos movimiento si el usuario lo prefiere */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ============================================================
+   TITULO GENERAL
+   ============================================================ */
 h1 {
     text-align: center;
-    margin-bottom: 2.5rem;
+    margin: 2rem 0 1rem;
     color: var(--dark-color);
-    font-weight: 700;
 }
 
-/* ================= GRID SYSTEM ================= */
+/* ============================================================
+   GRID DE HECHOS
+   ============================================================ */
 .grid {
     display: grid;
-    /* Crea columnas automáticas pero con un ancho mínimo de 300px */
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 2rem;
-    padding-bottom: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
 }
 
-/* ================= TARJETA (CARD) ================= */
+/* Tarjetas de hechos */
 .card {
-    background-color: var(--background-color);
+    background: var(--background-color);
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    display: flex;
-    flex-direction: column; /* Vital para alinear el footer al fondo */
-    overflow: hidden; /* Para que la imagen no se salga de los bordes redondeados */
-    height: 100%; /* Ocupa toda la altura de la celda del grid */
+    padding: 1rem;
     cursor: pointer;
-    border: 1px solid #eaeaea;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
 }
-
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 12px rgba(0,0,0,.12);
+    box-shadow: 0 8px 12px rgba(0,0,0,0.15);
 }
 
-/* --- Imagen e información superpuesta --- */
-.card-image-wrapper {
-    position: relative;
-    height: 180px;
-    width: 100%;
-    background-color: #f0f0f0;
-}
-
-.card-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Recorta la imagen para llenar el espacio sin deformar */
-}
-
-.card-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(0, 0, 0, 0.6);
-    color: #fff;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    backdrop-filter: blur(4px);
-}
-
-/* --- Contenido --- */
-.card-content {
-    padding: 1.2rem;
-    flex-grow: 1; /* Empuja el footer hacia abajo */
-}
-
+/* Cabecera de tarjeta */
 .card-header {
-    margin-bottom: 0.8rem;
-}
-
-.card-title {
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem 0;
-    color: var(--dark-color);
-    font-weight: 700;
-    line-height: 1.3;
-}
-
-.card-date {
-    font-size: 0.85rem;
-    color: var(--dark-color);
     display: flex;
-    align-items: center;
-    gap: 5px;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: .5rem;
 }
 
-.card-body {
-    margin-bottom: 1rem;
+/* Imagen en tarjeta */
+.card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+    margin-bottom: .5rem;
 }
 
-.card-description {
-    font-size: 0.95rem;
+/* Detalles de tarjeta */
+.card-details {
+    flex-grow: 1;
+    margin: .7rem 0;
+    font-size: .9rem;
     color: #555;
-    line-height: 1.5;
-    /* Truncar texto a 3 líneas */
+}
+
+/* Descripción acortada en tarjeta */
+.card-description {
+    margin: 0;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.4;
 }
 
-/* --- Footer de la tarjeta --- */
+/* Pie de tarjeta */
 .card-footer {
-    padding: 0.8rem 1.2rem;
-    background-color: #f8f9fa;
-    border-top: 1px solid #eaeaea;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: .9rem;
+    margin-top: auto;
 }
 
-.status-indicator {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #198754; /* Verde bootstrap */
+.card-link {
+    text-decoration: none;
+    color: inherit;
 }
 
-.status-indicator::before {
-    content: '●';
-    margin-right: 5px;
+.card-link:hover .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
 }
 
-.btn-icon {
-    color: var(--primary-color);
-    transition: transform 0.2s;
-}
-.btn-icon:hover {
-    transform: translateX(3px);
-}
 
-/* ================= PAGINACIÓN ================= */
-.pagination-wrapper {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-/* =========================================
-   MODAL (VENTANA EMERGENTE) - CORREGIDO
-   ========================================= */
-.modal-overlay {
-    position: fixed; /* Fundamental: Fijo respecto a la ventana del navegador */
-    top: 0;
-    left: 0;
-    width: 100vw; /* Ancho total de la ventana */
-    height: 100vh; /* Alto total de la ventana */
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo negro semitransparente */
-    z-index: 9999; /* Asegura que quede por encima de TODO */
-
-    /* ESTADO INICIAL: OCULTO */
-    display: none;
-
-    /* Para centrar el contenido cuando se muestre */
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    box-sizing: border-box;
-}
-
-/* Clase que JS añadirá para mostrar el modal */
-.modal-overlay.active {
-    display: flex !important; /* Se muestra usando flexbox para centrar */
-}
-
-/* El contenedor blanco del contenido */
-.modal-content {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 700px; /* Ancho máximo para que se vea bien en PC */
-    max-height: 90vh; /* Altura máxima (90% de la pantalla) */
-    overflow-y: auto; /* Scroll si el contenido es muy largo */
-    position: relative; /* Necesario para posicionar el botón "X" */
-    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-}
-
-/* Botón X para cerrar */
-.modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #999;
-    background: none;
-    border: none;
-    cursor: pointer;
-    line-height: 1;
-    transition: color 0.2s;
-    z-index: 10;
-}
-.modal-close:hover {
-    color: var(--dark-color);
-}
-
-/* Imagen dentro del modal */
-#modal-image {
-    width: 100%;
-    height: 350px; /* Altura fija para consistencia */
-    object-fit: cover;
-    border-radius: 12px;
-    margin-bottom: 1.5rem;
-    background-color: #f0f0f0; /* Color de fondo si falla la carga */
-}
-
-/* Header del modal */
-.modal-header {
-    margin-bottom: 1rem;
-}
-
-#modal-title {
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--dark-color);
-}
-#modal-date {
-    display: block;
-    margin-top: 0.5rem;
-    color: var(--dark-color);
+.footer-tag {
+    display: inline-block;
+    background: var(--secondary-color);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
     font-weight: 500;
 }
 
-/* Cuerpo y descripción */
-.modal-body {
-    position: relative;
-    margin-bottom: 2rem;
-}
-#modal-description {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--dark-color);
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 5000;
+    padding: 1rem;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
-/* Footer y botones de acción */
+.modal-content {
+    background: var(--background-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+    margin: auto;
+}
+
+/* Cabecera modal */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding-right: 50px;
+    padding-right: 1rem;
+}
+#modal-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    margin: 0;
+}
+#modal-date {
+    background: var(--light-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 5px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    margin-left: auto;
+}
+
+/* Cuerpo modal */
+.modal-body {
+    position: relative;
+}
+.modal-actions .btn,
+.modal-actions .btn-danger,
+.modal-actions .btn-primary {
+    text-decoration: none;
+}
+.modal-actions .btn {
+    white-space: nowrap;
+}
+#modal-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+/* Flechas carrusel */
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 50%;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+.carousel-arrow:hover {
+    opacity: 1;
+}
+.carousel-arrow.left {
+    left: 10px;
+}
+.carousel-arrow.right {
+    right: 10px;
+}
+
+#modal-description {
+    margin: 1rem 0;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
 .modal-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
-    border-top: 1px solid #eee;
-    padding-top: 1.5rem;
 }
-
+#modal-category {
+    display: inline-block;
+    background: var(--secondary-color);
+    color: white;
+    padding: 0.4rem 1rem;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
 .modal-actions {
     display: flex;
-    gap: 10px;
+    gap: 0.75rem;
+    flex-wrap: wrap;
 }
 
-/* Ajuste para móviles */
-@media (max-width: 992px) {
-    .main-header { padding-inline: 4%; }
-    .main-nav ul { justify-content: flex-end; }
-}
-
-@media (max-width: 768px) {
-    .main-header { padding-inline: 3%; }
-    .main-nav ul { gap: .5rem; }
-    .hecho-card-actions .btn { width: 100%; }
-}
-
-@media (max-width: 576px) {
-    .hecho-card {
-        flex-direction: column;
-        align-items: stretch;
-    }
-}
-
-/* ================= EMPTY STATE ================= */
-.empty-state-container {
-    text-align: center;
-    padding: 4rem 1rem;
-    background: #f8f9fa;
-    border-radius: 16px;
-    margin: 2rem auto;
-    max-width: 600px;
-}
-
-/* ================= PAGINACIÓN (Estilo Unificado) ================= */
-
-.pagination-wrapper {
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
     display: flex;
+    align-items: center;
     justify-content: center;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+    border-radius: 50%;
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 10;
+    line-height: 1;
 }
 
+.modal-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    transform: rotate(90deg);
+}
+
+/* Transición suave de imágenes */
+#modal-image {
+    transition: opacity 0.3s ease;
+}
+/* ============================================================
+   PAGINACIÓN
+   ============================================================ */
 .pagination {
     display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    padding: 0;
-    margin: 0;
-}
-
-.page-link {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    min-width: 40px;
-    height: 40px;
-    padding: 0 10px;
-
-    background-color: var(--background-color);
-    border: 2px solid var(--border-color);
-    border-radius: var(--border-radius);
-    color: var(--text-color);
-
-    font-weight: 600;
-    text-decoration: none;
-    transition: all 0.2s ease;
-    user-select: none;
+    align-items: center;
+    gap: var(--space-1);
+    margin-top: var(--space-4);
+    flex-wrap: wrap;
 }
 
-.page-link:hover:not(.disabled) {
-    background-color: var(--light-color);
-    color: var(--primary-color);
-    border-color: var(--primary-color);
-    transform: translateY(-2px);
+.page-link, .page-link-ellipsis {
+    color: var(--secondary-color);
     text-decoration: none;
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s, color 0.3s;
+    font-weight: 600;
+}
+
+.page-link:hover {
+    background-color: var(--secondary-color);
+    color: #fff;
+    border-color: var(--secondary-color);
 }
 
 .page-link.active {
     background-color: var(--primary-color);
-    color: #ffffff;
+    color: #fff;
     border-color: var(--primary-color);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.page-link.disabled {
-    color: #b0bec5;
-    background-color: #f8f9fa;
-    border-color: #eee;
     cursor: default;
-    pointer-events: none;
-    box-shadow: none;
 }
 
 .page-link-ellipsis {
-    color: var(--text-color);
-    font-weight: bold;
-    padding: 0 0.5rem;
+    border: none;
+}
+
+@media (max-width: 600px) {
+    .modal-actions {
+        width: 100%;
+        justify-content: stretch;
+    }
+
+    .modal-actions .btn {
+        flex: 1;
+        text-align: center;
+    }
+    .modal-header {
+        flex-direction: column;
+        padding-right: 50px;
+    }
+
+    #modal-date {
+        margin-left: 0;
+        margin-top: 0.5rem;
+        align-self: flex-start;
+    }
 }

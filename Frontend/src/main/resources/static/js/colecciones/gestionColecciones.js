@@ -1,59 +1,52 @@
-// Variable temporal para saber qué estamos borrando
+// Estado temporal del modal
 let _coleccionAEliminar = { id: null, titulo: '' };
 
-// 1. ABRIR MODAL
+// Abre el modal y carga los datos desde el botón
 function abrirModalEliminarColeccion(btn) {
-    const handle = btn.getAttribute('data-id');
-    const titulo = btn.getAttribute('data-titulo') || 'esta colección';
+    const id = btn.dataset.id;
+    const titulo = btn.dataset.titulo || 'esta colección';
 
-    _coleccionAEliminar = { id: handle, titulo: titulo };
+    _coleccionAEliminar = { id, titulo };
 
     const modal = document.getElementById('modal-eliminar');
     const texto = document.getElementById('modal-eliminar-texto');
+    texto.textContent = `¿Seguro que querés eliminar «${titulo}»? Esta acción no se puede deshacer.`;
 
-    // Mensaje claro para el usuario
-    texto.innerHTML = `Estás a punto de borrar definitivamente la colección <strong>"${titulo}"</strong>.<br><br>
-                       Los hechos asociados NO se borrarán del sistema, pero la agrupación dejará de existir.`;
-
-    // Mostrar el modal (quitamos hidden y forzamos flex)
     modal.hidden = false;
-    modal.style.display = 'flex';
+
+    // Enfoque accesible al botón confirmar
+    setTimeout(() => document.getElementById('modal-eliminar-confirmar').focus(), 0);
 }
 
-// 2. CERRAR MODAL
+// Cierra el modal
 function cerrarModalEliminarColeccion() {
     const modal = document.getElementById('modal-eliminar');
     modal.hidden = true;
-    modal.style.display = 'none';
     _coleccionAEliminar = { id: null, titulo: '' };
 }
 
-// Eventos de los botones del modal
-document.addEventListener('DOMContentLoaded', () => {
-    // Botón Cancelar
-    const btnCancelar = document.getElementById('modal-eliminar-cancelar');
-    if (btnCancelar) {
-        btnCancelar.addEventListener('click', cerrarModalEliminarColeccion);
-    }
+// Click en "Cancelar"
+document.getElementById('modal-eliminar-cancelar')?.addEventListener('click', cerrarModalEliminarColeccion);
 
-    // Botón Confirmar (El "Sí, eliminar")
-    const btnConfirmar = document.getElementById('modal-eliminar-confirmar');
-    if (btnConfirmar) {
-        btnConfirmar.addEventListener('click', () => {
-            if (!_coleccionAEliminar.id) return;
+// Click en "Confirmar" => envía POST con el form oculto
+document.getElementById('modal-eliminar-confirmar')?.addEventListener('click', () => {
+    if (!_coleccionAEliminar.id) return;
 
-            const form = document.getElementById('form-eliminar-coleccion');
-            // Construimos la URL: /colecciones/{handle}/eliminar
-            form.action = `/colecciones/${_coleccionAEliminar.id}/eliminar`;
-            form.submit();
-        });
-    }
+    const form = document.getElementById('form-eliminar-coleccion');
+    form.action = `/colecciones/${_coleccionAEliminar.id}/eliminar`; // ruta POST
+    form.submit(); // dispara el POST al backend
 
-    // Cerrar si clic afuera
-    const modal = document.getElementById('modal-eliminar');
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) cerrarModalEliminarColeccion();
-        });
+    cerrarModalEliminarColeccion();
+});
+
+// Cerrar con click fuera del contenido
+document.getElementById('modal-eliminar')?.addEventListener('click', (e) => {
+    if (e.target.id === 'modal-eliminar') cerrarModalEliminarColeccion();
+});
+
+// Cerrar con ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !document.getElementById('modal-eliminar').hidden) {
+        cerrarModalEliminarColeccion();
     }
 });

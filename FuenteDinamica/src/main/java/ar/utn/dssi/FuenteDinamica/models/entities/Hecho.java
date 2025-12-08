@@ -64,7 +64,4 @@ public class Hecho {
   private LocalDateTime fechaEdicion;
 
   private Boolean visible;
-
-  @Column(name = "autor")
-  private String autor;
 }

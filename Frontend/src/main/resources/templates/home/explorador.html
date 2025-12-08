@@ -36,9 +36,9 @@
             <select class="input" id="provincia" name="provincia">
                 <option value="">-- Todas --</option>
                 <option th:each="prov : ${provincias}"
-                        th:value="${prov}"
-                        th:text="${prov}"
-                        th:selected="(${filtroProvincia} != null) AND (${prov} == ${filtroProvincia})">
+                        th:value="${prov.nombre}"
+                        th:text="${prov.nombre}"
+                        th:selected="(${filtroProvincia} != null) AND (${prov.nombre} == ${filtroProvincia})">
                 </option>
             </select>
 

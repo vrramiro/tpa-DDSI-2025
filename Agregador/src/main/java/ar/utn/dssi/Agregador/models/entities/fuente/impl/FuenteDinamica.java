@@ -93,8 +93,6 @@ public class FuenteDinamica implements ITipoFuente {
               .map(ContenidoMultimedia::new)
               .collect(Collectors.toList())
       );
-
-      hecho.setAutor(input.getAutor());
     }
 
     return hecho;

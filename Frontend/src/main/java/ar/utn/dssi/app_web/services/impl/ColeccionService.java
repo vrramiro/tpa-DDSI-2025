@@ -20,18 +20,19 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page, Integer size) {
-        return gestionColeccionApiService.obtenerColecciones(page, size);
+  public PageResponseDTO<ColeccionResponseDTO> listarColecciones(Integer page) {
+        return gestionColeccionApiService.obtenerColecciones(page);
   }
 
   @Override
-  public Optional<ColeccionResponseDTO> obtenerColeccion(String handle) {
-    try {
-      ColeccionResponseDTO coleccion = gestionColeccionApiService.obtenerColeccion(handle);
-      return Optional.ofNullable(coleccion);
-    } catch (NotFoundException e) {
-      return Optional.empty();
-    }
+  public Optional<ColeccionResponseDTO> obtenerColeccion(Long id) {
+      try{
+        ColeccionResponseDTO coleccion = gestionColeccionApiService.obtenerColeccion(id);
+        return Optional.of(coleccion);
+      }
+      catch (NotFoundException e) {
+        return Optional.empty();
+      }
   }
 
   @Override
@@ -41,12 +42,14 @@ public class ColeccionService implements IColeccionService {
   }
 
   @Override
-  public void eliminarColeccion(String handle) {
-    gestionColeccionApiService.eliminarColeccion(handle);
+  public void eliminarColeccion(Long id) {
+    gestionColeccionApiService.obtenerColeccion(id);
+    gestionColeccionApiService.eliminarColeccion(id);
   }
 
   @Override
-  public ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion) {
-    return gestionColeccionApiService.actualizarColeccion(handle, coleccion);
+  public ColeccionResponseDTO actualizarColeccion(Long id) {
+      return gestionColeccionApiService.actualizarColeccion(id);
   }
+
 }
