@@ -22,10 +22,15 @@ public class GestionSolicitudesApiService {
 
     public List<SolicitudDTO> obtenerSolicitudesEliminacion() {
         String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion";
-        List<SolicitudDTO> solicitudesArray = List.of(webApiCallerService.get(url, SolicitudDTO[].class));
-        System.out.println(solicitudesArray);
 
-        return (solicitudesArray);
+        SolicitudDTO[] solicitudesArray = webApiCallerService.get(url, SolicitudDTO[].class);
+
+        if (solicitudesArray == null) {
+            return Collections.emptyList();
+        }
+
+        System.out.println(Arrays.toString(solicitudesArray));
+        return Arrays.asList(solicitudesArray);
     }
 
     public List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado) {
@@ -58,7 +63,4 @@ public class GestionSolicitudesApiService {
         String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion" + idSolicitud + "/estado";
         webApiCallerService.put(url, nuevoEstado, Void.class);
     }
-
-
 }
-
