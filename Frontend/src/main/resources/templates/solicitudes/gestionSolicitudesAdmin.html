@@ -2,6 +2,9 @@
 <head>
     <th:block th:fragment="styles">
         <link th:href="@{/css/solicitudes/gestionSolicitudes.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/coleccionesSistema.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </th:block>
 </head>
 
@@ -27,41 +30,55 @@
         <div th:if="${mensaje}" class="alert alert-success mt-2" th:text="${mensaje}"></div>
         <div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
 
-        <div class="table-container mt-3">
-            <table class="table table-striped">
+        <div class="table-container">
+            <table class="tabla-colecciones">
                 <thead>
                 <tr>
-                    <th>ID Solicitud</th>
-                    <th>Fecha de Creación</th>
-                    <th>Fecha de Evaluación</th>
+                    <th>ID</th>
+                    <th>Fecha Creación</th>
+                    <th>Fecha Evaluación</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th class="text-end">Acciones</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="solicitud : ${solicitudes}">
-                    <td th:text="${solicitud.idSolicitud}">1</td>
-                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/09/2025 14:30</td>
-                    <td th:text="${solicitud.fechaDeEvaluacion != null ? #temporals.format(solicitud.fechaDeEvaluacion, 'dd/MM/yyyy') : '-'}">-</td>
-                    <td>
-              <span th:classappend="${solicitud.estadoDeSolicitud == 'ACEPTADA'} ? 'badge bg-success'
-                      : (solicitud.estadoDeSolicitud == 'RECHAZADA' ? 'badge bg-danger' : 'badge bg-warning')"
-                    th:text="${solicitud.estadoDeSolicitud}">PENDIENTE</span>
-                    </td>
-                    <td class="action-buttons">
-                        <a th:href="@{/solicitudes/panel/{id}(id=${solicitud.idSolicitud})}"
-                           class="btn btn-sm btn-primary">Ver más</a>
+
+                <tr th:if="${#lists.isEmpty(solicitudes)}">
+                    <td colspan="5" class="muted text-center" style="padding: 2rem;">
+                        No hay solicitudes para mostrar.
                     </td>
                 </tr>
-                <tr th:if="${#lists.isEmpty(solicitudes)}">
-                    <td colspan="6" class="text-center">No hay solicitudes para mostrar</td>
+
+                <tr th:each="solicitud : ${solicitudes}">
+                    <td th:text="${solicitud.idSolicitud}">1</td>
+
+                    <td th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy')}">01/01/2025</td>
+
+                    <td th:text="${solicitud.fechaDeEvaluacion != null ? #temporals.format(solicitud.fechaDeEvaluacion, 'dd/MM/yyyy') : '-'}">-</td>
+
+                    <td>
+                        <span th:classappend="${solicitud.estadoDeSolicitud == 'ACEPTADA'} ? 'badge bg-success'
+                                      : (solicitud.estadoDeSolicitud == 'RECHAZADA' ? 'badge bg-danger' : 'badge bg-warning')"
+                              th:text="${solicitud.estadoDeSolicitud}">PENDIENTE</span>
+                    </td>
+
+                    <td class="action-buttons">
+                        <a th:href="@{/solicitudes/panel/solicitudId(id=${solicitud.idSolicitud})}"
+                           class="btn btn-primary btn-sm"
+                           title="Ver detalles">
+                            <i class="fa-solid fa-eye"></i> Ver más
+                        </a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="footer-actions mt-4">
-            <a th:href="@{/solicitudes/nueva}" class="btn btn-primary">Nueva Solicitud</a>
+            <a th:href="@{/solicitudes/crear}" class="btn btn-primary">Nueva Solicitud</a>
+        </div>
+        <div class="footer-actions">
+            <a th:href="@{/panel_gestion}" class="btn btn-secondary">Volver al Panel</a>
         </div>
     </section>
 
