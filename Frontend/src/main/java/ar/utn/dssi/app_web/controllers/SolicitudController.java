@@ -63,11 +63,14 @@ public class SolicitudController {
   @GetMapping("/crearSolicitud")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nueva Solicitud");
-    model.addAttribute("solicitud", new SolicitudDTO());
+    // Inicializamos el objeto Hecho dentro de la solicitud para evitar NullPointerException al bindear el ID
+    SolicitudDTO solicitud = new SolicitudDTO();
+    solicitud.setHecho(new HechoOutputDTO());
+    model.addAttribute("solicitud", solicitud);
     return "solicitudes/solicitudEliminacion";
   }
 
-  @GetMapping("/nueva")
+  @PostMapping("/crear") // Antes era @GetMapping("/nueva")
   public String nuevaSolicitud(@ModelAttribute("solicitud") SolicitudDTO solicitudOutputDTO,
                                BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
     try {
