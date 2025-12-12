@@ -22,6 +22,12 @@ function setMarker(lat, lng) {
 }
 
 window.addEventListener('DOMContentLoaded', function() {
+    const fechaInput = document.getElementById('fecha');
+    if (fechaInput) {
+        const hoy = new Date().toISOString().split('T')[0];
+        fechaInput.setAttribute('max', hoy);
+    }
+
     const latInput = document.getElementById('latitud');
     const lngInput = document.getElementById('longitud');
 
@@ -33,6 +39,7 @@ window.addEventListener('DOMContentLoaded', function() {
             setMarker(lat, lng);
         }
     }
+
 });
 
 map.on('click', function(e) {
