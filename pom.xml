@@ -35,7 +35,6 @@
         <module>Normalizador</module>
         <module>Frontend</module>
         <module>Usuarios</module>
-        <module>Frontend/public</module>
     </modules>
 
 
