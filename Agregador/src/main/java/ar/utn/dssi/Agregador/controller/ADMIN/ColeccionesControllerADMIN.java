@@ -100,4 +100,15 @@ public class ColeccionesControllerADMIN {
 
     return ResponseEntity.ok(hechos);
   }
+
+  @GetMapping("/todas")
+  public ResponseEntity<List<ColeccionOutputDTO>> obtenerTodasLasColecciones() {
+    List<ColeccionOutputDTO> colecciones = coleccionService.obtenerTodasLasColecciones();
+
+    if (colecciones.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(colecciones);
+  }
+
 }

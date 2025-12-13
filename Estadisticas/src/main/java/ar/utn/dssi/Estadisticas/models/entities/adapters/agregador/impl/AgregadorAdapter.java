@@ -35,7 +35,7 @@ public class AgregadorAdapter implements IAgregadorAdapter {
   @Override
   public List<Coleccion> obtenerColecciones() {
     return webClient.get()
-        .uri("/admin/colecciones")
+        .uri("/admin/colecciones/todas")
         .retrieve()
         .bodyToFlux(ColeccionInputDTO.class)
         .map(MapperDeColecciones::coleccionFromInputDTO)
