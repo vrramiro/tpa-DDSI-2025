@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.entities;
 
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,8 +20,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "hecho")
@@ -56,6 +57,11 @@ public class Hecho {
   @Embedded
   private Categoria categoria;
 
+  @Column(nullable = false, name = "clave_comparacion")
+  private String claveComparacion;
+
+  private List<TipoConsenso> consensosDados;
+
   @Embedded
   private Ubicacion ubicacion;
 
@@ -73,29 +79,15 @@ public class Hecho {
   private Boolean visible;
 
   @Column(name = "autor")
-    private String autor;
+  private String autor;
 
-
-  public Boolean mismoHecho(Hecho otroHecho) {
-    return this.titulo.equals(otroHecho.getTitulo()) &&
-        this.categoria.equals(otroHecho.getCategoria()) &&
-        this.ubicacion.equals(otroHecho.getUbicacion()) &&
-        this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
+  public void agregarConsenso(TipoConsenso tipoConsenso) {
+    if (this.consensosDados != null && !this.consensosDados.contains(tipoConsenso)) {
+      this.consensosDados.add(tipoConsenso);
+    }
   }
 
-
-  public boolean tituloSimilar(Hecho otroHecho) {
-    return this.getTitulo().equals(otroHecho.getTituloSanitizado());
-  }
-
-  public boolean mismosAtributos(Hecho otroHecho) {
-    return this.descripcion.equals(otroHecho.getDescripcion())
-        || this.categoria.equals(otroHecho.getCategoria())
-        || this.ubicacion.equals(otroHecho.getUbicacion())
-        || this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
-  }
-
-  public boolean distintaFuente(Hecho hecho) {
-    return (!Objects.equals(hecho.fuente.getId(), this.fuente.getId()));
+  public void resetearConsensos() {
+    this.consensosDados = new ArrayList<>();
   }
 }
