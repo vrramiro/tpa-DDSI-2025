@@ -101,4 +101,9 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     }
     return null;
   }
+
+  @Override
+  public Long contarSolicitudesSpam() {
+    return solicitudDeEliminacionRepository.countByEsSpamTrue();
+  }
 }

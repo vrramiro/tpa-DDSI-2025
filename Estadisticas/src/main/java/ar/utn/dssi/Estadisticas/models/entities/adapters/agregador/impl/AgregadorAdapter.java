@@ -2,11 +2,8 @@ package ar.utn.dssi.Estadisticas.models.entities.adapters.agregador.impl;
 
 import ar.utn.dssi.Estadisticas.dto.input.ColeccionInputDTO;
 import ar.utn.dssi.Estadisticas.dto.input.HechoInputDTO;
-import ar.utn.dssi.Estadisticas.dto.input.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Estadisticas.mappers.MapperDeColecciones;
 import ar.utn.dssi.Estadisticas.mappers.MapperDeHechos;
-import ar.utn.dssi.Estadisticas.mappers.MapperDeSolicitudEliminacion;
-import ar.utn.dssi.Estadisticas.models.entities.SolicitudDeEliminacion;
 import ar.utn.dssi.Estadisticas.models.entities.adapters.agregador.IAgregadorAdapter;
 import ar.utn.dssi.Estadisticas.models.entities.data.Coleccion;
 import ar.utn.dssi.Estadisticas.models.entities.data.Hecho;
@@ -47,13 +44,11 @@ public class AgregadorAdapter implements IAgregadorAdapter {
   }
 
   @Override
-  public List<SolicitudDeEliminacion> obtenerSolicitudes() {
+  public Long obtenerSolicitudesSpam() {
     return webClient.get()
-        .uri("/admin/solicitud/spam")
+        .uri("/admin/solicitudes-eliminacion/spam/cantidad")
         .retrieve()
-        .bodyToFlux(SolicitudDeEliminacionInputDTO.class)
-        .map(MapperDeSolicitudEliminacion::solicitudFromInput)
-        .collectList()
+        .bodyToMono(Long.class)
         .block();
   }
 }

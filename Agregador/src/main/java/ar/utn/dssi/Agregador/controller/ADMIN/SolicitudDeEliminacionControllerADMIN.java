@@ -37,4 +37,10 @@ public class SolicitudDeEliminacionControllerADMIN {
     solicitudesService.procesarSolicitud(idSolicitud, solicitud);
     return ResponseEntity.ok().build();
   }
+
+  @GetMapping("/spam/cantidad")
+  public ResponseEntity<Long> obtenerCantidadSpam() {
+    Long cantidad = solicitudesService.contarSolicitudesSpam();
+    return ResponseEntity.ok(cantidad);
+  }
 }

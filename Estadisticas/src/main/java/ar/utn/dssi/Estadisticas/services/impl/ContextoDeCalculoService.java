@@ -24,6 +24,7 @@ public class ContextoDeCalculoService implements IContextoDeCalculoService {
     contextoDeCalculo.setCategorias(normalizadorAdapter.obtenerCategorias().block());
     contextoDeCalculo.setHechos(agregadorAdapter.obtenerHechos());
     contextoDeCalculo.setColecciones(agregadorAdapter.obtenerColecciones());
+    contextoDeCalculo.setSolicitudDeEliminacion(agregadorAdapter.obtenerSolicitudesSpam());
 
     return contextoDeCalculo;
   }
