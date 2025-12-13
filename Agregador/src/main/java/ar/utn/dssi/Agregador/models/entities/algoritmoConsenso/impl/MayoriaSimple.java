@@ -2,27 +2,26 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Map;
 
 @Component
-public class MayoriaSimple implements IAlgoritmoConsenso {
-    /*
-    @Override
-    public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {
-        long coincidencias = fuentes.stream()
-                .filter(fuente -> fuente.obtenerHechos().stream()
-                        .anyMatch(hechoFuente -> hechoFuente.mismoHecho(hecho)))
-                .count();
-
-        return coincidencias >= fuentes.size()/2;
-    }
-    */
-
+public class MayoriaSimple extends IAlgoritmoConsenso {
   @Override
-  public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
-    return List.of();
+  public void consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+    Integer cantidadFuentes = fuentes.size();
+
+    Map<String, List<Hecho>> hechosPorClave = agruparHechosPorClave(hechos);
+
+    hechosPorClave.forEach((clave, listaHechos) -> {
+      List<Fuente> fuentesDeMencion = listaHechos.stream().map(Hecho::getFuente).toList();
+      if (fuentesDeMencion.stream().distinct().count() == cantidadFuentes / 2) {
+        listaHechos.forEach(hecho -> hecho.agregarConsenso(TipoConsenso.ABSOLUTA));
+      }
+    });
   }
 }
 

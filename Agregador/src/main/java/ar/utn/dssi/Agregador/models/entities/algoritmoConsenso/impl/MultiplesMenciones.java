@@ -3,41 +3,26 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
-public class MultiplesMenciones implements IAlgoritmoConsenso {
-
-  @Value("${cantFuentesMultiplesMenciones}")
-  static private Integer cantidadFuentes;
-
-    /*
-    @Override
-    public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {
-        return this.fuentesLoTienen(hecho, fuentes) && this.ningunaLoTieneConDistintosAtributos(hecho, fuentes);
-    }
-
-    private Boolean fuentesLoTienen(Hecho hecho, List<Fuente> fuentes) {
-        return fuentes.stream().
-                filter(fuente -> fuente.obtenerHechos()
-                        .stream()
-                        .anyMatch(otroHecho -> otroHecho.mismoHecho(hecho)))
-                .count() >= cantidadFuentes;
-    }
-
-    private Boolean ningunaLoTieneConDistintosAtributos(Hecho hecho, List<Fuente> fuentes) {
-        return fuentes
-                .stream()
-                .flatMap(fuente -> fuente.obtenerHechos().stream())
-                .noneMatch(otroHecho -> otroHecho.mismoMismoTitulo(hecho) && !otroHecho.mismosAtributos(hecho));
-    }
-    */
-
+public class MultiplesMenciones extends IAlgoritmoConsenso {
   @Override
-  public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
-    return List.of();
+  public void consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+    Integer cantidadFuentes = fuentes.size();
+
+    Map<String, List<Hecho>> hechosPorClave = agruparHechosPorClave(hechos);
+
+    hechosPorClave.forEach((clave, listaHechos) -> {
+      List<Fuente> fuentesDeMencion = listaHechos.stream().map(Hecho::getFuente).collect(Collectors.toList());
+      if (fuentesDeMencion.stream().distinct().count() == cantidadFuentes) {
+        listaHechos.forEach(hecho -> hecho.agregarConsenso(TipoConsenso.ABSOLUTA));
+      }
+    });
   }
 }
