@@ -17,6 +17,7 @@ public class ConsensuadorDeHechos implements IConsensuadorDeHechos {
   }
 
   public void consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+    hechos.forEach(Hecho::resetearConsensos);
     algoritmosConsenso.forEach(algoritmo -> algoritmo.consensuar(hechos, fuentes));
   }
 
