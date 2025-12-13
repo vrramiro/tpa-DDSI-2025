@@ -16,7 +16,6 @@ import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,10 +43,9 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getProvinciasConMasHechosColeccion(Long idColeccion) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEStadisticaByColeccionIdAndTipoAndFechaDeCalculoIsAfter
-              (idColeccion,
-                  TipoEstadistica.COLECCION_PROVINCIA_HECHOS,
-                  LocalDateTime.now());
+              .findTopByColeccionIdAndTipoOrderByFechaDeCalculoDesc(
+                  idColeccion,
+                  TipoEstadistica.COLECCION_PROVINCIA_HECHOS);
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
       throw new ErrorAlCalcular("Error al calcular provincias con mas hechos en una coleccion.");
@@ -58,9 +56,7 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getCategoriaConMasHechos() {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByTipoAndFechaDeCalculoIsAfter
-              (TipoEstadistica.CATEGORIA_MAS_HECHOS,
-                  LocalDateTime.now());
+          .findTopByTipoOrderByFechaDeCalculoDesc(TipoEstadistica.CATEGORIA_MAS_HECHOS);
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
       throw new ErrorAlCalcular("Error al calcular categorias con mas hechos en una coleccion.");
@@ -71,10 +67,9 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getProvinciasConMasHechoCategoria(Long idCategoria) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByCategoriaIdAndTipoAndFechaDeCalculoIsAfter
-              (idCategoria, TipoEstadistica.
-                      CATEGORIA_PROVINCIA_HECHOS,
-                  LocalDateTime.now());
+          .findTopByCategoriaIdAndTipoOrderByFechaDeCalculoDesc(
+                  idCategoria,
+                  TipoEstadistica.CATEGORIA_PROVINCIA_HECHOS);
 
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
@@ -86,10 +81,9 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getHorasConMasHechosCategoria(Long idCategoria) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByCategoriaIdAndTipoAndFechaDeCalculoIsAfter
-              (idCategoria,
-                  TipoEstadistica.CATEGORIA_HORA_HECHOS,
-                  LocalDateTime.now());
+          .findTopByCategoriaIdAndTipoOrderByFechaDeCalculoDesc(
+                  idCategoria,
+                  TipoEstadistica.CATEGORIA_HORA_HECHOS);
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
       throw new ErrorAlCalcular("Error al calcular horas con mas hechos en una categorias.");
@@ -100,8 +94,7 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getCantidadSpam() {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByTipoAndFechaDeCalculoIsAfter(TipoEstadistica.SOLICITUD_SPAM,
-              LocalDateTime.now());
+          .findTopByTipoOrderByFechaDeCalculoDesc(TipoEstadistica.SOLICITUD_SPAM);
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
       throw new ErrorAlCalcular("Error al calcular cantidad de spam en las solicitudes de eliminacion.");
