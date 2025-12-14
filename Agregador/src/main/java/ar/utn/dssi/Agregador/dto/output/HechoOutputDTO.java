@@ -16,4 +16,5 @@ public class HechoOutputDTO {
   private List<ContenidoMultimediaOuputDTO> contenidoMultimedia;
 
   private String autor;
+  private Boolean visible;
 }

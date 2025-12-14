@@ -1,5 +1,6 @@
 package ar.utn.dssi.app_web.controllers;
 
+import org.springframework.beans.factory.annotation.Value;
 import ar.utn.dssi.app_web.dto.Users.UserRequest;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
 import org.springframework.stereotype.Controller;
@@ -18,11 +19,16 @@ public class HomeController {
     this.usuariosApiService = usuariosApiService;
   }
 
+  @Value("${agregador.service.url:http://localhost:8082}")
+  private String agregadorUrl;
+
   @GetMapping("/")
-  public String home(Model model) {
-    model.addAttribute("titulo", "Home");
+  public String landing(Model model) {
+    model.addAttribute("agregadorUrl", agregadorUrl);
     return "home/landing";
   }
+
+
 
   @GetMapping("/login")
   public String login(Model model) {

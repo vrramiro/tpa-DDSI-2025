@@ -16,32 +16,24 @@
         <!-- Formulario -->
         <form th:action="@{/solicitudes/crear}" th:object="${solicitud}" method="post" class="form">
 
+            <input type="hidden" th:field="*{hecho.id}">
+
             <div class="form-group mb-3">
-                <label for="hechoId"><strong>ID del Hecho</strong></label>
-                <input id="hechoId" type="number" th:field="*{hecho.id}" class="form-control"
-                       placeholder="Ejemplo: 12" required>
-                <small class="form-text text-muted">Número identificador del hecho a eliminar.</small>
-                <div class="text-danger" th:if="${#fields.hasErrors('hecho.id')}" th:errors="*{hecho.id}"></div>
+                <p class="mb-1">
+                    Hecho a eliminar:
+                    <strong style="font-size: 1.2rem;" th:text="${solicitud.hecho.titulo}">TÍTULO DEL HECHO</strong>
+                </p>
+                <small class="text-muted">Estás solicitando la eliminación de este hecho.</small>
             </div>
 
             <div class="form-group mb-3">
-                <label for="hechoId"><strong>ID del Hecho</strong></label>
-                <input id="hechoId" type="number" th:field="*{hecho.idHecho}" class="form-control"
-                       placeholder="Ejemplo: 12" required>
-                <small class="form-text text-muted">Número identificador del hecho a eliminar.</small>
-                <div class="text-danger" th:if="${#fields.hasErrors('hecho.idHecho')}" th:errors="*{hecho.idHecho}"></div>
-            </div>
-
-            <div class="form-group mb-3">
-                <label for="descripcion"><strong>Descripción</strong></label>
-                <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control"
-                          placeholder="Escriba una descripción del hecho o motivo de eliminación" required></textarea>
-                <div class="text-danger" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></div>
+                <label for="descripcion"><strong>Motivo</strong></label>
+                <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control" required></textarea>
             </div>
 
             <div class="submit-container mt-3">
-                <a th:href="@{/solicitudes/gestion}" class="btn btn-secondary">Volver</a>
-                <button type="submit" class="btn btn-primary">Crear</button>
+                <a href="javascript:history.back()" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-danger">Enviar Solicitud</button>
             </div>
         </form>
     </section>

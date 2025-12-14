@@ -1,10 +1,11 @@
+<!DOCTYPE html>
 <html th:replace="~{layout/base:: html}">
 <head>
-    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
         <link rel="stylesheet" th:href="@{/css/home/landing.css}">
     </th:block>
 </head>
+<body>
 
 <div class="row" th:fragment="contenido">
     <div class="class-bienvenida">
@@ -44,28 +45,32 @@
     </div>
 
     <div class="container-hechos">
-        <h2>Hechos Destacados</h2>
-        <div class="features-grid">
-            <div class="card feature-card">
-                <h3>Incendio en Chascomus</h3>
-                <p>En la localidad de Chascomus se incendio una escuela, luego de que sus alumnos festejaran su UPD</p>
-            </div>
-            <div class="card feature-card">
-                <h3>Protestas Sociales Argentina</h3>
-                <p>Los gremios y sindicatos Argentinos, liderados por Hugo Moyano piden por subsidios para inmigrantes
-                    limitrofes</p>
-            </div>
-            <div class="card feature-card">
-                <h3>Ayuda Humanitaria La Matanza</h3>
-                <p>Puntos de distribución de alimentos y polenta en los al rededores de los principales puntos de
-                    votacion.</p>
+        <div class="col-12 text-center mb-4">
+            <h2 class="display-6 fw-bold text-primary">Hechos Recientes</h2>
+            <p class="text-muted">Los últimos sucesos reportados por la comunidad</p>
+        </div>
+
+        <div class="row" id="card-container-hechos">
+            <div class="col-12 text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
             </div>
         </div>
     </div>
-
-    <th:block th:fragment="scripts">
-        <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-        <script th:src="@{/js/home/landing.js}"></script>
-    </th:block>
 </div>
+
+<th:block th:fragment="scripts">
+    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const API_AGREGADOR_CONFIG = /*[[${agregadorUrl}]]*/ 'http://localhost:8082';
+        /*]]>*/
+    </script>
+
+    <script th:src="@{/js/home/landing.js}"></script>
+</th:block>
+
+</body>
 </html>

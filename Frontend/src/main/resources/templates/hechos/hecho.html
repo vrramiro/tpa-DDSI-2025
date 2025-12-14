@@ -79,24 +79,12 @@
             </a>
 
             <div class="action-group">
-                <a th:href="@{/solicitudes/nueva(hechoId=${hecho.id})}" class="btn btn-danger">
+                <a th:href="@{/solicitudes/crearSolicitud(hechoId=${hecho.id})}" class="btn btn-danger">
                     <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
                 </a>
-
-
             </div>
 
-            <div class="action-group" sec:authorize="hasRole('ADMINISTRADOR')"
-                 th:if="${hecho.estado?.name() == 'PENDIENTE'}">
 
-                <form th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Rechazar este hecho?')">Rechazar</button>
-                </form>
-
-                <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Aceptar y publicar este hecho?')">Aceptar</button>
-                </form>
-            </div>
         </div>
     </main>
 

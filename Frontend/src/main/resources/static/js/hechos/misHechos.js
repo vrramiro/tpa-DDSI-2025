@@ -1,5 +1,3 @@
-
-
 let imagenesActuales = [];
 let indiceImagenActual = 0;
 let hechoActualId = null;
@@ -31,10 +29,9 @@ function abrirModalHecho(cardElement) {
     hechoActualId = cardElement.getAttribute('data-id');
 
     // 2. Capturar elementos de la tarjeta clicada
-    // Nota: Usamos selectores que coinciden con tu nuevo HTML
     const title = cardElement.querySelector('.card-title').innerText;
 
-    // Intentamos buscar la fecha, si está dentro de un span o directa
+    // Intentamos buscar la fecha
     const dateEl = cardElement.querySelector('.card-date');
     const date = dateEl ? dateEl.innerText : '';
 
@@ -53,7 +50,7 @@ function abrirModalHecho(cardElement) {
         imgSrc = imgElement.src;
     }
 
-    // Guardar para carrusel (preparado para futuro)
+    // Guardar para carrusel
     imagenesActuales = [imgSrc];
     indiceImagenActual = 0;
 
@@ -62,17 +59,15 @@ function abrirModalHecho(cardElement) {
     document.getElementById('modal-date').innerText = date;
     document.getElementById('modal-image').src = imgSrc;
     document.getElementById('modal-category').innerText = category;
-
-    // Aquí podrías concatenar texto si la descripción en la tarjeta está recortada
     document.getElementById('modal-description').innerText = fullDescription;
 
     // 5. Actualizar botones de acción
     actualizarEnlacesModal(hechoActualId);
 
-    // 6. MOSTRAR MODAL (Usando la clase CSS .active)
+    // 6. MOSTRAR MODAL
     const modalOverlay = document.getElementById('eventModal');
     modalOverlay.classList.add('active');
-    document.body.style.overflow = 'hidden'; // Bloquear scroll del fondo
+    document.body.style.overflow = 'hidden';
 }
 
 /* ----------------------------------------------------------------
@@ -80,10 +75,9 @@ function abrirModalHecho(cardElement) {
    ---------------------------------------------------------------- */
 function cerrarModal() {
     const modalOverlay = document.getElementById('eventModal');
-    modalOverlay.classList.remove('active'); // Ocultar quitando la clase
-    document.body.style.overflow = 'auto'; // Restaurar scroll
+    modalOverlay.classList.remove('active');
+    document.body.style.overflow = 'auto';
 
-    // Limpiar variables
     imagenesActuales = [];
     indiceImagenActual = 0;
     hechoActualId = null;
@@ -98,31 +92,34 @@ function actualizarEnlacesModal(hechoId) {
     const verMasBtn = document.getElementById('modal-ver-mas');
     const editarBtn = document.getElementById('modal-editar');
 
+    // Aseguramos que el botón eliminar tenga el evento onclick asignado
+    // (Aunque ya lo pusimos en el HTML, es buena práctica reforzarlo o dejarlo limpio aquí)
+    const eliminarBtn = document.getElementById('modal-eliminar');
+    if (eliminarBtn) {
+        eliminarBtn.onclick = eliminarHecho;
+    }
+
     if (verMasBtn) {
-        // Ajusta la URL según tu controlador Spring Boot
-        verMasBtn.href = `/hechos/${hechoId}`;    }
+        verMasBtn.href = `/hechos/${hechoId}`;
+    }
 
     if (editarBtn) {
-        // Ajusta la URL según tu controlador Spring Boot
         editarBtn.href = `/hechos/${hechoId}/editar`;
     }
 }
 
 /* ----------------------------------------------------------------
-   Eliminar Hecho (Lógica JS)
+   Eliminar Hecho (REDIRECCIÓN DIRECTA)
    ---------------------------------------------------------------- */
 function eliminarHecho() {
     if (!hechoActualId) return;
 
-    if (confirm('¿Estás seguro de que deseas eliminar este hecho? Esta acción no se puede deshacer.')) {
-        // Redireccionar al endpoint de eliminación
-        // Asegúrate que tu Controller maneje GET para eliminar o usa fetch con DELETE
-        window.location.href = `/hechos/eliminar/${hechoActualId}`;
-    }
+    // CAMBIO: Se eliminó el "confirm" y la redirección es inmediata.
+    window.location.href = `/solicitudes/crearSolicitud?hechoId=${hechoActualId}`;
 }
 
 /* ----------------------------------------------------------------
-   Carrusel (Opcional - Si tienes múltiples imágenes)
+   Carrusel
    ---------------------------------------------------------------- */
 function cambiarImagen(direccion) {
     if (imagenesActuales.length <= 1) return;
@@ -136,7 +133,6 @@ function cambiarImagen(direccion) {
     }
 
     const modalImage = document.getElementById('modal-image');
-    // Pequeño efecto de parpadeo
     modalImage.style.opacity = '0.5';
     setTimeout(() => {
         modalImage.src = imagenesActuales[indiceImagenActual];

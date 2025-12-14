@@ -10,6 +10,5 @@ public interface ISolicitudService {
     List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado);
     SolicitudDTO obtenerSolicitudPorId(Long solicitudId);
     HechoOutputDTO obtenerHechoPorSolicitud(Long solicitudId);
-    void actualizarEstado(Long idSolicitud, String estado);
     SolicitudDTO crearSolicitud(SolicitudDTO solicitudOutputDTO);
 }

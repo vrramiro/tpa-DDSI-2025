@@ -3,6 +3,8 @@ package ar.utn.dssi.app_web.controllers;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.SolicitudDTO;
 import ar.utn.dssi.app_web.error.ValidationException;
+import ar.utn.dssi.app_web.services.GestionHechosApiService;
+import ar.utn.dssi.app_web.services.impl.GestionSolicitudesApiService;
 import ar.utn.dssi.app_web.services.impl.SolicitudService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -21,8 +23,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SolicitudController {
 
-  private final SolicitudService solicitudService;
   private static final Logger log = LoggerFactory.getLogger(SolicitudController.class);
+  private final GestionSolicitudesApiService solicitudService;
+  private final GestionHechosApiService hechosApiService;
 
   @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   @GetMapping("/gestion")
@@ -32,7 +35,7 @@ public class SolicitudController {
 
     List<SolicitudDTO> solicitudes;
     if (estado.equalsIgnoreCase("Todos")) {
-      solicitudes = solicitudService.obtenerTodasLasSolicitudes();
+      solicitudes = solicitudService.obtenerSolicitudesEliminacion();
     } else {
       solicitudes = solicitudService.obtenerSolicitudesPorEstado(estado);
     }
@@ -45,13 +48,12 @@ public class SolicitudController {
 
   @PreAuthorize("hasAnyRole('ADMINISTRADOR')")
   @GetMapping("/panel/solicitudId")
-  public String panelSolicitudes( @RequestParam(name = "id") Long solicitudId,
-                                  Model model) {
+  public String panelSolicitudes(@RequestParam(name = "id") Long solicitudId,
+                                 Model model) {
     SolicitudDTO solicitud = solicitudService.obtenerSolicitudPorId(solicitudId);
 
-    HechoOutputDTO hecho = solicitudService.obtenerHechoPorSolicitud(solicitudId);
+    HechoOutputDTO hecho = (solicitud.getHecho() != null) ? solicitud.getHecho() : new HechoOutputDTO();
 
-    model.addAttribute("titulo", "Panel de Solicitudes");
     model.addAttribute("solicitud", solicitud);
     model.addAttribute("hecho", hecho);
     model.addAttribute("titulo", "Panel de Solicitudes");
@@ -61,23 +63,29 @@ public class SolicitudController {
 
   // CREACION DE SOLICITUDES
   @GetMapping("/crearSolicitud")
-  public String mostrarFormularioCrear(Model model) {
+  public String mostrarFormularioCrear(@RequestParam(name = "hechoId", required = false) Long hechoId, Model model) {
     model.addAttribute("titulo", "Crear Nueva Solicitud");
-    // Inicializamos el objeto Hecho dentro de la solicitud para evitar NullPointerException al bindear el ID
+
     SolicitudDTO solicitud = new SolicitudDTO();
-    solicitud.setHecho(new HechoOutputDTO());
+    HechoOutputDTO hechoDto = new HechoOutputDTO();
+
+    if (hechoId != null) {
+      hechoDto = hechosApiService.obtenerHechoPorId(hechoId);
+    }
+
+    solicitud.setHecho(hechoDto);
     model.addAttribute("solicitud", solicitud);
     return "solicitudes/solicitudEliminacion";
   }
 
-  @PostMapping("/crear") // Antes era @GetMapping("/nueva")
+  @PostMapping("/crear")
   public String nuevaSolicitud(@ModelAttribute("solicitud") SolicitudDTO solicitudOutputDTO,
                                BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
     try {
       SolicitudDTO solicitudCreada = solicitudService.crearSolicitud(solicitudOutputDTO);
       redirectAttributes.addFlashAttribute("mensaje", "Solicitud creada exitosamente");
       redirectAttributes.addFlashAttribute("tipoMensaje", "success");
-      return "redirect:/explorador/" + solicitudCreada;
+      return "redirect:/hechos/misHechos"; //TODO: AGREGAR VISTA DE CREADO EXITOSO
     }
     catch (ValidationException e) {
       convertirValidationExceptionABindingResult(e, bindingResult);
@@ -92,18 +100,24 @@ public class SolicitudController {
     }
   }
 
-  // UPDATE DE SOLICITUDES
-  @PostMapping("/actualizarEstado")
-  public String actualizarEstadoSolicitud(@RequestParam Long solicitudId,
-                                          @RequestParam String estado,
-                                          RedirectAttributes redirectAttributes) {
+  @PostMapping("/procesar")
+  public String procesarSolicitud(@RequestParam Long solicitudId,
+                                  @RequestParam String estado,
+                                  RedirectAttributes redirectAttributes) {
     try {
-      solicitudService.actualizarEstado(solicitudId, estado);
-      redirectAttributes.addFlashAttribute("mensaje", "Estado actualizado correctamente");
+      if (!estado.equals("ACEPTADA") && !estado.equals("RECHAZADA")) {
+        throw new IllegalArgumentException("Estado inválido");
+      }
+      solicitudService.procesarSolicitud(solicitudId, estado);
+      String mensaje = estado.equals("ACEPTADA") ? "Solicitud aceptada y hecho eliminado." : "Solicitud rechazada.";
+      redirectAttributes.addFlashAttribute("mensaje", mensaje);
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+
     } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("error", "Error al actualizar el estado");
+      log.error("Error procesando solicitud", e);
+      redirectAttributes.addFlashAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
     }
-    return "redirect:/solicitudes/panel?id=" + solicitudId;
+    return "redirect:/solicitudes/gestion";
   }
 
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
