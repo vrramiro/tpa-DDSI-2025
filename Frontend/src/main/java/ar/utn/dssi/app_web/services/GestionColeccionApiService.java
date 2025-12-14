@@ -189,5 +189,18 @@ public class GestionColeccionApiService {
         }
         return listaCriterios;
     }
+
+    public List<ColeccionResponseDTO> obtenerTodasLasColecciones() {
+        String url = UriComponentsBuilder
+                .fromUriString(agregadorServiceUrl)
+                .path("/admin/colecciones/todas")
+                .toUriString();
+        try {
+            return webApiCallerService.getListPublic(url, ColeccionResponseDTO.class);
+        } catch (Exception e) {
+            log.error("Error al obtener todas las colecciones", e);
+            throw new RuntimeException("No se pudieron cargar todas las colecciones", e);
+        }
+    }
 }
 

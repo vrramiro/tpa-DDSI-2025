@@ -1,5 +1,7 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.CategoriaDTO;
+import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.input.EstadisticaInputDTO;
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
@@ -16,6 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Comparator;
+import java.util.List;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -30,8 +35,17 @@ public class EstadisticaController {
         model.addAttribute("titulo", "Estadisticas");
 
         try {
-            //model.addAttribute("colecciones", coleccionService.listarColecciones());
-            model.addAttribute("categorias", categoriaService.obtenerCategorias());
+            List<ColeccionResponseDTO> colecciones = coleccionService.obtenerTodasLasColecciones();
+            if (colecciones != null) {
+                colecciones.sort(Comparator.comparing(coleccion -> coleccion.getTitulo().toLowerCase()));
+                model.addAttribute("colecciones", colecciones);
+            }
+
+            List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+            if (categorias != null) {
+                categorias.sort(Comparator.comparing(c -> c.getCategoria().toLowerCase()));
+                model.addAttribute("categorias", categorias);
+            }
         } catch (Exception e) {
             model.addAttribute("error", "Error cargando listas.");
         }
