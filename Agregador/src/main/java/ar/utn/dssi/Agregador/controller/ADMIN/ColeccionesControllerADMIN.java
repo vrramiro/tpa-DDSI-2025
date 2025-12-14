@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin/colecciones")
@@ -100,15 +99,4 @@ public class ColeccionesControllerADMIN {
 
     return ResponseEntity.ok(hechos);
   }
-
-  @GetMapping("/todas")
-  public ResponseEntity<List<ColeccionOutputDTO>> obtenerTodasLasColecciones() {
-    List<ColeccionOutputDTO> colecciones = coleccionService.obtenerTodasLasColecciones();
-
-    if (colecciones.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
-    return ResponseEntity.ok(colecciones);
-  }
-
 }

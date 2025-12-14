@@ -5,7 +5,7 @@ import java.util.List;
 
 @Data
 public class ColeccionInputDTO {
-  private Long id;
+  private String handle;
   private String titulo;
   private List<HechoInputDTO> hechos;
 }

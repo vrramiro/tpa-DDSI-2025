@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
@@ -193,7 +192,7 @@ public class GestionColeccionApiService {
     public List<ColeccionResponseDTO> obtenerTodasLasColecciones() {
         String url = UriComponentsBuilder
                 .fromUriString(agregadorServiceUrl)
-                .path("/admin/colecciones/todas")
+                .path("/public/colecciones/todas")
                 .toUriString();
         try {
             return webApiCallerService.getListPublic(url, ColeccionResponseDTO.class);

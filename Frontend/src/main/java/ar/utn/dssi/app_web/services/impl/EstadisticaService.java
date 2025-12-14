@@ -23,8 +23,8 @@ public class EstadisticaService implements IEstadisticaService {
     }
 
     @Override
-    public EstadisticaInputDTO obtenerProvinciaPorColeccion(Long idColeccion) {
-        return estadisticasApiService.getProvinciaPorColeccion(idColeccion);
+    public EstadisticaInputDTO obtenerProvinciaPorColeccion(String handle) {
+        return estadisticasApiService.getProvinciaPorColeccion(handle);
     }
 
     @Override

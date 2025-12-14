@@ -40,11 +40,11 @@ public class EstadisticasService implements IEstadisticasService {
   }
 
   @Override
-  public EstadisticaOutputDTO getProvinciasConMasHechosColeccion(Long idColeccion) {
+  public EstadisticaOutputDTO getProvinciasConMasHechosColeccion(String handle) {
     try {
       Estadistica estadistica = estadisticasRepository
-              .findTopByColeccionIdAndTipoOrderByFechaDeCalculoDesc(
-                  idColeccion,
+              .findTopByColeccionHandleAndTipoOrderByFechaDeCalculoDesc(
+                  handle,
                   TipoEstadistica.COLECCION_PROVINCIA_HECHOS);
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {

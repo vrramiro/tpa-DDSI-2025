@@ -33,7 +33,7 @@ public class ProvinciaConMasHechosColeccion implements ICalculadorDeEstadisticas
 
       if (maxProvincia != null) {
         Estadistica estadistica = Estadistica.builder()
-            .coleccionId(coleccion.getId())
+            .coleccionHandle(coleccion.getHandle())
             .nombreColeccion(coleccion.getNombre())
             .tipo(TipoEstadistica.COLECCION_PROVINCIA_HECHOS)
             .valor(maxProvincia.getValue())

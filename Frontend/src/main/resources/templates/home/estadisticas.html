@@ -1,81 +1,96 @@
 <html th:replace="~{layout/base:: html}">
 <head>
-    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
         <link rel="stylesheet" th:href="@{/css/home/estadisticas.css}">
     </th:block>
 </head>
 
 <div class="row" th:fragment="contenido">
-    <h1>Estadisticas</h1>
+    <h1>Estadísticas</h1>
     <section class="estadisticas">
+
         <section class="card">
             <h2>Provincias con mayor cantidad de hechos en colección</h2>
             <div class="form-row">
-                <label for="coleccion">Elegir Colección:</label>
-                <select class="input" id="coleccion">
-                    <option>Seguridad</option>
-                    <option>Tránsito</option>
-                    <option>Clima</option>
+                <label for="select-coleccion">Elegir Colección:</label>
+                <select class="input" id="select-coleccion">
+                    <option th:each="c : ${colecciones}"
+                            th:value="${c.handle}"
+                            th:text="${c.titulo}"></option>
                 </select>
             </div>
             <div class="stats-grid">
-                <div><span class="big-number max">120</span>
-                    <p>Buenos Aires</p></div>
+                <span class="big-number max" id="res-col-valor"
+                      th:text="${statColDefault != null ? statColDefault.valor : '-'}">-</span>
+                <p th:text="${statColDefault != null ? statColDefault.clave : 'Sin datos'}">Cargando...</p>
             </div>
         </section>
 
         <section class="card">
             <h2>Categorías con mayor cantidad de hechos</h2>
             <div class="stats-grid">
-                <div><span class="big-number max">300</span>
-                    <p>Accidentes</p></div>
+                <div>
+                    <span class="big-number max"
+                          th:text="${statCategoriaMax != null ? statCategoriaMax.valor : '-'}">-</span>
+                    <p th:text="${statCategoriaMax != null ? statCategoriaMax.clave : 'Sin datos'}">Calculando...</p>
+                </div>
             </div>
         </section>
 
         <section class="card">
             <h2>Provincias con mayor cantidad de hechos en Categoría</h2>
             <div class="form-row">
-                <label for="categoria-prov">Elegir Categoría:</label>
-                <select class="input" id="categoria-prov">
-                    <option>Accidentes</option>
-                    <option>Inundaciones</option>
-                    <option>Cortes de luz</option>
+                <label for="select-cat-prov">Elegir Categoría:</label>
+                <select class="input" id="select-cat-prov">
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.categoria}"></option>
                 </select>
             </div>
             <div class="stats-grid">
-                <div><span class="big-number max">180</span>
-                    <p>Mendoza</p></div>
+                <div>
+                    <span class="big-number max" id="res-cat-prov-valor"
+                          th:text="${statCatProvDefault != null ? statCatProvDefault.valor : '-'}">-</span>
+                    <p id="res-cat-prov-clave"
+                       th:text="${statCatProvDefault != null ? statCatProvDefault.clave : 'Sin datos'}">Cargando...</p>
+                </div>
+            </div>
         </section>
 
         <section class="card">
             <h2>Hora de mayor incidencia de Hechos en Categoría</h2>
             <div class="form-row">
-                <label for="categoria-hora">Elegir Categoría:</label>
-                <select class="input" id="categoria-hora">
-                    <option>Accidentes</option>
-                    <option>Inundaciones</option>
-                    <option>Cortes de luz</option>
+                <label for="select-cat-hora">Elegir Categoría:</label>
+                <select class="input" id="select-cat-hora">
+                    <option th:each="cat : ${categorias}"
+                            th:value="${cat.id}"
+                            th:text="${cat.categoria}"></option>
                 </select>
             </div>
             <div class="stats-grid">
-                <div><span class="big-number max">60</span>
-                    <p>08:00</p></div>
+                <div>
+                    <span class="big-number max" id="res-cat-hora-valor"
+                          th:text="${statCatHoraDefault != null ? statCatHoraDefault.valor : '-'}">-</span>
+                    <p id="res-cat-hora-clave"
+                       th:text="${statCatHoraDefault != null ? statCatHoraDefault.clave : 'Sin datos'}">Cargando...</p>
+                </div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Solicitud de Eliminación</h2>
+            <h2>Solicitudes de Eliminación (Spam)</h2>
             <div class="stats-grid">
-                <div><span class="big-number min">15</span>
-                    <p>Spam</p></div>
+                <div>
+                    <span class="big-number min" th:text="${statSpam}">0</span>
+                    <p>Detectadas</p>
+                </div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Exportar estadisticas</h2>
+            <h2>Exportar estadísticas</h2>
             <div class="stats-grid">
-                <button class="btn btn-primary">Exportar</button>
+                <button class="btn btn-primary" onclick="window.location.href='/estadisticas/exportar?tipo=CSV'">Exportar CSV</button>
             </div>
         </section>
     </section>

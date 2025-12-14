@@ -25,8 +25,8 @@ public class GestionEstadisticaApiService {
         return apiCaller.get(urlEstadisticas + "/estadisticas/categoria", EstadisticaInputDTO.class);
     }
 
-    public EstadisticaInputDTO getProvinciaPorColeccion(Long idColeccion){
-        return apiCaller.get(urlEstadisticas + "/estadisticas/coleccion/" + idColeccion + "/provincia", EstadisticaInputDTO.class);
+    public EstadisticaInputDTO getProvinciaPorColeccion(String handle){
+        return apiCaller.get(urlEstadisticas + "/estadisticas/coleccion/" + handle + "/provincia", EstadisticaInputDTO.class);
     }
 
     public EstadisticaInputDTO getProvinciaPorCategoria(Long idCategoria){

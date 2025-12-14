@@ -36,15 +36,20 @@ public class EstadisticaController {
 
         try {
             List<ColeccionResponseDTO> colecciones = coleccionService.obtenerTodasLasColecciones();
-            if (colecciones != null) {
+            if (colecciones != null && !colecciones.isEmpty()) {
                 colecciones.sort(Comparator.comparing(coleccion -> coleccion.getTitulo().toLowerCase()));
                 model.addAttribute("colecciones", colecciones);
+                String handle = colecciones.get(0).getHandle();
+                model.addAttribute("statColDefault", estadisticasService.obtenerProvinciaPorColeccion(handle));
             }
 
             List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
-            if (categorias != null) {
+            if (categorias != null && !categorias.isEmpty()) {
                 categorias.sort(Comparator.comparing(c -> c.getCategoria().toLowerCase()));
                 model.addAttribute("categorias", categorias);
+                Long idPrimeraCat = categorias.get(0).getId();
+                model.addAttribute("statCatProvDefault", estadisticasService.obtenerProvinciaPorCategoria(idPrimeraCat));
+                model.addAttribute("statCatHoraDefault", estadisticasService.obtenerHorasPorCategoria(idPrimeraCat));
             }
         } catch (Exception e) {
             model.addAttribute("error", "Error cargando listas.");
@@ -59,10 +64,10 @@ public class EstadisticaController {
         return "home/estadisticas";
     }
 
-    @GetMapping("/estadisticas/api/coleccion/{id}/provincia")
+    @GetMapping("/estadisticas/api/coleccion/{handle}/provincia")
     @ResponseBody
-    public ResponseEntity<EstadisticaInputDTO> provinciaPorColeccion(@PathVariable Long id) {
-        return ResponseEntity.ok(estadisticasService.obtenerProvinciaPorColeccion(id));
+    public ResponseEntity<EstadisticaInputDTO> provinciaPorColeccion(@PathVariable String handle) {
+        return ResponseEntity.ok(estadisticasService.obtenerProvinciaPorColeccion(handle));
     }
 
     @GetMapping("/estadisticas/api/categoria/{id}/provincia")

@@ -6,7 +6,7 @@ import ar.utn.dssi.Estadisticas.models.entities.data.Coleccion;
 public class MapperDeColecciones {
   public static Coleccion coleccionFromInputDTO(ColeccionInputDTO coleccionInputDTO) {
     Coleccion coleccion = new Coleccion();
-    coleccion.setId(coleccionInputDTO.getId());
+    coleccion.setHandle(coleccionInputDTO.getHandle());
     coleccion.setNombre(coleccionInputDTO.getTitulo());
     coleccion.setHechos(
         coleccionInputDTO

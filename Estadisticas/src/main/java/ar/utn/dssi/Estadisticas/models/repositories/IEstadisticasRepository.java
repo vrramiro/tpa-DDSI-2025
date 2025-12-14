@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface IEstadisticasRepository extends JpaRepository<Estadistica, Long> {
   Estadistica findTopByCategoriaIdAndTipoOrderByFechaDeCalculoDesc(Long idCategoria, TipoEstadistica tipo);
 
-  Estadistica findTopByColeccionIdAndTipoOrderByFechaDeCalculoDesc(Long coleccionId, TipoEstadistica tipo);
+  Estadistica findTopByColeccionHandleAndTipoOrderByFechaDeCalculoDesc(String handle, TipoEstadistica tipo);
 
   Estadistica findTopByTipoOrderByFechaDeCalculoDesc(TipoEstadistica tipo);
 }

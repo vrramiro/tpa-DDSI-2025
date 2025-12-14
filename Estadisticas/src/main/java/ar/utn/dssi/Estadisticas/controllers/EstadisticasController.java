@@ -18,8 +18,8 @@ public class EstadisticasController {
   private final IEstadisticasService estadisticasService;
 
   @GetMapping("/coleccion/{idColeccion}/provincia")
-  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(Long idColeccion) {
-    EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechosColeccion(idColeccion);
+  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(String handle) {
+    EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechosColeccion(handle);
     return ResponseEntity.ok(estadisticas);
   }
 
