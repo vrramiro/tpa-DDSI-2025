@@ -4,10 +4,13 @@ import ar.utn.dssi.Estadisticas.models.entities.Estadistica;
 import ar.utn.dssi.Estadisticas.models.entities.TipoEstadistica;
 import ar.utn.dssi.Estadisticas.models.entities.calculadores.ICalculadorDeEstadisticas;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CantidadSolicitudesEliminacionSpam implements ICalculadorDeEstadisticas {
 
   @Override

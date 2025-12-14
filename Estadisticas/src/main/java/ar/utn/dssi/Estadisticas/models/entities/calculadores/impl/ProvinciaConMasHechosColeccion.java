@@ -6,12 +6,15 @@ import ar.utn.dssi.Estadisticas.models.entities.calculadores.ICalculadorDeEstadi
 import ar.utn.dssi.Estadisticas.models.entities.data.Coleccion;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.models.entities.data.Hecho;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class ProvinciaConMasHechosColeccion implements ICalculadorDeEstadisticas {
 
   @Override
