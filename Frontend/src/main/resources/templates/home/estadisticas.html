@@ -24,7 +24,7 @@
             <span class="big-number max" id="res-col-valor"
                   th:text="${statColDefault != null ? statColDefault.valor : '-'}">-</span>
                     <p id="res-col-clave"
-                       th:text="${statColDefault != null ? statColDefault.clave : 'Sin datos'}">Cargando...</p>
+                       th:text="${statColDefault != null ? statColDefault.clave : 'Sin datos'}">Sin datos</p>
                 </div>
             </div>
         </section>
@@ -35,7 +35,7 @@
                 <div>
                     <span class="big-number max"
                           th:text="${statCategoriaMax != null ? statCategoriaMax.valor : '-'}">-</span>
-                    <p th:text="${statCategoriaMax != null ? statCategoriaMax.clave : 'Sin datos'}">Calculando...</p>
+                    <p th:text="${statCategoriaMax != null ? statCategoriaMax.clave : 'Sin datos'}">Sin datos</p>
                 </div>
             </div>
         </section>
@@ -55,7 +55,7 @@
                     <span class="big-number max" id="res-cat-prov-valor"
                           th:text="${statCatProvDefault != null ? statCatProvDefault.valor : '-'}">-</span>
                     <p id="res-cat-prov-clave"
-                       th:text="${statCatProvDefault != null ? statCatProvDefault.clave : 'Sin datos'}">Cargando...</p>
+                       th:text="${statCatProvDefault != null ? statCatProvDefault.clave : 'Sin datos'}">Sin datos</p>
                 </div>
             </div>
         </section>
@@ -75,17 +75,17 @@
                     <span class="big-number max" id="res-cat-hora-valor"
                           th:text="${statCatHoraDefault != null ? statCatHoraDefault.valor : '-'}">-</span>
                     <p id="res-cat-hora-clave"
-                       th:text="${statCatHoraDefault != null ? statCatHoraDefault.clave : 'Sin datos'}">Cargando...</p>
+                       th:text="${statCatHoraDefault != null ? statCatHoraDefault.clave : 'Sin datos'}">Sin datos</p>
                 </div>
             </div>
         </section>
 
         <section class="card">
-            <h2>Solicitudes de Eliminación (Spam)</h2>
+            <h2>Solicitudes de Eliminación</h2>
             <div class="stats-grid">
                 <div>
                     <span id="cant-solicitudes-spam" class="big-number min" th:text="${statSpam.valor}">0</span>
-                    <p>Detectadas</p>
+                    <p>Spam</p>
                 </div>
             </div>
         </section>

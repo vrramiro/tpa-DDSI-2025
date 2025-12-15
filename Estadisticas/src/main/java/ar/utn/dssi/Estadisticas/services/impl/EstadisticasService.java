@@ -126,8 +126,12 @@ public class EstadisticasService implements IEstadisticasService {
   @Override
   public File getArchivoEstadisticas(TipoArchivo tipo) {
     try {
+      List<Estadistica> listaEstadisticas = estadisticasRepository.findAll();
+      if (listaEstadisticas.isEmpty()) {
+        log.warn("No hay estadísticas para exportar");
+      }
       IExportadorArchivos exportador = ExportadorFactory.getExportador(tipo);
-      return exportador.exportarEstadisticas();
+      return exportador.exportarEstadisticas(listaEstadisticas);
     } catch (Exception e) {
       log.error("Error al exportar archivo", e);
       return null;

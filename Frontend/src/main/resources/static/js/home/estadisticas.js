@@ -65,14 +65,14 @@ async function actualizarEstadistica(url, idValor, idClave) {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
-        const data = await response.json();
+        const text = await response.text();
 
-        // Validamos si hay dato real (que no sea null ni string "null")
-        if (data.valor && data.valor !== "null") {
+        const data = text ? JSON.parse(text) : null;
+
+        if (data && data.valor && data.valor !== "null") {
             elValor.textContent = data.valor;
             elClave.textContent = data.clave || "";
         } else {
-            // No hay datos: aplicamos formato verde
             aplicarFormatoSinDatos(elValor, elClave);
         }
 

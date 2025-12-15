@@ -6,7 +6,6 @@ import ar.utn.dssi.app_web.dto.input.EstadisticaInputDTO;
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import ar.utn.dssi.app_web.services.Interfaces.IEstadisticaService;
-import io.github.classgraph.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
@@ -17,6 +16,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 
 import java.util.Comparator;
 import java.util.List;
@@ -89,16 +91,21 @@ public class EstadisticaController {
     public ResponseEntity<Resource> exportar(@RequestParam(defaultValue = "CSV") String tipo) {
         try {
             byte[] archivo = estadisticasService.exportarEstadisticas(tipo);
+
+            if (archivo == null || archivo.length == 0) {
+                return ResponseEntity.notFound().build();
+            }
+
             ByteArrayResource resource = new ByteArrayResource(archivo);
 
-            /*return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=estadisticas.csv")
-                    .contentLength(archivo.length)
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Estadisticas MetaMapa.csv")
                     .contentType(MediaType.parseMediaType("text/csv"))
-                    .body(resource);*/
-            return null;
+                    .contentLength(archivo.length)
+                    .body(resource);
 
         } catch (Exception e) {
+            log.error("Error exportando estadísticas desde el front", e);
             return ResponseEntity.internalServerError().build();
         }
     }
