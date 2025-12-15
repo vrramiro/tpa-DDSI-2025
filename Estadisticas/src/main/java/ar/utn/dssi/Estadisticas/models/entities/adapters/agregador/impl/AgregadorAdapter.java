@@ -46,7 +46,7 @@ public class AgregadorAdapter implements IAgregadorAdapter {
   @Override
   public Long obtenerSolicitudesSpam() {
     return webClient.get()
-        .uri("/admin/solicitudes-eliminacion/spam/cantidad")
+        .uri("/public/solicitudes-eliminacion/spam-cantidad")
         .retrieve()
         .bodyToMono(Long.class)
         .block();

@@ -59,7 +59,10 @@ public class EstadisticaController {
             model.addAttribute("statSpam", estadisticasService.obtenerCantidadSpam());
             model.addAttribute("statCategoriaMax", estadisticasService.obtenerCategoriaMasHechos());
         } catch (Exception e) {
-            log.error("No se pudieron cargar las cantidad de spam y/o las categorias con mas hechos");
+            log.error("No se pudieron cargar las cantidad de spam y/o las categorias con mas hechos. Causa: ", e);
+
+            model.addAttribute("statSpam", 0);
+            model.addAttribute("statCategoriaMax", "No disponible");
         }
         return "home/estadisticas";
     }
