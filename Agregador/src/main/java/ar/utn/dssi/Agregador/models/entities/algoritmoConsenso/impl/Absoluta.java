@@ -11,17 +11,20 @@ import java.util.Map;
 @Component
 public class Absoluta extends IAlgoritmoConsenso {
   @Override
-  public void consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+  protected TipoConsenso getTipoConsenso() {
+    return TipoConsenso.ABSOLUTA;
+  }
+
+  @Override
+  protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
     Integer cantidadFuentes = fuentes.size();
+    Integer cantidadHechosFuenteDistinta = hechosActuales.stream()
+        .map(Hecho::getFuente)
+        .distinct()
+        .toList()
+        .size();
 
-    Map<String, List<Hecho>> hechosPorClave = agruparHechosPorClave(hechos);
-
-    hechosPorClave.forEach((clave, listaHechos) -> {
-      List<Fuente> fuentesDeMencion = listaHechos.stream().map(Hecho::getFuente).toList();
-      if (fuentesDeMencion.stream().distinct().count() == cantidadFuentes) {
-        listaHechos.forEach(hecho -> hecho.agregarConsenso(TipoConsenso.ABSOLUTA));
-      }
-    });
+    return cantidadFuentes == cantidadHechosFuenteDistinta;
   }
 }
 

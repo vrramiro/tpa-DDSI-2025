@@ -11,17 +11,20 @@ import java.util.Map;
 @Component
 public class MayoriaSimple extends IAlgoritmoConsenso {
   @Override
-  public void consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
+  protected TipoConsenso getTipoConsenso() {
+    return TipoConsenso.MAYORIA_SIMPLE;
+  }
+
+  @Override
+  protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
     Integer cantidadFuentes = fuentes.size();
-
-    Map<String, List<Hecho>> hechosPorClave = agruparHechosPorClave(hechos);
-
-    hechosPorClave.forEach((clave, listaHechos) -> {
-      List<Fuente> fuentesDeMencion = listaHechos.stream().map(Hecho::getFuente).toList();
-      if (fuentesDeMencion.stream().distinct().count() == cantidadFuentes / 2) {
-        listaHechos.forEach(hecho -> hecho.agregarConsenso(TipoConsenso.ABSOLUTA));
-      }
-    });
+    Integer cantidadHechosFuenteDistinta = hechosActuales.stream()
+        .map(Hecho::getFuente)
+        .distinct()
+        .toList()
+        .size();
+    
+    return cantidadHechosFuenteDistinta >= cantidadFuentes / 2;
   }
 }
 
