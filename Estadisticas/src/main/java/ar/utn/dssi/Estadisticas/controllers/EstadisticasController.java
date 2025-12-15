@@ -7,6 +7,7 @@ import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.io.File;
@@ -18,7 +19,7 @@ public class EstadisticasController {
   private final IEstadisticasService estadisticasService;
 
   @GetMapping("/coleccion/{idColeccion}/provincia")
-  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(String handle) {
+  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(@PathVariable("idColeccion") String handle) {
     EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechosColeccion(handle);
     return ResponseEntity.ok(estadisticas);
   }
@@ -30,13 +31,13 @@ public class EstadisticasController {
   }
 
   @GetMapping("/categoria/{idCategoria}/provincia")
-  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechoCategoria(Long idCategoria) {
+  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechoCategoria(@PathVariable("idCategoria") Long idCategoria) {
     EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechoCategoria(idCategoria);
     return ResponseEntity.ok(estadisticas);
   }
 
   @GetMapping("/categoria/{idCategoria}/horas")
-  public ResponseEntity<EstadisticaOutputDTO> getHorasConMasHechosCategoria(Long idCategoria) {
+  public ResponseEntity<EstadisticaOutputDTO> getHorasConMasHechosCategoria(@PathVariable("idCategoria") Long idCategoria) {
     EstadisticaOutputDTO estadisticas = estadisticasService.getHorasConMasHechosCategoria(idCategoria);
     return ResponseEntity.ok(estadisticas);
   }

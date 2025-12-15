@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 "/colecciones/{handle}/hechos",
                                 "/privacidad",
                                 "/estadisticas",
+                                "/estadisticas/api/**",
                                 "/css/**",
                                 "/js/**",
                                 "/img/**",

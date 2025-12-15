@@ -69,19 +69,19 @@ public class EstadisticaController {
 
     @GetMapping("/estadisticas/api/coleccion/{handle}/provincia")
     @ResponseBody
-    public ResponseEntity<EstadisticaInputDTO> provinciaPorColeccion(@PathVariable String handle) {
+    public ResponseEntity<EstadisticaInputDTO> provinciaPorColeccion(@PathVariable("handle") String handle) {
         return ResponseEntity.ok(estadisticasService.obtenerProvinciaPorColeccion(handle));
     }
 
     @GetMapping("/estadisticas/api/categoria/{id}/provincia")
     @ResponseBody
-    public ResponseEntity<EstadisticaInputDTO> provinciaPorCategoria(@PathVariable Long id) {
+    public ResponseEntity<EstadisticaInputDTO> provinciaPorCategoria(@PathVariable("id") Long id) {
         return ResponseEntity.ok(estadisticasService.obtenerProvinciaPorCategoria(id));
     }
 
     @GetMapping("/estadisticas/api/categoria/{id}/horas")
     @ResponseBody
-    public ResponseEntity<EstadisticaInputDTO> horasPorCategoria(@PathVariable Long id) {
+    public ResponseEntity<EstadisticaInputDTO> horasPorCategoria(@PathVariable("id") Long id) {
         return ResponseEntity.ok(estadisticasService.obtenerHorasPorCategoria(id));
     }
 
