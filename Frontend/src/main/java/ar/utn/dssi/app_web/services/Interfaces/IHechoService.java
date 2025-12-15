@@ -30,4 +30,5 @@ public interface IHechoService {
     List<SolicitudEdicionDTO> obtenerSolicitudesEdicionPendientes();
     void procesarSolicitudEdicion(Long id, String accion, HechoRequest modificaciones);
     Optional<SolicitudEdicionDTO> obtenerSolicitudEdicionPorId(Long id);
+    List<HechoOutputDTO> obtenerHechosRecientes(int limit);
 }

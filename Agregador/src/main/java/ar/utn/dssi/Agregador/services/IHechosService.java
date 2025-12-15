@@ -26,4 +26,7 @@ public interface IHechosService {
   List<HechoOutputDTO> obtenerHechosPorAutor(String autor);
 
   Page<HechoOutputDTO> obtenerTodos(Pageable pageable);
+
+  List<HechoOutputDTO> obtenerHechosRecientes(int limit);
+
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/base:: html}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base:: html}">
 <head>
     <th:block th:fragment="styles">
         <link rel="stylesheet" th:href="@{/css/home/landing.css}">
@@ -10,20 +10,17 @@
 <div class="row" th:fragment="contenido">
     <div class="class-bienvenida">
         <h1>Bienvenido a MetaMapa</h1>
-        <p>Una plataforma abierta y colaborativa para documentar, visualizar y analizar hechos geolocalizados de manera
-            transparente y verificable.</p>
+        <p>Una plataforma abierta y colaborativa para documentar, visualizar y analizar hechos geolocalizados de manera transparente y verificable.</p>
         <div>
             <a class="btn btn-primary" th:href="@{/hechos/explorador}">
-                <button class="btn btn-primary">Explorar Mapa</button>
+                <button class="btn btn-primary" type="button">Explorar Mapa</button>
             </a>
         </div>
     </div>
 
     <div class="container-quienesSomos">
         <h2>¿Qué es MetaMapa?</h2>
-        <p>Nuestra misión es proporcionar una herramienta accesible para que periodistas, investigadores, activistas y
-            ciudadanos puedan registrar y consultar eventos importantes, creando un archivo histórico geográfico
-            confiable.</p>
+        <p>Nuestra misión es proporcionar una herramienta accesible para que periodistas, investigadores, activistas y ciudadanos puedan registrar y consultar eventos importantes, creando un archivo histórico geográfico confiable.</p>
     </div>
 
     <div class="container-colecciones">
@@ -47,14 +44,32 @@
     <div class="container-hechos">
         <div class="col-12 text-center mb-4">
             <h2 class="display-6 fw-bold text-primary">Hechos Recientes</h2>
-            <p class="text-muted">Los últimos sucesos reportados por la comunidad</p>
         </div>
 
-        <div class="row" id="card-container-hechos">
-            <div class="col-12 text-center">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
+        <div class="features-grid">
+
+            <div th:if="${#lists.isEmpty(hechosRecientes)}" class="text-center text-muted" style="grid-column: 1 / -1;">
+                No hay hechos recientes cargados en el sistema.
+            </div>
+
+            <div class="card feature-card" th:each="hecho : ${hechosRecientes}">
+
+                <div class="mb-2">
+                    <span class="badge bg-light text-dark border" th:text="${hecho.categoria ?: 'General'}"></span>
                 </div>
+
+                <h3 th:text="${hecho.titulo}">Titulo del Hecho</h3> <p th:text="${hecho.descripcion != null && hecho.descripcion.length() > 120 ? #strings.substring(hecho.descripcion,0,120) + '...' : hecho.descripcion}">
+                Descripción breve...
+            </p>
+
+                <div style="margin-top: auto; padding-top: 1rem;">
+                    <small class="text-muted d-block mb-2">
+                        <i class="bi bi-calendar3 me-1"></i>
+                        <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2025</span>
+                    </small>
+                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver más</a>
+                </div>
+
             </div>
         </div>
     </div>
@@ -62,13 +77,6 @@
 
 <th:block th:fragment="scripts">
     <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        const API_AGREGADOR_CONFIG = /*[[${agregadorUrl}]]*/ 'http://localhost:8082';
-        /*]]>*/
-    </script>
-
     <script th:src="@{/js/home/landing.js}"></script>
 </th:block>
 

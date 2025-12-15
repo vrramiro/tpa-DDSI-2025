@@ -11,7 +11,10 @@ import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.GestionHechosApiService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -177,4 +180,26 @@ public class HechoServices implements IHechoService {
             .filter(s -> s.getId().equals(id))
             .findFirst();
   }
+
+
+    @Value("${agregador.service.url}")
+    private String agregadorUrl;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    public List<HechoOutputDTO> obtenerHechosRecientes(int limit) {
+
+      String url = agregadorUrl + "/hechos/recientes?limit=" + limit;
+
+      ResponseEntity<HechoOutputDTO[]> response =
+              restTemplate.getForEntity(url, HechoOutputDTO[].class);
+
+      if (response.getStatusCode().is2xxSuccessful() &&
+              response.getBody() != null) {
+        return Arrays.asList(response.getBody());
+      }
+
+      return List.of();
+    }
+
 }

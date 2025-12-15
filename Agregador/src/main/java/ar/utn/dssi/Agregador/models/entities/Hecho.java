@@ -59,6 +59,7 @@ public class Hecho {
   @Embedded
   private Ubicacion ubicacion;
 
+  @Getter
   @Column(nullable = false, name = "fechaAcontecimiento")
   private LocalDateTime fechaAcontecimiento;
 
@@ -98,4 +99,5 @@ public class Hecho {
   public boolean distintaFuente(Hecho hecho) {
     return (!Objects.equals(hecho.fuente.getId(), this.fuente.getId()));
   }
+
 }

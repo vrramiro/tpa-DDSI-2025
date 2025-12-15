@@ -84,9 +84,17 @@ public class HechosControllerPUBLIC {
   }
 
   @GetMapping("/recientes")
-  public ResponseEntity<Page<HechoOutputDTO>> obtenerHechosRecientes(@PageableDefault(size = 3) Pageable pageable) {
-    Page<HechoOutputDTO> hechos = hechosService.obtenerTodos(pageable);
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosRecientes(
+          @RequestParam(defaultValue = "3") int limit
+  ) {
+    List<HechoOutputDTO> hechos = hechosService.obtenerHechosRecientes(limit);
+
+    if (hechos.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
     return ResponseEntity.ok(hechos);
   }
+
 
 }

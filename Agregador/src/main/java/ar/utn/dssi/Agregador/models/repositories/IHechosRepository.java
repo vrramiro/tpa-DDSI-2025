@@ -1,5 +1,6 @@
 package ar.utn.dssi.Agregador.models.repositories;
 
+import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -37,4 +38,7 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   Page<Hecho> findByVisibleTrue(Pageable pageable);
 
   List<Hecho> findByAutor(String autor);
+
+  @Query("SELECT h FROM Hecho h ORDER BY h.fechaAcontecimiento DESC")
+  List<Hecho> findHechosRecientes(Pageable pageable);
 }
