@@ -25,4 +25,5 @@ public class HechoFuenteDinamicaInputDTO {
   private List<String> contenidoMultimedia;
 
   private String autor;
+  private Boolean visible;
 }

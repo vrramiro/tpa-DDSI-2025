@@ -27,8 +27,16 @@ public class FuentesService implements IFuentesService {
   @Override
   public List<Hecho> hechosNuevos() {
     return this.fuenteRepository.findAll().stream()
-        .flatMap(fuente -> actualizarFuenteYObtenerHechos(fuente).stream())
-        .toList();
+            .flatMap(fuente -> {
+              try {
+                return actualizarFuenteYObtenerHechos(fuente).stream();
+              } catch (Exception e) {
+                System.err.println("Error al procesar la fuente: " + fuente.getNombre());
+                e.printStackTrace();
+                return java.util.stream.Stream.empty();
+              }
+            })
+            .toList();
   }
 
   private List<Hecho> actualizarFuenteYObtenerHechos(Fuente fuente) {
