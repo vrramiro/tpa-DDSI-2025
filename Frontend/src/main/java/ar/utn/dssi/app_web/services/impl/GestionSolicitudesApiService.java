@@ -33,7 +33,8 @@ public class GestionSolicitudesApiService {
     }
 
     public List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado) {
-        String url = agregadorServiceUrl + "/admin/solicitudes" + (estado != null && !estado.isBlank() ? "?estado=" + estado : "");
+        String url = agregadorServiceUrl + "/admin/solicitudes-eliminacion" + (estado != null && !estado.isBlank() ? "?estado=" + estado : "");
+
         SolicitudDTO[] solicitudesArray = webApiCallerService.get(url, SolicitudDTO[].class);
 
         if (solicitudesArray == null) {

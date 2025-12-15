@@ -90,6 +90,14 @@
         </div>
     </div>
 
+    <div th:if="${mensaje}"
+         class="alert alert-dismissible fade show"
+         th:classappend="${tipoMensaje == 'success'} ? 'alert-success' : 'alert-danger'"
+         role="alert">
+        <strong th:text="${mensaje}">Mensaje</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
     <th:block th:fragment="scripts">
         <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
         <script th:src="@{/js/hechos/misHechos.js}"></script>
