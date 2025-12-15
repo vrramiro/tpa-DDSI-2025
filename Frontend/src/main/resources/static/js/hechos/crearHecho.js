@@ -89,6 +89,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const URL_UPLOAD = 'http://localhost:8082/multimedia/upload';
     let archivosSubidos = [];
 
+    if (form) {
+        if (!form.querySelector('input[name="visible"]')) {
+            const inputVisible = document.createElement('input');
+            inputVisible.type = 'hidden';
+            inputVisible.name = 'visible';
+            inputVisible.value = 'true';
+            form.appendChild(inputVisible);
+            console.log("Campo 'visible' agregado al formulario.");
+        }
+    }
+
     if (fileInput) {
         fileInput.addEventListener('change', async function() {
             const files = Array.from(fileInput.files);

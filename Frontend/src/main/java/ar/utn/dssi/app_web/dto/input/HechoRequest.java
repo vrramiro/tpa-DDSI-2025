@@ -17,4 +17,5 @@ public class HechoRequest {
   private List<String> urlsContenidoMultimedia;
 
   private Boolean anonimo;
+  private Boolean visible;
 }

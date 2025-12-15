@@ -19,6 +19,7 @@ public class MapperDeHechos {
     dtoHecho.setTituloSanitizado(hecho.getTituloSanitizado());
     dtoHecho.setDescripcionSanitizada(hecho.getDescripcionSanitizado());
 
+
     dtoHecho.setCategoria(MapperDeCategoria.categoriaToOutputDTO(hecho.getCategoria()));
     dtoHecho.setUbicacion(MapperDeUbicacion.ubicacionOuputFromUbicacion(hecho.getUbicacion()));
     dtoHecho.setFechaAcontecimiento(hecho.getFechaAcontecimiento());
@@ -37,6 +38,7 @@ public class MapperDeHechos {
 
     hecho.setTituloSanitizado(hechoInputDTO.getTituloSanitizado());
     hecho.setDescripcionSanitizado(hechoInputDTO.getDescripcionSanitizada());
+    hecho.setVisible(hechoInputDTO.getVisible() != null ? hechoInputDTO.getVisible() : true);
 
     hecho.setUbicacion(MapperDeUbicacion.ubicacionFromInput(hechoInputDTO.getUbicacion()));
     hecho.setCategoria(MapperDeCategoria.categoriaFromCategoriaNormalizadorDTO(hechoInputDTO.getCategoria()));
@@ -56,6 +58,8 @@ public class MapperDeHechos {
     ubicacion.setLatitud(hechoInputDTO.getLatitud());
     ubicacion.setLongitud(hechoInputDTO.getLongitud());
     hecho.setUbicacion(ubicacion);
+    hecho.setVisible(hechoInputDTO.getVisible() != null ? hechoInputDTO.getVisible() : true);
+
 
     return hecho;
   }
