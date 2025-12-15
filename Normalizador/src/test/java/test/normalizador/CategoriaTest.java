@@ -31,42 +31,33 @@ class CategoriaTest {
 
   @Test
   void normalizarCategoria_ExisteCategoria_RetornaCategoria() {
-    // Arrange
-    Categoria categoriaInput = new Categoria();
-    categoriaInput.setNombre("Tecnologia");
+    String nombreCategoria = "Tecnologia"; // Usamos String directamente
 
     Categoria categoriaMock = new Categoria();
     categoriaMock.setId(1L);
     categoriaMock.setNombre("Tecnologia");
 
-    when(categoriaRepository.findCategoriaByCategoriaExterna("tecnologia"))
-        .thenReturn(categoriaMock);
+    when(categoriaRepository.findCategoriaByNombre(nombreCategoria)).thenReturn(categoriaMock);
 
-    // Act
-    Categoria resultado = categoriaService.normalizarCategoria(categoriaInput);
 
-    // Assert
+    Categoria resultado = categoriaService.normalizarCategoria(nombreCategoria);
+
     assertNotNull(resultado);
     assertEquals(1L, resultado.getId());
     assertEquals("Tecnologia", resultado.getNombre());
-    verify(categoriaRepository, times(1))
-        .findCategoriaByCategoriaExterna("tecnologia");
+    verify(categoriaRepository, times(1)).findCategoriaByNombre(nombreCategoria);
   }
 
   @Test
   void normalizarCategoria_NoExisteCategoria_LanzaExcepcion() {
-    // Arrange
-    Categoria categoriaInput = new Categoria();
-    categoriaInput.setNombre("Inexistente");
+    String nombreCategoria = "Inexistente";
 
-    when(categoriaRepository.findCategoriaByCategoriaExterna("inexistente"))
-        .thenReturn(null);
+    when(categoriaRepository.findCategoriaByNombre(nombreCategoria)).thenReturn(null);
+    when(categoriaRepository.findCategoriaByCategoriaExterna(nombreCategoria)).thenReturn(null);
 
-    // Act & Assert
+
     RuntimeException ex = assertThrows(RuntimeException.class,
-        () -> categoriaService.normalizarCategoria(categoriaInput));
-
-    assertEquals("Categoria no encontrada", ex.getMessage());
+            () -> categoriaService.normalizarCategoria(nombreCategoria));
   }
 
   @Test

@@ -31,16 +31,17 @@ class HechoTest {
 
   private IHechosRepositorio hechoRepositorio;
   private INormalizadorAdapter normalizadorAdapter;
+  private FactoryLector factoryLector;
   private HechoServicio hechoServicio;
 
   @BeforeEach
   void setUp() {
     hechoRepositorio = Mockito.mock(IHechosRepositorio.class);
     normalizadorAdapter = Mockito.mock(INormalizadorAdapter.class);
+    factoryLector = Mockito.mock(FactoryLector.class);
 
-    hechoServicio = new HechoServicio(normalizadorAdapter);
-    ReflectionTestUtils.setField(hechoServicio, "hechoRepositorio", hechoRepositorio);
-    ReflectionTestUtils.setField(hechoServicio, "normalizadorAdapter", normalizadorAdapter);
+    hechoServicio = new HechoServicio(normalizadorAdapter, hechoRepositorio, factoryLector);
+
     ReflectionTestUtils.setField(hechoServicio, "cantidadMinimaDeHechos", 0);
   }
 
