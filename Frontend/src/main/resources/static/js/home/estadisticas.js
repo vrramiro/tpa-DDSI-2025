@@ -3,39 +3,45 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initListeners() {
-    // Listener para Colección -> Provincia
+    const spamCounter = document.getElementById("cant-solicitudes-spam");
+
+    if (spamCounter) {
+
+        let texto = spamCounter.textContent.trim();
+
+
+        if (!texto || texto === "null" || texto === "") {
+            spamCounter.textContent = "0";
+        }
+    }
+
     const selectColeccion = document.getElementById("select-coleccion");
     if (selectColeccion) {
         selectColeccion.addEventListener("change", (e) => {
-            const handle = e.target.value; // El valor del option es el handle
             actualizarEstadistica(
-                `/estadisticas/api/coleccion/${handle}/provincia`,
+                `/estadisticas/api/coleccion/${e.target.value}/provincia`,
                 "res-col-valor",
                 "res-col-clave"
             );
         });
     }
 
-    // Listener para Categoría -> Provincia
     const selectCatProv = document.getElementById("select-cat-prov");
     if (selectCatProv) {
         selectCatProv.addEventListener("change", (e) => {
-            const id = e.target.value;
             actualizarEstadistica(
-                `/estadisticas/api/categoria/${id}/provincia`,
+                `/estadisticas/api/categoria/${e.target.value}/provincia`,
                 "res-cat-prov-valor",
                 "res-cat-prov-clave"
             );
         });
     }
 
-    // Listener para Categoría -> Hora
     const selectCatHora = document.getElementById("select-cat-hora");
     if (selectCatHora) {
         selectCatHora.addEventListener("change", (e) => {
-            const id = e.target.value;
             actualizarEstadistica(
-                `/estadisticas/api/categoria/${id}/horas`,
+                `/estadisticas/api/categoria/${e.target.value}/horas`,
                 "res-cat-hora-valor",
                 "res-cat-hora-clave"
             );
@@ -47,29 +53,42 @@ async function actualizarEstadistica(url, idValor, idClave) {
     const elValor = document.getElementById(idValor);
     const elClave = document.getElementById(idClave);
 
-    // Estado de carga (Loading)
+    // Feedback visual simple
     elValor.style.opacity = '0.5';
     elClave.textContent = "Calculando...";
 
+    // Limpiamos clases de "Sin datos" por si estaban puestas de antes
+    elValor.classList.remove('estado-sin-datos');
+    elClave.classList.remove('descripcion-sin-datos');
+
     try {
         const response = await fetch(url);
-
-        if (!response.ok) {
-            throw new Error(`Error HTTP: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
 
         const data = await response.json();
-        // Se asume que data llega como: { clave: "Mendoza", valor: "150" }
 
-        // Actualizar DOM
-        elValor.textContent = data.valor || "0";
-        elClave.textContent = data.clave || "Sin datos";
+        // Validamos si hay dato real (que no sea null ni string "null")
+        if (data.valor && data.valor !== "null") {
+            elValor.textContent = data.valor;
+            elClave.textContent = data.clave || "";
+        } else {
+            // No hay datos: aplicamos formato verde
+            aplicarFormatoSinDatos(elValor, elClave);
+        }
 
     } catch (error) {
-        console.error("Error al obtener estadísticas:", error);
-        elValor.textContent = "-";
-        elClave.textContent = "Error al cargar";
+        console.error("Error stats:", error);
+        aplicarFormatoSinDatos(elValor, elClave, "Error de carga");
     } finally {
         elValor.style.opacity = '1';
     }
+}
+
+function aplicarFormatoSinDatos(elValor, elClave, mensaje = "Sin datos") {
+    elValor.textContent = "-";
+    elClave.textContent = mensaje;
+
+    // Aplicamos las clases CSS que usan var(--primary-color)
+    elValor.classList.add('estado-sin-datos');
+    elClave.classList.add('descripcion-sin-datos');
 }

@@ -20,9 +20,12 @@
                 </select>
             </div>
             <div class="stats-grid">
-                <span class="big-number max" id="res-col-valor"
-                      th:text="${statColDefault != null ? statColDefault.valor : '-'}">-</span>
-                <p th:text="${statColDefault != null ? statColDefault.clave : 'Sin datos'}">Cargando...</p>
+                <div>
+            <span class="big-number max" id="res-col-valor"
+                  th:text="${statColDefault != null ? statColDefault.valor : '-'}">-</span>
+                    <p id="res-col-clave"
+                       th:text="${statColDefault != null ? statColDefault.clave : 'Sin datos'}">Cargando...</p>
+                </div>
             </div>
         </section>
 
@@ -81,7 +84,7 @@
             <h2>Solicitudes de Eliminación (Spam)</h2>
             <div class="stats-grid">
                 <div>
-                    <span class="big-number min" th:text="${statSpam}">0</span>
+                    <span id="cant-solicitudes-spam" class="big-number min" th:text="${statSpam.valor}">0</span>
                     <p>Detectadas</p>
                 </div>
             </div>
