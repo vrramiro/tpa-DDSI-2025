@@ -14,21 +14,22 @@
 
     <main class="container-detalle">
 
-
-
         <div class="hecho-content">
 
             <div class="hecho-header">
-                <div class="hecho-badges">
-                    <span class="badge badge-category" th:text="${hecho.categoria}">Categoría</span>
 
-                    <span th:if="${hecho.estado != null}"
-                          th:class="'badge badge-status ' + ${hecho.estado}"
-                          th:text="${hecho.estado}">ESTADO</span>
+                <div class="hecho-title-wrapper">
+
+                    <h1 class="hecho-title" th:text="${hecho.titulo}">Título del Hecho</h1>
+
+                    <div class="hecho-badges">
+                        <span class="badge badge-category" th:text="${hecho.categoria}">Categoría</span>
+
+                        <span th:if="${hecho.estado != null}"
+                              th:class="'badge badge-status ' + ${hecho.estado}"
+                              th:text="${hecho.estado}">ESTADO</span>
+                    </div>
                 </div>
-
-                <h1 class="hecho-title" th:text="${hecho.titulo}">Título del Hecho</h1>
-
                 <div class="hecho-meta">
                     <span><i class="fa-regular fa-calendar"></i>
                         <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">Fecha</span>
@@ -87,25 +88,15 @@
 
             </div>
 
+            <div class="map-section">
+                <h3><i class="fa-solid fa-map-location-dot"></i> Ubicación del hecho</h3>
 
-
-            <!--<div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
-               <h3><i class="fa-solid fa-photo-film"></i> Galería Completa</h3>
-               <div class="gallery-grid">
-                   <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
-                       <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
-                           <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
-                       </a>
-                   </div>
-               </div>
-           </div> -->
-
-           <div class="map-section">
-               <h3><i class="fa-solid fa-map-location-dot"></i> Ubicación del hecho</h3>
-               <div id="map-detail"></div>
-           </div>
-
-       </div>
+                <div id="map-detail"
+                     th:data-lat="${hecho.ubicacion.latitud}"
+                     th:data-lng="${hecho.ubicacion.longitud}"
+                     th:data-titulo="${hecho.titulo}">
+                </div>
+            </div>
 
        <div class="hecho-actions">
            <a href="javascript:history.back()" class="btn btn-primary">
@@ -117,41 +108,15 @@
                    <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
                </a>
            </div>
-
-
        </div>
+    </div>
    </main>
 
 </div>
 
 <th:block th:fragment="scripts">
    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-   <script th:inline="javascript">
-       /*<![CDATA[*/
-       document.addEventListener('DOMContentLoaded', function() {
-           const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
-           const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
-           const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
-
-           if (lat != null && lng != null) {
-               const map = L.map('map-detail').setView([lat, lng], 14);
-
-               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                   attribution: '© OpenStreetMap contributors'
-               }).addTo(map);
-
-               L.marker([lat, lng]).addTo(map)
-                   .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
-                   .openPopup();
-           } else {
-               document.getElementById('map-detail').innerHTML =
-                   '<p style="text-align:center; padding:2rem; color:#666;">Ubicación no disponible.</p>';
-           }
-       });
-       /*]]>*/
-   </script>
+    <script th:src="@{/js/hechos/hecho.js}"></script>
 </th:block>
-
 </body>
 </html>
