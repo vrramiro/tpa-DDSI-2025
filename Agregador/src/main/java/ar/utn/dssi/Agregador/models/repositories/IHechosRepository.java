@@ -39,6 +39,6 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
 
   List<Hecho> findByAutor(String autor);
 
-  @Query("SELECT h FROM Hecho h ORDER BY h.fechaAcontecimiento DESC")
+  @Query("SELECT h FROM Hecho h WHERE h.visible IS TRUE ORDER BY h.fechaAcontecimiento DESC")
   List<Hecho> findHechosRecientes(Pageable pageable);
 }

@@ -58,7 +58,8 @@
                     <span class="badge bg-light text-dark border" th:text="${hecho.categoria ?: 'General'}"></span>
                 </div>
 
-                <h3 th:text="${hecho.titulo}">Titulo del Hecho</h3> <p th:text="${hecho.descripcion != null && hecho.descripcion.length() > 120 ? #strings.substring(hecho.descripcion,0,120) + '...' : hecho.descripcion}">
+                <h3 th:text="${hecho.titulo}">Titulo del Hecho</h3>
+                <p th:text="${hecho.descripcion != null && hecho.descripcion.length() > 120 ? #strings.substring(hecho.descripcion,0,120) + '...' : hecho.descripcion}">
                 Descripción breve...
             </p>
 
@@ -67,7 +68,7 @@
                         <i class="bi bi-calendar3 me-1"></i>
                         <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2025</span>
                     </small>
-                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-sm btn-outline-primary rounded-pill px-3">Ver más</a>
+                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-primary btn-outline-primary rounded-pill px-3">Ver más</a>
                 </div>
 
             </div>

@@ -57,12 +57,40 @@
 
             <div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
                 <h3><i class="fa-solid fa-photo-film"></i> Multimedia</h3>
-                <div class="gallery-grid">
-                    <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
-                        <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
-                            <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
-                        </a>
+
+                <div id="carouselHecho" class="carousel slide" data-bs-ride="carousel">
+
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselHecho"
+                                th:each="media, iter : ${hecho.contenidoMultimedia}"
+                                th:data-bs-slide-to="${iter.index}"
+                                th:class="${iter.index == 0} ? 'active' : ''"
+                                th:aria-current="${iter.index == 0} ? 'true' : 'false'"
+                                th:aria-label="'Slide ' + ${iter.index + 1}"></button>
                     </div>
+
+                    <div class="carousel-inner rounded shadow-sm">
+                        <div th:each="media, iter : ${hecho.contenidoMultimedia}"
+                             th:class="${iter.index == 0} ? 'carousel-item active' : 'carousel-item'">
+
+                            <div class="d-flex justify-content-center align-items-center bg-light" style="height: 400px; overflow: hidden;">
+                                <img th:src="${'http://localhost:8082' + media.url}"
+                                     class="d-block"
+                                     style="max-height: 100%; max-width: 100%; object-fit: contain;"
+                                     alt="Evidencia multimedia">
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHecho" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselHecho" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
                 </div>
             </div>
 

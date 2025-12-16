@@ -137,11 +137,9 @@ public class HechosService implements IHechosService {
 
   @Override
   public List<HechoOutputDTO> obtenerHechosRecientes(int limit) {
-    return hechosRepository
-            .findHechosRecientes(PageRequest.of(0, limit))
-            .stream()
-            .map(HechoOutputDTO::fromEntity)
-            .toList();
+    List<Hecho> hechos = hechosRepository.findHechosRecientes(PageRequest.of(0, limit));
+    return hechos.stream()
+            .map(MapperDeHechos::hechoToOutputDTO)
+            .collect(Collectors.toList());
   }
-
 }
