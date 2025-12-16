@@ -68,7 +68,11 @@
                         <i class="bi bi-calendar3 me-1"></i>
                         <span th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2025</span>
                     </small>
-                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-primary btn-outline-primary rounded-pill px-3">Ver más</a>
+                    <a th:href="@{/hechos/{id}(id=${hecho.id})}"
+                       class="btn btn-primary btn-outline-primary rounded-pill px-3"
+                       style="text-decoration: none;">
+                        Ver más
+                    </a>
                 </div>
 
             </div>

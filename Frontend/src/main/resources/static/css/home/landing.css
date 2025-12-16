@@ -1,21 +1,15 @@
-/* ============================================================
-   LANDING - ESTILOS ESPECÍFICOS
-   ============================================================ */
 
-/* Contenedor centralizado */
 .container {
     width: min(92%, var(--container-max));
     margin-inline: auto;
 }
 
-/* Imágenes y medios siempre fluidos */
 img, svg, video, canvas {
     max-width: 100%;
     height: auto;
     display: block;
 }
 
-/* Menos movimiento si el usuario lo prefiere */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation: none !important;
@@ -23,9 +17,7 @@ img, svg, video, canvas {
     }
 }
 
-/* ============================================================
-   SECCIÓN BIENVENIDA / HERO
-   ============================================================ */
+
 .class-bienvenida {
     text-align: center;
     background: var(--background-color);
@@ -45,11 +37,7 @@ img, svg, video, canvas {
     margin: 0 auto clamp(1rem, 2vw, 2rem);
 }
 
-/* ============================================================
-   SECCIONES DE CONTENIDO
-   ============================================================ */
 
-/* Contenedor base para secciones */
 .container-quienesSomos,
 .container-colecciones,
 .container-hechos {
@@ -68,18 +56,13 @@ img, svg, video, canvas {
     margin-bottom: clamp(.5rem, 1.5vw, 1rem);
 }
 
-/* ============================================================
-   TARJETAS Y GRID
-   ============================================================ */
 
-/* Grid adaptable */
 .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: clamp(1rem, 3vw, 2rem);
 }
 
-/* Tarjetas genéricas */
 .card {
     background: var(--background-color);
     border-radius: var(--border-radius);
@@ -96,7 +79,6 @@ img, svg, video, canvas {
     box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Tarjetas de features */
 .feature-card {
     text-align: center;
 }
@@ -106,11 +88,7 @@ img, svg, video, canvas {
     margin-bottom: .5rem;
 }
 
-/* ============================================================
-   MODAL
-   ============================================================ */
 
-/* Modal oculto por defecto */
 .modal {
     display: none;
     position: fixed;
@@ -124,12 +102,10 @@ img, svg, video, canvas {
     justify-content: center;
 }
 
-/* Cuando el modal está enfocado con :target */
 .modal:target {
     display: flex;
 }
 
-/* Caja del modal */
 .modal-content {
     background: #fff;
     padding: 2rem;
@@ -140,7 +116,6 @@ img, svg, video, canvas {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-/* Botón de cierre */
 .modal-close {
     position: absolute;
     top: 10px;
@@ -151,9 +126,6 @@ img, svg, video, canvas {
     text-decoration: none;
 }
 
-/* ============================================================
-   RESPONSIVE ESPECÍFICO DE LANDING
-   ============================================================ */
 
 @media (max-width: 992px) {
     .class-bienvenida {
@@ -167,29 +139,23 @@ img, svg, video, canvas {
     }
 }
 
-/* ============================================================
-   MEJORAS TARJETAS HECHOS (Landing)
-   ============================================================ */
 
-/* Asegurar que todas las tarjetas en la grid tengan la misma altura */
 .features-grid .card {
     height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    border: 1px solid rgba(0,0,0,0.08); /* Borde sutil */
+    border: 1px solid rgba(0,0,0,0.08);
     background-color: #ffffff;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Efecto Hover más pronunciado */
 .features-grid .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-    border-color: var(--primary-color, #0d6efd); /* Usa tu variable de color primario */
+    border-color: var(--primary-color, #0d6efd);
 }
 
-/* Estilo para el título del hecho */
 .features-grid .card h3 {
     font-size: 1.25rem;
     font-weight: 700;
@@ -199,26 +165,29 @@ img, svg, video, canvas {
     line-height: 1.4;
 }
 
-/* Estilo para la descripción */
 .features-grid .card p {
     font-size: 0.95rem;
     color: #6c757d;
     line-height: 1.5;
-    flex-grow: 1; /* Empuja el footer hacia abajo */
+    flex-grow: 1;
     margin-bottom: 1.5rem;
 }
 
-/* Badge de categoría */
 .features-grid .card .badge {
     font-weight: 500;
     letter-spacing: 0.5px;
     padding: 0.5em 0.8em;
     border-radius: 4px;
-    background-color: #e9ecef; /* Fondo gris claro por defecto */
+    background-color: #e9ecef;
     color: #495057;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
 }
 
-/* Footer de la tarjeta (fecha y botón) */
 .features-grid .card div[style*="margin-top: auto"] {
     border-top: 1px solid #f0f0f0;
     padding-top: 1rem;
@@ -232,7 +201,6 @@ img, svg, video, canvas {
     color: #95a5a6;
 }
 
-/* Botón "Ver más" */
 .features-grid .card .btn-outline-primary {
     border-width: 2px;
     font-weight: 600;
