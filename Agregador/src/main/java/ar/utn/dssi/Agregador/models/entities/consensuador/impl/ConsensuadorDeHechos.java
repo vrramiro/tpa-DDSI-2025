@@ -22,7 +22,7 @@ public class ConsensuadorDeHechos implements IConsensuadorDeHechos {
   }
 
   public void asignarClaveDeComparacion(Hecho hecho) {
-    String fechaAcontecimiento = hecho.getFechaAcontecimiento().toString();
+    String fechaAcontecimiento = hecho.getFechaAcontecimiento().toLocalDate().toString();
     Double latitud = hecho.getUbicacion().getLatitud();
     Double longitud = hecho.getUbicacion().getLongitud();
     String geohash = GeoHash.geoHashStringWithCharacterPrecision(latitud, longitud, 7);

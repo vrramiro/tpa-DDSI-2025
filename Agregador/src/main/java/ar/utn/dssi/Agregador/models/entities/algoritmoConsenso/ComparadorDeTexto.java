@@ -41,7 +41,7 @@ public class ComparadorDeTexto {
       else break;
     }
 
-    double p = 0.1; // scaling factor estándar
+    double p = 0.1;
     return jaro + (prefix * p * (1.0 - jaro));
   }
 
@@ -52,7 +52,7 @@ public class ComparadorDeTexto {
     int largo2 = cadena2.length();
     if (largo1 == 0 || largo2 == 0) return 0.0;
 
-    int matchDistance = Math.max(largo1, largo2) / 2 - 1;
+    int matchDistance = Math.max(0, Math.max(largo1, largo2)) / 2 - 1;
 
     boolean[] s1Matches = new boolean[largo1];
     boolean[] s2Matches = new boolean[largo2];

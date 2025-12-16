@@ -22,7 +22,7 @@ public class ConsensoService implements IConsensoService {
   }
 
   @Override
-  public void consensuarHechos(List<Hecho> hechosExistentes) {
+  public void consensuarHechos() {
     try {
       List<Hecho> hechos = this.hechosRepository.findByVisible(true);
       List<Fuente> fuentes = this.fuentesRepository.findAll();

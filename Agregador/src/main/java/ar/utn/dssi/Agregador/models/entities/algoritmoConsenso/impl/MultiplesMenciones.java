@@ -14,8 +14,8 @@ import java.util.Map;
 public class MultiplesMenciones extends IAlgoritmoConsenso {
   private final ComparadorDeTexto comparadorDeTexto;
 
-  public MultiplesMenciones() {
-    this.comparadorDeTexto = new ComparadorDeTexto();
+  public MultiplesMenciones(ComparadorDeTexto comparadorDeTexto) {
+    this.comparadorDeTexto = comparadorDeTexto;
   }
 
   @Override
@@ -25,6 +25,8 @@ public class MultiplesMenciones extends IAlgoritmoConsenso {
 
   @Override
   protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
+    if (hechosActuales == null || hechosActuales.isEmpty()) return false;
+
     Integer cantidadHechosFuenteDistinta = hechosActuales.stream()
         .map(Hecho::getFuente)
         .distinct()
@@ -33,27 +35,22 @@ public class MultiplesMenciones extends IAlgoritmoConsenso {
 
     if (cantidadHechosFuenteDistinta < 2) return false;
 
-    String claveActual = hechosActuales.stream().findAny().get().getClaveComparacion();
+    String claveActual = hechosActuales.get(0).getClaveComparacion();
+    List<String> titulosActuales = hechosActuales.stream().map(Hecho::getTituloSanitizado).toList();
 
     for (Map.Entry<String, List<Hecho>> entrada : hechosPorClave.entrySet()) {
       String claveDistinta = entrada.getKey();
 
       if (claveDistinta.equals(claveActual)) continue;
 
-      List<Hecho> hechosDistintos = entrada.getValue();
+      for (Hecho hechoDistinto : entrada.getValue()) {
+        String tituloDistinto = hechoDistinto.getTituloSanitizado();
 
-      for (Hecho hechoDistinto : hechosDistintos) {
-        if (hechosActuales.stream().anyMatch(hechoActual ->
-            this.comparadorDeTexto.cadenasSimilares(
-                hechoActual.getTituloSanitizado(),
-                hechoDistinto.getTituloSanitizado()
-            )
-        )) {
-          return true;
-        }
+        if (titulosActuales.stream().anyMatch(titulo -> comparadorDeTexto.cadenasSimilares(titulo, tituloDistinto)))
+          return false;
       }
     }
 
-    return false;
+    return true;
   }
 }

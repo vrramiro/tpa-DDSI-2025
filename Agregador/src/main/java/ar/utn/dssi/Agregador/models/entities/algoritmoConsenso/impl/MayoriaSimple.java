@@ -23,8 +23,8 @@ public class MayoriaSimple extends IAlgoritmoConsenso {
         .distinct()
         .toList()
         .size();
-    
-    return cantidadHechosFuenteDistinta >= cantidadFuentes / 2;
+
+    return cantidadHechosFuenteDistinta > (cantidadFuentes / 2);
   }
 }
 

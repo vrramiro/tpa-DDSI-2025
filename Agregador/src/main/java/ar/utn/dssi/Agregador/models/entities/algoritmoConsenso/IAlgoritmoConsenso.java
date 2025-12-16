@@ -2,6 +2,7 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,7 @@ public abstract class IAlgoritmoConsenso {
 
     for (Hecho hecho : hechos) {
       String clave = hecho.getClaveComparacion();
-      List<Hecho> listaHechos = hechosPorClave.getOrDefault(clave, List.of());
-      listaHechos.add(hecho);
-      hechosPorClave.put(clave, listaHechos);
+      hechosPorClave.computeIfAbsent(clave, k -> new ArrayList<>()).add(hecho);
     }
 
     return hechosPorClave;
