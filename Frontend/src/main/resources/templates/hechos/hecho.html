@@ -14,45 +14,7 @@
 
     <main class="container-detalle">
 
-        <div class="hecho-cover">
 
-            <div th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
-                 id="carruselHecho" class="carousel slide" data-bs-ride="carousel">
-
-                <div class="carousel-indicators">
-                    <button th:each="media, iter : ${hecho.contenidoMultimedia}"
-                            type="button"
-                            data-bs-target="#carruselHecho"
-                            th:data-bs-slide-to="${iter.index}"
-                            th:class="${iter.first} ? 'active' : ''"
-                            th:aria-current="${iter.first} ? 'true' : 'false'"
-                            th:aria-label="'Slide ' + ${iter.index + 1}"></button>
-                </div>
-
-                <div class="carousel-inner">
-                    <div th:each="media, iter : ${hecho.contenidoMultimedia}"
-                         th:class="${iter.first} ? 'carousel-item active' : 'carousel-item'">
-                        <img th:src="${'http://localhost:8082' + media.url}"
-                             class="d-block w-100"
-                             alt="Imagen del hecho">
-                    </div>
-                </div>
-
-                <button class="carousel-control-prev" type="button" data-bs-target="#carruselHecho" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carruselHecho" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
-                </button>
-            </div>
-
-            <div th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}" class="hecho-cover-placeholder">
-                <img th:src="@{/img/metamapa.jpg}" alt="Imagen por defecto">
-            </div>
-
-        </div>
 
         <div class="hecho-content">
 
@@ -81,71 +43,114 @@
             </div>
 
             <div class="hecho-description">
+                <h3> Descripcion del hecho</h3>
                 <p th:text="${hecho.descripcion}">Descripción del hecho...</p>
             </div>
 
-            <div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
-                <h3><i class="fa-solid fa-photo-film"></i> Galería Completa</h3>
-                <div class="gallery-grid">
-                    <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
-                        <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
-                            <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
-                        </a>
+            <div class="hecho-cover">
+
+                <div th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
+                     id="carruselHecho" class="carousel slide" data-bs-ride="carousel">
+
+                    <div class="carousel-indicators">
+                        <button th:each="media, iter : ${hecho.contenidoMultimedia}"
+                                type="button"
+                                data-bs-target="#carruselHecho"
+                                th:data-bs-slide-to="${iter.index}"
+                                th:class="${iter.first} ? 'active' : ''"
+                                th:aria-current="${iter.first} ? 'true' : 'false'"
+                                th:aria-label="'Slide ' + ${iter.index + 1}"></button>
                     </div>
+
+                    <div class="carousel-inner">
+                        <div th:each="media, iter : ${hecho.contenidoMultimedia}"
+                             th:class="${iter.first} ? 'carousel-item active' : 'carousel-item'">
+                            <img th:src="${'http://localhost:8082' + media.url}"
+                                 class="d-block w-100"
+                                 alt="Imagen del hecho">
+                        </div>
+                    </div>
+
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carruselHecho" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carruselHecho" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
                 </div>
-            </div>
 
-            <div class="map-section">
-                <h3><i class="fa-solid fa-map-location-dot"></i> Ubicación del hecho</h3>
-                <div id="map-detail"></div>
-            </div>
+                <div th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}" class="hecho-cover-placeholder">
+                    <img th:src="@{/img/metamapa.jpg}" alt="Imagen por defecto">
+                </div>
 
-        </div>
-
-        <div class="hecho-actions">
-            <a href="javascript:history.back()" class="btn btn-primary">
-                <i class="fa-solid fa-arrow-left"></i> Volver
-            </a>
-
-            <div class="action-group">
-                <a th:href="@{/solicitudes/crearSolicitud(hechoId=${hecho.id})}" class="btn btn-danger">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
-                </a>
             </div>
 
 
-        </div>
-    </main>
+
+            <!--<div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
+               <h3><i class="fa-solid fa-photo-film"></i> Galería Completa</h3>
+               <div class="gallery-grid">
+                   <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
+                       <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
+                           <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
+                       </a>
+                   </div>
+               </div>
+           </div> -->
+
+           <div class="map-section">
+               <h3><i class="fa-solid fa-map-location-dot"></i> Ubicación del hecho</h3>
+               <div id="map-detail"></div>
+           </div>
+
+       </div>
+
+       <div class="hecho-actions">
+           <a href="javascript:history.back()" class="btn btn-primary">
+               <i class="fa-solid fa-arrow-left"></i> Volver
+           </a>
+
+           <div class="action-group">
+               <a th:href="@{/solicitudes/crearSolicitud(hechoId=${hecho.id})}" class="btn btn-danger">
+                   <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
+               </a>
+           </div>
+
+
+       </div>
+   </main>
 
 </div>
 
 <th:block th:fragment="scripts">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        document.addEventListener('DOMContentLoaded', function() {
-            const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
-            const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
-            const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
+   <script th:inline="javascript">
+       /*<![CDATA[*/
+       document.addEventListener('DOMContentLoaded', function() {
+           const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
+           const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
+           const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
 
-            if (lat != null && lng != null) {
-                const map = L.map('map-detail').setView([lat, lng], 14);
+           if (lat != null && lng != null) {
+               const map = L.map('map-detail').setView([lat, lng], 14);
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
+               L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                   attribution: '© OpenStreetMap contributors'
+               }).addTo(map);
 
-                L.marker([lat, lng]).addTo(map)
-                    .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
-                    .openPopup();
-            } else {
-                document.getElementById('map-detail').innerHTML =
-                    '<p style="text-align:center; padding:2rem; color:#666;">Ubicación no disponible.</p>';
-            }
-        });
-        /*]]>*/
-    </script>
+               L.marker([lat, lng]).addTo(map)
+                   .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
+                   .openPopup();
+           } else {
+               document.getElementById('map-detail').innerHTML =
+                   '<p style="text-align:center; padding:2rem; color:#666;">Ubicación no disponible.</p>';
+           }
+       });
+       /*]]>*/
+   </script>
 </th:block>
 
 </body>

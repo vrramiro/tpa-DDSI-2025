@@ -84,7 +84,9 @@
             <h2>Solicitudes de Eliminación</h2>
             <div class="stats-grid">
                 <div>
-                    <span id="cant-solicitudes-spam" class="big-number min" th:text="${statSpam.valor}">0</span>
+                    <span id="cant-solicitudes-spam"
+                          class="big-number min"
+                          th:text="${statSpam != null ? statSpam.valor : 0}">0</span>
                     <p>Spam</p>
                 </div>
             </div>
