@@ -248,6 +248,10 @@ h1 {
     gap: 10px;
 }
 
+.modal-actions .btn{
+    text-decoration: none;
+}
+
 /* Ajuste para móviles */
 @media (max-width: 992px) {
     .main-header { padding-inline: 4%; }
