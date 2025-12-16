@@ -7,7 +7,7 @@ import java.io.File;
 public interface IEstadisticasService {
   void calcularEstadisticas();
 
-  EstadisticaOutputDTO getProvinciasConMasHechosColeccion(Long idColeccion);
+  EstadisticaOutputDTO getProvinciasConMasHechosColeccion(String handle);
 
   EstadisticaOutputDTO getCategoriaConMasHechos();
 

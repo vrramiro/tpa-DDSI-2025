@@ -105,6 +105,12 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     return null;
   }
 
+  @Override
+  public Long contarSolicitudesSpam() {
+    return solicitudDeEliminacionRepository.countByEsSpamTrue();
+  }
+  
+  @Override
   public SolicitudDeEliminacionOutputDTO obtenerSolicitudPorId(Long id) {
     SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(id)
             .orElseThrow(() -> new SolicitudNoEncontrada("La solicitud con id " + id + " no existe."));

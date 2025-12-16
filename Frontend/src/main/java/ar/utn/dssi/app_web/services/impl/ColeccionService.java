@@ -8,6 +8,7 @@ import ar.utn.dssi.app_web.services.GestionColeccionApiService;
 import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,5 +49,10 @@ public class ColeccionService implements IColeccionService {
   @Override
   public ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion) {
     return gestionColeccionApiService.actualizarColeccion(handle, coleccion);
+  }
+
+  @Override
+  public List<ColeccionResponseDTO> obtenerTodasLasColecciones() {
+    return gestionColeccionApiService.obtenerTodasLasColecciones();
   }
 }

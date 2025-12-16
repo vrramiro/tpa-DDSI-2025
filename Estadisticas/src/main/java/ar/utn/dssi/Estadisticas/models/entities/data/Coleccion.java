@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 @Getter
 public class Coleccion {
-  private Long id;
+  private String handle;
   private String nombre;
   private List<Hecho> hechos;
 }
