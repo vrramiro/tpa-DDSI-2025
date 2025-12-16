@@ -13,7 +13,7 @@ public class DetectorDeSpam {
 
   public static Boolean esSpam(String descripcion) {
     if (descripcion == null || descripcion.isBlank()) {
-      return false;
+      return true;
     }
 
     if (descripcion.length() < 50) {

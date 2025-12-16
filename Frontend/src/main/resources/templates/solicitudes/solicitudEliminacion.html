@@ -9,11 +9,9 @@
     <section class="form-container">
         <h1>Solicitud de Eliminación</h1>
 
-        <!-- Mensajes -->
         <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-        <!-- Formulario -->
         <form th:action="@{/solicitudes/crear}" th:object="${solicitud}" method="post" class="form">
 
             <input type="hidden" th:field="*{hecho.id}">
@@ -28,7 +26,11 @@
 
             <div class="form-group mb-3">
                 <label for="descripcion"><strong>Motivo</strong></label>
-                <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control" required></textarea>
+                <textarea id="descripcion" th:field="*{descripcion}" rows="4" class="form-control" required placeholder="Detalle por qué este hecho debe ser eliminado..."></textarea>
+
+                <small class="text-danger" style="display: block; margin-top: 5px;">
+                    <i class="fa-solid fa-circle-info"></i> Importante: Las solicitudes con menos de 500 caracteres serán consideradas SPAM y rechazadas automáticamente.
+                </small>
             </div>
 
             <div class="submit-container mt-3">
