@@ -17,8 +17,8 @@ public class MayoriaSimple extends IAlgoritmoConsenso {
 
   @Override
   protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
-    Integer cantidadFuentes = fuentes.size();
-    Integer cantidadHechosFuenteDistinta = hechosActuales.stream()
+    int cantidadFuentes = fuentes.size();
+    int cantidadHechosFuenteDistinta = hechosActuales.stream()
         .map(Hecho::getFuente)
         .distinct()
         .toList()

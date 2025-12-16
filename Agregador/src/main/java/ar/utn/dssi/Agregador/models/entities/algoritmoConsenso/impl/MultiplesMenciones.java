@@ -27,7 +27,7 @@ public class MultiplesMenciones extends IAlgoritmoConsenso {
   protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
     if (hechosActuales == null || hechosActuales.isEmpty()) return false;
 
-    Integer cantidadHechosFuenteDistinta = hechosActuales.stream()
+    int cantidadHechosFuenteDistinta = hechosActuales.stream()
         .map(Hecho::getFuente)
         .distinct()
         .toList()
