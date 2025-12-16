@@ -62,15 +62,6 @@
         <h3>Descripción del Hecho</h3>
         <div class="textarea" th:text="${hecho.descripcion}"></div>
 
-        <div th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}">
-          <h3>Evidencia Multimedia</h3>
-          <div th:each="media : ${hecho.contenidoMultimedia}">
-            <img class="card-img"
-                 th:if="${media.url != null}"
-                 th:src="${media.url}"
-                 alt="Multimedia del hecho"
-                 style="max-width: 100%; margin-bottom: 10px;">
-          </div>
         </div>
       </section>
     </div>
