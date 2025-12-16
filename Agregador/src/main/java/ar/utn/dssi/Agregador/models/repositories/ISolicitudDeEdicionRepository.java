@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ISolicitudDeEdicionRepository extends JpaRepository<SolicitudDeEdicion, Long> {
     List<SolicitudDeEdicion> findByEstado(EstadoDeSolicitud estado);
+
+    List<SolicitudDeEdicion> findByHechoOriginalId(Long idHecho);
 }

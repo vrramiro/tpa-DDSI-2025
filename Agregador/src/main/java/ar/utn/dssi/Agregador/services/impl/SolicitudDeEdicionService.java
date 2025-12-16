@@ -127,4 +127,17 @@ public class SolicitudDeEdicionService {
         }
         return null;
     }
+
+    public Void eliminarSolicitudesPorHechoId(Long idHecho) {
+        List<SolicitudDeEdicion> solicitudes = solicitudRepository.findByHechoOriginalId(idHecho);
+        for (SolicitudDeEdicion solicitud : solicitudes) {
+            if (solicitud.getEstado() == EstadoDeSolicitud.PENDIENTE) {
+                solicitud.setEstado(EstadoDeSolicitud.RECHAZADA);
+                solicitud.setFechaEvaluacion(LocalDateTime.now());
+                solicitud.setGestionadoPor(obtenerUsuarioActual());
+                solicitudRepository.save(solicitud);
+            }
+        }
+        return null;
+    }
 }

@@ -33,6 +33,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   private final IHechosService hechosService;
   private final IHechosRepository hechosRepository;
   private final SolicitudDeEliminacionFactory solicitudDeEliminacionFactory;
+  private final SolicitudDeEdicionService solicitudDeEdicionService;
 
   @Override
   public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion) {
@@ -70,6 +71,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     if (estado == EstadoDeSolicitud.ACEPTADA) {
       solicitud.aceptar();
       hechosService.eliminarHecho(solicitud.getHecho().getId());
+      solicitudDeEdicionService.eliminarSolicitudesPorHechoId(solicitud.getHecho().getId());
     } else {
       solicitud.rechazar();
     }
