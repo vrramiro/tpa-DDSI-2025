@@ -212,3 +212,53 @@ img, svg, video, canvas {
     background-color: var(--primary-color, #0d6efd);
     color: white;
 }
+
+
+
+a.feature-card,
+a.feature-card:hover,
+a.feature-card h3,
+a.feature-card p,
+a.feature-card span {
+    text-decoration: none !important;
+}
+
+.card-footer-hecho {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    border-top: 1px solid #eaeaea;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+}
+
+.card-footer-hecho i {
+    font-size: 0.8rem;
+    color: var(--primary-color);
+}
+
+.hecho-fecha,
+.hecho-categoria {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--primary-color);
+}
+
+.hecho-categoria {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.categoria-truncada {
+    max-width: 16ch;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
