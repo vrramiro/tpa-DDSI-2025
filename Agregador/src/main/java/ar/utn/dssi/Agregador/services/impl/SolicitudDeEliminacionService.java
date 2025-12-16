@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
 import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.error.SolicitudNoEncontrada;
 import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
 import ar.utn.dssi.Agregador.mappers.MapperDeSolicitudesDeEliminacion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
@@ -32,6 +33,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   private final IHechosService hechosService;
   private final IHechosRepository hechosRepository;
   private final SolicitudDeEliminacionFactory solicitudDeEliminacionFactory;
+  private final SolicitudDeEdicionService solicitudDeEdicionService;
 
   @Override
   public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion) {
@@ -42,7 +44,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     if (DetectorDeSpam.esSpam(solicitud.getDescripcion())) {
       solicitud.setEsSpam(true);
       solicitud.rechazar();
-      log.info("Solicitud marcada como SPAM y rechazada automáticamente");
+      log.info("Solicitud marcada como SPAM y rechazada automáticamente");  //TODO: HABRIA QUE DEVOLVER UNA EXCEPCION
     } else {
       solicitud.setEsSpam(false);
       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.PENDIENTE);
@@ -69,6 +71,7 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     if (estado == EstadoDeSolicitud.ACEPTADA) {
       solicitud.aceptar();
       hechosService.eliminarHecho(solicitud.getHecho().getId());
+      solicitudDeEdicionService.eliminarSolicitudesPorHechoId(solicitud.getHecho().getId());
     } else {
       solicitud.rechazar();
     }
@@ -105,5 +108,13 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   @Override
   public Long contarSolicitudesSpam() {
     return solicitudDeEliminacionRepository.countByEsSpamTrue();
+  }
+  
+  @Override
+  public SolicitudDeEliminacionOutputDTO obtenerSolicitudPorId(Long id) {
+    SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(id)
+            .orElseThrow(() -> new SolicitudNoEncontrada("La solicitud con id " + id + " no existe."));
+
+    return MapperDeSolicitudesDeEliminacion.outpuDTOFromSolicitudDeEliminacion(solicitud);
   }
 }

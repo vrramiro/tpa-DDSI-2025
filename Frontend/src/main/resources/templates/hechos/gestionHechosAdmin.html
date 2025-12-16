@@ -3,15 +3,17 @@
       th:replace="~{layout/base :: html}">
 <head>
     <th:block th:fragment="styles">
-        <link th:href="@{/css/solicitudes/gestionSolicitudesEdicion.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/coleccionesSistema.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </th:block>
 </head>
 <body>
 
-<div th:fragment="contenido">
-    <section class="content-container">
+<div th:fragment="contenido" class="row">
+    <main class="content-container">
 
-        <div class="solicitud-header">
+        <div class="collection-header">
             <h2>Solicitudes de Edición Pendientes</h2>
         </div>
 
@@ -19,34 +21,47 @@
         <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
         <div class="table-container">
-            <table class="table table-striped">
+            <table class="tabla-colecciones">
                 <thead>
                 <tr>
-                    <th>ID Solicitud</th>
+                    <th>ID</th>
                     <th>Hecho Original</th>
                     <th>Fecha Solicitud</th>
-                    <th>Acción</th>
+                    <th class="text-end">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
+
                 <tr th:if="${#lists.isEmpty(solicitudesEdicion)}">
-                    <td colspan="5" class="empty-message">
+                    <td colspan="4" class="muted text-center" style="padding: 2rem;">
                         No hay solicitudes de edición pendientes.
                     </td>
                 </tr>
+
                 <tr th:each="sol : ${solicitudesEdicion}">
                     <td th:text="${sol.id}">1</td>
-                    <td th:text="${sol.hechoOriginal.titulo}" style="font-weight: 600;">Título Original</td>
+
+                    <td th:text="${sol.hechoOriginal.titulo}" style="font-weight: 500;">Título Original</td>
+
                     <td th:text="${#temporals.format(sol.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
-                    <td>
-                        <a th:href="@{/hechos/gestion_hecho/revisar/{id}(id=${sol.id})}" class="btn btn-sm btn-primary">Revisar</a>
+
+                    <td class="action-buttons">
+                        <a th:href="@{/hechos/gestion_hecho/revisar/{id}(id=${sol.id})}"
+                           class="btn btn-primary btn-sm"
+                           title="Revisar cambios">
+                            <i class="fa-solid fa-pen-to-square"></i> Revisar
+                        </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-    </section>
+        <div class="footer-actions">
+            <a th:href="@{/panel_gestion}" class="btn btn-secondary">Volver al Panel</a>
+        </div>
+
+    </main>
 
     <th:block th:fragment="scripts">
     </th:block>

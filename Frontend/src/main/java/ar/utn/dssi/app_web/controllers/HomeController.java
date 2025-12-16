@@ -1,5 +1,9 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
+import ar.utn.dssi.app_web.services.impl.HechoServices;
+import org.springframework.beans.factory.annotation.Value;
 import ar.utn.dssi.app_web.dto.Users.UserRequest;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
 import org.springframework.stereotype.Controller;
@@ -7,20 +11,40 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class HomeController {
 
   private final UsuariosApiService usuariosApiService;
+  private final IHechoService hechosApiService;
 
-  public HomeController(UsuariosApiService usuariosApiService) {
+  public HomeController(UsuariosApiService usuariosApiService, IHechoService hechosApiService) {
     this.usuariosApiService = usuariosApiService;
+    this.hechosApiService = hechosApiService;
   }
 
+  @Value("${agregador.service.url:http://localhost:8082}")
+  private String agregadorUrl;
+/*
   @GetMapping("/")
-  public String home(Model model) {
-    model.addAttribute("titulo", "Home");
+  public String landing(Model model) {
+    model.addAttribute("agregadorUrl", agregadorUrl);
     return "home/landing";
   }
+  */
+
+  @GetMapping("/")
+  public String landing(Model model) {
+
+    List<HechoOutputDTO> hechosRecientes =
+            hechosApiService.obtenerHechosRecientes(3);
+
+    model.addAttribute("hechosRecientes", hechosRecientes);
+
+    return "home/landing";
+  }
+
 
   @GetMapping("/login")
   public String login(Model model) {

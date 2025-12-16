@@ -25,7 +25,7 @@ public class MapperDeSolicitudesDeEliminacion {
     dtoSolicitudEliminacion.setFechaDeEvaluacion(solicitud.getFechaDeEvaluacion());
     dtoSolicitudEliminacion.setEsSpam(solicitud.isEsSpam());
     dtoSolicitudEliminacion.setHecho(MapperDeHechos.hechoToOutputDTO(solicitud.getHecho()));
-
+    dtoSolicitudEliminacion.setAutor(solicitud.getAutor());
     return dtoSolicitudEliminacion;
   }
 }

@@ -230,12 +230,16 @@ public class HechoController {
 
   @GetMapping("/misHechos")
   public String listarMisHechos(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "9") int size, // Volvemos a un número razonable
+                                @RequestParam(defaultValue = "9") int size,
                                 @RequestParam(required = false) String filtro,
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    List<HechoOutputDTO> todosMisHechos = hechosService.obtenerMisHechos();
+    List<HechoOutputDTO> hechosCrudos = hechosService.obtenerMisHechos();
+
+    List<HechoOutputDTO> todosMisHechos = hechosCrudos.stream()
+            .filter(h -> Boolean.TRUE.equals(h.getVisible()))
+            .toList();
 
     if (filtro != null && !filtro.isEmpty()) {
       todosMisHechos = todosMisHechos.stream()
@@ -261,17 +265,15 @@ public class HechoController {
     }
 
     model.addAttribute("hechos", hechosPaginados);
-    model.addAttribute("page", page);             // Variable 'current' en el fragmento
+    model.addAttribute("page", page);
     model.addAttribute("size", size);
     model.addAttribute("sort", sort);
     model.addAttribute("filtro", filtro == null ? "" : filtro);
     model.addAttribute("totalPages", totalPages);
     model.addAttribute("totalElements", totalElements);
     model.addAttribute("baseUrl", "/hechos/misHechos");
-
     model.addAttribute("isFirst", page == 0);
     model.addAttribute("isLast", page == totalPages - 1);
-
     model.addAttribute("titulo", "Mis Hechos");
 
     return "hechos/misHechos";

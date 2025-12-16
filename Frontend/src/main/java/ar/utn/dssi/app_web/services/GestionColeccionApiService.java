@@ -29,7 +29,7 @@ public class GestionColeccionApiService {
     private static final Logger log = LoggerFactory.getLogger(GestionColeccionApiService.class);
 
     private final WebApiCallerService webApiCallerService;
-    private final String agregadorServiceUrl; // URL del servicio de agregador
+    private final String agregadorServiceUrl;
     private final WebClient webClient;
 
     public GestionColeccionApiService(WebApiCallerService webApiCallerService,
@@ -82,13 +82,10 @@ public class GestionColeccionApiService {
 
         try {
             Map<String, Object> payload = construirPayload(coleccion);
-
             return webApiCallerService.post(url, payload, ColeccionResponseDTO.class);
-
         } catch (WebClientResponseException e) {
             String mensajeError = e.getResponseBodyAsString();
             throw new ServicioNormalizadorException(mensajeError, e);
-
         } catch (Exception e) {
             log.error("Error creando colección", e);
             throw new RuntimeException("Error inesperado al crear colección", e);
@@ -105,12 +102,9 @@ public class GestionColeccionApiService {
         try {
             Map<String, Object> payload = construirPayload(coleccion);
             return webApiCallerService.put(url, payload, ColeccionResponseDTO.class);
-
         } catch (WebClientResponseException e) {
             String mensajeBackend = e.getResponseBodyAsString();
-
             throw new ServicioNormalizadorException("Error al actualizar: " + mensajeBackend, e);
-
         } catch (Exception e) {
             log.error("Error inesperado al actualizar colección", e);
             throw new RuntimeException("Error inesperado al actualizar colección", e);
@@ -127,8 +121,6 @@ public class GestionColeccionApiService {
                             .build()
                     )
                     .retrieve()
-                    .onStatus(status -> status.value() == 204,
-                            clientResponse -> clientResponse.bodyToMono(Void.class).thenReturn(null))
                     .bodyToMono(new ParameterizedTypeReference<PageResponseDTO<ColeccionResponseDTO>>() {})
                     .onErrorResume(WebClientResponseException.class, e -> {
                         log.error("Error {} al llamar /public/colecciones: {}", e.getStatusCode(), e.getMessage());
@@ -202,4 +194,3 @@ public class GestionColeccionApiService {
         }
     }
 }
-

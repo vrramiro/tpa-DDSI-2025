@@ -16,13 +16,42 @@
 
         <div class="hecho-cover">
 
-            <img th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
-                 th:src="${'http://localhost:8082' + hecho.contenidoMultimedia[0].url}"
-                 alt="Portada del hecho">
+            <div th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
+                 id="carruselHecho" class="carousel slide" data-bs-ride="carousel">
 
-            <img th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}"
-                 th:src="@{/img/metamapa.jpg}"
-                 alt="Imagen por defecto">
+                <div class="carousel-indicators">
+                    <button th:each="media, iter : ${hecho.contenidoMultimedia}"
+                            type="button"
+                            data-bs-target="#carruselHecho"
+                            th:data-bs-slide-to="${iter.index}"
+                            th:class="${iter.first} ? 'active' : ''"
+                            th:aria-current="${iter.first} ? 'true' : 'false'"
+                            th:aria-label="'Slide ' + ${iter.index + 1}"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <div th:each="media, iter : ${hecho.contenidoMultimedia}"
+                         th:class="${iter.first} ? 'carousel-item active' : 'carousel-item'">
+                        <img th:src="${'http://localhost:8082' + media.url}"
+                             class="d-block w-100"
+                             alt="Imagen del hecho">
+                    </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carruselHecho" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carruselHecho" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+
+            <div th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}" class="hecho-cover-placeholder">
+                <img th:src="@{/img/metamapa.jpg}" alt="Imagen por defecto">
+            </div>
+
         </div>
 
         <div class="hecho-content">
@@ -56,7 +85,7 @@
             </div>
 
             <div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
-                <h3><i class="fa-solid fa-photo-film"></i> Multimedia</h3>
+                <h3><i class="fa-solid fa-photo-film"></i> Galería Completa</h3>
                 <div class="gallery-grid">
                     <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
                         <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
@@ -79,24 +108,12 @@
             </a>
 
             <div class="action-group">
-                <a th:href="@{/solicitudes/nueva(hechoId=${hecho.id})}" class="btn btn-danger">
+                <a th:href="@{/solicitudes/crearSolicitud(hechoId=${hecho.id})}" class="btn btn-danger">
                     <i class="fa-solid fa-triangle-exclamation"></i> Reportar / Eliminar
                 </a>
-
-
             </div>
 
-            <div class="action-group" sec:authorize="hasRole('ADMINISTRADOR')"
-                 th:if="${hecho.estado?.name() == 'PENDIENTE'}">
 
-                <form th:action="@{/hechos/{id}/rechazar(id=${hecho.id})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-danger" onclick="return confirm('¿Rechazar este hecho?')">Rechazar</button>
-                </form>
-
-                <form th:action="@{/hechos/{id}/aceptar(id=${hecho.id})}" method="post" style="display:inline;">
-                    <button type="submit" class="btn btn-success" onclick="return confirm('¿Aceptar y publicar este hecho?')">Aceptar</button>
-                </form>
-            </div>
         </div>
     </main>
 
@@ -108,20 +125,17 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
-            // Obtenemos coordenadas desde Thymeleaf
             const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
             const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
             const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
 
             if (lat != null && lng != null) {
-                // Inicializar mapa
                 const map = L.map('map-detail').setView([lat, lng], 14);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
 
-                // Marcador
                 L.marker([lat, lng]).addTo(map)
                     .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
                     .openPopup();

@@ -15,4 +15,7 @@ public interface ISolicitudDeEliminacionService {
   List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado, Boolean spam);
 
   Long contarSolicitudesSpam();
+  
+  SolicitudDeEliminacionOutputDTO obtenerSolicitudPorId(Long id);
 }
+

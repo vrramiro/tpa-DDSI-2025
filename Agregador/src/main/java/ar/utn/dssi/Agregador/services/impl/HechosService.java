@@ -9,6 +9,9 @@ import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
@@ -123,5 +126,20 @@ public class HechosService implements IHechosService {
     } catch (Exception e) {
       throw new RuntimeException("Error al importar los hechos: " + e.getMessage(), e);
     }
+  }
+
+  @Override
+  public Page<HechoOutputDTO> obtenerTodos(Pageable pageable) {
+    Page<Hecho> paginaHechos = hechosRepository.findByVisibleTrue(pageable);
+
+    return paginaHechos.map(MapperDeHechos::hechoToOutputDTO);
+  }
+
+  @Override
+  public List<HechoOutputDTO> obtenerHechosRecientes(int limit) {
+    List<Hecho> hechos = hechosRepository.findHechosRecientes(PageRequest.of(0, limit));
+    return hechos.stream()
+            .map(MapperDeHechos::hechoToOutputDTO)
+            .collect(Collectors.toList());
   }
 }

@@ -163,7 +163,7 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoOutputDTO response = webApiCallerService.get(url, HechoOutputDTO.class);
+      HechoOutputDTO response = webApiCallerService.getPublic(url, HechoOutputDTO.class);
       if (response == null) {
         throw new NotFoundException("Hecho", id.toString());
       }

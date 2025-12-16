@@ -3,6 +3,9 @@ package ar.utn.dssi.Agregador.controller.PUBLIC;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,4 +82,19 @@ public class HechosControllerPUBLIC {
       return ResponseEntity.internalServerError().build();
     }
   }
+
+  @GetMapping("/recientes")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosRecientes(
+          @RequestParam(defaultValue = "3") int limit
+  ) {
+    List<HechoOutputDTO> hechos = hechosService.obtenerHechosRecientes(limit);
+
+    if (hechos.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(hechos);
+  }
+
+
 }
