@@ -28,6 +28,8 @@ function abrirModalHecho(cardElement) {
     // 1. Capturar ID
     hechoActualId = cardElement.getAttribute('data-id');
 
+    const tipoFuente = cardElement.getAttribute('data-tipo-fuente');
+
     // 2. Capturar elementos de la tarjeta clicada
     const title = cardElement.querySelector('.card-title').innerText;
 
@@ -63,11 +65,24 @@ function abrirModalHecho(cardElement) {
 
     // 5. Actualizar botones de acción
     actualizarEnlacesModal(hechoActualId);
+    gestionarVisibilidadBotonEditar(tipoFuente);
 
     // 6. MOSTRAR MODAL
     const modalOverlay = document.getElementById('eventModal');
     modalOverlay.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+}
+
+function gestionarVisibilidadBotonEditar(tipoFuente) {
+    const editarBtn = document.getElementById('modal-editar');
+    if (editarBtn) {
+        if (tipoFuente === 'DINAMICA') {
+            editarBtn.style.display = 'inline-block'; // O 'flex', según tu CSS base
+        } else {
+            editarBtn.style.display = 'none';
+        }
+    }
 }
 
 /* ----------------------------------------------------------------

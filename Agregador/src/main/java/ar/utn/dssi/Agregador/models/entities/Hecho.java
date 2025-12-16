@@ -47,10 +47,10 @@ public class Hecho {
   @Column(nullable = false, name = "titulo_sanitizado")
   private String tituloSanitizado;
 
-  @Column(nullable = false, name = "descripcion")
+  @Column(nullable = false, name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
 
-  @Column(nullable = false, name = "descripcion_sanitizada")
+  @Column(nullable = false, name = "descripcion_sanitizada", columnDefinition = "TEXT")
   private String descripcionSanitizado;
 
   @Embedded

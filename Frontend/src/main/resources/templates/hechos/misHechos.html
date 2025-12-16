@@ -22,7 +22,10 @@
 
     <div class="grid-container" th:unless="${#lists.isEmpty(hechos)}">
         <div class="grid">
-            <div class="card" th:each="hecho : ${hechos}" th:data-id="${hecho.id}" onclick="abrirModalHecho(this)">
+            <div class="card" th:each="hecho : ${hechos}"
+                 th:data-id="${hecho.id}"
+                 th:data-tipo-fuente="${hecho.tipoFuente}"
+                 onclick="abrirModalHecho(this)">
 
                 <div class="card-image-wrapper">
                     <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"

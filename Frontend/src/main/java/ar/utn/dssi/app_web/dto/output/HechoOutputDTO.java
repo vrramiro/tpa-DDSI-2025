@@ -19,4 +19,6 @@ public class HechoOutputDTO {
 
   private String autor;
   private Boolean visible;
+
+  private String tipoFuente;
 }

@@ -22,6 +22,8 @@ public class HechoOutputDTO {
   private String autor;
   private Boolean visible;
 
+  private String tipoFuente;
+
   public static HechoOutputDTO fromEntity(Hecho hecho) {
     HechoOutputDTO dto = new HechoOutputDTO();
     dto.setId(hecho.getId());
