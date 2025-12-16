@@ -26,20 +26,42 @@
     <div class="container-colecciones">
         <h2>Colecciones Destacadas</h2>
         <div class="features-grid">
-            <div class="card feature-card">
-                <h3>Crisis Climática 2024</h3>
-                <p>Registro de eventos climáticos extremos documentados por fuentes verificadas durante el año 2024.</p>
+
+            <div th:if="${#lists.isEmpty(coleccionesDestacadas)}" class="text-center text-muted" style="grid-column: 1 / -1;">
+                No hay colecciones destacadas disponibles en este momento.
             </div>
-            <div class="card feature-card">
-                <h3>Protestas Sociales Globales</h3>
-                <p>Mapa de movilizaciones ciudadanas a nivel mundial, con enlaces a reportes y material multimedia.</p>
-            </div>
-            <div class="card feature-card">
-                <h3>Ayuda Humanitaria</h3>
-                <p>Puntos de distribución de ayuda y zonas de necesidad reportadas por ONGs en zonas de conflicto.</p>
-            </div>
+
+            <a class="card feature-card text-decoration-none h-100"
+               th:each="coleccion : ${coleccionesDestacadas}"
+               th:href="@{'/colecciones/' + ${coleccion.handle} + '/hechos'}">
+                <h3 class="text-dark pt-3" th:text="${coleccion.titulo}">
+                    Título de la Colección
+                </h3>
+
+                <p class="text-muted"
+                   th:text="${coleccion.descripcion != null && coleccion.descripcion.length() > 100
+                              ? #strings.substring(coleccion.descripcion,0,100) + '...'
+                              : coleccion.descripcion}">
+                    Descripción de la colección...
+                </p>
+
+                <div class="card-footer-hecho">
+
+                    <span class="hecho-fecha">
+                        <i class="bi bi-folder me-1"></i>
+                        <span th:text="${'Handle: ' + #strings.substring(coleccion.handle, 0, 8) + '...'}">Handle: [handle]</span>
+                    </span>
+
+                    <span class="categoria-truncada fw-bold">
+                        Colección Activa
+                    </span>
+
+                </div>
+
+            </a>
         </div>
     </div>
+
 
     <div class="container-hechos">
         <div class="col-12 text-center mb-4">

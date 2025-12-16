@@ -1,6 +1,8 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import ar.utn.dssi.app_web.services.impl.HechoServices;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,10 +20,12 @@ public class HomeController {
 
   private final UsuariosApiService usuariosApiService;
   private final IHechoService hechosApiService;
+  private final IColeccionService coleccionService;
 
-  public HomeController(UsuariosApiService usuariosApiService, IHechoService hechosApiService) {
+  public HomeController(UsuariosApiService usuariosApiService, IHechoService hechosApiService, IColeccionService coleccionService) {
     this.usuariosApiService = usuariosApiService;
     this.hechosApiService = hechosApiService;
+      this.coleccionService = coleccionService;
   }
 
   @Value("${agregador.service.url:http://localhost:8082}")
@@ -36,6 +40,10 @@ public class HomeController {
 
   @GetMapping("/")
   public String landing(Model model) {
+    final int CANTIDAD_DESTACADAS = 3;
+
+    List<ColeccionResponseDTO> ultimasColecciones = coleccionService.obtenerUltimasColecciones(CANTIDAD_DESTACADAS);
+    model.addAttribute("coleccionesDestacadas", ultimasColecciones);
 
     List<HechoOutputDTO> hechosRecientes =
             hechosApiService.obtenerHechosRecientes(3);

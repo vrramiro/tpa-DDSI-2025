@@ -14,4 +14,5 @@ public interface IColeccionService {
     void eliminarColeccion(String handle);
     ColeccionResponseDTO actualizarColeccion(String handle, ColeccionRequestDTO coleccion);
     List<ColeccionResponseDTO> obtenerTodasLasColecciones();
+    List<ColeccionResponseDTO> obtenerUltimasColecciones(int cantidad);
 }
