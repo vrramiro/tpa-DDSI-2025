@@ -20,7 +20,6 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePe
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -45,7 +44,6 @@ import java.util.stream.Collectors;
 public class ColeccionService implements IColeccionService {
   private final IColeccionRepository coleccionRepository;
   private final IFuentesService fuentesService;
-  private final ModoNavegacionFactory modoNavegacionFactory;
 
   private final ApplicationEventPublisher publicador;
 

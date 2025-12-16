@@ -26,7 +26,7 @@ public class ColeccionesControllerPUBLIC {
   private final IColeccionService coleccionService;
 
   @GetMapping
-  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault(page = 0, size = 12) Pageable pageable) {
+  public ResponseEntity<Page<ColeccionOutputDTO>> obtenerColecciones(@PageableDefault(size = 12) Pageable pageable) {
     Page<ColeccionOutputDTO> colecciones = coleccionService.obtenerColecciones(pageable);
 
     if (colecciones.isEmpty()) {
