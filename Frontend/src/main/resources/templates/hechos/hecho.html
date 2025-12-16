@@ -16,13 +16,42 @@
 
         <div class="hecho-cover">
 
-            <img th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
-                 th:src="${'http://localhost:8082' + hecho.contenidoMultimedia[0].url}"
-                 alt="Portada del hecho">
+            <div th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}"
+                 id="carruselHecho" class="carousel slide" data-bs-ride="carousel">
 
-            <img th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}"
-                 th:src="@{/img/metamapa.jpg}"
-                 alt="Imagen por defecto">
+                <div class="carousel-indicators">
+                    <button th:each="media, iter : ${hecho.contenidoMultimedia}"
+                            type="button"
+                            data-bs-target="#carruselHecho"
+                            th:data-bs-slide-to="${iter.index}"
+                            th:class="${iter.first} ? 'active' : ''"
+                            th:aria-current="${iter.first} ? 'true' : 'false'"
+                            th:aria-label="'Slide ' + ${iter.index + 1}"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <div th:each="media, iter : ${hecho.contenidoMultimedia}"
+                         th:class="${iter.first} ? 'carousel-item active' : 'carousel-item'">
+                        <img th:src="${'http://localhost:8082' + media.url}"
+                             class="d-block w-100"
+                             alt="Imagen del hecho">
+                    </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#carruselHecho" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carruselHecho" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
+            </div>
+
+            <div th:if="${#lists.isEmpty(hecho.contenidoMultimedia)}" class="hecho-cover-placeholder">
+                <img th:src="@{/img/metamapa.jpg}" alt="Imagen por defecto">
+            </div>
+
         </div>
 
         <div class="hecho-content">
@@ -56,41 +85,13 @@
             </div>
 
             <div class="multimedia-section" th:if="${not #lists.isEmpty(hecho.contenidoMultimedia)}">
-                <h3><i class="fa-solid fa-photo-film"></i> Multimedia</h3>
-
-                <div id="carouselHecho" class="carousel slide" data-bs-ride="carousel">
-
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselHecho"
-                                th:each="media, iter : ${hecho.contenidoMultimedia}"
-                                th:data-bs-slide-to="${iter.index}"
-                                th:class="${iter.index == 0} ? 'active' : ''"
-                                th:aria-current="${iter.index == 0} ? 'true' : 'false'"
-                                th:aria-label="'Slide ' + ${iter.index + 1}"></button>
+                <h3><i class="fa-solid fa-photo-film"></i> Galería Completa</h3>
+                <div class="gallery-grid">
+                    <div th:each="media : ${hecho.contenidoMultimedia}" class="gallery-item">
+                        <a th:href="${'http://localhost:8082' + media.url}" target="_blank">
+                            <img th:src="${'http://localhost:8082' + media.url}" alt="Evidencia multimedia">
+                        </a>
                     </div>
-
-                    <div class="carousel-inner rounded shadow-sm">
-                        <div th:each="media, iter : ${hecho.contenidoMultimedia}"
-                             th:class="${iter.index == 0} ? 'carousel-item active' : 'carousel-item'">
-
-                            <div class="d-flex justify-content-center align-items-center bg-light" style="height: 400px; overflow: hidden;">
-                                <img th:src="${'http://localhost:8082' + media.url}"
-                                     class="d-block"
-                                     style="max-height: 100%; max-width: 100%; object-fit: contain;"
-                                     alt="Evidencia multimedia">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselHecho" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Anterior</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselHecho" data-bs-slide="next">
-                        <span class="carousel-control-next-icon bg-dark rounded-circle p-3" aria-hidden="true" style="background-size: 50%;"></span>
-                        <span class="visually-hidden">Siguiente</span>
-                    </button>
                 </div>
             </div>
 
@@ -124,20 +125,17 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
         document.addEventListener('DOMContentLoaded', function() {
-            // Obtenemos coordenadas desde Thymeleaf
             const lat = /*[[${hecho.ubicacion.latitud}]]*/ -34.6037;
             const lng = /*[[${hecho.ubicacion.longitud}]]*/ -58.3816;
             const titulo = /*[[${hecho.titulo}]]*/ 'Hecho';
 
             if (lat != null && lng != null) {
-                // Inicializar mapa
                 const map = L.map('map-detail').setView([lat, lng], 14);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
 
-                // Marcador
                 L.marker([lat, lng]).addTo(map)
                     .bindPopup(`<b>${titulo}</b><br>Ubicación exacta.`)
                     .openPopup();
