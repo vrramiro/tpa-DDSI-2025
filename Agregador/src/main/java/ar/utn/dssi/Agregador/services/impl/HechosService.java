@@ -7,6 +7,7 @@ import ar.utn.dssi.Agregador.models.entities.Coleccion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.models.repositories.IHechosRepository;
+import ar.utn.dssi.Agregador.services.IConsensoService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import org.springframework.data.domain.Page;
@@ -25,11 +26,13 @@ public class HechosService implements IHechosService {
   private final IHechosRepository hechosRepository;
   private final IColeccionRepository coleccionRepository;
   private final IFuentesService fuentesService;
+  private final IConsensoService consensoService;
 
-  public HechosService(IHechosRepository hechosRepository, IColeccionRepository coleccionRepository, IFuentesService fuentesService) {
+  public HechosService(IHechosRepository hechosRepository, IColeccionRepository coleccionRepository, IFuentesService fuentesService, IConsensoService consensoService) {
     this.hechosRepository = hechosRepository;
     this.coleccionRepository = coleccionRepository;
     this.fuentesService = fuentesService;
+    this.consensoService = consensoService;
   }
 
   @Override
@@ -57,14 +60,13 @@ public class HechosService implements IHechosService {
       );
 
       return hechos.stream()
-              .map(MapperDeHechos::hechoToOutputDTO)
-              .toList();
+          .map(MapperDeHechos::hechoToOutputDTO)
+          .toList();
 
     } catch (Exception e) {
       throw new RuntimeException("Error al obtener los hechos: " + e.getMessage(), e);
     }
   }
-
 
   @Override
   public HechoOutputDTO obtenerHechoPorId(Long idHecho) {
@@ -77,8 +79,8 @@ public class HechosService implements IHechosService {
   public List<HechoOutputDTO> obtenerHechosPorAutor(String autor) {
     List<Hecho> hechos = hechosRepository.findByAutor(autor);
     return hechos.stream()
-            .map(MapperDeHechos::hechoToOutputDTO)
-            .collect(Collectors.toList());
+        .map(MapperDeHechos::hechoToOutputDTO)
+        .collect(Collectors.toList());
   }
 
   private Hecho intentarObtenerHecho(Long idHecho) {
@@ -106,12 +108,14 @@ public class HechosService implements IHechosService {
     try {
       List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
       System.out.println(hechosNuevos);
+      consensoService.aplicarClavesDeComparacion(hechosNuevos);
+
       hechosRepository.saveAll(hechosNuevos);
 
       List<Coleccion> colecciones = coleccionRepository.findAll();
       System.out.println("CANTIDAD DE HECHOS TRAIDOS: " + hechosNuevos.size());
 
-      colecciones.stream().forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
+      colecciones.forEach(coleccion -> coleccion.agregarHechos(hechosNuevos));
 
       coleccionRepository.saveAll(colecciones);
     } catch (Exception e) {

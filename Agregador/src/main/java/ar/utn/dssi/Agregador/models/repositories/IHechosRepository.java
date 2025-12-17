@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +25,7 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
           "AND (:lonMin IS NULL OR h.ubicacion.longitud >= :lonMin) " +
           "AND (:lonMax IS NULL OR h.ubicacion.longitud <= :lonMax) " +
           "AND h.visible = true")
+
   List<Hecho> findHechosByVisibleTrueAndFiltrados(
           @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
           @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
@@ -40,6 +40,8 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   );
 
   Optional<Hecho> findHechoByIdAndVisible(Long idHecho, boolean visible);
+
+  List<Hecho> findByVisible(boolean visible);
 
   Page<Hecho> findByVisibleTrue(Pageable pageable);
 

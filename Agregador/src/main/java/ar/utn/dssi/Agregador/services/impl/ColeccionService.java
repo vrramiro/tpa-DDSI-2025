@@ -20,8 +20,6 @@ import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePe
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ar.utn.dssi.Agregador.models.entities.fuente.TipoFuente;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.IModoNavegacion;
-import ar.utn.dssi.Agregador.models.entities.modoNavegacion.ModoNavegacionFactory;
 import ar.utn.dssi.Agregador.models.repositories.IColeccionRepository;
 import ar.utn.dssi.Agregador.services.IColeccionService;
 import ar.utn.dssi.Agregador.services.IFuentesService;
@@ -33,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,7 +44,6 @@ import java.util.stream.Collectors;
 public class ColeccionService implements IColeccionService {
   private final IColeccionRepository coleccionRepository;
   private final IFuentesService fuentesService;
-  private final ModoNavegacionFactory modoNavegacionFactory;
 
   private final ApplicationEventPublisher publicador;
 
@@ -115,36 +113,39 @@ public class ColeccionService implements IColeccionService {
   @Override
   public void eliminarColeccion(String handle) {
     Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle)
-            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
+        .orElseThrow(() -> new ColeccionNoEncontrada(handle));
     coleccionRepository.delete(coleccion);
   }
 
   @Override
   public Page<HechoOutputDTO> obtenerHechosDeColeccion(
-          String modoNavegacion,
-          String handle,
-          LocalDate fechaReporteDesde,
-          LocalDate fechaReporteHasta,
-          LocalDate fechaAcontecimientoDesde,
-          LocalDate fechaAcontecimientoHasta,
-          String provincia,
-          String ciudad,
-          Pageable pageable // <-- Parámetro recibido
+      boolean navegacionCurada,
+      String handle,
+      LocalDate fechaReporteDesde,
+      LocalDate fechaReporteHasta,
+      LocalDate fechaAcontecimientoDesde,
+      LocalDate fechaAcontecimientoHasta,
+      String provincia,
+      String ciudad,
+      Pageable pageable
   ) {
     Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
-            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
+        .orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
     if (!Boolean.TRUE.equals(coleccion.getActualizada()))
       throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navegación.");
 
-    IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
+    Page<Hecho> hechosPage;
+    LocalDateTime frd = fechaReporteDesde != null ? fechaReporteDesde.atStartOfDay() : null;
+    LocalDateTime frh = fechaReporteHasta != null ? fechaReporteHasta.atTime(23, 59, 59) : null;
+    LocalDateTime fad = fechaAcontecimientoDesde != null ? fechaAcontecimientoDesde.atStartOfDay() : null;
+    LocalDateTime fah = fechaAcontecimientoHasta != null ? fechaAcontecimientoHasta.atTime(23, 59, 59) : null;
 
-    Page<Hecho> hechosPage = coleccionRepository.filtrarHechosDeColeccion(
-            handle, fechaReporteDesde, fechaReporteHasta,
-            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-            ciudad, provincia, pageable
-    );
-
+    if (navegacionCurada) {
+      hechosPage = coleccionRepository.findHechosByFiltradoCurado(handle, frd, frh, fad, fah, ciudad, provincia, pageable);
+    } else {
+      hechosPage = coleccionRepository.findHechosByFiltrado(handle, frd, frh, fad, fah, ciudad, provincia, pageable);
+    }
 
     return hechosPage.map(MapperDeHechos::hechoToOutputDTO);
   }
@@ -153,7 +154,7 @@ public class ColeccionService implements IColeccionService {
   @Override
   public ColeccionOutputDTO obtenerColeccion(String handle) {
     Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
-            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
+        .orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
     return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
   }
@@ -189,7 +190,7 @@ public class ColeccionService implements IColeccionService {
   }
 
   private Page<Coleccion> obtenerColeccionesActualizadas(Pageable pageable) {
-    return coleccionRepository.findColeccionByActualizada(pageable, true);
+    return coleccionRepository.findColeccionByActualizada(true, pageable);
   }
 
   private boolean validarCambioCriterios(Coleccion coleccion, ColeccionInputDTO input) {
@@ -249,8 +250,8 @@ public class ColeccionService implements IColeccionService {
 
   private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
     List<String> tiposDeFuentes = input.getFuentes().stream()
-            .map(f -> f.getTipoFuente().toString())
-            .collect(Collectors.toList());
+        .map(f -> f.getTipoFuente().toString())
+        .collect(Collectors.toList());
 
     return fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentes);
   }
@@ -267,9 +268,9 @@ public class ColeccionService implements IColeccionService {
   private void filtrarCriteriosVacios(ColeccionInputDTO input) {
     if (input.getCriteriosDePertenecias() != null) {
       input.setCriteriosDePertenecias(
-              input.getCriteriosDePertenecias().stream()
-                      .filter(c -> c.getValor() != null && !c.getValor().trim().isEmpty())
-                      .collect(Collectors.toList())
+          input.getCriteriosDePertenecias().stream()
+              .filter(c -> c.getValor() != null && !c.getValor().trim().isEmpty())
+              .collect(Collectors.toList())
       );
     }
   }
