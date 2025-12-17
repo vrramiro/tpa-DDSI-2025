@@ -314,3 +314,9 @@
     font-weight: bold;
     color: var(--primary-color);
 }
+
+.error-mensaje-label {
+    display: none;
+    color: red;
+    margin-top: 5px;
+}

@@ -6,6 +6,7 @@
     <th:block th:fragment="styles">
         <link th:href="@{/css/hechos/hecho.css}" rel="stylesheet">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </th:block>
 </head>
 
@@ -73,11 +74,12 @@
                     </div>
 
                     <button class="carousel-control-prev" type="button" data-bs-target="#carruselHecho" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <i class="fa-solid fa-chevron-left icono-carrusel" aria-hidden="true"></i>
                         <span class="visually-hidden">Anterior</span>
                     </button>
+
                     <button class="carousel-control-next" type="button" data-bs-target="#carruselHecho" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <i class="fa-solid fa-chevron-right icono-carrusel" aria-hidden="true"></i>
                         <span class="visually-hidden">Siguiente</span>
                     </button>
                 </div>
