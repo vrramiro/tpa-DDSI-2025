@@ -7,5 +7,5 @@ import java.util.List;
 public interface IConsensuadorDeHechos {
   void consensuar(List<Hecho> hechos, List<Fuente> fuentes);
 
-  void asignarClaveDeComparacion(Hecho hecho);
+  void inicializarParaConsensuado(Hecho hecho);
 }

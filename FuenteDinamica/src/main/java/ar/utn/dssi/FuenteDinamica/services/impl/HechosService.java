@@ -36,7 +36,6 @@ public class HechosService implements IHechosService {
 
   @Override
   public void crear(HechoInputDTO hechoInputDTO) {
-    detectarSpamHechos(hechoInputDTO);
     validarHechoInput(hechoInputDTO);
 
     Hecho hechoANormalizar = obtenerHechoANormalizar(hechoInputDTO);
@@ -182,16 +181,6 @@ public class HechosService implements IHechosService {
     }
   }
 
-  private void detectarSpamHechos(HechoInputDTO hechoInputDTO) {
-    boolean existe = hechoRepository.existsByTituloAndDescripcion(
-            hechoInputDTO.getTitulo(),
-            hechoInputDTO.getDescripcion()
-    );
-
-    if (existe) {
-      throw new RuntimeException("Hecho duplicado: se considera spam");
-    }
-  }
 
   private String obtenerAutorActual() {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

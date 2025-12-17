@@ -43,13 +43,12 @@
                 </option>
             </select>
 
-            <label>
+            <label for="modo-curado">
                 Modo curado
-                <input type="checkbox">
-                <!-- TODO <input type="checkbox"
-                           name="modoCurado"
-                           th:checked="(${filtroModoCurado} != null) AND ${filtroModoCurado}">-->
-            </label>
+                <input type="checkbox"
+                       id="modo-curado"
+                       name="modoCurado"
+                       th:checked="${modoCurado}"> </label>
 
 
             <button class="btn btn-primary" id="btn-filtrar" type="button">Filtrar</button>

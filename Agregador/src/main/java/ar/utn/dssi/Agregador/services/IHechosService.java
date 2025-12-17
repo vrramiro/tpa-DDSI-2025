@@ -8,7 +8,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface IHechosService {
-  List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+  List<HechoOutputDTO> obtenerHechos(boolean navegacionCurada,
+                                     LocalDate fechaReporteDesde,
                                      LocalDate fechaReporteHasta,
                                      LocalDate fechaAcontecimientoDesde,
                                      LocalDate fechaAcontecimientoHasta,

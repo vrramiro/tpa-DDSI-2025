@@ -24,6 +24,7 @@ public class FuenteEstatica implements ITipoFuente {
   @Override
   public List<Hecho> hechosNuevos(Fuente fuente) {
     LocalDateTime ultimoEnvioFuente = fuente.getUltimaActualizacion();
+    System.out.println("Ultima actualizacion de la fuente " + ultimoEnvioFuente);
 
     return getHechos(fuente.getBaseUrl(), ultimoEnvioFuente)
         .map(hecho -> hechoFromInputDTOEstatica(hecho, fuente))

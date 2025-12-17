@@ -110,24 +110,29 @@ function renderizarHechos(hechos) {
 
 function obtenerFiltrosParaUrl() {
     const params = new URLSearchParams();
-    // Validamos existencia de elementos antes de acceder a .value para evitar errores
+
     const inputFechaDesde = document.getElementById('fecha-desde');
     const inputFechaHasta = document.getElementById('fecha-hasta');
     const inputCategoria = document.getElementById('categoria');
     const inputProvincia = document.getElementById('provincia');
 
-    // Descomenté esto porque lo vas a necesitar para los requerimientos del TP
-    const inputColeccion = document.getElementById('coleccion');
+    // Recuperamos el input del modo curado
     const inputModoCurado = document.getElementById('modo-curado');
+    // Si tuvieras input de colección, descomentar: const inputColeccion = document.getElementById('coleccion');
 
     if (inputFechaDesde && inputFechaDesde.value) params.append('fechaAcontecimientoDesde', inputFechaDesde.value);
     if (inputFechaHasta && inputFechaHasta.value) params.append('fechaAcontecimientoHasta', inputFechaHasta.value);
     if (inputCategoria && inputCategoria.value) params.append('idCategoria', inputCategoria.value);
     if (inputProvincia && inputProvincia.value) params.append('provincia', inputProvincia.value);
 
-    // Filtros de colección y modo curado activados
-    if (inputColeccion && inputColeccion.value) params.append('idColeccion', inputColeccion.value);
-    if (inputModoCurado && inputModoCurado.checked) params.append('modoCurado', 'true');
+    // Lógica para modo curado
+    if (inputModoCurado && inputModoCurado.checked) {
+        params.append('modoCurado', 'true');
+    } else {
+        params.append('modoCurado', 'false');
+    }
+
+    // if (inputColeccion && inputColeccion.value) params.append('idColeccion', inputColeccion.value);
 
     return params;
 }

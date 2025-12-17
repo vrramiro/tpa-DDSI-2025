@@ -36,7 +36,8 @@ public class HechosService implements IHechosService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+  public List<HechoOutputDTO> obtenerHechos(boolean navegacionCurada,
+                                            LocalDate fechaReporteDesde,
                                             LocalDate fechaReporteHasta,
                                             LocalDate fechaAcontecimientoDesde,
                                             LocalDate fechaAcontecimientoHasta,
@@ -50,6 +51,7 @@ public class HechosService implements IHechosService {
       LocalDateTime fechaAcontecimientoHastaDT = (fechaAcontecimientoHasta != null) ? fechaAcontecimientoHasta.atTime(23, 59, 59) : null;
 
       List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
+              navegacionCurada,
               fechaReporteDesdeDT,
               fechaReporteHastaDT,
               fechaAcontecimientoDesdeDT,
@@ -108,7 +110,7 @@ public class HechosService implements IHechosService {
     try {
       List<Hecho> hechosNuevos = this.fuentesService.hechosNuevos();
       System.out.println(hechosNuevos);
-      consensoService.aplicarClavesDeComparacion(hechosNuevos);
+      consensoService.inicializarParaConsensuado(hechosNuevos);
 
       hechosRepository.saveAll(hechosNuevos);
 

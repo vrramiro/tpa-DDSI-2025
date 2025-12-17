@@ -2,6 +2,7 @@ package ar.utn.dssi.Agregador.models.entities.consensuador.impl;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.consensuador.IConsensuadorDeHechos;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import ch.hsr.geohash.GeoHash;
@@ -21,7 +22,7 @@ public class ConsensuadorDeHechos implements IConsensuadorDeHechos {
     algoritmosConsenso.forEach(algoritmo -> algoritmo.consensuar(hechos, fuentes));
   }
 
-  public void asignarClaveDeComparacion(Hecho hecho) {
+  public void inicializarParaConsensuado(Hecho hecho) {
     String fechaAcontecimiento = hecho.getFechaAcontecimiento().toLocalDate().toString();
     Double latitud = hecho.getUbicacion().getLatitud();
     Double longitud = hecho.getUbicacion().getLongitud();
@@ -29,5 +30,6 @@ public class ConsensuadorDeHechos implements IConsensuadorDeHechos {
     String categoria = hecho.getCategoria().getNombre();
     String claveDeComparacion = categoria + "-" + fechaAcontecimiento + "-" + geohash;
     hecho.setClaveComparacion(claveDeComparacion);
+    hecho.agregarConsenso(TipoConsenso.NINGUNO);
   }
 }

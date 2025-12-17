@@ -6,5 +6,5 @@ import java.util.List;
 public interface IConsensoService {
   void consensuarHechos();
 
-  void aplicarClavesDeComparacion(List<Hecho> hechosImportados);
+  void inicializarParaConsensuado(List<Hecho> hechosImportados);
 }

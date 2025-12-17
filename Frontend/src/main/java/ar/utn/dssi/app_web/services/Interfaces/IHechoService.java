@@ -23,7 +23,7 @@ public interface IHechoService {
 
     PageResponseHechosDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado);
 
-    List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia, Double latMin, Double latMax, Double lonMin, Double lonMax);
+    List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia, Double latMin, Double latMax, Double lonMin, Double lonMax, Boolean modoCurado);
     List<String> obtenerProvincias();
     List<HechoOutputDTO> obtenerMisHechos();
 

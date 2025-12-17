@@ -121,7 +121,8 @@ public class GestionHechosApiService {
           LocalDate fechaAcontecimientoHasta,
           Long idCategoria,
           String provincia,
-          Double latMin, Double latMax, Double lonMin, Double lonMax // Agregamos params
+          Double latMin, Double latMax, Double lonMin, Double lonMax,
+          Boolean modoCurado // Parámetro correctamente recibido
   ) {
 
     UriComponentsBuilder builder = UriComponentsBuilder
@@ -135,11 +136,15 @@ public class GestionHechosApiService {
     if (provincia != null && !provincia.isEmpty()) builder.queryParam("provincia", provincia);
     if (idCategoria != null) builder.queryParam("id_categoria", idCategoria);
 
-    // Nuevos filtros
+    // Filtros geográficos
     if (latMin != null) builder.queryParam("latMin", latMin);
     if (latMax != null) builder.queryParam("latMax", latMax);
     if (lonMin != null) builder.queryParam("lonMin", lonMin);
     if (lonMax != null) builder.queryParam("lonMax", lonMax);
+
+    if (modoCurado != null) {
+      builder.queryParam("navegacionCurada", modoCurado);
+    }
 
     String url = builder.build().toUriString();
 
@@ -242,7 +247,7 @@ public class GestionHechosApiService {
     PageResponseHechosDTO<HechoOutputDTO> response = new PageResponseHechosDTO<>();
     response.setContent(paginaContent);
     response.setTotalPages(totalPages);
-    response.setTotalElements((long) totalElements); // Asumiendo que es Long en el DTO
+    response.setTotalElements((long) totalElements);
 
     return response;
   }

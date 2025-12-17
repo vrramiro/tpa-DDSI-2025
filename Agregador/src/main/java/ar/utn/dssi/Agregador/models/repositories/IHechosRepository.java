@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface IHechosRepository extends JpaRepository<Hecho, Long> {
   @Query("SELECT h FROM Hecho h " +
           "WHERE (:fechaReporteDesde IS NULL OR h.fechaCarga >= :fechaReporteDesde) " +
+          "AND (:navegacionCurada IS FALSE OR EXISTS (SELECT c FROM h.consensosDados c WHERE c <> ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso.NINGUNO )) " +
           "AND (:fechaReporteHasta IS NULL OR h.fechaCarga <= :fechaReporteHasta) " +
           "AND (:fechaAcontecimientoDesde IS NULL OR h.fechaAcontecimiento >= :fechaAcontecimientoDesde) " +
           "AND (:fechaAcontecimientoHasta IS NULL OR h.fechaAcontecimiento <= :fechaAcontecimientoHasta) " +
@@ -27,6 +28,7 @@ public interface IHechosRepository extends JpaRepository<Hecho, Long> {
           "AND h.visible = true")
 
   List<Hecho> findHechosByVisibleTrueAndFiltrados(
+          @Param("navegacionCurada") boolean navegacionCurada,
           @Param("fechaReporteDesde") LocalDateTime fechaReporteDesde,
           @Param("fechaReporteHasta") LocalDateTime fechaReporteHasta,
           @Param("fechaAcontecimientoDesde") LocalDateTime fechaAcontecimientoDesde,

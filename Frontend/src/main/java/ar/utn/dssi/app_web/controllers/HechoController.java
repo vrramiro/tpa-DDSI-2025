@@ -367,7 +367,8 @@ public class HechoController {
                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
                                      @RequestParam(required = false) Long idCategoria,
                                      @RequestParam(required = false) String provincia,
-                                     @RequestParam(required = false) Long idColeccion
+                                     // CAMBIO: Renombramos a modoCurado para coincidir con el JS y HTML
+                                     @RequestParam(required = false, defaultValue = "false") Boolean modoCurado
   ) {
     model.addAttribute("titulo", "Explorador");
 
@@ -377,15 +378,12 @@ public class HechoController {
 
     model.addAttribute("provincias", hechosService.obtenerProvincias());
 
-    // YA NO CARGAMOS LA LISTA "hechos" ACÁ PARA EVITAR CARGA LENTA
-    // Solo manejamos el caso de idHecho único para centrar el mapa si es necesario
     if(idHecho != null) {
       Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
       if (hechoOptional.isPresent()) {
         HechoOutputDTO hechoDTO = hechoOptional.get();
         model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
         model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
-        // Pasamos el ID para que el JS sepa que tiene que abrir ese popup
         model.addAttribute("hechoSeleccionadoId", idHecho);
       }
     }
@@ -394,11 +392,11 @@ public class HechoController {
     model.addAttribute("filtroIdCategoria", idCategoria);
     model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
     model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
+    model.addAttribute("modoCurado", modoCurado);
 
     return "home/explorador";
   }
 
-  // 2. NUEVO ENDPOINT API PARA QUE EL MAPA PIDA DATOS (JSON)
   @GetMapping("/api/data")
   @ResponseBody
   public List<HechoOutputDTO> obtenerHechosData(
@@ -409,14 +407,17 @@ public class HechoController {
           @RequestParam(required = false) Double latMin,
           @RequestParam(required = false) Double latMax,
           @RequestParam(required = false) Double lonMin,
-          @RequestParam(required = false) Double lonMax
+          @RequestParam(required = false) Double lonMax,
+          @RequestParam(required = false, defaultValue = "false") Boolean modoCurado // <--- PARAMETRO AGREGADO
   ) {
+    // Pasamos el booleano al servicio
     return hechosService.obtenerHechos(
             fechaAcontecimientoDesde,
             fechaAcontecimientoHasta,
             idCategoria,
             provincia,
-            latMin, latMax, lonMin, lonMax
+            latMin, latMax, lonMin, lonMax,
+            modoCurado
     );
   }
 

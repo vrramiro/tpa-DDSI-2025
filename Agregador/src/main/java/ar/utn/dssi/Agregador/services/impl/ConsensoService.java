@@ -38,7 +38,7 @@ public class ConsensoService implements IConsensoService {
   }
 
   @Override
-  public void aplicarClavesDeComparacion(List<Hecho> hechosImportados) {
-    hechosImportados.forEach(consensuadorDeHechos::asignarClaveDeComparacion);
+  public void inicializarParaConsensuado(List<Hecho> hechosImportados) {
+    hechosImportados.forEach(consensuadorDeHechos::inicializarParaConsensuado);
   }
 }

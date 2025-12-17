@@ -98,6 +98,7 @@ public class Hecho {
 
   public void resetearConsensos() {
     this.consensosDados = new ArrayList<>();
+    this.consensosDados.add(TipoConsenso.NINGUNO);
   }
 
 }

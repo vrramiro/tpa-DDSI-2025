@@ -3,9 +3,6 @@ package ar.utn.dssi.Agregador.controller.PUBLIC;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,7 @@ public class HechosControllerPUBLIC {
 
   @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(
+          @RequestParam(name = "navegacionCurada", defaultValue = "false") boolean navegacionCurada,
           @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
           @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
           @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
@@ -39,7 +37,7 @@ public class HechosControllerPUBLIC {
           @RequestParam(name = "lonMax", required = false) Double lonMax
   ) {
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
-            fechaReporteDesde, fechaReporteHasta,
+            navegacionCurada, fechaReporteDesde, fechaReporteHasta,
             fechaAcontecimientoDesde, fechaAcontecimientoHasta,
             idCategoria, provincia,
             latMin, latMax, lonMin, lonMax

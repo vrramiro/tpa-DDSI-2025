@@ -28,7 +28,7 @@ public class GestionEstaticosController {
 
         try {
             hechoServices.crearHechoEstatico(file);
-            redirectAttributes.addFlashAttribute("mensaje", "Archivo enviado para su importación.");
+            redirectAttributes.addFlashAttribute("mensaje", "Archivo procesado exitosamente.");
             redirectAttributes.addFlashAttribute("tipoMensaje", "success");
             return "redirect:/panel_gestion";
 
@@ -48,4 +48,3 @@ public class GestionEstaticosController {
         }
     }
 }
-
