@@ -148,10 +148,10 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia) {
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia, Double latMin, Double latMax, Double lonMin, Double lonMax) {
     return gestionHechosApiService.obtenerHechos(null, null,
             fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-            idCategoria, provincia);
+            idCategoria, provincia, latMin, latMax, lonMin, lonMax);
   }
 
   @Override

@@ -4,9 +4,7 @@ import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IHechosService {
@@ -15,7 +13,8 @@ public interface IHechosService {
                                      LocalDate fechaAcontecimientoDesde,
                                      LocalDate fechaAcontecimientoHasta,
                                      Long idCategoria,
-                                     String provincia);
+                                     String provincia,
+                                     Double latMin, Double latMax, Double lonMin, Double lonMax); // Nuevos
 
   HechoOutputDTO obtenerHechoPorId(Long idHecho);
 
@@ -28,5 +27,4 @@ public interface IHechosService {
   Page<HechoOutputDTO> obtenerTodos(Pageable pageable);
 
   List<HechoOutputDTO> obtenerHechosRecientes(int limit);
-
 }

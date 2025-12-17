@@ -38,23 +38,13 @@ public class HechosService implements IHechosService {
                                             LocalDate fechaAcontecimientoDesde,
                                             LocalDate fechaAcontecimientoHasta,
                                             Long idCategoria,
-                                            String provincia) {
+                                            String provincia,
+                                            Double latMin, Double latMax, Double lonMin, Double lonMax) {
     try {
-      LocalDateTime fechaReporteDesdeDT = (fechaReporteDesde != null)
-              ? fechaReporteDesde.atStartOfDay()
-              : null;
-
-      LocalDateTime fechaReporteHastaDT = (fechaReporteHasta != null)
-              ? fechaReporteHasta.atTime(23, 59, 59)
-              : null;
-
-      LocalDateTime fechaAcontecimientoDesdeDT = (fechaAcontecimientoDesde != null)
-              ? fechaAcontecimientoDesde.atStartOfDay()
-              : null;
-
-      LocalDateTime fechaAcontecimientoHastaDT = (fechaAcontecimientoHasta != null)
-              ? fechaAcontecimientoHasta.atTime(23, 59, 59)
-              : null;
+      LocalDateTime fechaReporteDesdeDT = (fechaReporteDesde != null) ? fechaReporteDesde.atStartOfDay() : null;
+      LocalDateTime fechaReporteHastaDT = (fechaReporteHasta != null) ? fechaReporteHasta.atTime(23, 59, 59) : null;
+      LocalDateTime fechaAcontecimientoDesdeDT = (fechaAcontecimientoDesde != null) ? fechaAcontecimientoDesde.atStartOfDay() : null;
+      LocalDateTime fechaAcontecimientoHastaDT = (fechaAcontecimientoHasta != null) ? fechaAcontecimientoHasta.atTime(23, 59, 59) : null;
 
       List<Hecho> hechos = this.hechosRepository.findHechosByVisibleTrueAndFiltrados(
               fechaReporteDesdeDT,
@@ -62,7 +52,8 @@ public class HechosService implements IHechosService {
               fechaAcontecimientoDesdeDT,
               fechaAcontecimientoHastaDT,
               idCategoria,
-              provincia
+              provincia,
+              latMin, latMax, lonMin, lonMax
       );
 
       return hechos.stream()

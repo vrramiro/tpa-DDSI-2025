@@ -120,30 +120,26 @@ public class GestionHechosApiService {
           LocalDate fechaAcontecimientoDesde,
           LocalDate fechaAcontecimientoHasta,
           Long idCategoria,
-          String provincia) {
+          String provincia,
+          Double latMin, Double latMax, Double lonMin, Double lonMax // Agregamos params
+  ) {
 
     UriComponentsBuilder builder = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos");
 
-    if (fechaReporteDesde != null) {
-      builder.queryParam("fechaReporteDesde", fechaReporteDesde);
-    }
-    if (fechaReporteHasta != null) {
-      builder.queryParam("fechaReporteHasta", fechaReporteHasta);
-    }
-    if (fechaAcontecimientoDesde != null) {
-      builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
-    }
-    if (fechaAcontecimientoHasta != null) {
-      builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
-    }
-    if (provincia != null && !provincia.isEmpty()) {
-      builder.queryParam("provincia", provincia);
-    }
-    if (idCategoria != null) {
-        builder.queryParam("id_categoria", idCategoria);
-    }
+    if (fechaReporteDesde != null) builder.queryParam("fechaReporteDesde", fechaReporteDesde);
+    if (fechaReporteHasta != null) builder.queryParam("fechaReporteHasta", fechaReporteHasta);
+    if (fechaAcontecimientoDesde != null) builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
+    if (fechaAcontecimientoHasta != null) builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
+    if (provincia != null && !provincia.isEmpty()) builder.queryParam("provincia", provincia);
+    if (idCategoria != null) builder.queryParam("id_categoria", idCategoria);
+
+    // Nuevos filtros
+    if (latMin != null) builder.queryParam("latMin", latMin);
+    if (latMax != null) builder.queryParam("latMax", latMax);
+    if (lonMin != null) builder.queryParam("lonMin", lonMin);
+    if (lonMax != null) builder.queryParam("lonMax", lonMax);
 
     String url = builder.build().toUriString();
 
