@@ -1,7 +1,6 @@
 package ar.utn.dssi.Estadisticas.services.impl;
 
 import ar.utn.dssi.Estadisticas.dto.output.EstadisticaOutputDTO;
-import ar.utn.dssi.Estadisticas.errores.ErrorAlCalcular;
 import ar.utn.dssi.Estadisticas.mappers.MapperDeEstadisticas;
 import ar.utn.dssi.Estadisticas.models.entities.Estadistica;
 import ar.utn.dssi.Estadisticas.models.entities.TipoArchivo;
@@ -14,11 +13,12 @@ import ar.utn.dssi.Estadisticas.models.repositories.IEstadisticasRepository;
 import ar.utn.dssi.Estadisticas.services.IContextoDeCalculoService;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import java.io.File;
-import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EstadisticasService implements IEstadisticasService {
@@ -29,28 +29,33 @@ public class EstadisticasService implements IEstadisticasService {
   @Override
   public void calcularEstadisticas() {
     try {
+      log.info("Iniciando cálculo de estadísticas...");
       ContextoDeCalculo contextoDeCalculo = contextoDeCalculoService.obtenerContextoDeCalculo();
 
       List<Estadistica> estadisticasCalculadas = generadorDeEstadisticas.generarEstadisticas(contextoDeCalculo);
 
       estadisticasRepository.saveAll(estadisticasCalculadas);
+      log.info("Cálculo finalizado. Se guardaron {} estadísticas.", estadisticasCalculadas.size());
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      log.error("Error crítico al calcular estadísticas", e);
+      //throw new RuntimeException(e);
     }
-
   }
 
   @Override
-  public EstadisticaOutputDTO getProvinciasConMasHechosColeccion(Long idColeccion) {
+  public EstadisticaOutputDTO getProvinciasConMasHechosColeccion(String handle) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEStadisticaByColeccionIdAndTipoAndFechaDeCalculoIsAfter
-              (idColeccion,
-                  TipoEstadistica.COLECCION_PROVINCIA_HECHOS,
-                  LocalDateTime.now());
+              .findTopByColeccionHandleAndTipoOrderByFechaDeCalculoDesc(
+                  handle,
+                  TipoEstadistica.COLECCION_PROVINCIA_HECHOS);
+
+      if (estadistica == null) return null;
+
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
-      throw new ErrorAlCalcular("Error al calcular provincias con mas hechos en una coleccion.");
+      log.error("Error al obtener provincias por colección", e);
+      return null;
     }
   }
 
@@ -58,12 +63,14 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getCategoriaConMasHechos() {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByTipoAndFechaDeCalculoIsAfter
-              (TipoEstadistica.CATEGORIA_MAS_HECHOS,
-                  LocalDateTime.now());
+          .findTopByTipoOrderByFechaDeCalculoDesc(TipoEstadistica.CATEGORIA_MAS_HECHOS);
+
+      if (estadistica == null) return null;
+
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
-      throw new ErrorAlCalcular("Error al calcular categorias con mas hechos en una coleccion.");
+      log.error("Error al obtener categoría con más hechos", e);
+      return null;
     }
   }
 
@@ -71,14 +78,16 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getProvinciasConMasHechoCategoria(Long idCategoria) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByCategoriaIdAndTipoAndFechaDeCalculoIsAfter
-              (idCategoria, TipoEstadistica.
-                      CATEGORIA_PROVINCIA_HECHOS,
-                  LocalDateTime.now());
+          .findTopByCategoriaIdAndTipoOrderByFechaDeCalculoDesc(
+                  idCategoria,
+                  TipoEstadistica.CATEGORIA_PROVINCIA_HECHOS);
+
+      if (estadistica == null) return null;
 
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
-      throw new ErrorAlCalcular("Error al calcular categorias con mas hechos en una coleccion.");
+      log.error("Error al obtener provincia por categoría", e);
+      return null;
     }
   }
 
@@ -86,13 +95,16 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getHorasConMasHechosCategoria(Long idCategoria) {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByCategoriaIdAndTipoAndFechaDeCalculoIsAfter
-              (idCategoria,
-                  TipoEstadistica.CATEGORIA_HORA_HECHOS,
-                  LocalDateTime.now());
+          .findTopByCategoriaIdAndTipoOrderByFechaDeCalculoDesc(
+                  idCategoria,
+                  TipoEstadistica.CATEGORIA_HORA_HECHOS);
+
+      if (estadistica == null) return null;
+
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
-      throw new ErrorAlCalcular("Error al calcular horas con mas hechos en una categorias.");
+      log.error("Error al obtener horas por categoría", e);
+      return null;
     }
   }
 
@@ -100,17 +112,29 @@ public class EstadisticasService implements IEstadisticasService {
   public EstadisticaOutputDTO getCantidadSpam() {
     try {
       Estadistica estadistica = estadisticasRepository
-          .findEstadisticaByTipoAndFechaDeCalculoIsAfter(TipoEstadistica.SOLICITUD_SPAM,
-              LocalDateTime.now());
+          .findTopByTipoOrderByFechaDeCalculoDesc(TipoEstadistica.SOLICITUD_SPAM);
+
+      if (estadistica == null) return null;
+
       return MapperDeEstadisticas.estadisticaOutputDTO(estadistica);
     } catch (Exception e) {
-      throw new ErrorAlCalcular("Error al calcular cantidad de spam en las solicitudes de eliminacion.");
+      log.error("Error al obtener cantidad de spam", e);
+      return null;
     }
   }
 
   @Override
   public File getArchivoEstadisticas(TipoArchivo tipo) {
-    IExportadorArchivos exportador = ExportadorFactory.getExportador(tipo);
-    return exportador.exportarEstadisticas();
-  }
+    try {
+      List<Estadistica> listaEstadisticas = estadisticasRepository.findAll();
+      if (listaEstadisticas.isEmpty()) {
+        log.warn("No hay estadísticas para exportar");
+      }
+      IExportadorArchivos exportador = ExportadorFactory.getExportador(tipo);
+      return exportador.exportarEstadisticas(listaEstadisticas);
+    } catch (Exception e) {
+      log.error("Error al exportar archivo", e);
+      return null;
+    }
+}
 }

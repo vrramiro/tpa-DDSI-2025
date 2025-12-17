@@ -37,4 +37,10 @@ public class SolicitudDeEliminacionControllerADMIN {
     solicitudesService.procesarSolicitud(idSolicitud, solicitud);
     return ResponseEntity.ok().build();
   }
+
+  @GetMapping("/{idSolicitud}")
+  public ResponseEntity<SolicitudDeEliminacionOutputDTO> obtenerSolicitudPorId(@PathVariable Long idSolicitud) {
+    SolicitudDeEliminacionOutputDTO solicitud = solicitudesService.obtenerSolicitudPorId(idSolicitud);
+    return ResponseEntity.ok(solicitud);
+  }
 }

@@ -59,4 +59,6 @@ public interface IColeccionRepository extends JpaRepository<Coleccion, String> {
       @Param("provincia") String provincia,
       Pageable pageable
   );
+
+  List<Coleccion> findByActualizadaTrue();
 }

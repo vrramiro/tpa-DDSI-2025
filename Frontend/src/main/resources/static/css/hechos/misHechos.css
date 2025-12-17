@@ -248,6 +248,10 @@ h1 {
     gap: 10px;
 }
 
+.modal-actions .btn{
+    text-decoration: none;
+}
+
 /* Ajuste para móviles */
 @media (max-width: 992px) {
     .main-header { padding-inline: 4%; }
@@ -341,3 +345,55 @@ h1 {
     padding: 0 0.5rem;
 }
 
+.toast-notify {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px 14px;
+    min-width: 260px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.toast-notify.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-notify.success {
+    border-left: 5px solid #28a745;
+    color: #155724;
+}
+
+.toast-notify.error {
+    border-left: 5px solid #dc3545;
+    color: #721c24;
+}
+
+.toast-notify.info {
+    border-left: 5px solid #0dcaf0;
+    color: #055160;
+}
+
+.toast-notify .close-btn {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin-left: auto;
+    opacity: .6;
+}
+
+.toast-notify .close-btn:hover {
+    opacity: 1;
+}

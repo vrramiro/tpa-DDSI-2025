@@ -18,4 +18,7 @@ public class HechoOutputDTO {
   private EstadoHecho estado;
 
   private String autor;
+  private Boolean visible;
+
+  private String tipoFuente;
 }

@@ -1,28 +1,58 @@
 package ar.utn.dssi.app_web.controllers;
 
+import ar.utn.dssi.app_web.dto.input.ColeccionResponseDTO;
+import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.services.Interfaces.IColeccionService;
+import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
+import ar.utn.dssi.app_web.services.impl.HechoServices;
+import org.springframework.beans.factory.annotation.Value;
 import ar.utn.dssi.app_web.dto.Users.UserRequest;
 import ar.utn.dssi.app_web.services.UsuariosApiService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 @Controller
 public class HomeController {
 
   private final UsuariosApiService usuariosApiService;
+  private final IHechoService hechosApiService;
+  private final IColeccionService coleccionService;
 
-  public HomeController(UsuariosApiService usuariosApiService) {
+  public HomeController(UsuariosApiService usuariosApiService, IHechoService hechosApiService, IColeccionService coleccionService) {
     this.usuariosApiService = usuariosApiService;
+    this.hechosApiService = hechosApiService;
+      this.coleccionService = coleccionService;
   }
 
+  @Value("${agregador.service.url:http://localhost:8082}")
+  private String agregadorUrl;
+/*
   @GetMapping("/")
-  public String home(Model model) {
-    model.addAttribute("titulo", "Home");
+  public String landing(Model model) {
+    model.addAttribute("agregadorUrl", agregadorUrl);
     return "home/landing";
   }
+  */
+
+  @GetMapping("/")
+  public String landing(Model model) {
+    final int CANTIDAD_DESTACADAS = 3;
+
+    List<ColeccionResponseDTO> ultimasColecciones = coleccionService.obtenerUltimasColecciones(CANTIDAD_DESTACADAS);
+    model.addAttribute("coleccionesDestacadas", ultimasColecciones);
+
+    List<HechoOutputDTO> hechosRecientes =
+            hechosApiService.obtenerHechosRecientes(3);
+
+    model.addAttribute("hechosRecientes", hechosRecientes);
+
+    return "home/landing";
+  }
+
 
   @GetMapping("/login")
   public String login(Model model) {
@@ -67,12 +97,6 @@ public class HomeController {
   public String gestion(Model model) {
     model.addAttribute("titulo", "Panel de Gestion");
     return "home/panelGestion";
-  }
-
-  @GetMapping("/estadisticas")
-  public String estadisticas(Model model) {
-    model.addAttribute("titulo", "Estadisticas");
-    return "home/estadisticas";
   }
 
   @GetMapping("/404")

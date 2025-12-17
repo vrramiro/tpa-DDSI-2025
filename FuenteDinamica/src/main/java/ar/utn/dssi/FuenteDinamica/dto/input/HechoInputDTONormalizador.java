@@ -16,4 +16,7 @@ public class HechoInputDTONormalizador {
   private CategoriaNormalizadorDTO categoria;
   private UbicacionInputDTO ubicacion;
   private LocalDateTime fechaAcontecimiento;
+
+  private Boolean anonimo;
+  private Boolean visible;
 }

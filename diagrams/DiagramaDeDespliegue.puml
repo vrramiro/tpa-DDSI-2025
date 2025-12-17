@@ -1,0 +1,139 @@
+@startuml
+!theme plain
+hide stereotype
+skinparam componentStyle uml2
+skinparam databaseStyle uml2
+
+' --- ESTILO: Círculos vacíos para interfaces ---
+skinparam interface {
+  backgroundColor White
+  borderColor Black
+}
+
+title MetaMapa - Diagrama de Despliegue
+
+node "Cliente" {
+    [Navegador Web] as Browser
+}
+
+node "Cluster de Microservicios (Docker Host)" {
+
+    ' --- CAPA 1: PRESENTACIÓN ---
+    package "Presentación" {
+        component "Frontend (MVC)" as Front
+        interface "HTTP Web" as I_Web
+        Front -up- I_Web
+    }
+
+    ' --- CAPA 2: CORE Y SEGURIDAD ---
+    package "Core & Seguridad" {
+        component "Servicio\nUsuarios" as UserSvc
+        database "DB\nUsers" as UserDB
+        interface "API Auth" as I_Auth
+
+        UserSvc -up- I_Auth
+        UserSvc -right-> UserDB
+
+        component "Servicio\nAgregador" as AggSvc
+        database "DB\nAgg" as AggDB
+        interface "API Agregación" as I_Agg
+
+        AggSvc -up- I_Agg
+        AggSvc -left-> AggDB
+
+        component "Servicio\nEstadísticas" as StatsSvc
+        database "DB\nStats" as StatsDB
+        interface "API Stats" as I_Stats
+
+        StatsSvc -up- I_Stats
+        StatsSvc -> StatsDB
+    }
+
+    ' --- CAPA 3: FUENTES DE DATOS ---
+    package "Fuentes de Datos" {
+        interface "API Lectura Hechos" as I_SourceRead
+        interface "API Carga" as I_SourceWrite
+
+        component "Fuente\nDinámica" as DynSvc
+        database "DB\nDinámica" as DynDB
+
+        component "Fuente\nEstática" as StatSvc
+        database "DB\nEstática" as StatDB
+
+        component "Fuente\nProxy" as ProxySvc
+        database "DB\nProxy" as ProxyDB
+
+        ' Interfaces Provistas (Bolas)
+        DynSvc -up- I_SourceRead
+        StatSvc -up- I_SourceRead
+        ProxySvc -up- I_SourceRead
+        DynSvc -up- I_SourceWrite
+
+        ' Bases de datos
+        DynSvc --> DynDB
+        StatSvc --> StatDB
+        ProxySvc --> ProxyDB
+    }
+
+    ' --- CAPA 4: SOPORTE ---
+    package "Soporte" {
+        component "Servicio\nNormalizador" as NormSvc
+        database "DB\nNorm" as NormDB
+        interface "API Normalización" as I_Norm
+
+        NormSvc -up- I_Norm
+        NormSvc -> NormDB
+    }
+}
+
+' --- SISTEMAS EXTERNOS (NUEVO) ---
+node "Sistemas Externos / Internet" {
+
+    ' 1. Proveedores de Datos para el Proxy
+    component "API Desastres\nNaturales" as ExtDis
+    interface "API REST\nJSON" as I_ExtDis
+    ExtDis -up- I_ExtDis
+
+    component "Otras Instancias\nMetaMapa" as ExtMM
+    interface "API MetaMapa\n(Federación)" as I_ExtMM
+    ExtMM -up- I_ExtMM
+
+    ' 2. Proveedor de Datos para el Normalizador
+    component "Servicio\nGeoRef (Gob)" as ExtGeo
+    interface "API Normalización\nGeográfica" as I_ExtGeo
+    ExtGeo -up- I_ExtGeo
+}
+
+' --- RELACIONES DE CONSUMO (Lunitas) ---
+
+' Cliente -> Front
+Browser --( I_Web
+
+' Front -> Core
+Front --( I_Auth
+Front --( I_Agg
+Front --( I_Stats
+Front --( I_SourceWrite
+
+' Agregador -> Core
+AggSvc --( I_Auth
+AggSvc --( I_SourceRead
+
+' Stats -> Agregador
+StatsSvc --( I_Agg
+
+' Fuentes -> Normalizador
+DynSvc --( I_Norm
+StatSvc --( I_Norm
+ProxySvc --( I_Norm
+
+' --- INTEGRACIONES EXTERNAS (LO QUE PEDISTE) ---
+
+' El Proxy CONSUME las interfaces externas
+ProxySvc --( I_ExtDis : Adapta
+ProxySvc --( I_ExtMM : Federa
+
+' El Normalizador CONSUME GeoRef
+NormSvc --( I_ExtGeo : Valida Ubicación
+
+@enduml

@@ -116,3 +116,15 @@ h1 {
         transform: scale(1);
     }
 }
+
+.estado-sin-datos {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.descripcion-sin-datos {
+    color: var(--primary-color);
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 5px;
+}

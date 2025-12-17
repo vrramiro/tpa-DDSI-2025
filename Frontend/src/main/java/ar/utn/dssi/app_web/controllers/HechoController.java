@@ -230,12 +230,16 @@ public class HechoController {
 
   @GetMapping("/misHechos")
   public String listarMisHechos(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "9") int size, // Volvemos a un número razonable
+                                @RequestParam(defaultValue = "9") int size,
                                 @RequestParam(required = false) String filtro,
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    List<HechoOutputDTO> todosMisHechos = hechosService.obtenerMisHechos();
+    List<HechoOutputDTO> hechosCrudos = hechosService.obtenerMisHechos();
+
+    List<HechoOutputDTO> todosMisHechos = hechosCrudos.stream()
+            .filter(h -> Boolean.TRUE.equals(h.getVisible()))
+            .toList();
 
     if (filtro != null && !filtro.isEmpty()) {
       todosMisHechos = todosMisHechos.stream()
@@ -261,17 +265,15 @@ public class HechoController {
     }
 
     model.addAttribute("hechos", hechosPaginados);
-    model.addAttribute("page", page);             // Variable 'current' en el fragmento
+    model.addAttribute("page", page);
     model.addAttribute("size", size);
     model.addAttribute("sort", sort);
     model.addAttribute("filtro", filtro == null ? "" : filtro);
     model.addAttribute("totalPages", totalPages);
     model.addAttribute("totalElements", totalElements);
     model.addAttribute("baseUrl", "/hechos/misHechos");
-
     model.addAttribute("isFirst", page == 0);
     model.addAttribute("isLast", page == totalPages - 1);
-
     model.addAttribute("titulo", "Mis Hechos");
 
     return "hechos/misHechos";
@@ -367,60 +369,56 @@ public class HechoController {
                                      @RequestParam(required = false) String provincia,
                                      @RequestParam(required = false) Long idColeccion
   ) {
+    model.addAttribute("titulo", "Explorador");
 
-    log.info("--- Filtros recibidos en /explorador ---");
-    log.info("idHecho: {}", idHecho);
-    log.info("idCategoria: {}", idCategoria);
-    log.info("provincia: {}", provincia);
-    log.info("fechaDesde: {}", fechaAcontecimientoDesde);
-    log.info("fechaHasta: {}", fechaAcontecimientoHasta);
-    log.info("idColeccion: {}", idColeccion);
-    // log.info("modoCurado: {}", modoCurado);
-    log.info("-----------------------------------------");
+    List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+    categorias.sort(Comparator.comparing(CategoriaDTO::getCategoria));
+    model.addAttribute("categorias", categorias);
 
-      model.addAttribute("titulo", "Explorador");
+    model.addAttribute("provincias", hechosService.obtenerProvincias());
 
-      List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
-      categorias.sort(Comparator.comparing(CategoriaDTO::getCategoria));
-      model.addAttribute("categorias", categorias);
-
-      model.addAttribute("provincias", hechosService.obtenerProvincias());
-
-      if(idHecho != null) {
-
-        Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
-        if (hechoOptional.isPresent()) {
-          HechoOutputDTO hechoDTO = hechoOptional.get();
-          model.addAttribute("hechos", List.of(hechoDTO));
-          model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
-          model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
-        }
-
-      } else if (idColeccion != null) {
-
-        // Lógica para colecciones (si es diferente)
-        // model.addAttribute("hechos", gestionHechosApiService.obtenerHechosDeColeccion(idColeccion, ...));
-
-      } else {
-
-        List<HechoOutputDTO> hechosFiltrados = hechosService.obtenerHechos(
-                fechaAcontecimientoDesde,
-                fechaAcontecimientoHasta,
-                idCategoria,
-                provincia
-                //TODO modoCurado??
-        );
-        model.addAttribute("hechos", hechosFiltrados);
+    // YA NO CARGAMOS LA LISTA "hechos" ACÁ PARA EVITAR CARGA LENTA
+    // Solo manejamos el caso de idHecho único para centrar el mapa si es necesario
+    if(idHecho != null) {
+      Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
+      if (hechoOptional.isPresent()) {
+        HechoOutputDTO hechoDTO = hechoOptional.get();
+        model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
+        model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
+        // Pasamos el ID para que el JS sepa que tiene que abrir ese popup
+        model.addAttribute("hechoSeleccionadoId", idHecho);
       }
-
-      model.addAttribute("filtroProvincia", provincia);
-      model.addAttribute("filtroIdCategoria", idCategoria);
-      model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
-      model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
-      //TODO model.addAttribute("filtroModoCurado", modoCurado);???
-
-      return "home/explorador";
     }
+
+    model.addAttribute("filtroProvincia", provincia);
+    model.addAttribute("filtroIdCategoria", idCategoria);
+    model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
+    model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
+
+    return "home/explorador";
+  }
+
+  // 2. NUEVO ENDPOINT API PARA QUE EL MAPA PIDA DATOS (JSON)
+  @GetMapping("/api/data")
+  @ResponseBody
+  public List<HechoOutputDTO> obtenerHechosData(
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+          @RequestParam(required = false) Long idCategoria,
+          @RequestParam(required = false) String provincia,
+          @RequestParam(required = false) Double latMin,
+          @RequestParam(required = false) Double latMax,
+          @RequestParam(required = false) Double lonMin,
+          @RequestParam(required = false) Double lonMax
+  ) {
+    return hechosService.obtenerHechos(
+            fechaAcontecimientoDesde,
+            fechaAcontecimientoHasta,
+            idCategoria,
+            provincia,
+            latMin, latMax, lonMin, lonMax
+    );
+  }
 
   private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
     if (e.hasFieldErrors()) {

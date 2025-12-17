@@ -1,11 +1,11 @@
 package ar.utn.dssi.Agregador.models.entities.spam;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class DetectorDeSpam {
-
-  private static final int MIN_LENGTH = 50;
 
   private static final List<String> PALABRAS_SPAM = Arrays.asList(
       "oferta", "gratis", "promoción", "click aquí", "haz clic", "compra ya", "dinero rápido"
@@ -13,10 +13,10 @@ public class DetectorDeSpam {
 
   public static Boolean esSpam(String descripcion) {
     if (descripcion == null || descripcion.isBlank()) {
-      return false;
+      return true;
     }
 
-    if (descripcion.length() < MIN_LENGTH) {
+    if (descripcion.length() < 50) {
       return true;
     }
 

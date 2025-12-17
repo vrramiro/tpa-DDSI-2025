@@ -21,13 +21,13 @@ public class Hecho {
   @Column(name = "titulo", nullable = false)
   private String titulo;
 
-  @Column(name = "descripcion", nullable = false, columnDefinition = "TEXT")
-  private String descripcion;
-
   @Column(name = "tituloSanitizado", nullable = false)
   private String tituloSanitizado;
 
-  @Column(name = "descripcionSanitizado", nullable = false, columnDefinition = "TEXT")
+  @Column(nullable = false, name = "descripcion", columnDefinition = "TEXT")
+  private String descripcion;
+
+  @Column(nullable = false, name = "descripcion_sanitizada", columnDefinition = "TEXT")
   private String descripcionSanitizado;
 
   @Embedded

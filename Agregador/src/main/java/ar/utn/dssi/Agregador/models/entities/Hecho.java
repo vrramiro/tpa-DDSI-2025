@@ -52,10 +52,10 @@ public class Hecho {
   @Column(nullable = false, name = "titulo_sanitizado")
   private String tituloSanitizado;
 
-  @Column(nullable = false, name = "descripcion")
+  @Column(nullable = false, name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
 
-  @Column(nullable = false, name = "descripcion_sanitizada")
+  @Column(nullable = false, name = "descripcion_sanitizada", columnDefinition = "TEXT")
   private String descripcionSanitizado;
 
   @Embedded
@@ -73,6 +73,7 @@ public class Hecho {
   @Embedded
   private Ubicacion ubicacion;
 
+  @Getter
   @Column(nullable = false, name = "fechaAcontecimiento")
   private LocalDateTime fechaAcontecimiento;
 
@@ -98,4 +99,5 @@ public class Hecho {
   public void resetearConsensos() {
     this.consensosDados = new ArrayList<>();
   }
+
 }

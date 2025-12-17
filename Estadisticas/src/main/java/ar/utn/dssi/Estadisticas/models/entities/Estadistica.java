@@ -32,8 +32,8 @@ public class Estadistica {
   @Column(name = "tipo_estadistica", nullable = false)
   private TipoEstadistica tipo;
 
-  @Column(name = "colecccion_Id", nullable = true)
-  private Long coleccionId;
+  @Column(name = "colecccion_handle", nullable = true)
+  private String coleccionHandle;
 
   @Column(name = "nombre_coleccion", nullable = true)
   private String nombreColeccion;

@@ -159,6 +159,15 @@ public class ColeccionService implements IColeccionService {
     return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
   }
 
+  @Override
+  public List<ColeccionOutputDTO> obtenerTodasLasColecciones() {
+    List<Coleccion> colecciones = coleccionRepository.findByActualizadaTrue();
+
+    return colecciones.stream()
+            .map(MapperDeColecciones::coleccionOutputDTOFromColeccion)
+            .toList();
+  }
+
   private void validarDatosBasicos(ColeccionInputDTO input) {
     if (input.getTitulo() == null || input.getTitulo().isEmpty())
       throw new DatosDeColeccionFaltantes("El titulo es obligatorio.");

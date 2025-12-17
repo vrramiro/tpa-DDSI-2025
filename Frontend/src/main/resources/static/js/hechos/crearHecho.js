@@ -89,13 +89,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const URL_UPLOAD = 'http://localhost:8082/multimedia/upload';
     let archivosSubidos = [];
 
+    if (form) {
+        if (!form.querySelector('input[name="visible"]')) {
+            const inputVisible = document.createElement('input');
+            inputVisible.type = 'hidden';
+            inputVisible.name = 'visible';
+            inputVisible.value = 'true';
+            form.appendChild(inputVisible);
+            console.log("Campo 'visible' agregado al formulario.");
+        }
+    }
+
     if (fileInput) {
         fileInput.addEventListener('change', async function() {
             const files = Array.from(fileInput.files);
             if (files.length === 0) return;
+            const errorMultimedia = document.getElementById('errorMultimedia');
 
-            if (archivosSubidos.length + files.length > 5) {
+            if (errorMultimedia) {
+                errorMultimedia.style.display = 'none';
+            }
+
+            const archivosValidos = [];
+            let hayArchivosInvalidos = false;
+
+            files.forEach(file => {
+                const esTipoValido = file.type === 'image/jpeg' ||
+                    file.name.toLowerCase().endsWith('.jpg') ||
+                    file.name.toLowerCase().endsWith('.jpeg');
+
+                if (esTipoValido) {
+                    archivosValidos.push(file);
+                } else {
+                    hayArchivosInvalidos = true;
+                }
+            });
+
+            if (hayArchivosInvalidos && errorMultimedia) {
+                errorMultimedia.style.display = 'inline-block';
+            }
+
+            if (archivosSubidos.length + archivosValidos.length > 5) {
                 alert("Máximo 5 archivos permitidos.");
+                fileInput.value = '';
+                return;
+            }
+
+            if (archivosValidos.length === 0) {
                 fileInput.value = '';
                 return;
             }
@@ -105,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.innerText = "Subiendo...";
             }
 
-            for (const file of files) {
+            for (const file of archivosValidos) {
                 const card = crearTarjetaVisual(file.name, true);
                 previewContainer.appendChild(card);
 
@@ -147,9 +187,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.className = 'file-card' + (cargando ? ' loading' : '');
         div.innerHTML = `
-            <i class="fas fa-file-image"></i> 
-            <span>${nombre.length > 10 ? nombre.substring(0,8)+'...' : nombre}</span>
-        `;
+                    <i class="fas fa-file-image"></i>
+                    <span>${nombre.length > 10 ? nombre.substring(0,8)+'...' : nombre}</span>`;
         return div;
     }
 

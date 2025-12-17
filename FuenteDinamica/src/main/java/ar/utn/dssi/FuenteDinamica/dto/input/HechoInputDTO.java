@@ -21,4 +21,5 @@ public class HechoInputDTO {
   private List<String> urlsContenidoMultimedia;
 
   private Boolean anonimo;
+  private Boolean visible;
 }

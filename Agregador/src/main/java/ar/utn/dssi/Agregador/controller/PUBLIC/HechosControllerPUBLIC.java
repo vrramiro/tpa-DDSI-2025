@@ -3,6 +3,9 @@ package ar.utn.dssi.Agregador.controller.PUBLIC;
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
 import ar.utn.dssi.Agregador.services.IHechosService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,29 +27,23 @@ public class HechosControllerPUBLIC {
 
   @GetMapping
   public ResponseEntity<List<HechoOutputDTO>> obtenerHechos(
-      @RequestParam(name = "fechaReporteDesde", required = false)
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
-      @RequestParam(name = "fechaReporteHasta", required = false)
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
-      @RequestParam(name = "fechaAcontecimientoDesde", required = false)
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
-      @RequestParam(name = "fechaAcontecimientoHasta", required = false)
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
-      @RequestParam(name = "id_categoria", required = false) Long idCategoria,
-      @RequestParam(name = "provincia", required = false) String provincia
+          @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
+          @RequestParam(name = "fechaReporteHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteHasta,
+          @RequestParam(name = "fechaAcontecimientoDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+          @RequestParam(name = "fechaAcontecimientoHasta", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+          @RequestParam(name = "id_categoria", required = false) Long idCategoria,
+          @RequestParam(name = "provincia", required = false) String provincia,
+          @RequestParam(name = "latMin", required = false) Double latMin,
+          @RequestParam(name = "latMax", required = false) Double latMax,
+          @RequestParam(name = "lonMin", required = false) Double lonMin,
+          @RequestParam(name = "lonMax", required = false) Double lonMax
   ) {
     List<HechoOutputDTO> hechos = hechosService.obtenerHechos(
-            fechaReporteDesde,
-            fechaReporteHasta,
-            fechaAcontecimientoDesde,
-            fechaAcontecimientoHasta,
-            idCategoria,
-            provincia
+            fechaReporteDesde, fechaReporteHasta,
+            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
+            idCategoria, provincia,
+            latMin, latMax, lonMin, lonMax
     );
-
-    if (hechos.isEmpty()) {
-      return ResponseEntity.noContent().build();
-    }
 
     return ResponseEntity.ok(hechos);
   }
@@ -79,4 +76,19 @@ public class HechosControllerPUBLIC {
       return ResponseEntity.internalServerError().build();
     }
   }
+
+  @GetMapping("/recientes")
+  public ResponseEntity<List<HechoOutputDTO>> obtenerHechosRecientes(
+          @RequestParam(defaultValue = "3") int limit
+  ) {
+    List<HechoOutputDTO> hechos = hechosService.obtenerHechosRecientes(limit);
+
+    if (hechos.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
+
+    return ResponseEntity.ok(hechos);
+  }
+
+
 }

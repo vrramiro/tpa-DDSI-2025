@@ -1,26 +1,31 @@
 package ar.utn.dssi.Estadisticas.models.entities.calculadores.impl;
 
 import ar.utn.dssi.Estadisticas.models.entities.Estadistica;
-import ar.utn.dssi.Estadisticas.models.entities.SolicitudDeEliminacion;
 import ar.utn.dssi.Estadisticas.models.entities.TipoEstadistica;
 import ar.utn.dssi.Estadisticas.models.entities.calculadores.ICalculadorDeEstadisticas;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CantidadSolicitudesEliminacionSpam implements ICalculadorDeEstadisticas {
 
   @Override
   public List<Estadistica> generarEstadistica(ContextoDeCalculo datos) {
-    List<SolicitudDeEliminacion> solicitudes = datos.getSolicitudDeEliminacion();
-    List<Estadistica> estadisticas = new ArrayList<>();
+    Long solicitudes = datos.getSolicitudDeEliminacion();
 
-    Long spamPorSolicitudes = solicitudes.stream().filter(solicitud -> Boolean.TRUE.equals(solicitud.getEsSpam())).count();
+    if (solicitudes == null) {
+      solicitudes = 0L;
+    }
+
+    List<Estadistica> estadisticas = new ArrayList<>();
 
     Estadistica estadistica = Estadistica.builder()
         .tipo(TipoEstadistica.SOLICITUD_SPAM)
-        .valor(spamPorSolicitudes)
+        .valor(solicitudes)
         .clave("Spam")
         .fechaDeCalculo(LocalDateTime.now())
         .build();
