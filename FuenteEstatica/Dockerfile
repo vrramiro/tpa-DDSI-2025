@@ -4,13 +4,18 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
 
-# Copiar los archivos de configuración de Maven
+# 1. Copiar archivos de configuración (Padre e Hijo)
 COPY pom.xml .
 COPY FuenteEstatica/pom.xml FuenteEstatica/
-COPY src ./src
 
-# Compilar el proyecto (sin tests)
-RUN mvn clean package -DskipTests
+# 2. Instalar el padre para que el hijo lo encuentre (Paso CRÍTICO que te falta)
+RUN mvn install -N
+
+# 3. Copiar el código fuente REAL de FuenteEstatica
+COPY FuenteEstatica/src FuenteEstatica/src
+
+# 4. Compilar SOLO FuenteEstatica explícitamente
+RUN mvn clean package -DskipTests -f FuenteEstatica/pom.xml
 
 # ==========================
 # Etapa 2: Imagen final (solo el JAR)
@@ -18,7 +23,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
-# Copiar el JAR compilado desde la etapa anterior
-COPY --from=builder /app/target/*.jar app.jar
+# 5. Copiar el JAR desde la ruta correcta del módulo (dentro de FuenteEstatica/target)
+COPY --from=builder /app/FuenteEstatica/target/*.jar app.jar
+
 EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "app.jar"]
