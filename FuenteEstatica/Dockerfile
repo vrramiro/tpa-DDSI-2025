@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copiar los archivos de configuración de Maven
 COPY pom.xml .
+COPY FuenteEstatica/pom.xml FuenteEstatica/
 COPY src ./src
 
 # Compilar el proyecto (sin tests)

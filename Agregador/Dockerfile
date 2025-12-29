@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copiar los archivos de configuración de Maven
 COPY pom.xml .
+COPY Agregador/pom.xml Agregador/
 COPY src ./src
 
 # Compilar el proyecto (sin tests)

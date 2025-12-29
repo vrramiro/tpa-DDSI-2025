@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Copiar los archivos de configuración de Maven
 COPY pom.xml .
+COPY FuenteDinamica/pom.xml FuenteDinamica/
 COPY src ./src
 
 # Compilar el proyecto (sin tests)
