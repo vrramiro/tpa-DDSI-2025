@@ -2,42 +2,55 @@ package ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.impl;
 
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.ComparadorDeTexto;
 import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.IAlgoritmoConsenso;
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.Map;
 
 @Component
-public class MultiplesMenciones implements IAlgoritmoConsenso {
+public class MultiplesMenciones extends IAlgoritmoConsenso {
+  private final ComparadorDeTexto comparadorDeTexto;
 
-  @Value("${cantFuentesMultiplesMenciones}")
-  static private Integer cantidadFuentes;
-
-    /*
-    @Override
-    public Boolean cumpleAlgoritmo(Hecho hecho, List<Fuente> fuentes) {
-        return this.fuentesLoTienen(hecho, fuentes) && this.ningunaLoTieneConDistintosAtributos(hecho, fuentes);
-    }
-
-    private Boolean fuentesLoTienen(Hecho hecho, List<Fuente> fuentes) {
-        return fuentes.stream().
-                filter(fuente -> fuente.obtenerHechos()
-                        .stream()
-                        .anyMatch(otroHecho -> otroHecho.mismoHecho(hecho)))
-                .count() >= cantidadFuentes;
-    }
-
-    private Boolean ningunaLoTieneConDistintosAtributos(Hecho hecho, List<Fuente> fuentes) {
-        return fuentes
-                .stream()
-                .flatMap(fuente -> fuente.obtenerHechos().stream())
-                .noneMatch(otroHecho -> otroHecho.mismoMismoTitulo(hecho) && !otroHecho.mismosAtributos(hecho));
-    }
-    */
+  public MultiplesMenciones(ComparadorDeTexto comparadorDeTexto) {
+    this.comparadorDeTexto = comparadorDeTexto;
+  }
 
   @Override
-  public List<Hecho> consensuar(List<Hecho> hechos, List<Fuente> fuentes) {
-    return List.of();
+  protected TipoConsenso getTipoConsenso() {
+    return TipoConsenso.MULTIPLES_MENCIONES;
+  }
+
+  @Override
+  protected boolean cumplenCriterio(List<Hecho> hechosActuales, List<Fuente> fuentes, Map<String, List<Hecho>> hechosPorClave) {
+    if (hechosActuales == null || hechosActuales.isEmpty()) return false;
+
+    int cantidadHechosFuenteDistinta = hechosActuales.stream()
+        .map(Hecho::getFuente)
+        .distinct()
+        .toList()
+        .size();
+
+    if (cantidadHechosFuenteDistinta < 2) return false;
+
+    String claveActual = hechosActuales.get(0).getClaveComparacion();
+    List<String> titulosActuales = hechosActuales.stream().map(Hecho::getTituloSanitizado).toList();
+
+    for (Map.Entry<String, List<Hecho>> entrada : hechosPorClave.entrySet()) {
+      String claveDistinta = entrada.getKey();
+
+      if (claveDistinta.equals(claveActual)) continue;
+
+      for (Hecho hechoDistinto : entrada.getValue()) {
+        String tituloDistinto = hechoDistinto.getTituloSanitizado();
+
+        if (titulosActuales.stream().anyMatch(titulo -> comparadorDeTexto.cadenasSimilares(titulo, tituloDistinto)))
+          return false;
+      }
+    }
+
+    return true;
   }
 }

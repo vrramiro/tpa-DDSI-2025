@@ -1,17 +1,21 @@
 package ar.utn.dssi.Agregador.services;
 
 import ar.utn.dssi.Agregador.dto.output.HechoOutputDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface IHechosService {
-  List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde,
+  List<HechoOutputDTO> obtenerHechos(boolean navegacionCurada,
+                                     LocalDate fechaReporteDesde,
                                      LocalDate fechaReporteHasta,
                                      LocalDate fechaAcontecimientoDesde,
                                      LocalDate fechaAcontecimientoHasta,
                                      Long idCategoria,
-                                     String provincia);
+                                     String provincia,
+                                     Double latMin, Double latMax, Double lonMin, Double lonMax); // Nuevos
 
   HechoOutputDTO obtenerHechoPorId(Long idHecho);
 
@@ -20,4 +24,8 @@ public interface IHechosService {
   void importarNuevosHechos();
 
   List<HechoOutputDTO> obtenerHechosPorAutor(String autor);
+
+  Page<HechoOutputDTO> obtenerTodos(Pageable pageable);
+
+  List<HechoOutputDTO> obtenerHechosRecientes(int limit);
 }

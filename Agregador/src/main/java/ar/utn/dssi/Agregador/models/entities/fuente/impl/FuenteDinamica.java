@@ -84,7 +84,7 @@ public class FuenteDinamica implements ITipoFuente {
 
     hecho.setFechaAcontecimiento(input.getFechaAcontecimiento());
     hecho.setFechaCarga(input.getFechaCarga());
-    hecho.setVisible(true);
+    hecho.setVisible(input.getVisible() != null ? input.getVisible() : true);
 
     // Contenido Multimedia
     if (input.getContenidoMultimedia() != null) {

@@ -3,13 +3,18 @@ package ar.utn.dssi.app_web.services.impl;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.services.GestionHechosApiService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -83,10 +88,11 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public Boolean editarHecho(Long id, HechoRequest hechoRequest) {
-    validarDatosBasicos(hechoRequest);
-    validarUbicacion(hechoRequest);
-    return gestionHechosApiService.editarHecho(id, hechoRequest);
+  public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
+    if (nuevosDatos.getIdCategoria() == null) {
+      throw new ValidationException("La categoría es obligatoria");
+    }
+    return gestionHechosApiService.crearSolicitudEdicion(idHecho, nuevosDatos);
   }
 
   private void validarDatosBasicos(HechoRequest hechoRequest) {
@@ -131,9 +137,10 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public PageResponseDTO<HechoOutputDTO> listarHechos(Integer page) {
-    return gestionHechosApiService.buscarProximosHechosAPaginar(page);
+  public PageResponseHechosDTO<HechoOutputDTO> listarHechos(Integer page, Integer size, String estado) {
+    return gestionHechosApiService.buscarProximosHechosAPaginar(page, size, estado);
   }
+
 
   @Override //TODO
   public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page) {
@@ -141,10 +148,10 @@ public class HechoServices implements IHechoService {
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia) {
+  public List<HechoOutputDTO> obtenerHechos(LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, Long idCategoria, String provincia, Double latMin, Double latMax, Double lonMin, Double lonMax, Boolean modoCurado) {
     return gestionHechosApiService.obtenerHechos(null, null,
             fechaAcontecimientoDesde, fechaAcontecimientoHasta,
-            idCategoria, provincia);
+            idCategoria, provincia, latMin, latMax, lonMin, lonMax, modoCurado);
   }
 
   @Override
@@ -157,5 +164,42 @@ public class HechoServices implements IHechoService {
     return gestionHechosApiService.obtenerMisHechos();
   }
 
+  @Override
+  public List<SolicitudEdicionDTO> obtenerSolicitudesEdicionPendientes() {
+    return gestionHechosApiService.obtenerSolicitudesEdicionPendientes();
+  }
+
+  @Override
+  public void procesarSolicitudEdicion(Long id, String accion, HechoRequest modificaciones) {
+    gestionHechosApiService.procesarSolicitudEdicion(id, accion, modificaciones);
+  }
+
+  @Override
+  public Optional<SolicitudEdicionDTO> obtenerSolicitudEdicionPorId(Long id) {
+    return obtenerSolicitudesEdicionPendientes().stream()
+            .filter(s -> s.getId().equals(id))
+            .findFirst();
+  }
+
+
+    @Value("${agregador.service.url}")
+    private String agregadorUrl;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    public List<HechoOutputDTO> obtenerHechosRecientes(int limit) {
+
+      String url = agregadorUrl + "/hechos/recientes?limit=" + limit;
+
+      ResponseEntity<HechoOutputDTO[]> response =
+              restTemplate.getForEntity(url, HechoOutputDTO[].class);
+
+      if (response.getStatusCode().is2xxSuccessful() &&
+              response.getBody() != null) {
+        return Arrays.asList(response.getBody());
+      }
+
+      return List.of();
+    }
 
 }

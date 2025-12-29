@@ -15,4 +15,6 @@ public interface ISolicitudDeEliminacionRepository extends JpaRepository<Solicit
       "WHERE (:estado IS NULL OR s.estadoDeSolicitud = :estado) " +
       "AND (:spam IS NULL OR s.esSpam = :spam)")
   List<SolicitudDeEliminacion> findByFiltro(@Param("estado") EstadoDeSolicitud estadoDeSolicitud, @Param("spam") Boolean spam);
+
+  long countByEsSpamTrue();
 }

@@ -19,7 +19,9 @@ public interface IColeccionService {
 
   void eliminarColeccion(String handle);
 
-  Page<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad, Pageable pageable);
+  Page<HechoOutputDTO> obtenerHechosDeColeccion(boolean navegacionCurada, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad, Pageable pageable);
 
   ColeccionOutputDTO obtenerColeccion(String handle);
+
+  List<ColeccionOutputDTO> obtenerTodasLasColecciones();
 }

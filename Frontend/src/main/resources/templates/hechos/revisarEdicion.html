@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: html}">
+<head>
+    <th:block th:fragment="styles">
+        <link th:href="@{/css/hechos/revisarEdicion.css}" rel="stylesheet">
+    </th:block>
+</head>
+
+<body>
+<div th:fragment="contenido">
+    <main class="container">
+        <section class="content-container">
+            <h2>Revisión de Solicitud de Edición #<span th:text="${solicitud.id}"></span></h2>
+
+            <form th:action="@{/hechos/gestion_hecho/procesar}" method="post" id="formEdicion">
+                <input type="hidden" name="idSolicitud" th:value="${solicitud.id}">
+
+                <input type="hidden" name="accion" id="accionInput">
+
+                <div class="comparison-container">
+
+                    <div class="comparison-box">
+                        <h3>Original</h3>
+                        <div class="field-row">
+                            <span class="field-label">Título</span>
+                            <div class="field-value-readonly" th:text="${hechoOriginal.titulo}"></div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Categoría</span>
+                            <div class="field-value-readonly" th:text="${hechoOriginal.categoria}"></div>
+                        </div>
+                        <div class="field-row">
+                            <span class="field-label">Descripción</span>
+                            <div class="field-value-readonly" th:text="${hechoOriginal.descripcion}"></div>
+                        </div>
+                    </div>
+
+                    <div class="comparison-box modified">
+                        <h3><i class="fa-solid fa-pen"></i> Propuesta (Editable)</h3>
+
+                        <div class="field-row">
+                            <label for="titulo" class="field-label">Título</label>
+                            <input type="text" id="titulo" name="titulo" class="form-control"
+                                   th:value="${solicitud.nuevoTitulo ?: hechoOriginal.titulo}"
+                                   th:classappend="${solicitud.nuevoTitulo != null} ? 'input-changed' : ''">
+                        </div>
+
+                        <div class="field-row">
+                            <label for="idCategoria" class="field-label">Categoría</label>
+                            <select id="idCategoria" name="idCategoria" class="form-control"
+                                    th:classappend="${solicitud.nuevoIdCategoria != null} ? 'input-changed' : ''">
+                                <option th:each="cat : ${@categoriaService.obtenerCategorias()}"
+                                        th:value="${cat.id}"
+                                        th:text="${cat.categoria}"
+                                        th:selected="${cat.id == (solicitud.nuevoIdCategoria ?: 0) or cat.categoria == hechoOriginal.categoria}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="field-row">
+                            <label for="descripcion" class="field-label">Descripción</label>
+                            <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                                      th:classappend="${solicitud.nuevaDescripcion != null} ? 'input-changed' : ''"
+                                      th:text="${solicitud.nuevaDescripcion ?: hechoOriginal.descripcion}"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions-bar">
+                    <a th:href="@{/hechos/gestion_hecho}" class="btn btn-secondary">Cancelar</a>
+
+                    <button type="button" class="btn btn-danger"
+                            onclick="abrirConfirmacion('RECHAZAR', '¿Estás seguro de rechazar esta solicitud? Esta acción es irreversible.')">
+                        Rechazar
+                    </button>
+
+                    <button type="button" class="btn btn-primary"
+                            onclick="abrirConfirmacion('ACEPTAR', '¿Confirmás aplicar estos cambios al hecho original?')">
+                        <i class="fa-solid fa-check"></i> Aceptar y Aplicar
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <div id="customConfirmModal" class="modal-overlay">
+        <div class="modal-content confirm-box">
+            <div class="modal-header">
+                <h3>Confirmación</h3>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage">¿Está seguro?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="cerrarConfirmacion()">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="confirmarAccion()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:fragment="scripts">
+    <script>
+        const modal = document.getElementById('customConfirmModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const accionInput = document.getElementById('accionInput');
+        const formulario = document.getElementById('formEdicion');
+
+        function abrirConfirmacion(accion, mensaje) {
+            // 1. Seteamos la acción (ACEPTAR o RECHAZAR) en el input oculto
+            accionInput.value = accion;
+
+            // 2. Cambiamos el texto del modal
+            modalMessage.textContent = mensaje;
+
+            // 3. Mostramos el modal
+            modal.classList.add('show');
+        }
+
+        function cerrarConfirmacion() {
+            modal.classList.remove('show');
+        }
+
+        function confirmarAccion() {
+            // 4. Enviamos el formulario con los datos
+            formulario.submit();
+        }
+
+        // Cierra el modal si se hace clic afuera
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                cerrarConfirmacion();
+            }
+        }
+    </script>
+</th:block>
+
+</body>
+</html>

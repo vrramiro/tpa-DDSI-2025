@@ -179,3 +179,144 @@
     #map.map-placeholder { height: 220px; }
 }
 
+
+.upload-feedback {
+    display: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    transition: opacity 0.3s ease;
+}
+
+.upload-feedback.visible {
+    display: block;
+}
+
+.upload-feedback.uploading {
+    color: var(--primary-color);
+}
+
+.upload-feedback.success {
+    color: #28a745;
+}
+
+.upload-feedback.error {
+    color: var(--danger-color);
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.file-item.success {
+    border-left: 4px solid #28a745;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.file-item.error {
+    border-left: 4px solid #dc3545;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.file-item.uploading {
+    border-left: 4px solid #0d6efd;
+    color: #084298;
+}
+
+.file-name {
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.preview-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.file-card {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.file-card i {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+}
+
+.file-card span {
+    font-size: 0.75rem;
+    text-align: center;
+    word-break: break-all;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+.btn-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(220, 53, 69, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.btn-remove:hover {
+    background: rgb(220, 53, 69);
+}
+
+.file-card.loading {
+    opacity: 0.7;
+}
+.file-card.loading::after {
+    content: "Subiendo...";
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.error-mensaje-label {
+    display: none;
+    color: red;
+    margin-top: 5px;
+}

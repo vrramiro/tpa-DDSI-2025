@@ -1,17 +1,7 @@
 package ar.utn.dssi.Agregador.models.entities.solicitud;
 
 import ar.utn.dssi.Agregador.models.entities.Hecho;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDateTime;
@@ -45,6 +35,12 @@ public class SolicitudDeEliminacion {
   @Column(nullable = false, name = "es_spam")
   private boolean esSpam;
 
+  @Column(name = "autor")
+  private String autor;
+
+  @Column(name = "gestionado_por")
+  private String gestionadoPor;
+
   public void aceptar() {
     this.estadoDeSolicitud = EstadoDeSolicitud.ACEPTADA;
     this.fechaDeEvaluacion = LocalDateTime.now();
@@ -55,4 +51,3 @@ public class SolicitudDeEliminacion {
     this.fechaDeEvaluacion = LocalDateTime.now();
   }
 }
-

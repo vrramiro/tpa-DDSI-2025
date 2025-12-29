@@ -35,7 +35,8 @@ public class SecurityConfig {
                             "/admin/**",
                             "/hecho/{id}/estado",
                             "/hechos/eliminar/{idHecho}",
-                            "/procesar/{idSolicitud}"
+                            "/procesar/{idSolicitud}",
+                            "/admin/solicitudes-edicion/**"
                     ).hasRole("ADMINISTRADOR");
 
                     auth.anyRequest().authenticated();

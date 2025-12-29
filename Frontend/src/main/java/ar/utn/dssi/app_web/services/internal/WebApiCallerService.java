@@ -6,7 +6,6 @@ import ar.utn.dssi.app_web.error.NotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -257,9 +256,6 @@ public class WebApiCallerService {
     });
   }
 
-  // Fragmento de: ar.utn.dssi.app_web.services.internal.WebApiCallerService.java
-
-// ... después de la interfaz ApiCall y antes de la última llave de la clase.
 
   /**
    * Ejecuta una llamada HTTP GET SIN token de autorización.
@@ -295,7 +291,6 @@ public class WebApiCallerService {
               .collectList()
               .block();
     } catch (WebClientResponseException e) {
-      // Para llamadas de lista en el explorador, un 404 o 204 se traduce en lista vacía.
       if(e.getStatusCode() == HttpStatus.NOT_FOUND || e.getStatusCode() == HttpStatus.NO_CONTENT){
         return java.util.Collections.emptyList();
       }
@@ -304,6 +299,27 @@ public class WebApiCallerService {
       throw new RuntimeException("Error de conexión con el servicio: " + e.getMessage(), e);
     }
   }
-// ...
+
+  public <T> T postPublic(String url, Object body, Class<T> responseType) {
+    try {
+      return webClient
+              .post()
+              .uri(url)
+              .contentType(MediaType.APPLICATION_JSON)
+              .bodyValue(body)
+              .retrieve()
+              .bodyToMono(responseType)
+              .block();
+    } catch (WebClientResponseException e) {
+      if(e.getStatusCode() == HttpStatus.NOT_FOUND){
+        throw new NotFoundException(e.getMessage());
+      }
+
+      System.err.println("Error API: " + e.getResponseBodyAsString());
+      throw new RuntimeException("Error API Pública (" + e.getStatusCode() + "): " + e.getMessage(), e);
+    } catch (Exception e) {
+      throw new RuntimeException("Error de conexión: " + e.getMessage(), e);
+    }
+  }
 
 }

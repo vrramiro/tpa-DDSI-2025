@@ -21,4 +21,6 @@ public class SolicitudDeEliminacionOutputDTO {
   private String descripcion;
   @JsonProperty("hecho")
   private HechoOutputDTO hecho;
+  @JsonProperty("autor")
+  private String autor;
 }

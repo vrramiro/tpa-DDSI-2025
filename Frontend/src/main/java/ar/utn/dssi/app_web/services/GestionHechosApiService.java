@@ -1,12 +1,10 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
-import ar.utn.dssi.app_web.dto.input.HechoPageResponseDTO;
-import ar.utn.dssi.app_web.dto.input.HechoRequest;
-import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
-import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
+import ar.utn.dssi.app_web.dto.input.*;
 import ar.utn.dssi.app_web.dto.output.EstadoHechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.dto.output.UbicacionOutputDTO;
 import ar.utn.dssi.app_web.error.NotFoundException;
 import ar.utn.dssi.app_web.error.ServicioNormalizadorException;
@@ -14,15 +12,16 @@ import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class GestionHechosApiService {
@@ -89,15 +88,8 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoRequest dtoSinArchivos = new HechoRequest();
-      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
-      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
-      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
-      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
+      webApiCallerService.post(url, hechoRequest, Void.class);
 
-      webApiCallerService.post(url, dtoSinArchivos, Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al crear hecho: {}", e.getMessage(), e);
@@ -128,29 +120,30 @@ public class GestionHechosApiService {
           LocalDate fechaAcontecimientoDesde,
           LocalDate fechaAcontecimientoHasta,
           Long idCategoria,
-          String provincia) {
+          String provincia,
+          Double latMin, Double latMax, Double lonMin, Double lonMax,
+          Boolean modoCurado // Parámetro correctamente recibido
+  ) {
 
     UriComponentsBuilder builder = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos");
 
-    if (fechaReporteDesde != null) {
-      builder.queryParam("fechaReporteDesde", fechaReporteDesde);
-    }
-    if (fechaReporteHasta != null) {
-      builder.queryParam("fechaReporteHasta", fechaReporteHasta);
-    }
-    if (fechaAcontecimientoDesde != null) {
-      builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
-    }
-    if (fechaAcontecimientoHasta != null) {
-      builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
-    }
-    if (provincia != null && !provincia.isEmpty()) {
-      builder.queryParam("provincia", provincia);
-    }
-    if (idCategoria != null) {
-        builder.queryParam("id_categoria", idCategoria);
+    if (fechaReporteDesde != null) builder.queryParam("fechaReporteDesde", fechaReporteDesde);
+    if (fechaReporteHasta != null) builder.queryParam("fechaReporteHasta", fechaReporteHasta);
+    if (fechaAcontecimientoDesde != null) builder.queryParam("fechaAcontecimientoDesde", fechaAcontecimientoDesde);
+    if (fechaAcontecimientoHasta != null) builder.queryParam("fechaAcontecimientoHasta", fechaAcontecimientoHasta);
+    if (provincia != null && !provincia.isEmpty()) builder.queryParam("provincia", provincia);
+    if (idCategoria != null) builder.queryParam("id_categoria", idCategoria);
+
+    // Filtros geográficos
+    if (latMin != null) builder.queryParam("latMin", latMin);
+    if (latMax != null) builder.queryParam("latMax", latMax);
+    if (lonMin != null) builder.queryParam("lonMin", lonMin);
+    if (lonMax != null) builder.queryParam("lonMax", lonMax);
+
+    if (modoCurado != null) {
+      builder.queryParam("navegacionCurada", modoCurado);
     }
 
     String url = builder.build().toUriString();
@@ -171,7 +164,7 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoOutputDTO response = webApiCallerService.get(url, HechoOutputDTO.class);
+      HechoOutputDTO response = webApiCallerService.getPublic(url, HechoOutputDTO.class);
       if (response == null) {
         throw new NotFoundException("Hecho", id.toString());
       }
@@ -206,15 +199,7 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      HechoRequest dtoSinArchivos = new HechoRequest();
-      dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
-      dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
-      dtoSinArchivos.setIdCategoria(hechoRequest.getIdCategoria());
-      dtoSinArchivos.setLatitud(hechoRequest.getLatitud());
-      dtoSinArchivos.setLongitud(hechoRequest.getLongitud());
-      dtoSinArchivos.setFechaAcontecimiento(hechoRequest.getFechaAcontecimiento());
-
-      webApiCallerService.put(url, dtoSinArchivos, Void.class);
+      webApiCallerService.put(url,hechoRequest, Void.class);
       return true;
     } catch (Exception e) {
       log.error("Error al editar hecho {}: {}", id, e.getMessage());
@@ -222,16 +207,49 @@ public class GestionHechosApiService {
     }
   }
 
-  //TODO VER SI HACE FALTA CUANDO ESTE LISTO EL BACK
-  public PageResponseDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page) {
+  public PageResponseHechosDTO<HechoOutputDTO> buscarProximosHechosAPaginar(Integer page, Integer size, String estado) {
     String url = UriComponentsBuilder
             .fromUriString(agregadorServiceUrl)
             .path("/hechos")
-            .queryParam("page", page)
             .toUriString();
 
-    return (PageResponseDTO<HechoOutputDTO>)
-            webApiCallerService.get(url, PageResponseDTO.class);
+    List<HechoOutputDTO> todosLosHechos;
+    try {
+      todosLosHechos = webApiCallerService.getListPublic(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener lista de hechos para paginar", e);
+      todosLosHechos = Collections.emptyList();
+    }
+
+    if (estado != null && !estado.trim().isEmpty()) {
+      todosLosHechos = todosLosHechos.stream()
+              .filter(h -> h.getEstado() != null && h.getEstado().name().equalsIgnoreCase(estado))
+              .collect(Collectors.toList());
+    }
+
+    int totalElements = todosLosHechos.size();
+    int totalPages = (int) Math.ceil((double) totalElements / size);
+    if (totalPages == 0) totalPages = 1;
+
+    if (page < 0) page = 0;
+    if (page >= totalPages) page = totalPages - 1;
+
+    int fromIndex = page * size;
+    int toIndex = Math.min(fromIndex + size, totalElements);
+
+    List<HechoOutputDTO> paginaContent;
+    if (totalElements == 0) {
+      paginaContent = Collections.emptyList();
+    } else {
+      paginaContent = todosLosHechos.subList(fromIndex, toIndex);
+    }
+
+    PageResponseHechosDTO<HechoOutputDTO> response = new PageResponseHechosDTO<>();
+    response.setContent(paginaContent);
+    response.setTotalPages(totalPages);
+    response.setTotalElements((long) totalElements);
+
+    return response;
   }
 
   private void validarUbicacion(UbicacionOutputDTO ubicacion) {
@@ -289,6 +307,53 @@ public class GestionHechosApiService {
     } catch (Exception e) {
       log.error("Error al listar hechos de la colección {}: {}", handle, e.getMessage());
       return new PageResponseDTO<>();
+    }
+  }
+
+  public Boolean crearSolicitudEdicion(Long idHecho, HechoRequest nuevosDatos) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/public/solicitudes-edicion/{idHecho}")
+            .buildAndExpand(idHecho)
+            .toUriString();
+
+    try {
+      webApiCallerService.post(url, nuevosDatos, Void.class);
+      return true;
+    } catch (Exception e) {
+      log.error("Error al crear solicitud de edición para hecho {}: {}", idHecho, e.getMessage());
+      throw new RuntimeException("Error en el servicio de solicitudes de edición", e);
+    }
+  }
+
+  public List<SolicitudEdicionDTO> obtenerSolicitudesEdicionPendientes() {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/admin/solicitudes-edicion/pendientes")
+            .toUriString();
+
+    try {
+      SolicitudEdicionDTO[] response = webApiCallerService.get(url, SolicitudEdicionDTO[].class);
+      return response != null ? Arrays.asList(response) : Collections.emptyList();
+    } catch (Exception e) {
+      log.error("Error al obtener solicitudes de edición pendientes", e);
+      return Collections.emptyList();
+    }
+  }
+
+  public void procesarSolicitudEdicion(Long idSolicitud, String accion, HechoRequest modificaciones) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/admin/solicitudes-edicion/{id}/procesar")
+            .queryParam("accion", accion)
+            .buildAndExpand(idSolicitud)
+            .toUriString();
+
+    try {
+      Object body = (modificaciones != null) ? modificaciones : "";
+      webApiCallerService.post(url, body, Void.class);
+    } catch (Exception e) {
+      throw new RuntimeException("Error al procesar la solicitud de edición", e);
     }
   }
 

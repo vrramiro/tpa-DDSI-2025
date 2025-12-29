@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin/colecciones")
@@ -70,7 +68,7 @@ public class ColeccionesControllerADMIN {
   @GetMapping("/{handle}/hechos")
   public ResponseEntity<Page<HechoOutputDTO>> obtenerHechos( // Cambiado a Page<HechoOutputDTO>
                                                              @PathVariable String handle,
-                                                             @RequestParam(name = "modoNavegacion", defaultValue = "NAVEGACION_IRRESTRICTA") String modoNavegacion,
+                                                             @RequestParam(name = "navegacionCurada", defaultValue = "false") boolean navegacionCurada,
                                                              @RequestParam(name = "page", defaultValue = "0") int page, // Nuevo
                                                              @RequestParam(name = "size", defaultValue = "9") int size,  // Nuevo
                                                              @RequestParam(name = "fechaReporteDesde", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaReporteDesde,
@@ -81,22 +79,22 @@ public class ColeccionesControllerADMIN {
                                                              @RequestParam(name = "provincia", required = false) String provincia
   ) {
 
-    Pageable pageable = PageRequest.of(page, size, JpaSort.unsafe(Sort.Direction.DESC, "h.fechaAcontecimiento"));
+    Pageable pageable = PageRequest.of(
+        page, size,
+        Sort.by(Sort.Direction.DESC, "fechaAcontecimiento")
+            .and(Sort.by(Sort.Direction.DESC, "id"))
+    );
 
     Page<HechoOutputDTO> hechos = coleccionService.obtenerHechosDeColeccion(
-            modoNavegacion,
-            handle,
-            fechaReporteDesde,
-            fechaReporteHasta,
-            fechaAcontecimientoDesde,
-            fechaAcontecimientoHasta,
-            provincia,
-            ciudad,
-            pageable);
-
-    if (hechos.isEmpty()) {
-      return ResponseEntity.ok(hechos);
-    }
+        navegacionCurada,
+        handle,
+        fechaReporteDesde,
+        fechaReporteHasta,
+        fechaAcontecimientoDesde,
+        fechaAcontecimientoHasta,
+        provincia,
+        ciudad,
+        pageable);
 
     return ResponseEntity.ok(hechos);
   }

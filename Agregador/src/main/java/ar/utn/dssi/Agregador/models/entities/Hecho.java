@@ -1,10 +1,15 @@
 package ar.utn.dssi.Agregador.models.entities;
 
+import ar.utn.dssi.Agregador.models.entities.algoritmoConsenso.TipoConsenso;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,8 +24,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "hecho")
@@ -47,18 +52,28 @@ public class Hecho {
   @Column(nullable = false, name = "titulo_sanitizado")
   private String tituloSanitizado;
 
-  @Column(nullable = false, name = "descripcion")
+  @Column(nullable = false, name = "descripcion", columnDefinition = "TEXT")
   private String descripcion;
 
-  @Column(nullable = false, name = "descripcion_sanitizada")
+  @Column(nullable = false, name = "descripcion_sanitizada", columnDefinition = "TEXT")
   private String descripcionSanitizado;
 
   @Embedded
   private Categoria categoria;
 
+  @Column(nullable = false, name = "clave_comparacion")
+  private String claveComparacion;
+
+  @Enumerated(EnumType.STRING)
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "hecho_consenso", joinColumns = @JoinColumn(name = "hecho_id", referencedColumnName = "id"))
+  @Column(name = "tipo_consenso")
+  private List<TipoConsenso> consensosDados;
+
   @Embedded
   private Ubicacion ubicacion;
 
+  @Getter
   @Column(nullable = false, name = "fechaAcontecimiento")
   private LocalDateTime fechaAcontecimiento;
 
@@ -73,29 +88,17 @@ public class Hecho {
   private Boolean visible;
 
   @Column(name = "autor")
-    private String autor;
+  private String autor;
 
-
-  public Boolean mismoHecho(Hecho otroHecho) {
-    return this.titulo.equals(otroHecho.getTitulo()) &&
-        this.categoria.equals(otroHecho.getCategoria()) &&
-        this.ubicacion.equals(otroHecho.getUbicacion()) &&
-        this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
+  public void agregarConsenso(TipoConsenso tipoConsenso) {
+    if (this.consensosDados != null && !this.consensosDados.contains(tipoConsenso)) {
+      this.consensosDados.add(tipoConsenso);
+    }
   }
 
-
-  public boolean tituloSimilar(Hecho otroHecho) {
-    return this.getTitulo().equals(otroHecho.getTituloSanitizado());
+  public void resetearConsensos() {
+    this.consensosDados = new ArrayList<>();
+    this.consensosDados.add(TipoConsenso.NINGUNO);
   }
 
-  public boolean mismosAtributos(Hecho otroHecho) {
-    return this.descripcion.equals(otroHecho.getDescripcion())
-        || this.categoria.equals(otroHecho.getCategoria())
-        || this.ubicacion.equals(otroHecho.getUbicacion())
-        || this.fechaAcontecimiento.equals(otroHecho.getFechaAcontecimiento());
-  }
-
-  public boolean distintaFuente(Hecho hecho) {
-    return (!Objects.equals(hecho.fuente.getId(), this.fuente.getId()));
-  }
 }

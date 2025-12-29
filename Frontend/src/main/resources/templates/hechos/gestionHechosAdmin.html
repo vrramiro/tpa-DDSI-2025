@@ -1,97 +1,71 @@
-<html th:replace="~{layout/base::html}">
-
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/base :: html}">
 <head>
-    <!-- CSS específico de esta vista -->
     <th:block th:fragment="styles">
-        <link th:href="@{/css/hechos/gestionHechos.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/coleccionesSistema.css}" rel="stylesheet">
+        <link th:href="@{/css/colecciones/gestionColecciones.css}" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     </th:block>
 </head>
+<body>
 
-<div th:fragment="contenido">
-
+<div th:fragment="contenido" class="row">
     <main class="content-container">
 
-        <div class="hechos-header">
-            <h2>Hechos subidos y pendientes:</h2>
-            <div class="filter-controls">
-                <label for="status-filter">Filtrar hechos:</label>
-                <select id="status-filter" name="status" onchange="filtrarPorEstado(this.value)">
-                    <option value="" th:selected="${estado == null or estado == ''}">Todos los estados</option>
-                    <option value="ACEPTADO" th:selected="${estado == 'ACEPTADO'}">Aprobado</option>
-                    <option value="PENDIENTE" th:selected="${estado == 'PENDIENTE'}">Pendiente</option>
-                    <option value="RECHAZADO" th:selected="${estado == 'RECHAZADO'}">Rechazado</option>
-                </select>
-
-                <button th:if="${estado != null and estado != ''}"
-                        onclick="limpiarFiltro()"
-                        class="btn btn-secondary btn-filtro">
-                    Limpiar filtro
-                </button>
-            </div>
+        <div class="collection-header">
+            <h2>Solicitudes de Edición Pendientes</h2>
         </div>
 
+        <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
         <div class="table-container">
-            <table>
+            <table class="tabla-colecciones">
                 <thead>
                 <tr>
-                    <th>Título</th>
-                    <th>Categoría</th>
-                    <th>Fecha de carga</th>
-                    <th>Fecha de acontecimiento</th>
-                    <th>Estado</th>
-                    <th>Gestionar</th>
+                    <th>ID</th>
+                    <th>Hecho Original</th>
+                    <th>Fecha Solicitud</th>
+                    <th class="text-end">Acción</th>
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Si no hay hechos -->
-                <tr th:if="${#lists.isEmpty(hechos)}">
-                    <td colspan="6" style="text-align: center; padding: 2rem;">
-                        No se encontraron hechos con el filtro seleccionado
+
+                <tr th:if="${#lists.isEmpty(solicitudesEdicion)}">
+                    <td colspan="4" class="muted text-center" style="padding: 2rem;">
+                        No hay solicitudes de edición pendientes.
                     </td>
                 </tr>
 
-                <!-- Lista de hechos -->
-                <tr th:each="hecho : ${hechos}">
-                    <td th:text="${hecho.titulo}">Título del hecho</td>
-                    <td th:text="${hecho.categoria}">Categoría</td>
-                    <td th:text="${#temporals.format(hecho.fechaCarga, 'dd/MM/yyyy')}">01/01/2024</td>
-                    <td th:text="${#temporals.format(hecho.fechaAcontecimiento, 'dd/MM/yyyy')}">01/01/2024</td>
-                    <td>
-                        <span class="estado-badge"
-                              th:classappend="${hecho.estado.name() == 'ACEPTADO'} ? 'estado-aceptado' :
-                                            (${hecho.estado.name() == 'PENDIENTE'} ? 'estado-pendiente' : 'estado-rechazado')"
-                              th:text="${hecho.estado.name() == 'ACEPTADO'} ? 'Aprobado' :
-                                       (${hecho.estado.name() == 'PENDIENTE'} ? 'Pendiente' : 'Rechazado')">
-                            Estado
-                        </span>
-                    </td>
+                <tr th:each="sol : ${solicitudesEdicion}">
+                    <td th:text="${sol.id}">1</td>
+
+                    <td th:text="${sol.hechoOriginal.titulo}" style="font-weight: 500;">Título Original</td>
+
+                    <td th:text="${#temporals.format(sol.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+
                     <td class="action-buttons">
-                        <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn btn-edit">Ver Más</a>
+                        <a th:href="@{/hechos/gestion_hecho/revisar/{id}(id=${sol.id})}"
+                           class="btn btn-primary btn-sm"
+                           title="Revisar cambios">
+                            <i class="fa-solid fa-pen-to-square"></i> Revisar
+                        </a>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Paginación -->
-        <div th:replace="~{navegacion/navegacion :: pager(
-            ${page},
-            ${totalPages},
-            ${size},
-            ${baseUrl},
-            ${estado},
-            ${sort},
-            ${isFirst},
-            ${isLast}
-        )}"></div>
-
         <div class="footer-actions">
-            <a th:href="@{/panel_gestion}" class="btn btn-primary">Volver</a>
+            <a th:href="@{/panel_gestion}" class="btn btn-secondary">Volver al Panel</a>
         </div>
+
     </main>
 
     <th:block th:fragment="scripts">
-        <script th:src="@{/js/hechos/gestionHechos.js}"></script>
     </th:block>
 </div>
+
+</body>
 </html>

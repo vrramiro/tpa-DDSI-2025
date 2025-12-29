@@ -1,128 +1,98 @@
 <html th:replace="~{layout/base::html}">
 <head>
     <th:block th:fragment="styles">
-        <link th:href="@{/css/hechos/editarHecho.css}" rel="stylesheet">
-        <link rel="stylesheet" th:href="@{/webjars/leaflet/dist/leaflet.css}">
+        <link th:href="@{/css/hechos/crearHecho.css}" rel="stylesheet">
     </th:block>
 </head>
 
 <main th:fragment="contenido" class="container">
     <section class="form-container">
-        <h1>Editar Hecho</h1>
+        <h1>Solicitar Modificación</h1>
 
-        <form th:action="@{/hechos/{id}/editar(id=${hecho.id})}"
+        <div class="alert alert-info" style="background-color: #e3f2fd; color: #0d47a1; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #bbdefb;">
+            <i class="fas fa-info-circle"></i>
+            <strong>Importante:</strong> Estás creando una solicitud de edición. Un administrador revisará tus cambios (Título, Descripción o Categoría) antes de que sean públicos.
+        </div>
+
+        <form th:action="@{/hechos/{id}/editar(id=${hechoOutput.id})}"
               th:object="${hecho}"
               method="POST"
-              enctype="multipart/form-data"
               class="form">
 
-            <div>
+            <div class="form-group">
                 <label for="titulo">Título</label>
                 <input type="text" id="titulo" th:field="*{titulo}"
-                       th:placeholder="${#fields.hasErrors('titulo') ? #fields.errors('titulo')[0] : 'Ingrese el título del hecho'}"
-                       th:classappend="${#fields.hasErrors('titulo')} ? 'input-error' : ''">
+                       th:classappend="${#fields.hasErrors('titulo')} ? 'input-error' : ''"
+                       required>
+                <span class="error-mensaje" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
             </div>
 
-            <div>
-                <label for="fecha" style="cursor: pointer;">
-                    Fecha de acontecimiento
-                    <span th:if="${#fields.hasErrors('fechaAcontecimiento')}"
-                          th:text="${#fields.errors('fechaAcontecimiento')[0]}"
-                          class="error-mensaje-label">
-          </span>
-                </label>
-                <input type="date" id="fecha" th:field="*{fechaAcontecimiento}"
-                       th:classappend="${#fields.hasErrors('fechaAcontecimiento')} ? 'input-error' : ''"
-                       onclick="this.showPicker ? this.showPicker() : this.focus()">
-            </div>
-
-            <div>
-                <label for="categoria">
-                    Categoría
-                    <span th:if="${#fields.hasErrors('categoria')}"
-                          th:text="${#fields.errors('categoria')[0]}"
-                          class="error-mensaje-label">
-    </span>
-                </label>
-
-                <select id="categoria" th:field="*{categoria.id}"
-                        th:classappend="${#fields.hasErrors('categoria')} ? 'input-error' : ''">
-
+            <div class="form-group">
+                <label for="categoria">Categoría</label>
+                <select id="categoria" th:field="*{idCategoria}"
+                        th:classappend="${#fields.hasErrors('idCategoria')} ? 'input-error' : ''">
                     <option value="">Seleccione una categoría</option>
-
                     <option th:each="cat : ${categorias}"
                             th:value="${cat.id}"
                             th:text="${cat.categoria}"
-                            th:selected="${hecho.categoria != null and hecho.categoria.id == cat.id}">
+                            th:selected="${hechoOutput.categoria.equals(cat.categoria)}">
                     </option>
                 </select>
+                <span class="error-mensaje" th:if="${#fields.hasErrors('idCategoria')}" th:errors="*{idCategoria}"></span>
             </div>
 
-            <div>
+            <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" th:field="*{descripcion}" rows="4"
-                          th:placeholder="${#fields.hasErrors('descripcion') ? #fields.errors('descripcion')[0] : 'Escriba una descripción del hecho'}"
-                          th:classappend="${#fields.hasErrors('descripcion')} ? 'input-error' : ''"></textarea>
+                <textarea id="descripcion" th:field="*{descripcion}" rows="6"
+                          th:classappend="${#fields.hasErrors('descripcion')} ? 'input-error' : ''"
+                          required></textarea>
+                <span class="error-mensaje" th:if="${#fields.hasErrors('descripcion')}" th:errors="*{descripcion}"></span>
             </div>
 
-            <div>
-                <label for="multimedia">Multimedia</label>
-                <input type="file" id="multimedia" th:field="*{contenidoMultimedia}">
+            <input type="hidden" th:field="*{fechaAcontecimiento}">
+            <input type="hidden" th:field="*{latitud}">
+            <input type="hidden" th:field="*{longitud}">
 
-                <div th:if="${hechoOutput != null and hechoOutput.contenidoMultimedia != null and !hechoOutput.contenidoMultimedia.isEmpty()}"
-                     class="imagen-actual">
-                    <p class="texto-imagen-actual">Imagen actual:</p>
-                    <img th:src="${hechoOutput.contenidoMultimedia[0].url}"
-                         alt="Imagen actual"
-                         style="max-width: 200px; margin-top: 10px; border-radius: 4px;">
-                </div>
-            </div>
-
-            <div>
-                <label>Ubicación</label>
-                <div class="map-placeholder" id="map"></div>
-                <input type="hidden" id="latitud" th:field="*{latitud}">
-                <input type="hidden" id="longitud" th:field="*{longitud}">
-                <span th:if="${#fields.hasErrors('latitud')}"
-                      th:text="${#fields.errors('latitud')[0]}"
-                      class="error-mensaje-label"></span>
-            </div>
-
-            <div class="form-options">
-                <label class="anonimo-option">
-                    <span>Publicar como anónimo</span>
-                    <input type="checkbox" id="anonimo" name="anonimo">  <!-- th:field="*{anonimo}" -->
-                </label>
-            </div>
-
-            <div class="submit-container">
-                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                <a th:href="@{/hechos/{id}(id=${hechoOutput.id})}" class="btn btn-secondary">Cancelar</a>
+            <div class="submit-container" style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem;">
+                <a th:href="@{/hechos/misHechos}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Enviar Solicitud</button>
             </div>
         </form>
     </section>
 
-    <div th:if="${mensaje}"
-         class="modal-overlay" id="mensajeModal"
+    <div th:if="${mensaje}" class="modal-overlay" id="mensajeModal" style="display: flex;"
          th:attr="data-redirect=${tipoMensaje == 'success' ? 'true' : 'false'}">
         <div class="modal-content" th:classappend="${tipoMensaje == 'success' ? 'modal-success' : 'modal-error'}">
             <div class="modal-header">
-                <h3 th:text="${tipoMensaje == 'success' ? '✓ Éxito' : '✗ Error'}"></h3>
+                <h3 th:text="${tipoMensaje == 'success' ? 'Solicitud Enviada' : 'Error'}"></h3>
             </div>
             <div class="modal-body">
                 <p th:text="${mensaje}"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" onclick="cerrarModal()" class="btn btn-secondary">Cerrar</button>
+                <button type="button" onclick="cerrarModalYRedirigir()" class="btn btn-secondary">Cerrar</button>
             </div>
         </div>
     </div>
-
 </main>
 
 <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-    <script th:src="@{/js/hechos/editarHecho.js}"></script>
+    <script>
+        function cerrarModalYRedirigir() {
+            const modal = document.getElementById('mensajeModal');
+            if (modal.dataset.redirect === 'true') {
+                window.location.href = '/hechos/misHechos';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('mensajeModal');
+            // Si el modal existe (porque hay mensaje del backend), asegúrate que se vea
+            if(modal) modal.style.display = 'flex';
+        });
+    </script>
 </th:block>
 
 </html>

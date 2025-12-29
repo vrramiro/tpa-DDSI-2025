@@ -6,9 +6,13 @@ import ar.utn.dssi.Estadisticas.models.entities.TipoArchivo;
 import ar.utn.dssi.Estadisticas.services.IEstadisticasService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
+
 import java.io.File;
 
 @RestController
@@ -18,8 +22,8 @@ public class EstadisticasController {
   private final IEstadisticasService estadisticasService;
 
   @GetMapping("/coleccion/{idColeccion}/provincia")
-  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(Long idColeccion) {
-    EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechosColeccion(idColeccion);
+  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechosColecion(@PathVariable("idColeccion") String handle) {
+    EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechosColeccion(handle);
     return ResponseEntity.ok(estadisticas);
   }
 
@@ -30,13 +34,13 @@ public class EstadisticasController {
   }
 
   @GetMapping("/categoria/{idCategoria}/provincia")
-  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechoCategoria(Long idCategoria) {
+  public ResponseEntity<EstadisticaOutputDTO> getProvinciasConMasHechoCategoria(@PathVariable("idCategoria") Long idCategoria) {
     EstadisticaOutputDTO estadisticas = estadisticasService.getProvinciasConMasHechoCategoria(idCategoria);
     return ResponseEntity.ok(estadisticas);
   }
 
   @GetMapping("/categoria/{idCategoria}/horas")
-  public ResponseEntity<EstadisticaOutputDTO> getHorasConMasHechosCategoria(Long idCategoria) {
+  public ResponseEntity<EstadisticaOutputDTO> getHorasConMasHechosCategoria(@PathVariable("idCategoria") Long idCategoria) {
     EstadisticaOutputDTO estadisticas = estadisticasService.getHorasConMasHechosCategoria(idCategoria);
     return ResponseEntity.ok(estadisticas);
   }
@@ -48,9 +52,19 @@ public class EstadisticasController {
   }
 
   @GetMapping("/exportar")
-  public ResponseEntity<File> getArchivoEstadisticas(TipoArchivo tipo) {
+  public ResponseEntity<Resource> getArchivoEstadisticas(@RequestParam(defaultValue = "CSV") TipoArchivo tipo) {
     File archivo = estadisticasService.getArchivoEstadisticas(tipo);
-    return ResponseEntity.ok(archivo);
+
+    if (archivo == null || !archivo.exists()) {
+      return ResponseEntity.notFound().build();
+    }
+
+    Resource resource = new FileSystemResource(archivo);
+
+    return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Estadisticas MetaMapa.csv")
+            .contentType(MediaType.parseMediaType("text/csv"))
+            .body(resource);
   }
 }
 

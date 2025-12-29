@@ -6,12 +6,15 @@ import ar.utn.dssi.Estadisticas.models.entities.calculadores.ICalculadorDeEstadi
 import ar.utn.dssi.Estadisticas.models.entities.data.Categoria;
 import ar.utn.dssi.Estadisticas.models.entities.data.ContextoDeCalculo;
 import ar.utn.dssi.Estadisticas.models.entities.data.Hecho;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Component
 public class CategoriaConMasHechos implements ICalculadorDeEstadisticas {
   @Override
   public List<Estadistica> generarEstadistica(ContextoDeCalculo datos) {
@@ -25,7 +28,7 @@ public class CategoriaConMasHechos implements ICalculadorDeEstadisticas {
         .max(Map.Entry.comparingByValue())
         .orElse(null);
 
-    Categoria categoriaMaxima = null;
+    Categoria categoriaMaxima;
 
     if (entradaCategoriaMaxima != null) {
       categoriaMaxima = categorias.stream().filter(categoria -> categoria.getNombre()

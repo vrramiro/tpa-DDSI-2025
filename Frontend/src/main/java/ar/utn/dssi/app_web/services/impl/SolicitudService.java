@@ -16,7 +16,7 @@ public class SolicitudService implements ISolicitudService {
     private final GestionSolicitudesApiService gestionSolicitudesApiService;
 
     public List<SolicitudDTO> obtenerTodasLasSolicitudes() {
-        return gestionSolicitudesApiService.obtenerSolicitudes();
+        return gestionSolicitudesApiService.obtenerSolicitudesEliminacion();
     }
 
     public List<SolicitudDTO> obtenerSolicitudesPorEstado(String estado) {
@@ -34,11 +34,6 @@ public class SolicitudService implements ISolicitudService {
         return gestionSolicitudesApiService.obtenerHechoPorSolicitud(solicitudId);
     }
 
-    public void actualizarEstado(Long idSolicitud, String estado) {
-        if (idSolicitud == null) throw new IllegalArgumentException("idSolicitud no puede ser nulo");
-        if (estado == null || estado.isBlank()) throw new IllegalArgumentException("estado invalido");
-        gestionSolicitudesApiService.actualizarEstado(idSolicitud, estado);
-    }
 
     public SolicitudDTO crearSolicitud(SolicitudDTO solicitudOutputDTO) {
         validarDatosBasicos(solicitudOutputDTO);

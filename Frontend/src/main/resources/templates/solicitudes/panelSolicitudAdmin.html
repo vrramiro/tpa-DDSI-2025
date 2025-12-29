@@ -9,133 +9,73 @@
   <div class="container">
     <h1>Detalle de Solicitud</h1>
 
-    <!-- Mensajes de éxito o error -->
     <div th:if="${mensaje}" class="alert alert-success mt-2" th:text="${mensaje}"></div>
     <div th:if="${error}" class="alert alert-danger mt-2" th:text="${error}"></div>
 
     <div class="grid-detalle">
-      <!-- Solicitud -->
       <section class="card">
-        <h2>Solicitud</h2>
-        <p><strong>Fecha de creación:</strong>
-          <span th:text="${solicitud.fechaDeCreacion}">01/09/2025</span>
-        </p>
-        <p><strong>Fecha de evaluación:</strong>
-          <span th:text="${solicitud.fechaDeEvaluacion}">05/09/2025</span>
-        </p>
-        <p><strong>Autor:</strong>
+        <h2>Solicitud #<span th:text="${solicitud.idSolicitud}"></span></h2>
+
+        <p><strong>Autor de la solicitud:</strong>
           <span th:text="${solicitud.autor}">Juan Pérez</span>
         </p>
-        <p><strong>Gestionado por:</strong>
-          <span th:text="${solicitud.gestionadoPor}">Ramiro Verga</span>
+        <p><strong>Fecha:</strong>
+          <span th:text="${#temporals.format(solicitud.fechaDeCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</span>
+        </p>
+        <p><strong>Estado Actual:</strong>
+          <span class="badge"
+                th:classappend="${solicitud.estadoDeSolicitud == 'PENDIENTE' ? 'bg-warning' : (solicitud.estadoDeSolicitud == 'ACEPTADA' ? 'bg-success' : 'bg-danger')}"
+                th:text="${solicitud.estadoDeSolicitud}">PENDIENTE</span>
         </p>
 
-        <h3>Descripción</h3>
-        <div class="textarea" th:text="${solicitud.descripcion}">
-          La información prevista es errónea, el incendio fue causado durante los festejos del UUD, no UPD.
-        </div>
+        <h3>Motivo</h3>
+        <div class="textarea" th:text="${solicitud.descripcion}"></div>
 
-        <div class="actions mt-3">
+        <div class="actions mt-3" th:if="${solicitud.estadoDeSolicitud == 'PENDIENTE'}">
 
-          <!-- ACEPTAR: elimina el hecho y cambia el estado -->
-          <form id="form-aceptar" onsubmit="return aceptarSolicitud(event)" style="display:inline;">
-            <input type="hidden" id="solicitud-id" th:value="${solicitud.idSolicitud}" />
-            <input type="hidden" id="hecho-id" th:value="${hecho.idHecho}" />
-            <button type="submit" class="btn btn-success">Aceptar</button>
+          <form th:action="@{/solicitudes/procesar}" method="post" style="display:inline;"
+                onsubmit="return confirm('¿Confirmás ACEPTAR la solicitud? Esto eliminará el hecho permanentemente.');">
+            <input type="hidden" name="solicitudId" th:value="${solicitud.idSolicitud}" />
+            <input type="hidden" name="estado" value="ACEPTADA" />
+            <button type="submit" class="btn btn-success">Aceptar y Eliminar Hecho</button>
           </form>
 
-          <!-- RECHAZAR: solo cambia el estado -->
-          <form th:action="@{/solicitudes/actualizarEstado}"
-                method="post"
-                style="display:inline;"
-                onsubmit="return confirm('¿Seguro que querés rechazar esta solicitud?');">
+          <form th:action="@{/solicitudes/procesar}" method="post" style="display:inline;"
+                onsubmit="return confirm('¿Confirmás RECHAZAR la solicitud? El hecho permanecerá visible.');">
             <input type="hidden" name="solicitudId" th:value="${solicitud.idSolicitud}" />
             <input type="hidden" name="estado" value="RECHAZADA" />
             <button type="submit" class="btn btn-danger">Rechazar</button>
           </form>
-
-          <!-- VOLVER -->
-          <a th:href="@{/solicitudes/gestion}" class="btn btn-secondary">Volver</a>
         </div>
+
       </section>
 
-      <!-- Hecho -->
-      <section class="card">
-        <h2 th:text="'Hecho: ' + ${hecho.titulo}">Hecho: "Incendio en Chascomús"</h2>
-        <p><strong>Fecha del acontecimiento:</strong>
-          <span th:text="${hecho.fechaAcontecimiento}">15/07/2025</span>
-        </p>
-        <p><strong>Autor:</strong>
-          <span th:text="${hecho.autor}">Juan Pérez</span>
-        </p>
-        <p><strong>Gestionado por:</strong>
-          <span th:text="${hecho.gestionadoPor}">Nicolás Tuma Ma</span>
+
+      <section class="card" th:if="${hecho != null}">
+        <h2 th:text="'Hecho Reportado: ' + ${hecho.titulo}">Hecho</h2>
+        <p><strong>Autor del Hecho:</strong> <span th:text="${hecho.autor}">Autor</span></p>
+
+        <p class="text-muted" th:if="${hecho.autor == null}">
+          <em>(Autor desconocido o usuario eliminado)</em>
         </p>
 
-        <h3>Descripción</h3>
-        <div class="textarea" th:text="${hecho.descripcion}">
-          Se incendió una escuela durante festejos de UPD, dejando pérdidas materiales importantes.
+        <h3>Descripción del Hecho</h3>
+        <div class="textarea" th:text="${hecho.descripcion}"></div>
+
         </div>
-
-        <h3>Multimedia</h3>
-        <img class="card-img" th:src="${hecho.imagenUrl}" alt="hecho" src="https://picsum.photos/400/200?random=2">
       </section>
     </div>
+
+    <section class="volver">
+    <div class="mt-3">
+      <a th:href="@{/solicitudes/gestion}" class="btn btn-volver2">Volver al listado</a>
+    </div>
+    </section>
+
   </div>
 
-  <!-- Scripts -->
   <th:block th:fragment="scripts">
-    <script th:src="@{/webjars/leaflet/dist/leaflet.js}"></script>
-    <script th:src="@{/js/solicitudes/gestionSolicitudes.js}"></script>
-
-    <script>
-      async function aceptarSolicitud(event) {
-        event.preventDefault();
-
-        const solicitudId = document.getElementById("solicitud-id").value;
-        const hechoId = document.getElementById("hecho-id").value;
-
-        const confirmar = confirm("¿Confirmás aceptar la solicitud y eliminar el hecho?");
-        if (!confirmar) return false;
-
-        try {
-          // 1️⃣ Eliminar el hecho
-          const respHecho = await fetch(`/hechos/eliminar/${hechoId}`, {
-            method: "DELETE"
-          });
-
-          if (!respHecho.ok) {
-            alert("Error al eliminar el hecho.");
-            return false;
-          }
-
-          // 2️⃣ Actualizar el estado de la solicitud
-          const formData = new FormData();
-          formData.append("solicitudId", solicitudId);
-          formData.append("estado", "ACEPTADA");
-
-          const respSolicitud = await fetch("/solicitudes/actualizarEstado", {
-            method: "POST",
-            body: formData
-          });
-
-          if (respSolicitud.redirected) {
-            window.location.href = respSolicitud.url;
-          } else if (respSolicitud.ok) {
-            alert("Solicitud aceptada y hecho eliminado correctamente.");
-            window.location.href = "/solicitudes/gestion";
-          } else {
-            alert("Error al actualizar el estado de la solicitud.");
-          }
-
-        } catch (error) {
-          console.error(error);
-          alert("Error de conexión con el servidor.");
-        }
-
-        return false;
-      }
-    </script>
+    <script th:src="@{/js/solicitudes/panelSolicitudAdmin.js}"></script>
   </th:block>
 </div>
 </html>

@@ -4,6 +4,7 @@ import ar.utn.dssi.Agregador.dto.input.SolicitudDeEliminacionInputDTO;
 import ar.utn.dssi.Agregador.dto.input.SolicitudProcesadaInputDTO;
 import ar.utn.dssi.Agregador.dto.output.SolicitudDeEliminacionOutputDTO;
 import ar.utn.dssi.Agregador.error.HechoNoEcontrado;
+import ar.utn.dssi.Agregador.error.SolicitudNoEncontrada;
 import ar.utn.dssi.Agregador.error.SolicitudYaProcesada;
 import ar.utn.dssi.Agregador.mappers.MapperDeSolicitudesDeEliminacion;
 import ar.utn.dssi.Agregador.models.entities.Hecho;
@@ -18,6 +19,8 @@ import ar.utn.dssi.Agregador.services.ISolicitudDeEliminacionService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,8 +33,8 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
   private final IHechosService hechosService;
   private final IHechosRepository hechosRepository;
   private final SolicitudDeEliminacionFactory solicitudDeEliminacionFactory;
+  private final SolicitudDeEdicionService solicitudDeEdicionService;
 
-  //CREAR SOLICITUDES DE ELIMINACION
   @Override
   public SolicitudDeEliminacionOutputDTO crearSolicitudDeEliminacion(SolicitudDeEliminacionInputDTO solicitudDeEliminacion) {
     Hecho hecho = hechosRepository.findById(solicitudDeEliminacion.getIdHecho())
@@ -41,13 +44,13 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     if (DetectorDeSpam.esSpam(solicitud.getDescripcion())) {
       solicitud.setEsSpam(true);
       solicitud.rechazar();
-      log.info("Solicitud marcada como SPAM y rechazada automáticamente");
+      log.info("Solicitud marcada como SPAM y rechazada automáticamente");  //TODO: HABRIA QUE DEVOLVER UNA EXCEPCION
     } else {
       solicitud.setEsSpam(false);
       solicitud.setEstadoDeSolicitud(EstadoDeSolicitud.PENDIENTE);
       log.info("Solicitud creada y en estado PENDIENTE");
     }
-
+    solicitud.setAutor(obtenerUsuarioActual());
     this.solicitudDeEliminacionRepository.save(solicitud);
 
     return MapperDeSolicitudesDeEliminacion.outpuDTOFromSolicitudDeEliminacion(solicitud);
@@ -68,17 +71,17 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     if (estado == EstadoDeSolicitud.ACEPTADA) {
       solicitud.aceptar();
       hechosService.eliminarHecho(solicitud.getHecho().getId());
+      solicitudDeEdicionService.eliminarSolicitudesPorHechoId(solicitud.getHecho().getId());
     } else {
       solicitud.rechazar();
     }
-
+    solicitud.setAutor(obtenerUsuarioActual());
     this.solicitudDeEliminacionRepository.save(solicitud);
 
     log.info("Solicitud {}{}{}", solicitud.getIdSolicitud().toString(), " procesada como ", solicitud.getEstadoDeSolicitud().toString());
   }
 
   @Override
-  //No valido nada sobre los parametros porque si mete true y aceptada no le va a traer nada y eso no esta mal, solo es boludo
   public List<SolicitudDeEliminacionOutputDTO> obtenerSolicitudes(String tipoEstado, Boolean spam) {
     EstadoDeSolicitud estadoDeSolicitud = null;
 
@@ -90,5 +93,28 @@ public class SolicitudDeEliminacionService implements ISolicitudDeEliminacionSer
     return solicitudes.stream()
         .map(MapperDeSolicitudesDeEliminacion::outpuDTOFromSolicitudDeEliminacion)
         .toList();
+  }
+
+  private String obtenerUsuarioActual() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null
+            && authentication.isAuthenticated()
+            && !authentication.getPrincipal().equals("anonymousUser")) {
+      return authentication.getName();
+    }
+    return null;
+  }
+
+  @Override
+  public Long contarSolicitudesSpam() {
+    return solicitudDeEliminacionRepository.countByEsSpamTrue();
+  }
+  
+  @Override
+  public SolicitudDeEliminacionOutputDTO obtenerSolicitudPorId(Long id) {
+    SolicitudDeEliminacion solicitud = solicitudDeEliminacionRepository.findById(id)
+            .orElseThrow(() -> new SolicitudNoEncontrada("La solicitud con id " + id + " no existe."));
+
+    return MapperDeSolicitudesDeEliminacion.outpuDTOFromSolicitudDeEliminacion(solicitud);
   }
 }

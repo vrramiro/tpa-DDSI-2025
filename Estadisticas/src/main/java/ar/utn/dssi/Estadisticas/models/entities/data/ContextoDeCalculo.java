@@ -1,6 +1,5 @@
 package ar.utn.dssi.Estadisticas.models.entities.data;
 
-import ar.utn.dssi.Estadisticas.models.entities.SolicitudDeEliminacion;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.List;
@@ -10,6 +9,6 @@ import java.util.List;
 public class ContextoDeCalculo {
   private List<Hecho> hechos;
   private List<Coleccion> colecciones;
-  private List<SolicitudDeEliminacion> solicitudDeEliminacion;
+  private Long solicitudDeEliminacion;
   private List<Categoria> categorias;
 }

@@ -4,7 +4,9 @@ import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
+import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
+import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
 import ar.utn.dssi.app_web.mappers.HechoMapper;
@@ -162,12 +164,27 @@ public class HechoController {
     }
 
     HechoOutputDTO hechoOutput = hechoOutputOpt.get();
-    HechoRequest hechoInput = HechoMapper.outputToInput(hechoOutput);
+
+    HechoRequest hechoInput = new HechoRequest();
+    hechoInput.setTitulo(hechoOutput.getTitulo());
+    hechoInput.setDescripcion(hechoOutput.getDescripcion());
+    hechoInput.setFechaAcontecimiento(hechoOutput.getFechaAcontecimiento());
+
+    List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+    categorias.stream()
+            .filter(c -> c.getCategoria().equals(hechoOutput.getCategoria()))
+            .findFirst()
+            .ifPresent(cat -> hechoInput.setIdCategoria(cat.getId()));
+
+    if (hechoOutput.getUbicacion() != null) {
+      hechoInput.setLatitud(hechoOutput.getUbicacion().getLatitud());
+      hechoInput.setLongitud(hechoOutput.getUbicacion().getLongitud());
+    }
 
     model.addAttribute("hecho", hechoInput);
     model.addAttribute("hechoOutput", hechoOutput);
+    model.addAttribute("categorias", categorias);
     model.addAttribute("titulo", "Editar Hecho");
-    model.addAttribute("categorias", categoriaService.obtenerCategorias());
 
     return "hechos/editarHecho";
   }
@@ -178,59 +195,51 @@ public class HechoController {
                             BindingResult bindingResult,
                             Model model) {
     try {
-      boolean exitoso = hechosService.editarHecho(id, hechoRequest);
-      if (exitoso) {
-        model.addAttribute("mensaje", "Hecho editado correctamente");
-        model.addAttribute("tipoMensaje", "success");
-        model.addAttribute("titulo", "Editar Hecho");
-        model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id));
-        model.addAttribute("hecho", hechoRequest);
-        model.addAttribute("categorias", categoriaService.obtenerCategorias());
-        return "/hechos/editarHecho";
-      } else {
-        model.addAttribute("mensaje", "Error al editar el hecho, inténtelo nuevamente.");
-        model.addAttribute("tipoMensaje", "error");
-        model.addAttribute("titulo", "Editar Hecho");
-        model.addAttribute("hecho", hechoRequest);
-        model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-        model.addAttribute("categorias", categoriaService.obtenerCategorias());
-        return "/hechos/editarHecho";
+      if (hechoRequest.getTitulo().isBlank())
+        bindingResult.rejectValue("titulo", "error", "El título es obligatorio");
+
+      if (bindingResult.hasErrors()) {
+        return recargarFormularioError(id, hechoRequest, model);
       }
-    } catch (UbicacionInvalida e) {
-      bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
-      bindingResult.rejectValue("longitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
-    } catch (ValidationException e) {
-      convertirValidationExceptionABindingResult(e, bindingResult);
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
+
+      boolean exitoso = hechosService.crearSolicitudEdicion(id, hechoRequest);
+
+      if (exitoso) {
+        model.addAttribute("mensaje", "Tu solicitud de edición ha sido enviada correctamente. Un administrador la revisará.");
+        model.addAttribute("tipoMensaje", "success");
+      } else {
+        model.addAttribute("mensaje", "Error al enviar la solicitud. Intenta nuevamente.");
+        model.addAttribute("tipoMensaje", "error");
+      }
+
+      return recargarFormularioError(id, hechoRequest, model);
+
     } catch (Exception e) {
-      log.error("Error al editar hecho", e);
-      model.addAttribute("mensaje", "Error inesperado al editar el hecho: " + e.getMessage());
+      model.addAttribute("mensaje", "Error inesperado: " + e.getMessage());
       model.addAttribute("tipoMensaje", "error");
-      model.addAttribute("titulo", "Editar Hecho");
-      model.addAttribute("hecho", hechoRequest);
-      model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
-      model.addAttribute("categorias", categoriaService.obtenerCategorias());
-      return "/hechos/editarHecho";
+      return recargarFormularioError(id, hechoRequest, model);
     }
+  }
+
+  private String recargarFormularioError(Long id, HechoRequest request, Model model) {
+    model.addAttribute("hechoOutput", hechosService.obtenerHechoPorId(id).orElse(null));
+    model.addAttribute("categorias", categoriaService.obtenerCategorias());
+    model.addAttribute("titulo", "Editar Hecho");
+    return "hechos/editarHecho";
   }
 
   @GetMapping("/misHechos")
   public String listarMisHechos(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "9") int size, // Volvemos a un número razonable
+                                @RequestParam(defaultValue = "9") int size,
                                 @RequestParam(required = false) String filtro,
                                 @RequestParam(required = false, defaultValue = "titulo,asc") String sort,
                                 Model model) {
 
-    List<HechoOutputDTO> todosMisHechos = hechosService.obtenerMisHechos();
+    List<HechoOutputDTO> hechosCrudos = hechosService.obtenerMisHechos();
+
+    List<HechoOutputDTO> todosMisHechos = hechosCrudos.stream()
+            .filter(h -> Boolean.TRUE.equals(h.getVisible()))
+            .toList();
 
     if (filtro != null && !filtro.isEmpty()) {
       todosMisHechos = todosMisHechos.stream()
@@ -256,17 +265,15 @@ public class HechoController {
     }
 
     model.addAttribute("hechos", hechosPaginados);
-    model.addAttribute("page", page);             // Variable 'current' en el fragmento
+    model.addAttribute("page", page);
     model.addAttribute("size", size);
     model.addAttribute("sort", sort);
     model.addAttribute("filtro", filtro == null ? "" : filtro);
     model.addAttribute("totalPages", totalPages);
     model.addAttribute("totalElements", totalElements);
     model.addAttribute("baseUrl", "/hechos/misHechos");
-
     model.addAttribute("isFirst", page == 0);
     model.addAttribute("isLast", page == totalPages - 1);
-
     model.addAttribute("titulo", "Mis Hechos");
 
     return "hechos/misHechos";
@@ -292,7 +299,10 @@ public class HechoController {
             .map(Enum::name)
             .orElse(null);
 
-    PageResponseDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page);
+    PageResponseHechosDTO<HechoOutputDTO> pageResponseDTO = hechosService.listarHechos(page, size, filtroEstado);
+
+    List<SolicitudEdicionDTO> solicitudesEdicion = hechosService.obtenerSolicitudesEdicionPendientes();
+    model.addAttribute("solicitudesEdicion", solicitudesEdicion);
 
     model.addAttribute("hechos", pageResponseDTO.getContent());
     model.addAttribute("page", page);
@@ -307,10 +317,47 @@ public class HechoController {
     return "hechos/gestionHechosAdmin";
   }
 
-  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
-    if (e.hasFieldErrors()) {
-      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
+  @GetMapping("/gestion_hecho/revisar/{id}")
+  @PreAuthorize("hasRole('ADMINISTRADOR')")
+  public String revisarEdicion(@PathVariable Long id, Model model) {
+    Optional<SolicitudEdicionDTO> solicitudOpt = hechosService.obtenerSolicitudEdicionPorId(id);
+
+    if (solicitudOpt.isEmpty()) {
+      return "redirect:/hechos/gestion_hecho?error=SolicitudNoEncontrada";
     }
+
+    SolicitudEdicionDTO solicitud = solicitudOpt.get();
+    model.addAttribute("solicitud", solicitud);
+    model.addAttribute("hechoOriginal", solicitud.getHechoOriginal());
+
+    if (solicitud.getNuevoIdCategoria() != null) {
+      categoriaService.obtenerCategorias().stream()
+              .filter(c -> c.getId().equals(solicitud.getNuevoIdCategoria()))
+              .findFirst()
+              .ifPresent(cat -> model.addAttribute("nombreNuevaCategoria", cat.getCategoria()));
+    }
+
+    return "hechos/revisarEdicion";
+  }
+
+  @PostMapping("/gestion_hecho/procesar")
+  @PreAuthorize("hasRole('ADMINISTRADOR')")
+  public String procesarEdicion(@RequestParam Long idSolicitud,
+                                @RequestParam String accion,
+                                @ModelAttribute HechoRequest modificaciones,
+                                RedirectAttributes redirectAttributes) {
+    try {
+      hechosService.procesarSolicitudEdicion(idSolicitud, accion, modificaciones);
+
+      String mensaje = "ACEPTAR".equals(accion) ? "Edición aceptada y aplicada." : "Solicitud rechazada.";
+      redirectAttributes.addFlashAttribute("mensaje", mensaje);
+      redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+    } catch (Exception e) {
+      log.error("Error procesando solicitud", e);
+      redirectAttributes.addFlashAttribute("mensaje", "Error: " + e.getMessage());
+      redirectAttributes.addFlashAttribute("tipoMensaje", "error");
+    }
+    return "redirect:/hechos/gestion_hecho";
   }
 
   @GetMapping("/explorador")
@@ -320,63 +367,65 @@ public class HechoController {
                                      @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
                                      @RequestParam(required = false) Long idCategoria,
                                      @RequestParam(required = false) String provincia,
-                                     @RequestParam(required = false) Long idColeccion
+                                     // CAMBIO: Renombramos a modoCurado para coincidir con el JS y HTML
+                                     @RequestParam(required = false, defaultValue = "false") Boolean modoCurado
   ) {
+    model.addAttribute("titulo", "Explorador");
 
-    log.info("--- Filtros recibidos en /explorador ---");
-    log.info("idHecho: {}", idHecho);
-    log.info("idCategoria: {}", idCategoria);
-    log.info("provincia: {}", provincia);
-    log.info("fechaDesde: {}", fechaAcontecimientoDesde);
-    log.info("fechaHasta: {}", fechaAcontecimientoHasta);
-    log.info("idColeccion: {}", idColeccion);
-    // log.info("modoCurado: {}", modoCurado);
-    log.info("-----------------------------------------");
+    List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
+    categorias.sort(Comparator.comparing(CategoriaDTO::getCategoria));
+    model.addAttribute("categorias", categorias);
 
-      model.addAttribute("titulo", "Explorador");
+    model.addAttribute("provincias", hechosService.obtenerProvincias());
 
-      List<CategoriaDTO> categorias = categoriaService.obtenerCategorias();
-      categorias.sort(Comparator.comparing(CategoriaDTO::getCategoria));
-      model.addAttribute("categorias", categorias);
-
-      model.addAttribute("provincias", hechosService.obtenerProvincias());
-
-      if(idHecho != null) {
-
-        Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
-        if (hechoOptional.isPresent()) {
-          HechoOutputDTO hechoDTO = hechoOptional.get();
-          model.addAttribute("hechos", List.of(hechoDTO));
-          model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
-          model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
-        }
-
-      } else if (idColeccion != null) {
-
-        // Lógica para colecciones (si es diferente)
-        // model.addAttribute("hechos", gestionHechosApiService.obtenerHechosDeColeccion(idColeccion, ...));
-
-      } else {
-
-        List<HechoOutputDTO> hechosFiltrados = hechosService.obtenerHechos(
-                fechaAcontecimientoDesde,
-                fechaAcontecimientoHasta,
-                idCategoria,
-                provincia
-                //TODO modoCurado??
-        );
-        model.addAttribute("hechos", hechosFiltrados);
+    if(idHecho != null) {
+      Optional<HechoOutputDTO> hechoOptional = hechosService.obtenerHechoPorId(idHecho);
+      if (hechoOptional.isPresent()) {
+        HechoOutputDTO hechoDTO = hechoOptional.get();
+        model.addAttribute("centroMapaLat", hechoDTO.getUbicacion().getLatitud());
+        model.addAttribute("centroMapaLng", hechoDTO.getUbicacion().getLongitud());
+        model.addAttribute("hechoSeleccionadoId", idHecho);
       }
-
-      model.addAttribute("filtroProvincia", provincia);
-      model.addAttribute("filtroIdCategoria", idCategoria);
-      model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
-      model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
-      //TODO model.addAttribute("filtroModoCurado", modoCurado);???
-
-      return "home/explorador";
     }
 
+    model.addAttribute("filtroProvincia", provincia);
+    model.addAttribute("filtroIdCategoria", idCategoria);
+    model.addAttribute("filtroFechaDesde", fechaAcontecimientoDesde);
+    model.addAttribute("filtroFechaHasta", fechaAcontecimientoHasta);
+    model.addAttribute("modoCurado", modoCurado);
+
+    return "home/explorador";
+  }
+
+  @GetMapping("/api/data")
+  @ResponseBody
+  public List<HechoOutputDTO> obtenerHechosData(
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoDesde,
+          @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaAcontecimientoHasta,
+          @RequestParam(required = false) Long idCategoria,
+          @RequestParam(required = false) String provincia,
+          @RequestParam(required = false) Double latMin,
+          @RequestParam(required = false) Double latMax,
+          @RequestParam(required = false) Double lonMin,
+          @RequestParam(required = false) Double lonMax,
+          @RequestParam(required = false, defaultValue = "false") Boolean modoCurado // <--- PARAMETRO AGREGADO
+  ) {
+    // Pasamos el booleano al servicio
+    return hechosService.obtenerHechos(
+            fechaAcontecimientoDesde,
+            fechaAcontecimientoHasta,
+            idCategoria,
+            provincia,
+            latMin, latMax, lonMin, lonMax,
+            modoCurado
+    );
+  }
+
+  private void convertirValidationExceptionABindingResult(ValidationException e, BindingResult bindingResult) {
+    if (e.hasFieldErrors()) {
+      e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
+    }
+  }
 
 /***********************************************************************************************************************/
 /***************************************************LO DE ABAJO FALTA***************************************************/
@@ -389,5 +438,6 @@ public class HechoController {
     model.addAttribute("titulo", "Hechos de Coleccion");
     return "hechos/listaHechosColeccion";
   }*/
+
 }
 

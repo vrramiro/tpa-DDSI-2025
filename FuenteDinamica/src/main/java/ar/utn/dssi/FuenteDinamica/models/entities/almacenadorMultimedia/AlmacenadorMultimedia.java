@@ -50,7 +50,7 @@ public class AlmacenadorMultimedia {
       Path rutaDeArchivo = this.rutaAbsoluta.resolve(nombreArchivoGenerado);
       Files.copy(archivo.getInputStream(), rutaDeArchivo);
 
-      return rutaDeArchivo.toString();
+      return "/uploads/" + nombreArchivoGenerado;
 
     } catch (IOException e) {
       throw new FallaGuardadoArchivoMultimedia("No se pudo guardar el archivo: " + nombreArchivoOriginal);

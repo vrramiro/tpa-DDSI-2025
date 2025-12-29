@@ -33,6 +33,12 @@ public class MapperDeHechos {
         })
         .toList()
     );
+    dto.setAutor(hecho.getAutor());
+    dto.setVisible(hecho.getVisible());
+
+    if (hecho.getFuente() != null && hecho.getFuente().getTipoFuente() != null) {
+      dto.setTipoFuente(hecho.getFuente().getTipoFuente().getTipoFuente().name());
+    }
 
     return dto;
   }

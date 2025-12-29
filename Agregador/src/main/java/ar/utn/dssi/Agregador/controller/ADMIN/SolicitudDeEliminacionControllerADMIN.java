@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/solicitudes")
+@RequestMapping("/admin/solicitudes-eliminacion")
 @RequiredArgsConstructor
 public class SolicitudDeEliminacionControllerADMIN {
   private final SolicitudDeEliminacionService solicitudesService;
@@ -36,5 +36,11 @@ public class SolicitudDeEliminacionControllerADMIN {
   public ResponseEntity<SolicitudDeEliminacionOutputDTO> procesarSolicitud(@PathVariable Long idSolicitud, @RequestBody SolicitudProcesadaInputDTO solicitud) {
     solicitudesService.procesarSolicitud(idSolicitud, solicitud);
     return ResponseEntity.ok().build();
+  }
+
+  @GetMapping("/{idSolicitud}")
+  public ResponseEntity<SolicitudDeEliminacionOutputDTO> obtenerSolicitudPorId(@PathVariable Long idSolicitud) {
+    SolicitudDeEliminacionOutputDTO solicitud = solicitudesService.obtenerSolicitudPorId(idSolicitud);
+    return ResponseEntity.ok(solicitud);
   }
 }
