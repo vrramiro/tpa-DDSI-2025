@@ -17,6 +17,7 @@ public class ColeccionResponseDTO {
     private String handle;
     private String titulo;
     private String descripcion;
+    private String consenso;
     private List<CriterioDTO> criterios;
     private List<TipoFuente> fuentes;
 }

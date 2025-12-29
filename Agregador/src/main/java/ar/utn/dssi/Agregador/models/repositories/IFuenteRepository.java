@@ -12,6 +12,6 @@ import java.util.List;
 public interface IFuenteRepository extends JpaRepository<Fuente, Long> {
   List<Fuente> findByTipoFuente(ITipoFuente tipoFuente);
 
-  @Query(value = "SELECT * FROM Fuente f WHERE f.tipo_fuente IN :tipos", nativeQuery = true)
+  @Query(value = "SELECT * FROM fuente f WHERE f.tipo_fuente IN (:tipos)", nativeQuery = true)
   List<Fuente> findFuenteByTipoFuenteIn(@Param("tipos") List<String> tiposFuente);
 }

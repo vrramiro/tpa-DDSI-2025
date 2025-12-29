@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IHechoService {
-    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle);
+    PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page);
     Boolean crearHecho(HechoRequest hecho);
     Optional<HechoOutputDTO> obtenerHechoPorId(Long id);
     void cambiarEstadoHecho(Long id, EstadoHecho nuevoEstado);
@@ -22,5 +22,6 @@ public interface IHechoService {
     PageResponseDTO<HechoOutputDTO> listarHechos(Integer page);
     Boolean crearHechoEstatico(MultipartFile archivo);
     List<HechoOutputDTO> obtenerHechos(LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, Long idCategoria, String provincia);
-    List<ProvinciaInputDTO> obtenerProvincias();
+    List<String> obtenerProvincias();
+    List<HechoOutputDTO> obtenerMisHechos();
 }

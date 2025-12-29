@@ -72,6 +72,9 @@ public class Hecho {
   @Column(nullable = false, name = "visible")
   private Boolean visible;
 
+  @Column(name = "autor")
+    private String autor;
+
 
   public Boolean mismoHecho(Hecho otroHecho) {
     return this.titulo.equals(otroHecho.getTitulo()) &&

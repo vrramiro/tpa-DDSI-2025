@@ -1,6 +1,7 @@
 package ar.utn.dssi.app_web.services;
 
 import ar.utn.dssi.app_web.dto.EstadoHecho;
+import ar.utn.dssi.app_web.dto.input.HechoPageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
 import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.ProvinciaInputDTO;
@@ -13,6 +14,7 @@ import ar.utn.dssi.app_web.services.internal.WebApiCallerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClientException;
@@ -74,7 +76,7 @@ public class GestionHechosApiService {
             .path("/ubicacion/provincias")
             .toUriString();
     try {
-      return webApiCallerService.getList(url, ProvinciaInputDTO.class);
+      return webApiCallerService.getListPublic(url, ProvinciaInputDTO.class);
     } catch (WebClientException e) {
       throw new ServicioNormalizadorException("Error de conexión con servicio normalizador", e);
     }
@@ -87,7 +89,6 @@ public class GestionHechosApiService {
             .toUriString();
 
     try {
-      // Clon sin archivos porque me rompen los archivos
       HechoRequest dtoSinArchivos = new HechoRequest();
       dtoSinArchivos.setTitulo(hechoRequest.getTitulo());
       dtoSinArchivos.setDescripcion(hechoRequest.getDescripcion());
@@ -155,7 +156,7 @@ public class GestionHechosApiService {
     String url = builder.build().toUriString();
 
     try {
-      return webApiCallerService.getList(url, HechoOutputDTO.class);
+      return webApiCallerService.getListPublic(url, HechoOutputDTO.class);
     } catch (Exception e) {
       log.error("Error al obtener hechos desde el agregador", e);
       return Collections.emptyList();
@@ -259,4 +260,36 @@ public class GestionHechosApiService {
       throw new RuntimeException("Error al verificar la ubicación: " + e.getMessage(), e);
     }
   }
+
+  public List<HechoOutputDTO> obtenerMisHechos() {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/hechos/misHechos")
+            .toUriString();
+
+    try {
+      return webApiCallerService.getList(url, HechoOutputDTO.class);
+    } catch (Exception e) {
+      log.error("Error al obtener mis hechos: {}", e.getMessage());
+      return Collections.emptyList();
+    }
+  }
+
+  public PageResponseDTO<HechoOutputDTO> listarHechosDeColeccion(String handle, Integer page) {
+    String url = UriComponentsBuilder
+            .fromUriString(agregadorServiceUrl)
+            .path("/public/colecciones/{handle}/hechos")
+            .queryParam("page", page)
+            .buildAndExpand(handle)
+            .toUriString();
+
+    try {
+      return webApiCallerService.getPublic(url, HechoPageResponseDTO.class);
+
+    } catch (Exception e) {
+      log.error("Error al listar hechos de la colección {}: {}", handle, e.getMessage());
+      return new PageResponseDTO<>();
+    }
+  }
+
 }

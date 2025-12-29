@@ -15,6 +15,7 @@ import ar.utn.dssi.Agregador.mappers.MapperDeColecciones;
 import ar.utn.dssi.Agregador.mappers.MapperDeCriterio;
 import ar.utn.dssi.Agregador.mappers.MapperDeHechos;
 import ar.utn.dssi.Agregador.models.entities.Coleccion;
+import ar.utn.dssi.Agregador.models.entities.Hecho;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.CriterioDePertenencia;
 import ar.utn.dssi.Agregador.models.entities.criteriosDePertenencia.TipoCriterio;
 import ar.utn.dssi.Agregador.models.entities.fuente.Fuente;
@@ -51,6 +52,8 @@ public class ColeccionService implements IColeccionService {
   @Override
   @Transactional
   public ColeccionOutputDTO crearColeccion(ColeccionInputDTO input) {
+
+    filtrarCriteriosVacios(input);
 
     validarDatosBasicos(input);
     validarCriterios(input);
@@ -111,25 +114,48 @@ public class ColeccionService implements IColeccionService {
 
   @Override
   public void eliminarColeccion(String handle) {
-    Coleccion coleccion = obtenerColeccionSiExiste(handle);
-
+    Coleccion coleccion = coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
     coleccionRepository.delete(coleccion);
   }
 
   @Override
-  public List<HechoOutputDTO> obtenerHechosDeColeccion(String modoNavegacion, String handle, LocalDate fechaReporteDesde, LocalDate fechaReporteHasta, LocalDate fechaAcontecimientoDesde, LocalDate fechaAcontecimientoHasta, String provincia, String ciudad) {
-    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle).orElseThrow(() -> new ColeccionNoEncontrada(handle));
+  public Page<HechoOutputDTO> obtenerHechosDeColeccion(
+          String modoNavegacion,
+          String handle,
+          LocalDate fechaReporteDesde,
+          LocalDate fechaReporteHasta,
+          LocalDate fechaAcontecimientoDesde,
+          LocalDate fechaAcontecimientoHasta,
+          String provincia,
+          String ciudad,
+          Pageable pageable // <-- Parámetro recibido
+  ) {
+    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
 
-    if (!coleccion.getActualizada())
-      throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navergación.");
+    if (!Boolean.TRUE.equals(coleccion.getActualizada()))
+      throw new ColeccionAguardandoActualizacion("La colección no esta disponible para navegación.");
 
     IModoNavegacion modo = modoNavegacionFactory.modoDeNavegacionFromString(modoNavegacion);
 
-    return coleccionRepository.filtrarHechosDeColeccion(handle, fechaReporteDesde, fechaReporteHasta, fechaAcontecimientoDesde, fechaAcontecimientoHasta, ciudad, provincia)
-        .stream()
-        .filter(hecho -> modo.hechoNavegable(hecho, coleccion))
-        .map(MapperDeHechos::hechoToOutputDTO)
-        .toList();
+    Page<Hecho> hechosPage = coleccionRepository.filtrarHechosDeColeccion(
+            handle, fechaReporteDesde, fechaReporteHasta,
+            fechaAcontecimientoDesde, fechaAcontecimientoHasta,
+            ciudad, provincia, pageable
+    );
+
+
+    return hechosPage.map(MapperDeHechos::hechoToOutputDTO);
+  }
+
+
+  @Override
+  public ColeccionOutputDTO obtenerColeccion(String handle) {
+    Coleccion coleccion = this.coleccionRepository.findColeccionByHandle(handle)
+            .orElseThrow(() -> new ColeccionNoEncontrada(handle));
+
+    return MapperDeColecciones.coleccionOutputDTOFromColeccion(coleccion);
   }
 
   private void validarDatosBasicos(ColeccionInputDTO input) {
@@ -190,24 +216,33 @@ public class ColeccionService implements IColeccionService {
   }
 
   private void validarCriterios(ColeccionInputDTO input) {
-    Map<TipoCriterio, String> criterios = input.getCriteriosDePertenecias().stream()
-        .collect(Collectors.toMap(CriterioDePertenenciaInputDTO::getTipo, CriterioDePertenenciaInputDTO::getValor));
+    Map<TipoCriterio, String> criterios = new java.util.HashMap<>();
 
-    if (criterios.size() != input.getCriteriosDePertenecias().size())
-      throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo.");
+    for (CriterioDePertenenciaInputDTO c : input.getCriteriosDePertenecias()) {
+      if (c.getTipo() == null || c.getValor() == null || c.getValor().trim().isEmpty()) {
+        continue;
+      }
 
-    LocalDate fechaDesde = criterios.containsKey(TipoCriterio.FECHA_DESDE) ? MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE)) : null;
+      if (criterios.containsKey(c.getTipo())) {
+        throw new DatosDeColeccionFaltantes("No puede haber más de un criterio del mismo tipo (" + c.getTipo() + ").");
+      }
 
-    if (fechaDesde != null && fechaDesde.isAfter(LocalDate.now()))
-      throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+      criterios.put(c.getTipo(), c.getValor());
+    }
+
+    if (criterios.containsKey(TipoCriterio.FECHA_DESDE)) {
+      LocalDate fechaDesde = MapperDeCriterio.parsearFecha(criterios.get(TipoCriterio.FECHA_DESDE));
+      if (fechaDesde.isAfter(LocalDate.now())) {
+        throw new CriterioPorFechasIncorrecto("El criterio 'fecha desde' no puede ser una fecha futura.");
+      }
+    }
   }
 
   private List<Fuente> fuentesNuevas(ColeccionInputDTO input) {
     List<String> tiposDeFuentes = input.getFuentes().stream()
-        .map(f -> f.getTipoFuente().toString())
-        .collect(Collectors.toList());
+            .map(f -> f.getTipoFuente().toString())
+            .collect(Collectors.toList());
 
-    //tiene que ser string xq para persistir se usa un converter que pasa el ITipoFuente a string
     return fuentesService.obtenerFuentesPorTiposDeFuente(tiposDeFuentes);
   }
 
@@ -217,6 +252,16 @@ public class ColeccionService implements IColeccionService {
     } catch (Exception e) {
       log.error("Error al guardar la coleccion: {}", e.getMessage());
       throw e;
+    }
+  }
+
+  private void filtrarCriteriosVacios(ColeccionInputDTO input) {
+    if (input.getCriteriosDePertenecias() != null) {
+      input.setCriteriosDePertenecias(
+              input.getCriteriosDePertenecias().stream()
+                      .filter(c -> c.getValor() != null && !c.getValor().trim().isEmpty())
+                      .collect(Collectors.toList())
+      );
     }
   }
 }
