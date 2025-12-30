@@ -1,23 +1,19 @@
-# ==========================
-# Etapa 1: Build del JAR con Maven
-# ==========================
-FROM maven:3.9.6-eclipse-temurin-17 AS builder
+# Etapa de construcción
+FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 
-# Copiar los archivos de configuración de Maven
-COPY pom.xml .
-COPY src ./src
+# Copiamos solo el contenido del microservicio
+COPY . .
 
-# Compilar el proyecto (sin tests)
+# Compilamos saltando los tests para acelerar el despliegue
 RUN mvn clean package -DskipTests
 
-# ==========================
-# Etapa 2: Imagen final (solo el JAR)
-# ==========================
-FROM eclipse-temurin:17-jdk-alpine
+# Etapa de ejecución
+FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Copiar el JAR compilado desde la etapa anterior
-COPY --from=builder /app/target/*.jar app.jar
+# El nombre del jar suele ser artifactId-version.jar definido en el pom
+COPY --from=build /app/target/usuarios-0.0.1-SNAPSHOT.jar app.jar
+
 EXPOSE 8086
 ENTRYPOINT ["java", "-jar", "app.jar"]
