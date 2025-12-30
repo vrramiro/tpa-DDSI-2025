@@ -6,10 +6,10 @@ WORKDIR /app
 COPY . .
 
 # Compilamos saltando los tests para acelerar el despliegue
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -Dmaven.test.skip=true -Dfile.encoding=UTF-8
 
 # Etapa de ejecución
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 
 # El nombre del jar suele ser artifactId-version.jar definido en el pom
