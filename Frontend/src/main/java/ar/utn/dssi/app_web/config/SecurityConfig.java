@@ -23,31 +23,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/",
-                                "/login",
-                                "/registro",
-                                "/crear_cuenta",
-                                "/hechos/explorador",
-                                "/hechos/explorador/**",
-                                "/colecciones",
-                                "/colecciones/{handle}/hechos",
-                                "/privacidad",
-                                "/estadisticas/**",
-                                "/css/**",
-                                "/js/**",
-                                "/img/**",
-                                "/webjars/**",
-                                "/uploads/**",
-                                "/hechos/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(
+                            "/",
+                            "/login",
+                            "/registro",
+                            "/crear_cuenta",
+                            "/privacidad",
+                            "/hechos/**", 
+                            "/hechos/explorador",
+                            "/hechos/explorador/**",
+                            "/colecciones",
+                            "/colecciones/{handle}/hechos",
+                            "/estadisticas/**",
+                            "/css/**",
+                            "/js/**",
+                            "/img/**",
+                            "/webjars/**",
+                            "/uploads/**",
+                            "/favicon.ico",
+                            "/static/**"
+                    ).permitAll()
+                    .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                        .defaultSuccessUrl("/", true)
+                    .loginPage("/login")
+                    .permitAll()
+                    .defaultSuccessUrl("/", true)
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
