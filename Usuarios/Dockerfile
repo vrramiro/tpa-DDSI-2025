@@ -15,5 +15,5 @@ WORKDIR /app
 # El nombre del jar suele ser artifactId-version.jar definido en el pom
 COPY --from=build /app/target/usuarios-0.0.1-SNAPSHOT.jar app.jar
 
-EXPOSE 8086
+EXPOSE 8085
 ENTRYPOINT ["java", "-jar", "app.jar"]
