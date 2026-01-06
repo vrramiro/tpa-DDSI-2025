@@ -27,7 +27,7 @@ public class HechosController {
 
   @PostMapping("/importar")
   public ResponseEntity<Void> importarArchivo(@RequestParam("archivo") MultipartFile archivo) {
-
+    System.out.println("ENTRANDO AL MÉTODO DE IMPORTACIÓN");
     try {
       File tempFile = File.createTempFile("importado-", archivo.getOriginalFilename());
       archivo.transferTo(tempFile);
