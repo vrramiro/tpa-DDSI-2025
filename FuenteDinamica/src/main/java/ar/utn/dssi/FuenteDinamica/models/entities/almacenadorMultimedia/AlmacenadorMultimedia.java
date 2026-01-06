@@ -21,17 +21,21 @@ public class AlmacenadorMultimedia {
 
   private Path rutaAbsoluta;
 
-@PostConstruct
+  @PostConstruct
   public void init() {
     try {
-        this.rutaAbsoluta = Paths.get(System.getProperty("user.dir"))
-                                 .resolve(directorioDeGuardado)
-                                 .normalize();
-        
-        Files.createDirectories(this.rutaAbsoluta);
-        System.out.println(">> Almacenamiento configurado en: " + this.rutaAbsoluta.toString());
+      // Forzamos una ruta relativa segura dentro del contenedor
+      this.rutaAbsoluta = Paths.get(System.getProperty("user.dir"))
+                               .resolve(directorioDeGuardado)
+                               .normalize();
+      
+      if (!Files.exists(this.rutaAbsoluta)) {
+          Files.createDirectories(this.rutaAbsoluta);
+      }
+      System.out.println(">> Almacenamiento activo en: " + this.rutaAbsoluta.toAbsolutePath());
     } catch (Exception e) {
-        System.err.println("CRITICAL: No se pudo crear el directorio de uploads: " + e.getMessage());
+      // LOGUEAR en lugar de lanzar THROW para que la app no se apague
+      System.err.println("WARN: No se pudo inicializar el directorio de archivos: " + e.getMessage());
     }
   }
 
