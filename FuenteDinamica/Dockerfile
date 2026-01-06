@@ -6,6 +6,6 @@ RUN mvn clean package -DskipTests -Dmaven.test.skip=true -Dfile.encoding=UTF-8
 FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 COPY --from=build /app/target/FuenteDinamica-0.0.1-SNAPSHOT.jar app.jar
-RUN mkdir -p /app/uploads
+RUN mkdir -p /app/uploads && chmod 777 /app/uploads
 EXPOSE 8083
 ENTRYPOINT ["java", "-jar", "app.jar"]
