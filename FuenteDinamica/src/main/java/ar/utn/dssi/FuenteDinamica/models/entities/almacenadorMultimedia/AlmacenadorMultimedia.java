@@ -21,13 +21,17 @@ public class AlmacenadorMultimedia {
 
   private Path rutaAbsoluta;
 
-  @PostConstruct
+@PostConstruct
   public void init() {
-    this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
     try {
-      Files.createDirectories(this.rutaAbsoluta);
+        this.rutaAbsoluta = Paths.get(System.getProperty("user.dir"))
+                                 .resolve(directorioDeGuardado)
+                                 .normalize();
+        
+        Files.createDirectories(this.rutaAbsoluta);
+        System.out.println(">> Almacenamiento configurado en: " + this.rutaAbsoluta.toString());
     } catch (Exception e) {
-      throw new DirectorioNoCreado("No se pudo crear un directorio " + directorioDeGuardado + " para guardar archivos multimedia.");
+        System.err.println("CRITICAL: No se pudo crear el directorio de uploads: " + e.getMessage());
     }
   }
 
