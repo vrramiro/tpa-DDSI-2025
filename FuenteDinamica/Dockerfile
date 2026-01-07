@@ -1,11 +1,10 @@
 FROM maven:3.8.5-openjdk-17-slim AS build
 WORKDIR /app
 COPY . .
-RUN mvn clean package -DskipTests -Dmaven.test.skip=true -Dfile.encoding=UTF-8
+RUN mvn clean package -Dmaven.test.skip=true -Dfile.encoding=UTF-8
 
-FROM eclipse-temurin:17-jre-jammy
+FROM eclipse-temurin:17-jdk-alpine
 WORKDIR /app
 COPY --from=build /app/target/FuenteDinamica-0.0.1-SNAPSHOT.jar app.jar
-RUN mkdir -p /app/uploads && chmod 777 /app/uploads
-EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=8083"]
+EXPOSE 8084
+ENTRYPOINT ["java", "-jar", "app.jar"]
