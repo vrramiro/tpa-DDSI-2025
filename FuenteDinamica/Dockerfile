@@ -8,4 +8,4 @@ WORKDIR /app
 COPY --from=build /app/target/FuenteDinamica-0.0.1-SNAPSHOT.jar app.jar
 RUN mkdir -p /app/uploads && chmod 777 /app/uploads
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar", "--server.port=8083"]
