@@ -24,18 +24,26 @@ public class AlmacenadorMultimedia {
 
     @PostConstruct
     public void init() {
-        System.out.println("LOG_SISTEMA: Iniciando servicio...");
+        System.out.println("LOG_SISTEMA: Iniciando servicio de multimedia...");
         try {
             this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
             File directory = this.rutaAbsoluta.toFile();
             
             if (!directory.exists()) {
                 boolean created = directory.mkdirs();
-                System.out.println("LOG_SISTEMA: Directorio creado: " + created);
+                System.out.println("LOG_SISTEMA: Directorio creado: " + created + " en " + rutaAbsoluta);
+            } else {
+                System.out.println("LOG_SISTEMA: El volumen ya está montado en " + rutaAbsoluta);
             }
-            System.out.println("LOG_SISTEMA: Ruta activa en: " + rutaAbsoluta.toString());
+            
+            // Prueba de escritura preventiva
+            if (directory.canWrite()) {
+                 System.out.println("LOG_SISTEMA: ¡Permisos de escritura OK!");
+            } else {
+                 System.err.println("LOG_SISTEMA_ERROR: No hay permisos de escritura en el volumen.");
+            }
         } catch (Exception e) {
-            System.err.println("LOG_SISTEMA_ERROR: No se pudo preparar el disco: " + e.getMessage());
+            System.err.println("LOG_SISTEMA_ERROR: Falla al inicializar: " + e.getMessage());
         }
     }
     
