@@ -24,24 +24,21 @@ public class AlmacenadorMultimedia {
 
     @PostConstruct
     public void init() {
+        System.out.println("LOG_SISTEMA: Iniciando servicio...");
         try {
-            // Imprimimos un mensaje ANTES de tocar el disco
-            System.out.println("LOG_INICIO: Iniciando Almacenador en ruta: " + directorioDeGuardado);
-            
             this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
             File directory = this.rutaAbsoluta.toFile();
             
             if (!directory.exists()) {
-                directory.mkdirs();
-                System.out.println("LOG_INICIO: Carpeta creada.");
-            } else {
-                System.out.println("LOG_INICIO: Carpeta ya existía.");
+                boolean created = directory.mkdirs();
+                System.out.println("LOG_SISTEMA: Directorio creado: " + created);
             }
+            System.out.println("LOG_SISTEMA: Ruta activa en: " + rutaAbsoluta.toString());
         } catch (Exception e) {
-            // Capturamos el error para que no mate el contenedor
-            System.err.println("LOG_INICIO_ERROR: Falla en volumen: " + e.getMessage());
+            System.err.println("LOG_SISTEMA_ERROR: No se pudo preparar el disco: " + e.getMessage());
         }
     }
+    
     public String guardarArchivo(MultipartFile archivo) {
         String nombreArchivoOriginal = archivo.getOriginalFilename();
         
