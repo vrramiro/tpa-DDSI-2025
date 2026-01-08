@@ -24,20 +24,22 @@ public class AlmacenadorMultimedia {
 
     @PostConstruct
     public void init() {
-        // 1. Inicializamos la variable que estaba dando NULL
-        this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
-        
-        File directory = this.rutaAbsoluta.toFile();
-        
-        if (!directory.exists()) {
-            boolean created = directory.mkdirs();
-            if (!created) {
-                System.err.println("ERROR CRÍTICO: No se pudo crear el directorio en: " + directory.getAbsolutePath());
-            } else {
-                System.out.println("INFO: Directorio creado exitosamente en: " + directory.getAbsolutePath());
+        try {
+            this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
+            File directory = this.rutaAbsoluta.toFile();
+            
+            if (!directory.exists()) {
+                directory.mkdirs();
             }
-        } else {
-            System.out.println("INFO: Directorio de multimedia listo en: " + directory.getAbsolutePath());
+            
+            // Verificación extra de escritura para el log
+            if (directory.canWrite()) {
+                System.out.println("VOLUMEN OK: Permisos de escritura confirmados en " + rutaAbsoluta);
+            } else {
+                System.err.println("VOLUMEN ERROR: No tengo permisos de escritura en " + rutaAbsoluta);
+            }
+        } catch (Exception e) {
+            System.err.println("ERROR CRITICO INICIALIZANDO VOLUMEN: " + e.getMessage());
         }
     }
 
