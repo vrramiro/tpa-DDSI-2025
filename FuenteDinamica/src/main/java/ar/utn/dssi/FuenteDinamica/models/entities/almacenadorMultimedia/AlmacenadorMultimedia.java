@@ -3,12 +3,15 @@ package ar.utn.dssi.FuenteDinamica.models.entities.almacenadorMultimedia;
 import ar.utn.dssi.FuenteDinamica.error.ArchivoMultimediaVacio;
 import ar.utn.dssi.FuenteDinamica.error.FallaGuardadoArchivoMultimedia;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.annotation.PostConstruct; // Importante para Spring Boot 3
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -77,6 +80,21 @@ public class AlmacenadorMultimedia {
             Files.deleteIfExists(rutaAlArchivo);
         } catch (IOException e) {
             System.err.println("Error al eliminar el archivo " + urlArchivo + ": " + e.getMessage());
+        }
+    }
+
+    public Resource cargarArchivo(String nombreArchivo) {
+        try {
+            Path archivo = this.rutaAbsoluta.resolve(nombreArchivo);
+            Resource recurso = new UrlResource(archivo.toUri());
+
+            if (recurso.exists() || recurso.isReadable()) {
+                return recurso;
+            } else {
+                throw new RuntimeException("No se puede leer el archivo: " + nombreArchivo);
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
         }
     }
 }

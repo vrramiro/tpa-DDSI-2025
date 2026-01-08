@@ -103,6 +103,8 @@ public class HechoController {
 
     model.addAttribute("titulo", hechoOutputDTO.get().getTitulo());
     model.addAttribute("hecho", hechoOutputDTO.get());
+
+    model.addAttribute("urlBaseMultimedia", urlMultimedia);
     return "hechos/hecho";
   }
 
@@ -118,36 +120,6 @@ public class HechoController {
     }
     return "redirect:/hechos/" + id;
   }
-/* TODO
-  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-  @GetMapping("/{id}/sugerir")
-  public String mostrarFormularioSugerencia(@PathVariable Long id, Model model) {
-    Optional<HechoOutputDTO> hecho = hechosService.obtenerHechoPorId(id);
-    model.addAttribute("hecho", hecho);
-    return "hechos/sugerirHecho";
-  }
-
-  @PreAuthorize("hasAuthority('ADMINISTRADOR')")
-  @PostMapping("/{id}/sugerir")
-  public String enviarSugerencia(@PathVariable Long id,
-                                 @RequestParam(required = false) String sugerencia,
-                                 RedirectAttributes redirectAttributes) {
-    try {
-      if (sugerencia != null && !sugerencia.isBlank()) {
-        hechosService.registrarSugerencia(id, sugerencia);
-        redirectAttributes.addFlashAttribute("mensaje", "Sugerencia enviada correctamente");
-      } else {
-        hechosService.cambiarEstadoHecho(id, EstadoHecho.ACEPTADO);
-        redirectAttributes.addFlashAttribute("mensaje", "Hecho aceptado sin sugerencia");
-      }
-      redirectAttributes.addFlashAttribute("tipo", "success");
-    } catch (Exception e) {
-      redirectAttributes.addFlashAttribute("mensaje", "Error al procesar la acción");
-      redirectAttributes.addFlashAttribute("tipo", "error");
-    }
-    return "redirect:/hechos/" + id;
-  }
-*/
 
   @PostMapping("/{id}/rechazar")
   public String rechazarHecho(@PathVariable Long id, RedirectAttributes redirectAttributes) {

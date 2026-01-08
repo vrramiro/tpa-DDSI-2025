@@ -67,7 +67,7 @@
                     <div class="carousel-inner">
                         <div th:each="media, iter : ${hecho.contenidoMultimedia}"
                              th:class="${iter.first} ? 'carousel-item active' : 'carousel-item'">
-                            <img th:src="${'http://localhost:8082' + media.url}"
+                            <img th:src="${urlBaseMultimedia + media.url}"
                                  class="d-block w-100"
                                  alt="Imagen del hecho">
                         </div>
