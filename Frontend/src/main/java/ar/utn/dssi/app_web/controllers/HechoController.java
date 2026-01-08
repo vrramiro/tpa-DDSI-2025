@@ -68,17 +68,20 @@ public class HechoController {
       }
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
+      model.addAttribute("urlUpload", urlMultimedia);
       return "hechos/crearHecho";
     } catch (UbicacionInvalida e) {
       bindingResult.rejectValue("latitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       bindingResult.rejectValue("longitud", "ubicacionInvalida", "La ubicación debe estar dentro de Argentina");
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
+      model.addAttribute("urlUpload", urlMultimedia);
       return "hechos/crearHecho";
     } catch (ValidationException e) {
       convertirValidationExceptionABindingResult(e, bindingResult);
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
+      model.addAttribute("urlUpload", urlMultimedia);
       return "hechos/crearHecho";
     } catch (Exception e) {
       log.error("Error al crear hecho", e);
@@ -86,6 +89,7 @@ public class HechoController {
       model.addAttribute("tipoMensaje", "error");
       model.addAttribute("titulo", "Crear Nuevo Hecho");
       model.addAttribute("categorias", categoriaService.obtenerCategorias());
+      model.addAttribute("urlUpload", urlMultimedia);
       return "hechos/crearHecho";
     }
   }
