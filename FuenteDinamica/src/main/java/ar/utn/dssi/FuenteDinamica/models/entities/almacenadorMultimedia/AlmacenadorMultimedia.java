@@ -25,22 +25,21 @@ public class AlmacenadorMultimedia {
     @PostConstruct
     public void init() {
         try {
-            // Usamos la ruta absoluta
+            // Imprimimos un mensaje ANTES de tocar el disco
+            System.out.println("LOG_INICIO: Iniciando Almacenador en ruta: " + directorioDeGuardado);
+            
             this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
             File directory = this.rutaAbsoluta.toFile();
             
-            // Si el volumen está montado, la carpeta ya existe. 
-            // Solo intentamos crearla si no existe.
             if (!directory.exists()) {
                 directory.mkdirs();
+                System.out.println("LOG_INICIO: Carpeta creada.");
+            } else {
+                System.out.println("LOG_INICIO: Carpeta ya existía.");
             }
-            
-            System.out.println("CONFIGURACIÓN VOLUMEN: Ruta configurada en " + rutaAbsoluta);
-            
         } catch (Exception e) {
-            // Solo imprimimos el error, no lanzamos excepción. 
-            // Esto permite que Spring termine de levantar y veas el log.
-            System.err.println("ADVERTENCIA VOLUMEN: Error inicializando carpeta: " + e.getMessage());
+            // Capturamos el error para que no mate el contenedor
+            System.err.println("LOG_INICIO_ERROR: Falla en volumen: " + e.getMessage());
         }
     }
     public String guardarArchivo(MultipartFile archivo) {
