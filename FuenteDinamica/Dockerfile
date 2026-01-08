@@ -20,5 +20,8 @@ COPY --from=build /app/target/FuenteDinamica-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8083
 
+# Definimos la variable de entorno interna
+ENV DIRECTORIO_UPLOADS=/app/uploads
+
 # Usamos CMD con el parámetro de seguridad para agilizar el arranque
 CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "app.jar"]
