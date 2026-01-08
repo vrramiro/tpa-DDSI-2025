@@ -37,8 +37,8 @@ public class HechoController {
   private final IHechoService hechosService;
   private final ICategoriaService categoriaService;
 
-  @Value("${fuenteDinamica.service.url}")
-  private String urlFuenteDinamica;
+  @Value("${fuenteDinamica.multimedia.service.url}")
+  private String urlMultimedia;
 
   @GetMapping("/nuevo")
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
@@ -46,7 +46,7 @@ public class HechoController {
     model.addAttribute("titulo", "Crear Nuevo Hecho");
     model.addAttribute("hecho", new HechoRequest());
     model.addAttribute("categorias", categoriaService.obtenerCategorias());
-    model.addAttribute("urlUpload", urlFuenteDinamica + "/multimedia/upload");
+    model.addAttribute("urlUpload", urlMultimedia);
     return "hechos/crearHecho";
   }
 
