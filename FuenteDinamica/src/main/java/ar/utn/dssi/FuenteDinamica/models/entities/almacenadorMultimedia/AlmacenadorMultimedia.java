@@ -25,24 +25,24 @@ public class AlmacenadorMultimedia {
     @PostConstruct
     public void init() {
         try {
+            // Usamos la ruta absoluta
             this.rutaAbsoluta = Paths.get(directorioDeGuardado).toAbsolutePath().normalize();
             File directory = this.rutaAbsoluta.toFile();
             
+            // Si el volumen está montado, la carpeta ya existe. 
+            // Solo intentamos crearla si no existe.
             if (!directory.exists()) {
                 directory.mkdirs();
             }
             
-            // Verificación extra de escritura para el log
-            if (directory.canWrite()) {
-                System.out.println("VOLUMEN OK: Permisos de escritura confirmados en " + rutaAbsoluta);
-            } else {
-                System.err.println("VOLUMEN ERROR: No tengo permisos de escritura en " + rutaAbsoluta);
-            }
+            System.out.println("CONFIGURACIÓN VOLUMEN: Ruta configurada en " + rutaAbsoluta);
+            
         } catch (Exception e) {
-            System.err.println("ERROR CRITICO INICIALIZANDO VOLUMEN: " + e.getMessage());
+            // Solo imprimimos el error, no lanzamos excepción. 
+            // Esto permite que Spring termine de levantar y veas el log.
+            System.err.println("ADVERTENCIA VOLUMEN: Error inicializando carpeta: " + e.getMessage());
         }
     }
-
     public String guardarArchivo(MultipartFile archivo) {
         String nombreArchivoOriginal = archivo.getOriginalFilename();
         
