@@ -86,7 +86,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('formCrearHecho');
     const submitBtn = form ? form.querySelector('button[type="submit"]') : null;
 
-    const URL_UPLOAD = 'http://localhost:8082/multimedia/upload';
+    const urlInput = document.getElementById('config-url-upload');
+    const URL_UPLOAD = urlInput ? urlInput.value : '';
+    if (!URL_UPLOAD) {
+        console.error("No se encontró la URL de subida multimedia.");
+    }
+
     let archivosSubidos = [];
 
     if (form) {

@@ -2,6 +2,7 @@ package ar.utn.dssi.FuenteDinamica.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -23,5 +24,13 @@ public class WebConfig implements WebMvcConfigurer {
         // Mapeamos la URL /uploads/** a la carpeta física
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations(rutaFinal);
+    }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**") // Permitir todas las rutas
+                .allowedOrigins("*") // O poner la URL específica de tu frontend: "https://front-01..."
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*");
     }
 }

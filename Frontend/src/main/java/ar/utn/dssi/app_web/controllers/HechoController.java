@@ -3,18 +3,17 @@ package ar.utn.dssi.app_web.controllers;
 import ar.utn.dssi.app_web.dto.CategoriaDTO;
 import ar.utn.dssi.app_web.dto.EstadoHecho;
 import ar.utn.dssi.app_web.dto.input.HechoRequest;
-import ar.utn.dssi.app_web.dto.input.PageResponseDTO;
 import ar.utn.dssi.app_web.dto.input.PageResponseHechosDTO;
 import ar.utn.dssi.app_web.dto.output.HechoOutputDTO;
 import ar.utn.dssi.app_web.dto.output.SolicitudEdicionDTO;
 import ar.utn.dssi.app_web.error.UbicacionInvalida;
 import ar.utn.dssi.app_web.error.ValidationException;
-import ar.utn.dssi.app_web.mappers.HechoMapper;
 import ar.utn.dssi.app_web.services.Interfaces.ICategoriaService;
 import ar.utn.dssi.app_web.services.Interfaces.IHechoService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -38,12 +37,16 @@ public class HechoController {
   private final IHechoService hechosService;
   private final ICategoriaService categoriaService;
 
+  @Value("${fuenteDinamica.service.url}")
+  private String urlFuenteDinamica;
+
   @GetMapping("/nuevo")
   @PreAuthorize("hasAnyRole('CONTRIBUYENTE', 'ADMINISTRADOR')")
   public String mostrarFormularioCrear(Model model) {
     model.addAttribute("titulo", "Crear Nuevo Hecho");
     model.addAttribute("hecho", new HechoRequest());
     model.addAttribute("categorias", categoriaService.obtenerCategorias());
+    model.addAttribute("urlUpload", urlFuenteDinamica + "/multimedia/upload");
     return "hechos/crearHecho";
   }
 
@@ -426,18 +429,5 @@ public class HechoController {
       e.getFieldErrors().forEach((field, error) -> bindingResult.rejectValue(field, "error." + field, error));
     }
   }
-
-/***********************************************************************************************************************/
-/***************************************************LO DE ABAJO FALTA***************************************************/
-/***********************************************************************************************************************/
-
-
-  //TODO VERLO CON SANTI
-  /*@GetMapping("/lista_hechos_coleccion")
-  public String hechosCoelccion(Model model) {
-    model.addAttribute("titulo", "Hechos de Coleccion");
-    return "hechos/listaHechosColeccion";
-  }*/
-
 }
 
