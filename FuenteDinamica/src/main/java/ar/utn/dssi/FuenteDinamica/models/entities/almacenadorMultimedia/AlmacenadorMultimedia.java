@@ -21,23 +21,19 @@ public class AlmacenadorMultimedia {
 
   private Path rutaAbsoluta;
 
-  @PostConstruct
-  public void init() {
-    try {
-      // Forzamos una ruta relativa segura dentro del contenedor
-      this.rutaAbsoluta = Paths.get(System.getProperty("user.dir"))
-                               .resolve(directorioDeGuardado)
-                               .normalize();
-      
-      if (!Files.exists(this.rutaAbsoluta)) {
-          Files.createDirectories(this.rutaAbsoluta);
-      }
-      System.out.println(">> Almacenamiento activo en: " + this.rutaAbsoluta.toAbsolutePath());
-    } catch (Exception e) {
-      // LOGUEAR en lugar de lanzar THROW para que la app no se apague
-      System.err.println("WARN: No se pudo inicializar el directorio de archivos: " + e.getMessage());
+@PostConstruct
+    public void init() {
+        File directory = new File(directorioDeGuardado);
+        if (!directory.exists()) {
+            boolean created = directory.mkdirs();
+            if (!created) {
+                // Imprimimos la ruta exacta para verla en los logs del PaaS
+                System.err.println("ERROR CRÍTICO: No se pudo crear el directorio en: " + directory.getAbsolutePath());
+                // No lances la excepción todavía para dejar que el servicio al menos levante
+            }
+        }
+        System.out.println("Directorio de multimedia listo en: " + directory.getAbsolutePath());
     }
-  }
 
   public String guardarArchivo(MultipartFile archivo) {
     String nombreArchivoOriginal = archivo.getOriginalFilename();
