@@ -243,6 +243,8 @@ public class HechoController {
       hechosPaginados = todosMisHechos.subList(fromIndex, toIndex);
     }
 
+    model.addAttribute("urlBaseMultimedia", urlMultimedia);
+
     model.addAttribute("hechos", hechosPaginados);
     model.addAttribute("page", page);
     model.addAttribute("size", size);
