@@ -27,9 +27,8 @@
                  th:data-tipo-fuente="${hecho.tipoFuente}"
                  onclick="abrirModalHecho(this)">
 
-                <div class="card-image-wrapper">
                     <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
-                         th:src="|http://localhost:8082${hecho.contenidoMultimedia[0].url}|"
+                         th:src="${baseMultimediaUrl} + ${hecho.contenidoMultimedia[0].url}"
                          alt="Imagen del hecho"
                          loading="lazy">
 
