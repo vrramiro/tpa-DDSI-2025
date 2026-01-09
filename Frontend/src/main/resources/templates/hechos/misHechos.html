@@ -28,7 +28,7 @@
                  onclick="abrirModalHecho(this)">
 
                     <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
-                         th:src="${baseMultimediaUrl} + ${hecho.contenidoMultimedia[0].url}"
+                         th:src="${urlBaseMultimedia} + ${hecho.contenidoMultimedia[0].url}"
                          alt="Imagen del hecho"
                          loading="lazy">
 
