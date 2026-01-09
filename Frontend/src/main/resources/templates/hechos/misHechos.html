@@ -21,25 +21,32 @@
     </div>
 
     <div class="grid-container" th:unless="${#lists.isEmpty(hechos)}">
-        <div class="grid">
-            <div class="card" th:each="hecho : ${hechos}"
-                 th:data-id="${hecho.id}"
-                 th:data-tipo-fuente="${hecho.tipoFuente}"
-                 onclick="abrirModalHecho(this)">
+<div class="grid">
+    <div class="card" th:each="hecho : ${hechos}"
+         th:data-id="${hecho.id}"
+         th:data-tipo-fuente="${hecho.tipoFuente}"
+         onclick="abrirModalHecho(this)">
 
-                <div class="card-image">
-                    <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
-                         th:src="${urlBaseMultimedia} + ${hecho.contenidoMultimedia[0].url}"
-                         alt="Imagen del hecho"
-                         loading="lazy">
+        <div class="card-image">
+            <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
+                 th:src="${urlBaseMultimedia} + ${hecho.contenidoMultimedia[0].url}"
+                 class="hecho-img"
+                 alt="Imagen del hecho"
+                 loading="lazy">
 
-                    <img th:if="${hecho.contenidoMultimedia == null or hecho.contenidoMultimedia.isEmpty()}"
-                         th:src="@{/img/metamapa.jpg}"
-                         alt="Imagen por defecto"
-                         loading="lazy">
-                    
-                    <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
-                </div>
+            <img th:if="${hecho.contenidoMultimedia == null or hecho.contenidoMultimedia.isEmpty()}"
+                 th:src="@{/img/metamapa.jpg}"
+                 class="hecho-img default-img"
+                 alt="Imagen por defecto"
+                 loading="lazy">
+            
+            <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
+        </div>
+
+        <div class="card-content">
+            </div>
+    </div>
+</div>
 
                 <div class="card-content">
                     <div class="card-header">
