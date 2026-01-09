@@ -63,6 +63,10 @@ public class SecurityConfig {
                         .accessDeniedHandler((request, response, accessDeniedException) ->
                                 response.sendRedirect("/")
                         )
+                )
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/actuator/**").permitAll()
+                        .anyRequest().permitAll() // O la configuración que tengas
                 );
 
         return http.build();
