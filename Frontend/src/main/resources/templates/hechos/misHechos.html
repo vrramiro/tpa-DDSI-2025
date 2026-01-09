@@ -30,16 +30,13 @@
                 <div class="card-image-wrapper">
                     <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
                          th:src="${urlBaseMultimedia} + ${hecho.contenidoMultimedia[0].url}"
-                         class="hecho-img"
                          alt="Imagen del hecho"
                          loading="lazy">
 
                     <img th:if="${hecho.contenidoMultimedia == null or hecho.contenidoMultimedia.isEmpty()}"
                          th:src="@{/img/metamapa.jpg}"
-                         class="hecho-img default-img"
                          alt="Imagen por defecto"
                          loading="lazy">
-                    
                     <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
                 </div>
 
@@ -59,11 +56,13 @@
 
                 <div class="card-footer">
                     <span class="status-indicator published">Publicado</span>
-                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn-icon" title="Ver detalle">
+                    <a href="#" class="btn-icon" title="Ver detalle">
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
-            </div> </div> </div>
+            </div>
+        </div>
+    </div>
 
     <div class="pagination-wrapper" th:unless="${#lists.isEmpty(hechos)}">
         <div th:replace="~{navegacion/navegacion :: pager(
