@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const formData = new FormData();
                     formData.append('file', file);
 
-                    const response = await fetch(URL_UPLOAD, { method: 'POST', body: formData });
+                    const response = await fetch(URL_UPLOAD + '/upload', { method: 'POST', body: formData });
 
                     if (response.ok) {
                         const ruta = await response.text();
