@@ -27,6 +27,7 @@
                  th:data-tipo-fuente="${hecho.tipoFuente}"
                  onclick="abrirModalHecho(this)">
 
+                <div class="card-image">
                     <img th:if="${hecho.contenidoMultimedia != null and !hecho.contenidoMultimedia.isEmpty()}"
                          th:src="${urlBaseMultimedia} + ${hecho.contenidoMultimedia[0].url}"
                          alt="Imagen del hecho"
@@ -36,6 +37,7 @@
                          th:src="@{/img/metamapa.jpg}"
                          alt="Imagen por defecto"
                          loading="lazy">
+                    
                     <span class="card-badge" th:text="${hecho.categoria}">Categoría</span>
                 </div>
 
@@ -55,12 +57,11 @@
 
                 <div class="card-footer">
                     <span class="status-indicator published">Publicado</span>
-                    <a href="#" class="btn-icon" title="Ver detalle">
+                    <a th:href="@{/hechos/{id}(id=${hecho.id})}" class="btn-icon" title="Ver detalle">
                         <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
-            </div>
-        </div>
+            </div> </div>
     </div>
 
     <div class="pagination-wrapper" th:unless="${#lists.isEmpty(hechos)}">
